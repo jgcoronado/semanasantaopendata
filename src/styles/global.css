@@ -155,6 +155,22 @@ table.datos tfoot td.txt { text-align: left; }
 
 tr.sin-resultados td { text-align: center; color: var(--gris); padding: 1.5rem; }
 
+table.datos tbody tr.fila-resaltada { background: var(--resalte) !important; box-shadow: inset 4px 0 0 var(--oro); }
+table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--morado-osc); }
+
+/* ---------- Gráficas ---------- */
+.graficas-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+.grafica { margin: 0; background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1rem 1.1rem; box-shadow: var(--sombra); }
+.grafica--ancha { grid-column: 1 / -1; }
+.grafica figcaption { font-weight: 600; color: var(--morado-osc); margin-bottom: 0.7rem; font-size: 0.97rem; }
+.grafica figcaption strong { color: var(--morado); }
+.grafica__lienzo { position: relative; height: 340px; }
+.grafica__nota { color: var(--gris); font-size: 0.85rem; margin-top: 0.9rem; }
+@media (max-width: 720px) {
+  .graficas-grid { grid-template-columns: 1fr; }
+  .grafica__lienzo { height: 300px; }
+}
+
 /* ---------- Pie ---------- */
 .pie { margin-top: 3rem; border-top: 1px solid var(--linea); background: var(--blanco); }
 .pie__inner { padding-block: 1.6rem; color: var(--gris); font-size: 0.88rem; display: grid; gap: 0.4rem; }

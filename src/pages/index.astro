@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import TablaNazarenos from '../components/TablaNazarenos.astro';
+import Explorador from '../components/Explorador.astro';
 import { registros, dias, totalesPorDia, totalGeneral, fmt } from '../lib/datos.js';
 
 const title = 'Semana Santa de Sevilla 2026 en datos: nazarenos por hermandad | Open Data';
@@ -80,6 +81,8 @@ const jsonLd = {
     </div>
     <TablaNazarenos registros={registros} dias={dias} totalGeneral={totalGeneral} />
   </section>
+
+  <Explorador />
 
   <section class="panel contenedor" id="descargas">
     <div class="panel__cab">

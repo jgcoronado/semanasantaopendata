@@ -68,7 +68,7 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
           {conColumnaDia && (
             <td class="txt"><a class="pildora-dia" href={`/dia/${r.diaSlug}/`}>{r.diaNombre}</a></td>
           )}
-          <td class="txt">{r.nombre}</td>
+          <td class="txt"><a href={`/hermandad/${r.slug}/`}>{r.nombre}</a></td>
           <td class="fuerte">{fmt(r.noNaz)}</td>
           <td>{fmtPct(r.pctNaz)}</td>
           <td class="fuerte">{fmt(r.noTotal)}</td>
@@ -156,6 +156,18 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
     if (select) select.addEventListener('change', filtrar);
     tabla.querySelectorAll('thead th.orden').forEach((th) => {
       th.querySelector('button').addEventListener('click', () => ordenar(th.dataset.key, th.dataset.tipo));
+    });
+
+    // Resaltado cruzado: escucha la hermandad seleccionada en las gráficas.
+    document.addEventListener('hdad-sel', (e) => {
+      const slug = e.detail && e.detail.slug;
+      let objetivo = null;
+      for (const f of filas) {
+        const activo = !!slug && f.dataset.slug === slug;
+        f.classList.toggle('fila-resaltada', activo);
+        if (activo) objetivo = f;
+      }
+      if (objetivo && !objetivo.hidden) objetivo.scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
   }
 </script>

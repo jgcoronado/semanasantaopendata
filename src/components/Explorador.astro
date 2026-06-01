@@ -1,0 +1,175 @@
+---
+import { registros, totalesPorDia, dias } from '../lib/datos.js';
+
+// Datos mínimos que necesita el cliente para las gráficas.
+const datosGraficas = {
+  dias: totalesPorDia.map((t) => ({ slug: t.slug, nombre: t.nombre, noNaz: t.noNaz, noTotal: t.noTotal })),
+  hermandades: registros.map((r) => ({
+    slug: r.slug,
+    nombre: r.nombre,
+    diaSlug: r.diaSlug,
+    pctNaz: Math.round(r.pctNaz * 10) / 10,
+    pctTotal: Math.round(r.pctTotal * 10) / 10,
+  })),
+};
+
+const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
+---
+
+<section class="panel contenedor" id="graficas">
+  <div class="panel__cab">
+    <h2>Gráficas comparativas</h2>
+  </div>
+
+  <div class="controles">
+    <label class="campo">
+      Resaltar hermandad
+      <select id="selector-hermandad">
+        <option value="">— Ninguna —</option>
+        {dias.map((d) => (
+          <optgroup label={d.nombre}>
+            {hermandadesDe(d.slug).map((h) => <option value={h.slug}>{h.nombre}</option>)}
+          </optgroup>
+        ))}
+      </select>
+    </label>
+    <label class="campo">
+      Día (gráficas de composición)
+      <select id="selector-dia">
+        {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div class="graficas-grid">
+    <figure class="grafica grafica--ancha">
+      <figcaption>Participantes por día</figcaption>
+      <div class="grafica__lienzo"><canvas id="grafica-dias" aria-label="Nazarenos y cortejo total por día"></canvas></div>
+    </figure>
+    <figure class="grafica">
+      <figcaption>% de <strong>nazarenos</strong> sobre el total del día — <span id="titulo-dia-naz"></span></figcaption>
+      <div class="grafica__lienzo"><canvas id="grafica-pct-naz" aria-label="Porcentaje de nazarenos de cada hermandad sobre su día"></canvas></div>
+    </figure>
+    <figure class="grafica">
+      <figcaption>% del <strong>cortejo total</strong> sobre el total del día — <span id="titulo-dia-total"></span></figcaption>
+      <div class="grafica__lienzo"><canvas id="grafica-pct-total" aria-label="Porcentaje del cortejo de cada hermandad sobre su día"></canvas></div>
+    </figure>
+  </div>
+  <p class="grafica__nota">Consejo: pulsa una barra para resaltar esa hermandad en las gráficas y en la tabla.</p>
+
+  <script type="application/json" id="datos-graficas" set:html={JSON.stringify(datosGraficas)}></script>
+</section>
+
+<script>
+  import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+  Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+  const datos = JSON.parse(document.getElementById('datos-graficas').textContent);
+  const MORADO = '#5b2a86';
+  const ORO = '#c8a24a';
+  const TINTA = '#1c1a22';
+  const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+
+  const selHdad = document.getElementById('selector-hermandad');
+  const selDia = document.getElementById('selector-dia');
+  const tituloNaz = document.getElementById('titulo-dia-naz');
+  const tituloTotal = document.getElementById('titulo-dia-total');
+
+  const nombreDia = (slug) => datos.dias.find((d) => d.slug === slug)?.nombre ?? '';
+  const hermsDe = (slug) => datos.hermandades.filter((h) => h.diaSlug === slug);
+
+  let diaActual = datos.dias[0].slug;
+  let hdadActual = null;
+
+  // ---- Gráfica A: participantes por día ----
+  const chartA = new Chart(document.getElementById('grafica-dias'), {
+    type: 'bar',
+    data: {
+      labels: datos.dias.map((d) => d.nombre),
+      datasets: [
+        { label: 'Nazarenos', data: datos.dias.map((d) => d.noNaz), backgroundColor: MORADO, borderColor: TINTA, borderWidth: 0 },
+        { label: 'Cortejo total', data: datos.dias.map((d) => d.noTotal), backgroundColor: ORO, borderColor: TINTA, borderWidth: 0 },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${nf.format(c.parsed.y)}` } },
+      },
+      scales: { y: { beginAtZero: true, ticks: { callback: (v) => nf.format(v) } } },
+    },
+  });
+
+  // ---- Gráficas B y C: composición del día ----
+  const opcionesPct = (onPick) => ({
+    responsive: true, maintainAspectRatio: false,
+    onClick: (_e, els) => { if (els.length) onPick(els[0].index); },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (c) => `${c.parsed.y} %` } },
+    },
+    scales: { y: { beginAtZero: true, ticks: { callback: (v) => v + ' %' } }, x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } } },
+  });
+
+  const elegirEnComposicion = (i) => { const h = hermsDe(diaActual)[i]; if (h) seleccionar(h.slug); };
+
+  const chartB = new Chart(document.getElementById('grafica-pct-naz'), {
+    type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] }, options: opcionesPct(elegirEnComposicion),
+  });
+  const chartC = new Chart(document.getElementById('grafica-pct-total'), {
+    type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] }, options: opcionesPct(elegirEnComposicion),
+  });
+
+  const coloresComposicion = (herms) => herms.map((h) => (h.slug === hdadActual ? ORO : MORADO));
+
+  function pintarComposicion() {
+    const herms = hermsDe(diaActual);
+    const labels = herms.map((h) => h.nombre);
+    const colores = coloresComposicion(herms);
+    chartB.data.labels = labels;
+    chartB.data.datasets[0].data = herms.map((h) => h.pctNaz);
+    chartB.data.datasets[0].backgroundColor = colores;
+    chartB.update();
+    chartC.data.labels = labels;
+    chartC.data.datasets[0].data = herms.map((h) => h.pctTotal);
+    chartC.data.datasets[0].backgroundColor = colores;
+    chartC.update();
+    tituloNaz.textContent = nombreDia(diaActual);
+    tituloTotal.textContent = nombreDia(diaActual);
+  }
+
+  function pintarDiaResaltado() {
+    const border = datos.dias.map((d) => (d.slug === diaActual ? 3 : 0));
+    chartA.data.datasets.forEach((ds) => { ds.borderWidth = border; });
+    chartA.update();
+  }
+
+  // Notifica a la tabla (y a quien escuche) la hermandad resaltada.
+  function emitir() {
+    document.dispatchEvent(new CustomEvent('hdad-sel', { detail: { slug: hdadActual } }));
+  }
+
+  function seleccionar(slug) {
+    hdadActual = slug || null;
+    if (hdadActual) {
+      const h = datos.hermandades.find((x) => x.slug === hdadActual);
+      if (h) { diaActual = h.diaSlug; selDia.value = diaActual; }
+    }
+    selHdad.value = hdadActual || '';
+    pintarComposicion();
+    pintarDiaResaltado();
+    emitir();
+  }
+
+  selHdad.addEventListener('change', () => seleccionar(selHdad.value));
+  selDia.addEventListener('change', () => {
+    diaActual = selDia.value;
+    if (hdadActual && !hermsDe(diaActual).some((h) => h.slug === hdadActual)) { hdadActual = null; selHdad.value = ''; emitir(); }
+    pintarComposicion();
+    pintarDiaResaltado();
+  });
+
+  pintarComposicion();
+  pintarDiaResaltado();
+</script>
