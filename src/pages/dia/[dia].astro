@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import TablaNazarenos from '../../components/TablaNazarenos.astro';
+import { registros, dias, totalesPorDia, fmt } from '../../lib/datos.js';
+
+export function getStaticPaths() {
+  return dias.map((d) => ({ params: { dia: d.slug } }));
+}
+
+const { dia } = Astro.params;
+const diaInfo = dias.find((d) => d.slug === dia);
+const totales = totalesPorDia.find((t) => t.slug === dia);
+const regs = registros.filter((r) => r.diaSlug === dia);
+
+const idx = dias.findIndex((d) => d.slug === dia);
+const anterior = dias[idx - 1];
+const siguiente = dias[idx + 1];
+
+const title = `Nazarenos del ${diaInfo.nombre} 2026 · Semana Santa de Sevilla | Open Data`;
+const description =
+  `Conteo del ${diaInfo.nombre} de la Semana Santa de Sevilla 2026: ${fmt(totales.noNaz)} nazarenos y ` +
+  `${fmt(totales.noTotal)} participantes en el cortejo, repartidos en ${totales.hermandades} hermandades.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Conteo del ${diaInfo.nombre} — Semana Santa de Sevilla 2026`,
+  description,
+  url: new URL(`/dia/${dia}/`, Astro.site).href,
+  inLanguage: 'es',
+  isPartOf: { '@type': 'Dataset', name: 'Conteo de la Semana Santa de Sevilla 2026', url: new URL('/', Astro.site).href },
+  temporalCoverage: '2026',
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  isAccessibleForFree: true,
+};
+
+const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTotal: totales.noTotal };
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="contenedor">
+      <nav class="migas" aria-label="Migas de pan">
+        <a href="/">Inicio</a> <span aria-hidden="true">›</span> <span>{diaInfo.nombre}</span>
+      </nav>
+      <h1>{diaInfo.nombre} 2026</h1>
+      <p>
+        Nazarenos y participantes por hermandad en el {diaInfo.nombre} de la Semana Santa de
+        Sevilla. Ordena la tabla pulsando cualquier cabecera.
+      </p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totales.hermandades)}</div>
+          <div class="kpi__lbl">Hermandades</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totales.noNaz)}</div>
+          <div class="kpi__lbl">Nazarenos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totales.noTotal)}</div>
+          <div class="kpi__lbl">Participantes en el cortejo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor">
+    <div class="panel__cab">
+      <h2>Hermandades del {diaInfo.nombre}</h2>
+    </div>
+    <TablaNazarenos registros={regs} totalGeneral={totalDia} conColumnaDia={false} conFiltroDia={false} />
+
+    <nav class="dia-nav" aria-label="Navegación entre días">
+      {anterior
+        ? <a class="dia-nav__a" href={`/dia/${anterior.slug}/`}>← {anterior.nombre}</a>
+        : <span></span>}
+      <a class="dia-nav__a dia-nav__centro" href="/#dias">Todos los días</a>
+      {siguiente
+        ? <a class="dia-nav__a dia-nav__der" href={`/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>
+        : <span></span>}
+    </nav>
+  </section>
+</Base>

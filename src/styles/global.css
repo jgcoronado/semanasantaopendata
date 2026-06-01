@@ -68,6 +68,45 @@ a { color: var(--morado); }
 .kpi__num { font-size: 1.8rem; font-weight: 800; color: var(--morado); line-height: 1; }
 .kpi__lbl { color: var(--gris); font-size: 0.85rem; margin-top: 0.35rem; }
 
+/* ---------- Migas de pan ---------- */
+.migas { font-size: 0.9rem; color: var(--gris); margin-bottom: 0.6rem; }
+.migas a { color: var(--morado); text-decoration: none; }
+.migas a:hover { text-decoration: underline; }
+.migas span[aria-hidden] { margin-inline: 0.3rem; opacity: 0.6; }
+
+/* ---------- Rejilla de días ---------- */
+.dias-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.9rem; }
+.dia-card {
+  display: flex; flex-direction: column; gap: 0.3rem;
+  background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio);
+  padding: 1rem 1.1rem; text-decoration: none; color: var(--tinta);
+  box-shadow: var(--sombra); transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.dia-card:hover { transform: translateY(-2px); border-color: var(--morado); }
+.dia-card__nombre { font-weight: 700; color: var(--morado-osc); font-size: 1.05rem; }
+.dia-card__cifras { font-size: 0.92rem; color: var(--tinta); }
+.dia-card__cifras strong { color: var(--morado); }
+.dia-card__meta { font-size: 0.82rem; color: var(--gris); margin-top: auto; }
+
+/* ---------- Navegación entre días ---------- */
+.dia-nav { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-top: 1.2rem; }
+.dia-nav__a { color: var(--morado); text-decoration: none; font-size: 0.95rem; font-weight: 600; }
+.dia-nav__a:hover { text-decoration: underline; }
+.dia-nav__centro { color: var(--gris); font-weight: 500; }
+.dia-nav__der { margin-left: auto; }
+
+/* ---------- Descargas ---------- */
+.descargas-intro { color: var(--gris); max-width: 70ch; margin-top: -0.2rem; }
+.descargas { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+.btn {
+  display: inline-block; font-weight: 600; font-size: 0.95rem; text-decoration: none;
+  padding: 0.6rem 1.1rem; border-radius: 8px; border: 1px solid var(--morado);
+  background: var(--morado); color: var(--blanco); transition: background 0.12s ease;
+}
+.btn:hover { background: var(--morado-osc); }
+.btn--sec { background: var(--blanco); color: var(--morado); }
+.btn--sec:hover { background: var(--fondo-alt); }
+
 /* ---------- Controles ---------- */
 .panel { margin-top: 2.4rem; }
 .panel__cab { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem; }

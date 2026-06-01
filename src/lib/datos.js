@@ -78,6 +78,23 @@ export const totalGeneral = registros.reduce(
   { hermandades: registros.length, ...Object.fromEntries(METRICAS.map((m) => [m, 0])) }
 );
 
+/** Conjunto plano y limpio para exportar como datos abiertos (CSV / JSON). */
+export const datasetExport = registros.map((r) => ({
+  id_hermandad: r.id_hdad,
+  hermandad: r.nombre,
+  dia: r.diaNombre,
+  dia_slug: r.diaSlug,
+  nazarenos: r.nazarenos,
+  penitentes: r.penitentes,
+  total_nazarenos: r.noNaz,
+  acolitos: r.acolitos,
+  monaguillos: r.monaguillos,
+  acompanamiento: r.acompCortejo,
+  total_cortejo: r.noTotal,
+  pct_nazarenos_dia: Math.round(r.pctNaz * 10) / 10,
+  pct_cortejo_dia: Math.round(r.pctTotal * 10) / 10,
+}));
+
 /** Formatea un número entero al estilo español, agrupando siempre los miles (3.958). */
 export function fmt(n) {
   return Number(n).toLocaleString('es-ES', { useGrouping: 'always' });

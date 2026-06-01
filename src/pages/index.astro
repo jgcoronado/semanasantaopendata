@@ -22,6 +22,10 @@ const jsonLd = {
   variableMeasured: ['Número de nazarenos', 'Participantes totales del cortejo'],
   isAccessibleForFree: true,
   creator: { '@type': 'Organization', name: 'Semana Santa Open Data' },
+  distribution: [
+    { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: new URL('/datos/semana-santa-2026.csv', Astro.site).href },
+    { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: new URL('/datos/semana-santa-2026.json', Astro.site).href },
+  ],
 };
 ---
 
@@ -55,10 +59,40 @@ const jsonLd = {
     </div>
   </section>
 
+  <section class="panel contenedor" id="dias">
+    <div class="panel__cab">
+      <h2>Explora por día</h2>
+    </div>
+    <div class="dias-grid">
+      {totalesPorDia.map((t) => (
+        <a class="dia-card" href={`/dia/${t.slug}/`}>
+          <span class="dia-card__nombre">{t.nombre}</span>
+          <span class="dia-card__cifras"><strong>{fmt(t.noNaz)}</strong> nazarenos · {fmt(t.noTotal)} cortejo</span>
+          <span class="dia-card__meta">{fmt(t.hermandades)} hermandad{t.hermandades === 1 ? '' : 'es'} →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
   <section class="panel contenedor" id="tabla">
     <div class="panel__cab">
       <h2>Nazarenos por hermandad</h2>
     </div>
     <TablaNazarenos registros={registros} dias={dias} totalGeneral={totalGeneral} />
+  </section>
+
+  <section class="panel contenedor" id="descargas">
+    <div class="panel__cab">
+      <h2>Datos abiertos</h2>
+    </div>
+    <p class="descargas-intro">
+      Descarga el conjunto completo ({fmt(totalGeneral.hermandades)} hermandades, con todas las
+      columnas: nazarenos, penitentes, acólitos, monaguillos, acompañamiento y totales) para
+      reutilizarlo libremente citando la fuente.
+    </p>
+    <div class="descargas">
+      <a class="btn" href="/datos/semana-santa-2026.csv" download>⬇ Descargar CSV</a>
+      <a class="btn btn--sec" href="/datos/semana-santa-2026.json">Ver JSON</a>
+    </div>
   </section>
 </Base>
