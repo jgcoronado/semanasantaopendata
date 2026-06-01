@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://semanasantaopendata.pages.dev/sitemap-index.xml
+Sitemap: https://semanasantaopendata.jaguerra27.workers.dev/sitemap-index.xml
