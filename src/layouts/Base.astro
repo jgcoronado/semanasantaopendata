@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+
+const {
+  title,
+  description,
+  jsonLd = null,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const anioActual = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#5b2a86" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Semana Santa Open Data" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="cabecera">
+      <div class="contenedor cabecera__inner">
+        <a href="/" class="marca"><span class="marca__punto" aria-hidden="true"></span> Semana Santa Open Data</a>
+        <nav class="nav" aria-label="Principal">
+          <a href="/">Inicio</a>
+          <a href="/#tabla">Datos</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <div class="contenedor pie__inner">
+        <div>
+          <strong>Semana Santa Open Data</strong> — datos abiertos del conteo de la Semana Santa de Sevilla {2026}.
+        </div>
+        <div>
+          Fuente original: <a href="https://www.hermandades-de-sevilla.org/consejo/el-consejo-completa-el-conteo-de-la-semana-santa-2026/" rel="nofollow noopener" target="_blank">Consejo General de Hermandades y Cofradías de Sevilla</a>.
+          Datos transcritos de las tablas oficiales de conteo; este sitio no es oficial.
+        </div>
+        <div>© {anioActual} · Proyecto de datos abiertos sin ánimo de lucro.</div>
+      </div>
+    </footer>
+  </body>
+</html>

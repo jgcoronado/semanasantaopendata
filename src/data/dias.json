@@ -1,0 +1,11 @@
+[
+  { "slug": "domingo-de-ramos",     "nombre": "Domingo de Ramos",        "orden": 1 },
+  { "slug": "lunes-santo",          "nombre": "Lunes Santo",             "orden": 2 },
+  { "slug": "martes-santo",         "nombre": "Martes Santo",            "orden": 3 },
+  { "slug": "miercoles-santo",      "nombre": "Miércoles Santo",         "orden": 4 },
+  { "slug": "jueves-santo",         "nombre": "Jueves Santo",            "orden": 5 },
+  { "slug": "madruga",              "nombre": "Madrugá",                 "orden": 6 },
+  { "slug": "viernes-santo",        "nombre": "Viernes Santo",           "orden": 7 },
+  { "slug": "sabado-santo",         "nombre": "Sábado Santo",            "orden": 8 },
+  { "slug": "domingo-resurreccion", "nombre": "Domingo de Resurrección", "orden": 9 }
+]

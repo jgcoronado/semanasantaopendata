@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import TablaNazarenos from '../components/TablaNazarenos.astro';
+import { registros, dias, totalesPorDia, totalGeneral, fmt } from '../lib/datos.js';
+
+const title = 'Semana Santa de Sevilla 2026 en datos: nazarenos por hermandad | Open Data';
+const description =
+  `Datos abiertos del conteo oficial de la Semana Santa de Sevilla 2026: ${fmt(totalGeneral.noNaz)} nazarenos y ` +
+  `${fmt(totalGeneral.noTotal)} participantes de ${totalGeneral.hermandades} hermandades en 9 días. Tabla consultable, ordenable y filtrable.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: 'Conteo de la Semana Santa de Sevilla 2026',
+  description:
+    'Número de nazarenos y de participantes totales (cortejo) por hermandad en cada día de la Semana Santa de Sevilla 2026, según el conteo oficial del Consejo de Hermandades.',
+  url: new URL('/', Astro.site).href,
+  inLanguage: 'es',
+  keywords: ['Semana Santa', 'Sevilla', '2026', 'nazarenos', 'hermandades', 'cofradías', 'datos abiertos'],
+  temporalCoverage: '2026',
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  variableMeasured: ['Número de nazarenos', 'Participantes totales del cortejo'],
+  isAccessibleForFree: true,
+  creator: { '@type': 'Organization', name: 'Semana Santa Open Data' },
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="contenedor">
+      <h1>La Semana Santa de Sevilla 2026, en datos abiertos</h1>
+      <p>
+        Conteo oficial de nazarenos y participantes por hermandad y día. Consulta, ordena y filtra
+        la tabla; pronto, gráficas comparativas por día y por hermandad.
+      </p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.hermandades)}</div>
+          <div class="kpi__lbl">Hermandades</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{dias.length}</div>
+          <div class="kpi__lbl">Días procesionales</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.noNaz)}</div>
+          <div class="kpi__lbl">Nazarenos (total)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.noTotal)}</div>
+          <div class="kpi__lbl">Participantes en el cortejo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor" id="tabla">
+    <div class="panel__cab">
+      <h2>Nazarenos por hermandad</h2>
+    </div>
+    <TablaNazarenos registros={registros} dias={dias} totalGeneral={totalGeneral} />
+  </section>
+</Base>

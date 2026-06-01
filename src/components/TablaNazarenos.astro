@@ -1,0 +1,148 @@
+---
+import { fmt, fmtPct } from '../lib/datos.js';
+
+const { registros, dias, totalGeneral } = Astro.props;
+
+// Definición de columnas: clave para ordenar, tipo y alineación.
+const columnas = [
+  { key: 'diaOrden', etiqueta: 'Día', tipo: 'num', txt: true },
+  { key: 'nombre', etiqueta: 'Hermandad', tipo: 'txt', txt: true },
+  { key: 'noNaz', etiqueta: 'Nazarenos', tipo: 'num', fuerte: true },
+  { key: 'pctNaz', etiqueta: '% de su día', tipo: 'num' },
+  { key: 'noTotal', etiqueta: 'Total cortejo', tipo: 'num', fuerte: true },
+  { key: 'pctTotal', etiqueta: '% de su día', tipo: 'num' },
+];
+---
+
+<div class="controles">
+  <label class="campo">
+    Filtrar por día
+    <select id="filtro-dia" aria-controls="tabla-nazarenos">
+      <option value="todos">Todos los días</option>
+      {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+    </select>
+  </label>
+  <p class="contador" id="contador" aria-live="polite">{registros.length} hermandades</p>
+</div>
+
+<div class="tabla-wrap">
+  <table class="datos" id="tabla-nazarenos">
+    <caption>
+      Conteo oficial de la Semana Santa de Sevilla 2026. <strong>Nazarenos</strong> = total de
+      nazarenos y penitentes; <strong>Total cortejo</strong> = todos los participantes (incluye
+      acólitos, monaguillos y acompañamiento). Pulsa una cabecera para ordenar.
+    </caption>
+    <thead>
+      <tr>
+        {columnas.map((c) => (
+          <th class={`orden${c.txt ? ' txt' : ''}`} data-key={c.key} data-tipo={c.tipo} scope="col">
+            <button type="button">
+              <span>{c.etiqueta}</span><span class="flecha" aria-hidden="true"></span>
+            </button>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {registros.map((r) => (
+        <tr
+          data-dia={r.diaSlug}
+          data-slug={r.slug}
+          data-diaorden={r.diaOrden}
+          data-nombre={r.nombre}
+          data-nonaz={r.noNaz}
+          data-pctnaz={r.pctNaz}
+          data-nototal={r.noTotal}
+          data-pcttotal={r.pctTotal}
+        >
+          <td class="txt"><span class="pildora-dia">{r.diaNombre}</span></td>
+          <td class="txt">{r.nombre}</td>
+          <td class="fuerte">{fmt(r.noNaz)}</td>
+          <td>{fmtPct(r.pctNaz)}</td>
+          <td class="fuerte">{fmt(r.noTotal)}</td>
+          <td>{fmtPct(r.pctTotal)}</td>
+        </tr>
+      ))}
+      <tr class="sin-resultados" hidden><td colspan={columnas.length}>No hay hermandades para ese día.</td></tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="txt" colspan="2" id="pie-etiqueta">Total ({fmt(totalGeneral.hermandades)} hermandades)</td>
+        <td class="fuerte" id="pie-nonaz">{fmt(totalGeneral.noNaz)}</td>
+        <td></td>
+        <td class="fuerte" id="pie-nototal">{fmt(totalGeneral.noTotal)}</td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<script>
+  // Mejora progresiva: la tabla ya está completa en el HTML. Esto añade filtrado por día,
+  // ordenación por cualquier columna y recálculo de los totales del pie.
+  const tabla = document.getElementById('tabla-nazarenos');
+  if (tabla) {
+    const tbody = tabla.querySelector('tbody');
+    const filas = Array.from(tbody.querySelectorAll('tr[data-slug]'));
+    const filaVacia = tbody.querySelector('.sin-resultados');
+    const select = document.getElementById('filtro-dia');
+    const contador = document.getElementById('contador');
+    const pieEtiqueta = document.getElementById('pie-etiqueta');
+    const pieNaz = document.getElementById('pie-nonaz');
+    const pieTotal = document.getElementById('pie-nototal');
+    const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+
+    let ordenKey = null;
+    let ordenAsc = true;
+
+    const valor = (fila, key, tipo) => {
+      const raw = fila.dataset[key.toLowerCase()];
+      return tipo === 'num' ? parseFloat(raw) : (raw || '').toLowerCase();
+    };
+
+    function visibles() {
+      return filas.filter((f) => !f.hidden);
+    }
+
+    function actualizarPie() {
+      const v = visibles();
+      let sNaz = 0, sTotal = 0;
+      for (const f of v) { sNaz += +f.dataset.nonaz; sTotal += +f.dataset.nototal; }
+      pieEtiqueta.textContent = `Total (${v.length} hermandad${v.length === 1 ? '' : 'es'})`;
+      pieNaz.textContent = nf.format(sNaz);
+      pieTotal.textContent = nf.format(sTotal);
+      contador.textContent = `${v.length} hermandad${v.length === 1 ? '' : 'es'}`;
+      filaVacia.hidden = v.length !== 0;
+    }
+
+    function filtrar() {
+      const dia = select.value;
+      for (const f of filas) f.hidden = dia !== 'todos' && f.dataset.dia !== dia;
+      actualizarPie();
+    }
+
+    function ordenar(key, tipo) {
+      if (ordenKey === key) ordenAsc = !ordenAsc;
+      else { ordenKey = key; ordenAsc = true; }
+
+      const factor = ordenAsc ? 1 : -1;
+      const orden = [...filas].sort((a, b) => {
+        const va = valor(a, key, tipo), vb = valor(b, key, tipo);
+        if (va < vb) return -1 * factor;
+        if (va > vb) return 1 * factor;
+        return 0;
+      });
+      for (const f of orden) tbody.insertBefore(f, filaVacia);
+
+      tabla.querySelectorAll('thead th').forEach((th) => {
+        if (th.dataset.key === key) th.setAttribute('aria-sort', ordenAsc ? 'ascending' : 'descending');
+        else th.removeAttribute('aria-sort');
+      });
+    }
+
+    select.addEventListener('change', filtrar);
+    tabla.querySelectorAll('thead th.orden').forEach((th) => {
+      th.querySelector('button').addEventListener('click', () => ordenar(th.dataset.key, th.dataset.tipo));
+    });
+  }
+</script>
