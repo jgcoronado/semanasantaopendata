@@ -41,10 +41,6 @@ const altoGlobal = Math.max(420, registros.length * 20);
       <figcaption>Cofradías a la vez en la Carrera Oficial (pasa el ratón para ver cuáles)</figcaption>
       <div class="grafica__lienzo"><canvas id="ocupacion" aria-label="Ocupación de la Carrera Oficial"></canvas></div>
     </figure>
-    <figure class="grafica grafica--ancha">
-      <figcaption>Distribución de salidas y entradas por hora</figcaption>
-      <div class="grafica__lienzo"><canvas id="distribucion" aria-label="Distribución de salidas y entradas"></canvas></div>
-    </figure>
   </div>
 </section>
 
@@ -61,10 +57,6 @@ const altoGlobal = Math.max(420, registros.length * 20);
     <figure class="grafica grafica--ancha">
       <figcaption>Duración total por hermandad</figcaption>
       <div class="grafica__lienzo" style={`height:${altoGlobal}px`}><canvas id="dur-hdad" aria-label="Duración por hermandad"></canvas></div>
-    </figure>
-    <figure class="grafica grafica--ancha">
-      <figcaption>Participantes por hora (cortejo ÷ duración)</figcaption>
-      <div class="grafica__lienzo" style={`height:${altoGlobal}px`}><canvas id="pph-hdad" aria-label="Participantes por hora por hermandad"></canvas></div>
     </figure>
   </div>
 </section>
@@ -98,30 +90,24 @@ const altoGlobal = Math.max(420, registros.length * 20);
   let ocupNombres = [];
   const chartOcup = new Chart(document.getElementById('ocupacion'), {
     type: 'line',
-    data: { labels: [], datasets: [{ label: 'Cofradías en la Carrera Oficial', data: [], borderColor: ORO, backgroundColor: 'rgba(200,162,74,0.25)', fill: true, tension: 0.25, pointRadius: 0 }] },
+    data: { labels: [], datasets: [{ label: 'Cofradías en la Carrera Oficial', data: [], borderColor: ORO, backgroundColor: 'rgba(200,162,74,0.25)', fill: true, tension: 0.25, pointRadius: 0, pointHoverRadius: 4 }] },
     options: {
       responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
+          mode: 'index',
+          intersect: false,
           callbacks: {
-            label: (c) => `${c.parsed.y} cofradía${c.parsed.y === 1 ? '' : 's'}`,
-            afterBody: (items) => ocupNombres[items[0].dataIndex] || [],
+            title: (items) => items[0]?.label ?? '',
+            label: (c) => `${c.parsed.y} cofradía${c.parsed.y === 1 ? '' : 's'} en Carrera Oficial`,
+            afterLabel: (c) => (ocupNombres[c.dataIndex] || []).join('\n'),
           },
         },
       },
       scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { ticks: { maxTicksLimit: 12 } } },
     },
-  });
-
-  // ---------- Por día: distribución de salidas y entradas ----------
-  const chartDist = new Chart(document.getElementById('distribucion'), {
-    type: 'bar',
-    data: { labels: [], datasets: [
-      { label: 'Salidas', data: [], backgroundColor: MORADO },
-      { label: 'Entradas', data: [], backgroundColor: ORO },
-    ] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
   });
 
   const selDia = document.getElementById('sel-dia-crono');
@@ -152,20 +138,6 @@ const altoGlobal = Math.max(420, registros.length * 20);
     chartOcup.data.datasets[0].data = conteo;
     ocupNombres = nombres;
     chartOcup.update();
-
-    // Distribución por hora (de la primera salida a la última entrada).
-    const hIni = Math.floor(Math.min(...regs.map((r) => r.salidaMin)) / 60);
-    const hFin = Math.ceil(Math.max(...regs.map((r) => r.entradaMin)) / 60);
-    const hLabels = [], salidas = [], entradas = [];
-    for (let h = hIni; h < hFin; h++) {
-      hLabels.push(reloj(h * 60));
-      salidas.push(regs.filter((r) => Math.floor(r.salidaMin / 60) === h).length);
-      entradas.push(regs.filter((r) => Math.floor(r.entradaMin / 60) === h).length);
-    }
-    chartDist.data.labels = hLabels;
-    chartDist.data.datasets[0].data = salidas;
-    chartDist.data.datasets[1].data = entradas;
-    chartDist.update();
   }
   selDia.addEventListener('change', pintarDia);
   pintarDia();
@@ -195,5 +167,4 @@ const altoGlobal = Math.max(420, registros.length * 20);
     });
   }
   barrasGlobales('dur-hdad', (r) => r.duracionMin, (v) => dur(v));
-  barrasGlobales('pph-hdad', (r) => r.partPorHora ?? 0, (v) => `${v.toLocaleString('es-ES')} participantes/hora`);
 </script>
