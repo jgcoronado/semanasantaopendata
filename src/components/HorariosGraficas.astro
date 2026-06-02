@@ -1,0 +1,114 @@
+---
+const { registros, dias } = Astro.props;
+
+const datosCliente = {
+  dias: dias.map((d) => ({ slug: d.slug, nombre: d.nombre })),
+  registros: registros.map((r) => ({
+    slug: r.slug,
+    nombre: r.nombre,
+    diaSlug: r.diaSlug,
+    salidaMin: r.salidaMin,
+    entradaMin: r.entradaMin,
+    campanaMin: r.min.campana,
+    ultimoPasoFueraMin: r.min.ultimoPasoFuera,
+    duracionMin: r.duracionMin,
+    noTotal: r.noTotal,
+  })),
+};
+---
+
+<section class="panel contenedor" id="cronograma">
+  <div class="panel__cab"><h2>Cronograma por día</h2></div>
+  <div class="controles">
+    <label class="campo">
+      Día
+      <select id="sel-dia-crono">
+        {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div class="graficas-grid">
+    <figure class="grafica grafica--ancha">
+      <figcaption>Cada barra es el tiempo de la cofradía en la calle (salida → entrada)</figcaption>
+      <div class="grafica__lienzo" style="height:460px"><canvas id="gantt" aria-label="Cronograma de cofradías por día"></canvas></div>
+    </figure>
+    <figure class="grafica grafica--ancha">
+      <figcaption>Cofradías a la vez en la Carrera Oficial (La Campana → salida de Catedral)</figcaption>
+      <div class="grafica__lienzo"><canvas id="ocupacion" aria-label="Ocupación de la Carrera Oficial"></canvas></div>
+    </figure>
+  </div>
+</section>
+
+<section class="panel contenedor" id="dispersion">
+  <div class="panel__cab"><h2>Duración frente a tamaño</h2></div>
+  <p class="descargas-intro">Cada punto es una hermandad: participantes del cortejo (eje X) y duración total (eje Y). ¿Las más grandes están más tiempo en la calle?</p>
+  <figure class="grafica grafica--ancha">
+    <figcaption>Duración (horas) vs participantes del cortejo</figcaption>
+    <div class="grafica__lienzo" style="height:420px"><canvas id="dispersion-dur" aria-label="Duración frente a participantes"></canvas></div>
+  </figure>
+</section>
+
+<script type="application/json" id="datos-horarios" set:html={JSON.stringify(datosCliente)}></script>
+<script>
+  import { Chart, BarController, BarElement, LineController, LineElement, PointElement, ScatterController, CategoryScale, LinearScale, Tooltip, Legend, Filler } from 'chart.js';
+  Chart.register(BarController, BarElement, LineController, LineElement, PointElement, ScatterController, CategoryScale, LinearScale, Tooltip, Legend, Filler);
+
+  const datos = JSON.parse(document.getElementById('datos-horarios').textContent);
+  const MORADO = '#5b2a86';
+  const ORO = '#c8a24a';
+  const reloj = (m) => `${String(Math.floor((((m % 1440) + 1440) % 1440) / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const dur = (m) => { const h = Math.floor(m / 60); return `${h} h ${String(m % 60).padStart(2, '0')} min`; };
+
+  // --- Cronograma (Gantt) ---
+  const chartGantt = new Chart(document.getElementById('gantt'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'En la calle', data: [], backgroundColor: 'rgba(91,42,134,0.78)', borderColor: MORADO, borderWidth: 1, borderSkipped: false }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${reloj(c.raw[0])} – ${reloj(c.raw[1])} (${dur(c.raw[1] - c.raw[0])})` } } },
+      scales: { x: { ticks: { stepSize: 60, callback: (v) => reloj(v) }, title: { display: true, text: 'Hora' } }, y: { ticks: { autoSkip: false } } },
+    },
+  });
+
+  // --- Ocupación de la Carrera Oficial ---
+  const chartOcup = new Chart(document.getElementById('ocupacion'), {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'Cofradías en la Carrera Oficial', data: [], borderColor: ORO, backgroundColor: 'rgba(200,162,74,0.25)', fill: true, tension: 0.25, pointRadius: 0 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { ticks: { maxTicksLimit: 12 } } } },
+  });
+
+  const selDia = document.getElementById('sel-dia-crono');
+  function pintarDia() {
+    const dia = selDia.value;
+    const regs = datos.registros.filter((r) => r.diaSlug === dia).sort((a, b) => a.salidaMin - b.salidaMin);
+    chartGantt.data.labels = regs.map((r) => r.nombre);
+    chartGantt.data.datasets[0].data = regs.map((r) => [r.salidaMin, r.entradaMin]);
+    chartGantt.update();
+
+    const paso = 5;
+    const ini = Math.floor(Math.min(...regs.map((r) => r.campanaMin)) / paso) * paso;
+    const fin = Math.max(...regs.map((r) => r.ultimoPasoFueraMin));
+    const labels = [], conteo = [];
+    for (let t = ini; t <= fin; t += paso) {
+      labels.push(reloj(t));
+      conteo.push(regs.filter((r) => r.campanaMin <= t && t <= r.ultimoPasoFueraMin).length);
+    }
+    chartOcup.data.labels = labels;
+    chartOcup.data.datasets[0].data = conteo;
+    chartOcup.update();
+  }
+  selDia.addEventListener('change', pintarDia);
+  pintarDia();
+
+  // --- Dispersión duración vs tamaño ---
+  new Chart(document.getElementById('dispersion-dur'), {
+    type: 'scatter',
+    data: { datasets: [{ label: 'Hermandades', data: datos.registros.map((r) => ({ x: r.noTotal, y: Math.round((r.duracionMin / 60) * 10) / 10, nombre: r.nombre })), backgroundColor: 'rgba(91,42,134,0.7)', pointRadius: 5, pointHoverRadius: 7 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.raw.nombre}: ${c.raw.x.toLocaleString('es-ES')} participantes · ${c.raw.y} h` } } },
+      scales: { x: { title: { display: true, text: 'Participantes (cortejo)' }, beginAtZero: true }, y: { title: { display: true, text: 'Duración (horas)' }, beginAtZero: true } },
+    },
+  });
+</script>

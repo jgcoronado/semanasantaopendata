@@ -149,6 +149,85 @@ export function getComparativaDias() {
   });
 }
 
+// ---------- Horarios oficiales ----------
+
+const ficherosHorarios = import.meta.glob('../data/horarios-*.json', { eager: true });
+const horariosPorAnio = {};
+for (const [ruta, mod] of Object.entries(ficherosHorarios)) {
+  const m = ruta.match(/horarios-(\d{4})\.json$/);
+  if (m) horariosPorAnio[Number(m[1])] = mod.default;
+}
+
+/** Años que tienen horarios oficiales cargados (del más reciente al más antiguo). */
+export const aniosConHorarios = anios.filter((a) => horariosPorAnio[a.anio]);
+/** ¿Hay horarios para este año? */
+export const hayHorarios = (anio) => !!horariosPorAnio[Number(anio)];
+
+const PUNTOS = ['salida', 'campana', 'sierpes', 'plaza', 'catedral', 'ultimoPasoFuera', 'entrada'];
+const aMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+
+function construirHorarios(anio) {
+  const lista = horariosPorAnio[anio];
+  if (!lista) throw new Error(`[datos] No hay horarios (horarios-${anio}.json) para ${anio}.`);
+  const nazPorId = new Map(getAnio(anio).registros.map((r) => [r.id_hdad, r]));
+
+  const registros = lista.map((h) => {
+    const hdad = hdadPorId.get(h.idHdad);
+    if (!hdad) throw new Error(`[datos] horarios ${anio}: idHdad ${h.idHdad} no existe.`);
+    const dia = diaPorSlug.get(hdad.dia);
+
+    // Minutos absolutos monotónicos (suma 24 h cuando un punto cruza la medianoche).
+    const min = {};
+    let prev = -Infinity;
+    for (const p of PUNTOS) {
+      let v = aMin(h[p]);
+      while (v < prev) v += 1440;
+      min[p] = v;
+      prev = v;
+    }
+
+    const duracionMin = min.entrada - min.salida;
+    const carreraOficialMin = min.ultimoPasoFuera - min.campana; // la cofradía ocupa la Carrera Oficial
+    const cruzCarreraMin = min.catedral - min.campana; // la cruz de guía recorre la Carrera Oficial
+    const naz = nazPorId.get(h.idHdad) || null;
+    const partPorHora = naz && duracionMin ? Math.round((naz.noTotal / (duracionMin / 60))) : null;
+
+    return {
+      anio,
+      id_hdad: h.idHdad,
+      nombre: hdad.nombre,
+      slug: hdad.slug,
+      diaSlug: hdad.dia,
+      diaNombre: dia.nombre,
+      diaOrden: dia.orden,
+      horas: Object.fromEntries(PUNTOS.map((p) => [p, h[p]])),
+      min,
+      salidaMin: min.salida,
+      entradaMin: min.entrada,
+      duracionMin,
+      carreraOficialMin,
+      cruzCarreraMin,
+      noNaz: naz ? naz.noNaz : null,
+      noTotal: naz ? naz.noTotal : null,
+      partPorHora,
+    };
+  });
+  registros.sort((a, b) => a.diaOrden - b.diaOrden || a.salidaMin - b.salidaMin);
+
+  const diasPresentes = [...new Map(registros.map((r) => [r.diaSlug, { slug: r.diaSlug, nombre: r.diaNombre, orden: r.diaOrden }])).values()]
+    .sort((a, b) => a.orden - b.orden);
+
+  return { anio, registros, diasPresentes };
+}
+
+const cacheHorarios = new Map();
+/** Horarios de un año, enriquecidos (duración, carrera oficial, cruce con conteo). */
+export function getHorariosAnio(anio) {
+  const a = Number(anio);
+  if (!cacheHorarios.has(a)) cacheHorarios.set(a, construirHorarios(a));
+  return cacheHorarios.get(a);
+}
+
 // ---------- Formato ----------
 
 /** Formatea un número entero al estilo español, agrupando siempre los miles (3.958). */
@@ -159,6 +238,13 @@ export function fmt(n) {
 /** Formatea un porcentaje con un decimal (12,3 %). */
 export function fmtPct(n) {
   return `${Number(n).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+}
+
+/** Formatea una duración en minutos como "11 h 45 min". */
+export function fmtDur(min) {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
 }
 
 /** Variación porcentual entre dos valores (para la comparativa). Devuelve null si no procede. */

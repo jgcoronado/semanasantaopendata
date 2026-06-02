@@ -1,0 +1,115 @@
+---
+import { fmt, fmtDur } from '../lib/datos.js';
+
+const { registros, dias = [], anio, conColumnaDia = true, conFiltroDia = true } = Astro.props;
+
+const columnas = [
+  { key: 'diaOrden', etiqueta: 'Día', tipo: 'num', txt: true, soloConDia: true },
+  { key: 'nombre', etiqueta: 'Hermandad', tipo: 'txt', txt: true },
+  { key: 'salidaMin', etiqueta: 'Salida', tipo: 'num' },
+  { key: 'entradaMin', etiqueta: 'Entrada', tipo: 'num' },
+  { key: 'duracionMin', etiqueta: 'Duración', tipo: 'num', fuerte: true },
+  { key: 'carreraOficialMin', etiqueta: 'En Carrera Oficial', tipo: 'num' },
+  { key: 'partPorHora', etiqueta: 'Particip./hora', tipo: 'num' },
+].filter((c) => conColumnaDia || !c.soloConDia);
+---
+
+{conFiltroDia && (
+  <div class="controles">
+    <label class="campo">
+      Filtrar por día
+      <select id="filtro-dia-hor">
+        <option value="todos">Todos los días</option>
+        {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+      </select>
+    </label>
+    <p class="contador" id="contador-hor" aria-live="polite">{registros.length} hermandades</p>
+  </div>
+)}
+
+<div class="tabla-wrap">
+  <table class="datos" id="tabla-horarios">
+    <caption>
+      <strong>Horario oficial</strong> de 2026 (horas previstas). «En Carrera Oficial» = desde que
+      la cruz de guía entra en La Campana hasta que el último paso sale de la Catedral.
+      «Particip./hora» cruza el cortejo total con la duración. Pulsa una cabecera para ordenar.
+    </caption>
+    <thead>
+      <tr>
+        {columnas.map((c) => (
+          <th class={`orden${c.txt ? ' txt' : ''}`} data-key={c.key} data-tipo={c.tipo} scope="col">
+            <button type="button"><span>{c.etiqueta}</span><span class="flecha" aria-hidden="true"></span></button>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {registros.map((r) => (
+        <tr
+          data-dia={r.diaSlug}
+          data-slug={r.slug}
+          data-diaorden={r.diaOrden}
+          data-nombre={r.nombre}
+          data-salidamin={r.salidaMin}
+          data-entradamin={r.entradaMin}
+          data-duracionmin={r.duracionMin}
+          data-carreraoficialmin={r.carreraOficialMin}
+          data-partporhora={r.partPorHora ?? ''}
+        >
+          {conColumnaDia && <td class="txt"><span class="pildora-dia">{r.diaNombre}</span></td>}
+          <td class="txt"><a href={`/${anio}/hermandad/${r.slug}/`}>{r.nombre}</a></td>
+          <td>{r.horas.salida}</td>
+          <td>{r.horas.entrada}{r.entradaMin >= 1440 && <span class="dia-sig" title="día siguiente"> +1</span>}</td>
+          <td class="fuerte">{fmtDur(r.duracionMin)}</td>
+          <td>{fmtDur(r.carreraOficialMin)}</td>
+          <td>{r.partPorHora != null ? fmt(r.partPorHora) : '—'}</td>
+        </tr>
+      ))}
+      <tr class="sin-resultados" hidden><td colspan={columnas.length}>No hay hermandades para ese día.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const tabla = document.getElementById('tabla-horarios');
+  if (tabla) {
+    const tbody = tabla.querySelector('tbody');
+    const filas = Array.from(tbody.querySelectorAll('tr[data-slug]'));
+    const filaVacia = tbody.querySelector('.sin-resultados');
+    const select = document.getElementById('filtro-dia-hor');
+    const contador = document.getElementById('contador-hor');
+    let ordenKey = null, ordenAsc = true;
+
+    const valor = (f, key, tipo) => {
+      const raw = f.dataset[key.toLowerCase()];
+      return tipo === 'num' ? (raw === '' ? -Infinity : parseFloat(raw)) : (raw || '').toLowerCase();
+    };
+
+    function filtrar() {
+      const dia = select ? select.value : 'todos';
+      let n = 0;
+      for (const f of filas) { const ok = dia === 'todos' || f.dataset.dia === dia; f.hidden = !ok; if (ok) n++; }
+      if (contador) contador.textContent = `${n} hermandad${n === 1 ? '' : 'es'}`;
+      filaVacia.hidden = n !== 0;
+    }
+
+    function ordenar(key, tipo) {
+      ordenAsc = ordenKey === key ? !ordenAsc : true;
+      ordenKey = key;
+      const factor = ordenAsc ? 1 : -1;
+      [...filas].sort((a, b) => {
+        const va = valor(a, key, tipo), vb = valor(b, key, tipo);
+        return va < vb ? -factor : va > vb ? factor : 0;
+      }).forEach((f) => tbody.insertBefore(f, filaVacia));
+      tabla.querySelectorAll('thead th').forEach((th) => {
+        if (th.dataset.key === key) th.setAttribute('aria-sort', ordenAsc ? 'ascending' : 'descending');
+        else th.removeAttribute('aria-sort');
+      });
+    }
+
+    if (select) select.addEventListener('change', filtrar);
+    tabla.querySelectorAll('thead th.orden').forEach((th) => {
+      th.querySelector('button').addEventListener('click', () => ordenar(th.dataset.key, th.dataset.tipo));
+    });
+  }
+</script>

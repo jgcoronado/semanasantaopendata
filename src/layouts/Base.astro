@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { anios } from '../lib/datos.js';
+import { anios, aniosConHorarios } from '../lib/datos.js';
 
 const {
   title,
@@ -9,7 +9,10 @@ const {
   anioActivo = null,
   comparativaActiva = false,
   hermandadesActiva = false,
+  horariosActiva = false,
 } = Astro.props;
+
+const slugHorarios = aniosConHorarios[0]?.slug;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const anioActual = new Date().getFullYear();
@@ -56,6 +59,9 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
           {anios.map((a) => (
             <a href={`/${a.slug}/`} class={anioActivo === a.anio ? 'activo' : ''} aria-current={anioActivo === a.anio ? 'page' : undefined}>{a.anio}</a>
           ))}
+          {slugHorarios && (
+            <a href={`/${slugHorarios}/horarios/`} class={horariosActiva ? 'activo' : ''} aria-current={horariosActiva ? 'page' : undefined}>Horarios</a>
+          )}
           <a href="/hermandades/" class={hermandadesActiva ? 'activo' : ''} aria-current={hermandadesActiva ? 'page' : undefined}>Hermandades</a>
           <a href="/comparativa/" class={comparativaActiva ? 'activo' : ''} aria-current={comparativaActiva ? 'page' : undefined}>Comparativa</a>
         </nav>

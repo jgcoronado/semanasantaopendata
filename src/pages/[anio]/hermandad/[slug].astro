@@ -1,7 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
-import { anios, getAnio, fmt, fmtPct, variacion } from '../../../lib/datos.js';
+import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -53,6 +53,20 @@ const filasAnios = porAnioAsc.map((x, i) => {
 });
 
 const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
+
+// Horario oficial de esta hermandad en el año mostrado (si existe).
+const horario = hayHorarios(anioNum) ? getHorariosAnio(anioNum).registros.find((x) => x.id_hdad === r.id_hdad) : null;
+const itinerario = horario
+  ? [
+      { punto: 'Salida', hora: horario.horas.salida },
+      { punto: 'La Campana', hora: horario.horas.campana },
+      { punto: 'Sierpes', hora: horario.horas.sierpes },
+      { punto: 'Plaza S. Francisco', hora: horario.horas.plaza },
+      { punto: 'Catedral', hora: horario.horas.catedral },
+      { punto: 'Últ. paso (Catedral)', hora: horario.horas.ultimoPasoFuera },
+      { punto: 'Entrada', hora: horario.horas.entrada, sig: horario.entradaMin >= 1440 },
+    ]
+  : [];
 
 const metricasDesglose = [
   { etiqueta: 'Nazarenos', key: 'nazarenos' },
@@ -119,6 +133,28 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  {horario && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>Horario oficial {anio}</h2></div>
+      <p class="descargas-intro">
+        Duración <strong>{fmtDur(horario.duracionMin)}</strong> · en Carrera Oficial
+        <strong>{fmtDur(horario.carreraOficialMin)}</strong>
+        {horario.partPorHora != null && <> · <strong>{fmt(horario.partPorHora)}</strong> participantes/hora</>}.
+      </p>
+      <ul class="itinerario">
+        {itinerario.map((it) => (
+          <li>
+            <span class="it-punto">{it.punto}</span>
+            <span class="it-hora">{it.hora}{it.sig && <span class="dia-sig"> +1</span>}</span>
+          </li>
+        ))}
+      </ul>
+      <nav class="dia-nav" aria-label="Más">
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/horarios/`}>Ver todos los horarios →</a>
+      </nav>
+    </section>
+  )}
 
   <section class="panel contenedor">
     <div class="panel__cab"><h2>Desglose por año</h2></div>
