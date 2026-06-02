@@ -186,6 +186,33 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 /* ---------- Pestañas de año (cabecera) ---------- */
 .nav a.activo { opacity: 1; font-weight: 700; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; text-decoration-color: var(--oro); }
 
+/* Desplegable de año en nav */
+.nav-dd { position: relative; }
+.nav-dd__btn {
+  list-style: none; cursor: pointer; opacity: 0.92; font-size: inherit; font-family: inherit;
+  color: var(--blanco); background: none; border: none; padding: 0;
+  display: flex; align-items: center; gap: 0.25rem;
+  text-underline-offset: 5px; text-decoration-thickness: 2px;
+}
+.nav-dd__btn::-webkit-details-marker { display: none; }
+.nav-dd__btn:hover { opacity: 1; text-decoration: underline; }
+.nav-dd__btn.activo { opacity: 1; font-weight: 700; text-decoration: underline; text-decoration-color: var(--oro); }
+.nav-dd__flecha { font-size: 0.7em; transition: transform 0.15s; display: inline-block; }
+.nav-dd[open] .nav-dd__flecha { transform: rotate(180deg); }
+.nav-dd__panel {
+  position: absolute; top: calc(100% + 0.5rem); left: 50%; transform: translateX(-50%);
+  background: var(--morado-osc); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radio); padding: 0.4rem 0; min-width: 9rem;
+  display: flex; flex-direction: column; gap: 0; z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+.nav-dd__panel a {
+  padding: 0.55rem 1.1rem; opacity: 0.92; display: block;
+  color: var(--blanco); text-decoration: none;
+}
+.nav-dd__panel a:hover { opacity: 1; background: rgba(255,255,255,0.08); text-decoration: underline; }
+.nav-dd__panel a.activo { opacity: 1; font-weight: 700; text-decoration: underline; text-decoration-color: var(--oro); }
+
 /* ---------- Hub: tarjetas de año ---------- */
 .anios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
 .anio-card { display: flex; flex-direction: column; gap: 0.4rem; background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1.3rem; text-decoration: none; color: var(--tinta); box-shadow: var(--sombra); transition: transform 0.12s ease, border-color 0.12s ease; }
@@ -213,6 +240,17 @@ td.var.neg { color: #b5462f; }
 
 /* ---------- Año en H1 de hermandad ---------- */
 .h1-anio { color: var(--oro); font-weight: 700; }
+
+/* ---------- Leyenda de días (horarios) ---------- */
+.leyenda-dias { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+.leyenda-dias__item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--tinta); }
+
+/* ---------- Horarios ---------- */
+.dia-sig { color: var(--gris); font-size: 0.75em; }
+.itinerario { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.6rem; margin: 0.4rem 0 0; padding: 0; list-style: none; }
+.itinerario li { background: var(--blanco); border: 1px solid var(--linea); border-radius: 8px; padding: 0.6rem 0.7rem; }
+.itinerario .it-punto { font-size: 0.78rem; color: var(--gris); display: block; }
+.itinerario .it-hora { font-size: 1.15rem; font-weight: 700; color: var(--morado-osc); }
 
 /* ---------- Columna del año actual (desglose por año) ---------- */
 table.datos td.col-actual { background: var(--resalte); }
