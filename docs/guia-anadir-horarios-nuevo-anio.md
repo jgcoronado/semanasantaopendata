@@ -77,7 +77,7 @@ columnas: nombre, salida, campana, sierpes, plaza, catedral, último paso fuera,
    separador `;`:
    ```
    nombre;salida;campana;sierpes;plaza;catedral;ultimoPasoFuera;entrada
-   sagrada entrada;14:15;15:35;...
+   la borriquita;14:15;15:35;...
    ```
 2. **Verificar que los nombres** coinciden con el mapeo `idPorNombre` del script (ver
    sección 4). Si hay nombres nuevos o variantes (p. ej. "Las Tres Caídas" vs "San

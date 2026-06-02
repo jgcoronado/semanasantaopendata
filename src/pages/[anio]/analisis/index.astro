@@ -1,0 +1,171 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getCruceNazarenosHorarios, getHorariosEnCalle, dias, fmt, fmtDur, variacion } from '../../../lib/datos.js';
+import GraficasAnalisis from '../../../components/GraficasAnalisis.astro';
+
+export function getStaticPaths() {
+  // Only generate for years that have horarios (since analysis requires both datasets)
+  // We could also import aniosConHorarios from datos.js, but let's reuse the same logic as horarios page.
+  // We'll import aniosConHorarios to be consistent.
+  const { aniosConHorarios } = await import('../../../lib/datos.js');
+  return aniosConHorarios.map((a) => ({ params: { anio: a.slug } }));
+}
+
+const { anio } = Astro.params;
+const anioNum = Number(anio);
+
+// Datos cruzados
+const { registros: registrosCruzado, diasPresentes } = getCruceNazarenosHorarios(anioNum);
+// Datos de nazarenos puros (para posibles comparativas o notas)
+const { registros: registrosNazarenos, totalesPorDia, totalGeneral } = getAnio(anioNum);
+// Horarios en calle (serie temporal)
+const { serieTiempo, maxNazarenos } = getHorariosEnCalle(anioNum);
+
+// Determinar si hay datos de dos años para comparativa
+const aniosDisponibles = await import('../../../lib/datos.js');
+const aniosConHorarios = aniosDisponibles.aniosConHorarios;
+const tieneComparativa = aniosConHorarios.length >= 2 && aniosConHorarios.some(a => a.anio !== anioNum);
+
+// Título y descripción
+const title = `Análisis de la Semana Santa de Sevilla ${anio} | Nazarenos × Horarios | Open Data`;
+const description =
+  `Análisis cruzado entre el conteo de nazarenos y los horarios oficiales de la Semana Santa de Sevilla ${anio}. ` +
+  `Duración, densidad, simultaneidad en calle y comparativas interanuales.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Análisis cruzado Nazarenos-Horarios Semana Santa de Sevilla ${anio}`,
+  description: `Métricas derivadas de la combinación del conteo de nazarenos y horarios oficiales de cada hermandad en la Semana Santa de Sevilla ${anio}: duración de la estación de penitencia, nazarenos por minuto, simultaneidad en calle, etc.`,
+  url: new URL(`/${anio}/analisis/`, Astro.site).href,
+  inLanguage: 'es',
+  isPartOf: { '@type': 'Dataset', name: `Conteo de la Semana Santa de Sevilla ${anio}`, url: new URL(`/${anio}/`, Astro.site).href },
+  temporalCoverage: anio,
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  isAccessibleForFree: true,
+  creator: { '@type': 'Organization', name: 'Semana Santa Open Data' },
+  distribution: [
+    { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: new URL(`/${anio}/datos/analisis.csv`, Astro.site).href },
+    { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: new URL(`/${anio}/datos/analisis.json`, Astro.site).href },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum} analisisActiva={true}>
+  <section class="hero">
+    <div class="contenedor">
+      <h1>Análisis cruzado: Nazarenos × Horarios</h1>
+      <p>
+        Métricas derivadas de combinar el conteo oficial de nazarenos con los horarios de salida y entrada de cada hermandad.
+        Descubre la duración de la estación de penitencia, la densidad del desfile y la simultaneidad en calle.
+      </p>
+
+      {registrosCruzado.some(r => r.incidencia === 'sin_datos') && (
+        <p class="nota-aviso">
+          ℹ️ Algunas hermandades no tienen datos de nazarenos en {anio} (posibles suspensiones por lluvia) y aparecen marcadas en la tabla.
+        </p>
+      )}
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(registrosCruzado.filter(r => r.incidencia === null).length)}</div>
+          <div class="kpi__lbl">Hermandades con datos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(registrosCruzado.filter(r => r.incidencia === 'sin_datos').length)}</div>
+          <div class="kpi__lbl">Sin datos de nazarenos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmtDur(Math.round(registrosCruzado.filter(r => r.incidencia === null).reduce((s, r) => s + r.duracionMin, 0) / registrosCruzado.filter(r => r.incidencia === null).length))}</div>
+          <div class="kpi__lbl">Duración media estación</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(maxNazarenos)}</div>
+          <div class="kpi__lbl">Máximo nazarenos simultáneos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor" id="graficas">
+    <div class="panel__cab"><h2>Gráficas de análisis</h2></div>
+    <GraficasAnalisis
+      registros={registrosCruzado}
+      dias={diasPresentes}
+      serieTiempo={serieTiempo}
+      anio={anioNum}
+      tieneComparativa={tieneComparativa}
+    />
+  </section>
+
+  <section class="panel contenedor" id="tabla">
+    <div class="panel__cab"><h2>Tabla de datos cruzados</h2></div>
+    <p>
+      Cada fila representa una hermandad. Las columnas muestran horarios, conteo de nazarenos y métricas derivadas.
+      Ordena por cualquier cabecera y filtra por día o por incidencia.
+    </p>
+    <!-- We'll create a specific component for this table later, or reuse TablaNazarenos with adapted columns -->
+    <!-- For now, let's create a simple table; we can replace with a component later -->
+    <table class="tabla-datos">
+      <thead>
+        <tr>
+          <th>Hermandad</th>
+          <th>Día</th>
+          <th>Salida</th>
+          <th>Entrada</th>
+          <th>Duración</th>
+          <th>Nazarenos</th>
+          <th>Total cortejo</th>
+          <th>Nazarenos/min</th>
+          <th>Total/min</th>
+          <th>% Nazarenos/día</th>
+          <th>% Cortejo/día</th>
+          <th>Incidencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        {registrosCruzado.map((r) => (
+          <tr key={r.id_hdad}>
+            <td>{r.nombre}</td>
+            <td>{r.diaNombre}</td>
+            <td>{r.horas.salida}</td>
+            <td>{r.horas.entrada}</td>
+            <td>{fmtDur(r.duracionMin)}</td>
+            <td>{r.nazarenos !== null ? fmt(r.nazarenos) : '—'}</td>
+            <td>{r.noTotal !== null ? fmt(r.noTotal) : '—'}</td>
+            <td>{r.nazarenosPorMinuto !== null ? r.nazarenosPorMinuto : '—'}</td>
+            <td>{r.totalPorMinuto !== null ? r.totalPorMinuto : '—'}</td>
+            <td>{r.pctNaz !== null ? fmtPct(r.pctNaz) : '—'}</td>
+            <td>{r.pctTotal !== null ? fmtPct(r.pctTotal) : '—'}</td>
+            <td>{r.incidencia === 'sin_datos' ? 'Sin datos (lluvia?)' : 'Normal'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  {tieneComparativa && (
+    <section class="panel contenedor" id="comparativa">
+      <div class="panel__cab"><h2>Comparativa {aniosConHorarios.map(a => a.anio).join(' y ')}</h2></div>
+      <p>
+        Variación porcentual de nazarenos y duración entre los años disponibles. Las hermandades sin datos en alguno de los años
+        se muestran como n/d.
+      </p>
+      <!-- Placeholder for comparative table/component -->
+      <div class="comparativa-placeholder">
+        Comparativa interanual (por implementar)
+      </div>
+    </section>
+  )}
+
+  <section class="panel contenedor" id="descargas">
+    <div class="panel__cab"><h2>Datos abiertos</h2></div>
+    <p class="descargas-intro">
+      Descarga el conjunto completo de análisis cruzado de {anio} ({fmt(registrosCruzado.length)} hermandades) para reutilizarlo libremente citando la fuente.
+    </p>
+    <div class="descargas">
+      <a class="btn" href={`/${anio}/datos/analisis.csv`} download>⬇ Descargar CSV</a>
+      <a class="btn btn--sec" href={`/${anio}/datos/analisis.json`}>Ver JSON</a>
+    </div>
+  </section>
+</Base>

@@ -10,6 +10,7 @@ const {
   comparativaActiva = false,
   hermandadesActiva = false,
   horariosActiva = false,
+  analisisActiva = false,
 } = Astro.props;
 
 const slugHorarios = aniosConHorarios[0]?.slug;
@@ -66,8 +67,9 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
               <details class={`nav-dd${esActivo ? ' nav-dd--activo' : ''}`} open={esActivo || undefined}>
                 <summary class={`nav-dd__btn${esActivo ? ' activo' : ''}`}>{a.anio} <span class="nav-dd__flecha" aria-hidden="true">▾</span></summary>
                 <div class="nav-dd__panel">
-                  <a href={`/${a.slug}/`} class={esActivo && !horariosActiva ? 'activo' : ''}>Nazarenos</a>
-                  <a href={`/${a.slug}/horarios/`} class={esActivo && horariosActiva ? 'activo' : ''}>Horarios</a>
+                  <a href={`/${a.slug}/`} class={esActivo && !horariosActiva && !analisisActiva ? 'activo' : ''}>Nazarenos</a>
+                  <a href={`/${a.slug}/horarios/`} class={esActivo && horariosActiva && !analisisActiva ? 'activo' : ''}>Horarios</a>
+                  <a href={`/${a.slug}/analisis/`} class={esActivo && analisisActiva ? 'activo' : ''}>Análisis</a>
                 </div>
               </details>
             );

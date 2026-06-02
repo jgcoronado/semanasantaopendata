@@ -1,5 +1,5 @@
 [
-  { "id_hdad": 1,  "nombre": "Sagrada Entrada",             "dia": "domingo-de-ramos",     "slug": "sagrada-entrada" },
+  { "id_hdad": 1,  "nombre": "La Borriquita",             "dia": "domingo-de-ramos",     "slug": "sagrada-entrada" },
   { "id_hdad": 2,  "nombre": "La Cena",                     "dia": "domingo-de-ramos",     "slug": "la-cena" },
   { "id_hdad": 3,  "nombre": "Jesús Despojado",             "dia": "domingo-de-ramos",     "slug": "jesus-despojado" },
   { "id_hdad": 4,  "nombre": "La Hiniesta",                 "dia": "domingo-de-ramos",     "slug": "la-hiniesta" },

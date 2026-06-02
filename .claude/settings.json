@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\usuario\\\\Documents\\\\semanasantaopendata\" -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\usuario\\\\Documents\\\\semanasantaopendata\" -File)",
+      "Bash(Select-Object Name)",
+      "Bash(mkdir -p \"c:\\\\Users\\\\usuario\\\\Documents\\\\semanasantaopendata\\\\src\\\\pages\\\\[anio]\\\\analisis\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\usuario\\Documents\\semanasantaopendata\\src\\pages\\[anio]"
+    ]
+  }
+}

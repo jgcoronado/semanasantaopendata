@@ -1,0 +1,336 @@
+---
+const { registros, dias, serieTiempo, anio, tieneComparativa } = Astro.props;
+
+const diasOrd = [...dias].sort((a, b) => a.orden - b.orden);
+
+// Codificación visual: máx. 5 colores
+// Días 1-5: barra SÓLIDA. Días 6-9: mismo color + rayas dobles blancas (para distinguir).
+const COLORES_5 = ['#5b2a86', '#c8a24a', '#3d8a6b', '#b5462f', '#2f6fb5'];
+const SIMBOLOS_9 = ['circle','triangle','rect','star','crossRot','triangle','rect','star','crossRot'];
+
+const estilosDias = diasOrd.map((d) => ({
+  nombre: d.nombre,
+  orden: d.orden,
+  color: COLORES_5[(d.orden - 1) % COLORES_5.length],
+  simbolo: SIMBOLOS_9[(d.orden - 1) % SIMBOLOS_9.length],
+  patron: d.orden <= 5 ? 'solido' : 'doble',
+}));
+
+const altoBarras = Math.max(420, registros.length * 18);
+
+const datosCliente = {
+  dias: diasOrd.map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden })),
+  registros: registros.map((r) => ({
+    nombre: r.nombre,
+    diaSlug: r.diaSlug,
+    diaOrden: r.diaOrden,
+    salidaMin: r.salidaMin,
+    entradaMin: r.entradaMin,
+    duracionMin: r.duracionMin,
+    noNaz: r.noNaz,
+    noTotal: r.noTotal,
+    nazarenosPorMinuto: r.nazarenosPorMinuto,
+    totalPorMinuto: r.totalPorMinuto,
+    pctNaz: r.pctNaz,
+    pctTotal: r.pctTotal,
+    incidencia: r.incidencia,
+  })),
+  serieTiempo: serieTiempo,
+};
+---
+
+<!-- ======================== POR DÍA ======================== -->
+<section class="panel contenedor" id="analisis-dia">
+  <div class="panel__cab"><h2>Por día</h2></div>
+  <div class="controles">
+    <label class="campo">
+      Día
+      <select id="sel-dia-analisis">
+        {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div class="graficas-grid">
+    <figure class="grafica grafica--ancha">
+      <figcaption>Duración de la estación de penitencia (salida → entrada)</figcaption>
+      <div class="grafica__lienzo" style="height:460px">
+        <canvas id="gantt-duracion" aria-label="Duración de la estación por hermandad"></canvas>
+      </div>
+    </figure>
+    <figure class="grafica grafica--ancha">
+      <figcaption>Densidad del desfile: nazarenos por minuto de estación</figcaption>
+      <div class="grafica__lienzo" style="height:460px">
+        <canvas id="densidad-nazarenos" aria-label="Nazarenos por minuto"></canvas>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================== SIMULTANEIDAD EN CALLE ======================== -->
+<section class="panel contenedor" id="calle-simultanea">
+  <div class="panel__cab"><h2>Simultaneidad en calle</h2></div>
+
+  <p class="descargas-intro">
+    Nazarenos simultáneos en la calle a lo largo del día (00:00-24:00), sumando todas las hermandades que estan en su estación de penitencia a esa hora.
+  </p>
+
+  <figure class="grafica grafica--ancha">
+    <figcaption>Nazarenos en calle por hora del día</figcaption>
+    <div class="grafica__lienzo" style="height:400px">
+      <canvas id="nazarenos-en-calle" aria-label="Nazarenos simultáneos en calle"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== DENSIDAD Y COMPARATIVA ======================== -->
+<section class="panel contenedor" id="analisis-global">
+  <div class="panel__cab"><h2>Análisis global</h2></div>
+
+  <!-- Leyenda de días (color + indicador de sólido / doble raya) -->
+  <ul class="leyenda-dias" aria-label="Días procesionales">
+    {estilosDias.map((e) => (
+      <li class="leyenda-dias__item">
+        <svg width="28" height="16" aria-hidden="true" style="flex-shrink:0">
+          <rect width="28" height="16" rx="3" fill={e.color} />
+          {e.patron === 'doble' && (
+            <>
+              <line x1="4"  y1="16" x2="16" y2="4"  stroke="white" stroke-width="1.5" opacity="0.85" />
+              <line x1="10" y1="16" x2="22" y2="4"  stroke="white" stroke-width="1.5" opacity="0.85" />
+            </>
+          )}
+          <rect width="28" height="16" rx="3" fill="none" stroke={e.color} stroke-width="1" />
+        </svg>
+        <span>{e.nombre}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="descargas-intro" style="margin-top:.6rem">
+    Cada día tiene un color y símbolo únicos. Las barras con rayas dobles blancas comparten color
+    con otro día (se usan cuando los 5 colores se agotan).
+  </p>
+
+  <div class="graficas-grid">
+    <figure class="grafica grafica--ancha">
+      <figcaption>Duración vs. tamaño del cortejo</figcaption>
+      <div class="grafica__lienzo" style="height:420px">
+        <canvas id="dispersion-dur-vs-total" aria-label="Duración frente a participantes del cortejo"></canvas>
+      </div>
+    </figure>
+    <figure class="grafica grafica--ancha">
+      <figcaption>Nazarenos por minuto (densidad de desfile)</figcaption>
+      <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
+        <canvas id="nazarenos-por-minuto" aria-label="Nazarenos por minuto por hermandad"></canvas>
+      </div>
+    </figure>
+  </div>
+</section>
+
+{tieneComparativa && (
+  <section class="panel contenedor" id="comparativa-interanual">
+    <div class="panel__cab"><h2>Comparativa interanual</h2></div>
+    <p>
+      Variación porcentual entre años para hermandades que tienen datos en ambos años.
+      Las hermandades que faltan en alguno de los años se muestran como n/d.
+    </p>
+    <div class="comparativa-placeholder">
+      Comparativa interanual (por implementar en futuro desarrollo)
+    </div>
+  </section>
+)}
+
+<script type="application/json" id="datos-analisis" set:html={JSON.stringify(datosCliente)}></script>
+<script>
+  import {
+    Chart, BarController, BarElement, LineController, LineElement,
+    PointElement, ScatterController, CategoryScale, LinearScale,
+    Tooltip, Legend, Filler,
+  } from 'chart.js';
+  Chart.register(BarController, BarElement, LineController, LineElement, PointElement,
+    ScatterController, CategoryScale, LinearScale, Tooltip, Legend, Filler);
+
+  const datos = JSON.parse(document.getElementById('datos-analisis').textContent);
+
+  const reloj = (m) => `${String(Math.floor((((m%1440)+1440)%1440)/60)).padStart(2,'0')}:${String(((m%60)+60)%60).padStart(2,'0')}`;
+  const dur   = (m) => { const h = Math.floor(m/60); return h > 0 ? `${h} h ${String(m%60).padStart(2,'0')} min` : `${m} min`; };
+
+  // ── Codificación visual (igual que frontmatter) ──
+  const COLORES_5 = ['#5b2a86','#c8a24a','#3d8a6b','#b5462f','#2f6fb5'];
+  const SIMBOLOS_9 = ['circle','triangle','rect','star','crossRot','triangle','rect','star','crossRot'];
+  const estiloDia = (orden) => ({
+    color:  COLORES_5[(orden - 1) % COLORES_5.length],
+    simbolo: SIMBOLOS_9[(orden - 1) % SIMBOLOS_9.length],
+    patron: orden <= 5 ? 'solido' : 'doble',
+  });
+
+  const MORADO = '#5b2a86';
+  const ORO    = '#c8a24a';
+  const VERDE  = '#3d8a6b';
+
+  // ── Fondo de barra: sólido O sólido + rayas dobles blancas ──
+  const _patCtx = document.createElement('canvas').getContext('2d');
+  function bgBarra(color, patron) {
+    if (patron === 'solido') return color;                 // sin patrón, puro color
+    // Tile sólido del color + dos líneas blancas sutiles (rayas dobles)
+    const s = 20;
+    const tile = document.createElement('canvas');
+    tile.width = tile.height = s;
+    const ctx = tile.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, s, s);
+    ctx.strokeStyle = 'rgba(255,255,255,0.80)';
+    ctx.lineWidth = 1.5;
+    // Primera raya
+    ctx.beginPath(); ctx.moveTo(0, s - 4); ctx.lineTo(s - 4, 0); ctx.stroke();
+    // Segunda raya (desplazada +6px)
+    ctx.beginPath(); ctx.moveTo(6, s); ctx.lineTo(s, 6); ctx.stroke();
+    return _patCtx.createPattern(tile, 'repeat');
+  }
+
+  // ── Gantt: Duración de la estación ──
+  const chartGantt = new Chart(document.getElementById('gantt-duracion'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: 'rgba(91,42,134,0.78)', borderColor: MORADO, borderWidth: 1, borderSkipped: false }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${reloj(c.raw[0])} – ${reloj(c.raw[1])} (${dur(c.raw[1]-c.raw[0])})` } } },
+      scales: { x: { min:0, max:1440, ticks: { stepSize:60, callback: (v) => reloj(v) }, title: { display:true, text:'Hora' } }, y: { ticks: { autoSkip:false } } },
+    },
+  });
+
+  // ── Densidad: Nazarenos por minuto ──
+  const chartDensidad = new Chart(document.getElementById('densidad-nazarenos'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: 'rgba(61,138,107,0.78)', borderColor: VERDE, borderWidth: 1, borderSkipped: false }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.raw} nazarenos/min` } } },
+      scales: { x: { beginAtZero:true, ticks: { callback: (v) => v } }, y: { ticks: { autoSkip:false } } },
+    },
+  });
+
+  const selDia = document.getElementById('sel-dia-analisis');
+  function pintarDia() {
+    // Filtrar solo registros con datos (excluir sin_datos para las gráficas de duración y densidad)
+    const regsConDatos = datos.registros.filter(r => r.incidencia === null && r.diaSlug === selDia.value);
+    const regsOrdenados = regsConDatos.sort((a,b) => a.salidaMin - b.salidaMin);
+
+    // Gantt: duración
+    chartGantt.data.labels = regsOrdenados.map(r => r.nombre);
+    chartGantt.data.datasets[0].data = regsOrdenados.map(r => [r.salidaMin, r.entradaMin]);
+    chartGantt.options.scales.x.min = Math.min(...regsOrdenados.map(r => r.salidaMin)) - 20;
+    chartGantt.options.scales.x.max = Math.max(...regsOrdenados.map(r => r.entradaMin)) + 20;
+    chartGantt.update();
+
+    // Densidad: nazarenos por minuto
+    chartDensidad.data.labels = regsOrdenados.map(r => r.nombre);
+    chartDensidad.data.datasets[0].data = regsOrdenados.map(r => r.nazarenosPorMinuto || 0);
+    chartDensidad.update();
+  }
+  selDia.addEventListener('change', pintarDia);
+  pintarDia();
+
+  // ── Nazarenos en calle por hora (serie temporal) ──
+  const chartCalle = new Chart(document.getElementById('nazarenos-en-calle'), {
+    type: 'line',
+    data: {
+      labels: datos.serieTiempo.map(p => p.hhmm),
+      datasets: [{
+        label: 'Nazarenos simultáneos en calle',
+        data: datos.serieTiempo.map(p => p.nazarenos),
+        borderColor: '#e74c3c',
+        backgroundColor: 'rgba(231,76,60,0.2)',
+        fill: true,
+        tension: 0.25,
+        pointRadius: 0,
+        pointHoverRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          callbacks: {
+            label: (c) => `${c.formattedValue} nazarenos`
+          }
+        },
+      },
+      scales: {
+        y: { beginAtZero:true, ticks: { callback: (v) => v }, title: { display:true, text:'Nazarenos' } },
+        x: { ticks: { maxTicksLimit:12, callback: (value) => {
+          const hora = parseInt(value.split(':')[0]);
+          return hora % 6 === 0 ? value : ''; // Mostrar cada 6 horas para no saturar
+        }} }
+      },
+    },
+  });
+
+  // ── Dispersión: Duración vs. Total cortejo (un dataset por día) ──
+  const scatterDatasets = datos.dias
+    .filter(d => datos.registros.some(r => r.diaSlug===d.slug && r.incidencia === null && r.noTotal!=null))
+    .map(d => {
+      const e = estiloDia(d.orden);
+      return {
+        label: d.nombre,
+        data: datos.registros
+          .filter(r => r.diaSlug===d.slug && r.incidencia === null && r.noTotal!=null)
+          .map(r => ({ x:r.noTotal, y:+(r.duracionMin/60).toFixed(1), nombre:r.nombre, incidencia:r.incidencia })),
+        backgroundColor: e.color + 'bb',
+        borderColor: e.color,
+        pointStyle: e.simbolo,
+        pointRadius: 7,
+        pointHoverRadius: 9,
+      };
+    });
+
+  new Chart(document.getElementById('dispersion-dur-vs-total'), {
+    type: 'scatter',
+    data: { datasets: scatterDatasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom', labels: { usePointStyle:true, pointStyleWidth:14, padding:14 } },
+        tooltip: { callbacks: { label: (c) => {
+          const punto = c.raw;
+          let txt = `${punto.nombre}: ${punto.x.toLocaleString('es-ES')} participantes · ${punto.y} h`;
+          if (punto.incidencia === 'sin_datos') txt += ' (sin datos de nazarenos)';
+          return txt;
+        } } },
+      },
+      scales: {
+        x: { title: { display:true, text:'Participantes en el cortejo' }, beginAtZero:true },
+        y: { title: { display:true, text:'Duración de la estación (horas)' }, beginAtZero:true },
+      },
+    },
+  });
+
+  // ── Barras de Nazarenos por minuto: sólido O sólido + rayas dobles ──
+  // Ordenar por nazarenosPorMinuto descendente (solo los que tienen datos)
+  const ordenDens = [...datos.registros]
+    .filter(r => r.incidencia === null && r.nazarenosPorMinuto !== null)
+    .sort((a,b) => (b.nazarenosPorMinuto || 0) - (a.nazarenosPorMinuto || 0));
+
+  new Chart(document.getElementById('nazarenos-por-minuto'), {
+    type: 'bar',
+    data: {
+      labels: ordenDens.map(r => r.nombre),
+      datasets: [{
+        data: ordenDens.map(r => r.nazarenosPorMinuto || 0),
+        backgroundColor: ordenDens.map(r => { const e=estiloDia(r.diaOrden); return bgBarra(e.color, e.patron); }),
+        borderColor:     ordenDens.map(r => estiloDia(r.diaOrden).color),
+        borderWidth: 1,
+      }],
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display:false }, tooltip: { callbacks: { label: (c) => `${c.raw} nazarenos/min` } } },
+      scales: {
+        x: { beginAtZero:true, ticks: { callback: (v) => v } },
+        y: { ticks: { autoSkip:false, font: { size:10 } } },
+      },
+    },
+  });
+</script>

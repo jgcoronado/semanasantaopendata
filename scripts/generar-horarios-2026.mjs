@@ -6,7 +6,7 @@
 import { writeFileSync } from 'node:fs';
 
 const idPorNombre = {
-  'sagrada entrada': 1, 'la cena': 2, 'jesus despojado': 3, 'la hiniesta': 4, 'la paz': 5,
+  'la borriquita': 1, 'la cena': 2, 'jesus despojado': 3, 'la hiniesta': 4, 'la paz': 5,
   'san roque': 6, 'la estrella': 7, 'la amargura': 8, 'el amor': 9,
   'san pablo': 10, 'redencion': 11, 'santa genoveva': 12, 'santa marta': 13, 'san gonzalo': 14,
   'vera cruz': 15, 'penas': 16, 'aguas': 17, 'museo': 18,
@@ -26,7 +26,7 @@ const idPorNombre = {
 
 // nombre;salida;campana;sierpes;plaza;catedral;ultimoPasoFuera;entrada
 const datos = `
-sagrada entrada;14,15;15,35;15,42;16,15;16,41;17,2;18,3
+la borriquita;14,15;15,35;15,42;16,15;16,41;17,2;18,3
 la cena;14;15,55;16,02;16,35;17,01;17,56;22
 jesus despojado;14,2;16,31;16,38;17,11;17,37;18,26;22,45
 la hiniesta;13,45;17,01;17,08;17,41;18,07;19,12;23,45
