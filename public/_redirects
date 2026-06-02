@@ -1,0 +1,5 @@
+# Rutas antiguas (sitio de un solo año) -> nueva estructura por año
+/dia/*                          /2026/dia/:splat        301
+/hermandad/*                    /2026/hermandad/:splat  301
+/datos/semana-santa-2026.csv    /2026/datos/conteo.csv  301
+/datos/semana-santa-2026.json   /2026/datos/conteo.json 301

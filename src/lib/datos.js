@@ -1,99 +1,155 @@
-// Capa de datos: carga los JSON fuente, valida la integridad en build,
-// hace el "join" hermandad <-> nazarenos_2026 y precalcula totales y % por día.
-// Todo esto se ejecuta en build (SSG): la web final es HTML estático.
+// Capa de datos MULTI-AÑO. Carga los JSON fuente, valida integridad en build,
+// une hermandad <-> nazarenos_AAAA y precalcula totales y % por día, para cada año.
+// Auto-descubre los ficheros `nazarenos-AAAA.json`: añadir un año = soltar su JSON
+// y añadir su entrada en `anios.json`. Todo se ejecuta en build (SSG).
 
 import hermandadesRaw from '../data/hermandades.json';
-import nazarenosRaw from '../data/nazarenos-2026.json';
 import diasRaw from '../data/dias.json';
+import aniosRaw from '../data/anios.json';
 
-/** Días en orden litúrgico. */
+// Auto-descubrimiento de los datos por año.
+const ficheros = import.meta.glob('../data/nazarenos-*.json', { eager: true });
+const datosPorAnio = {};
+for (const [ruta, mod] of Object.entries(ficheros)) {
+  const m = ruta.match(/nazarenos-(\d{4})\.json$/);
+  if (m) datosPorAnio[Number(m[1])] = mod.default;
+}
+
+/** Días en orden litúrgico (catálogo maestro de 9 días). */
 export const dias = [...diasRaw].sort((a, b) => a.orden - b.orden);
-
 const diaPorSlug = new Map(dias.map((d) => [d.slug, d]));
-const nazPorHdad = new Map(nazarenosRaw.map((n) => [n.idHdad, n]));
+const hdadPorId = new Map(hermandadesRaw.map((h) => [h.id_hdad, h]));
 
-// --- Validación de integridad referencial (falla el build si algo no cuadra) ---
-for (const h of hermandadesRaw) {
-  if (!nazPorHdad.has(h.id_hdad)) {
-    throw new Error(`[datos] Falta registro nazarenos_2026 para hermandad ${h.id_hdad} (${h.nombre}).`);
-  }
-  if (!diaPorSlug.has(h.dia)) {
-    throw new Error(`[datos] Día desconocido "${h.dia}" en la hermandad "${h.nombre}".`);
-  }
-}
-if (nazarenosRaw.length !== hermandadesRaw.length) {
-  throw new Error(`[datos] nazarenos_2026 (${nazarenosRaw.length}) y hermandades (${hermandadesRaw.length}) no coinciden en número.`);
-}
+/** Años disponibles, del más reciente al más antiguo, con su metadato. */
+export const anios = [...aniosRaw]
+  .sort((a, b) => b.anio - a.anio)
+  .map((a) => ({ ...a, slug: String(a.anio) }));
+
+/** Año principal (el más reciente). */
+export const anioPrincipal = anios[0].anio;
 
 const METRICAS = ['nazarenos', 'penitentes', 'noNaz', 'acolitos', 'monaguillos', 'acompCortejo', 'noTotal'];
 
-// --- Totales por día ---
-const totalesPorDiaMap = new Map(
-  dias.map((d) => [d.slug, { slug: d.slug, nombre: d.nombre, orden: d.orden, hermandades: 0, ...Object.fromEntries(METRICAS.map((m) => [m, 0])) }])
-);
-for (const h of hermandadesRaw) {
-  const n = nazPorHdad.get(h.id_hdad);
-  const t = totalesPorDiaMap.get(h.dia);
-  t.hermandades += 1;
-  for (const m of METRICAS) t[m] += n[m];
+function construirAnio(anio) {
+  const naz = datosPorAnio[anio];
+  if (!naz) throw new Error(`[datos] No hay datos (nazarenos-${anio}.json) para el año ${anio}.`);
+
+  const nazPorHdad = new Map(naz.map((n) => [n.idHdad, n]));
+
+  // Validación: cada registro apunta a una hermandad del catálogo.
+  for (const n of naz) {
+    const h = hdadPorId.get(n.idHdad);
+    if (!h) throw new Error(`[datos] ${anio}: idHdad ${n.idHdad} no existe en el catálogo de hermandades.`);
+    if (!diaPorSlug.has(h.dia)) throw new Error(`[datos] Día desconocido "${h.dia}" en la hermandad "${h.nombre}".`);
+  }
+
+  // Totales por día (solo días con datos ese año).
+  const totalesMap = new Map();
+  for (const n of naz) {
+    const h = hdadPorId.get(n.idHdad);
+    if (!totalesMap.has(h.dia)) {
+      const d = diaPorSlug.get(h.dia);
+      totalesMap.set(h.dia, { slug: d.slug, nombre: d.nombre, orden: d.orden, hermandades: 0, ...Object.fromEntries(METRICAS.map((m) => [m, 0])) });
+    }
+    const t = totalesMap.get(h.dia);
+    t.hermandades += 1;
+    for (const m of METRICAS) t[m] += n[m];
+  }
+  const totalesPorDia = [...totalesMap.values()].sort((a, b) => a.orden - b.orden);
+  const diasPresentes = totalesPorDia.map((t) => ({ slug: t.slug, nombre: t.nombre, orden: t.orden, hermandades: t.hermandades }));
+
+  // Registros enriquecidos (join + % sobre su día).
+  const registros = naz.map((n) => {
+    const h = hdadPorId.get(n.idHdad);
+    const d = diaPorSlug.get(h.dia);
+    const t = totalesMap.get(h.dia);
+    return {
+      anio,
+      id_hdad: h.id_hdad,
+      nombre: h.nombre,
+      slug: h.slug,
+      diaSlug: h.dia,
+      diaNombre: d.nombre,
+      diaOrden: d.orden,
+      nazarenos: n.nazarenos,
+      penitentes: n.penitentes,
+      noNaz: n.noNaz,
+      acolitos: n.acolitos,
+      monaguillos: n.monaguillos,
+      acompCortejo: n.acompCortejo,
+      noTotal: n.noTotal,
+      pctNaz: t.noNaz ? (n.noNaz / t.noNaz) * 100 : 0,
+      pctTotal: t.noTotal ? (n.noTotal / t.noTotal) * 100 : 0,
+    };
+  });
+  registros.sort((a, b) => a.diaOrden - b.diaOrden || b.noTotal - a.noTotal);
+
+  const totalGeneral = registros.reduce(
+    (acc, r) => { for (const m of METRICAS) acc[m] += r[m]; return acc; },
+    { hermandades: registros.length, dias: diasPresentes.length, ...Object.fromEntries(METRICAS.map((m) => [m, 0])) }
+  );
+
+  return { anio, registros, totalesPorDia, diasPresentes, totalGeneral };
 }
 
-/** Totales por día, en orden litúrgico. */
-export const totalesPorDia = [...totalesPorDiaMap.values()].sort((a, b) => a.orden - b.orden);
+const cache = new Map();
+/** Devuelve los datos calculados de un año: { registros, totalesPorDia, diasPresentes, totalGeneral }. */
+export function getAnio(anio) {
+  const a = Number(anio);
+  if (!cache.has(a)) cache.set(a, construirAnio(a));
+  return cache.get(a);
+}
 
-// --- Registros enriquecidos: join hermandad + nazarenos + día + % sobre su día ---
-export const registros = hermandadesRaw.map((h) => {
-  const n = nazPorHdad.get(h.id_hdad);
-  const dia = diaPorSlug.get(h.dia);
-  const t = totalesPorDiaMap.get(h.dia);
-  return {
-    id_hdad: h.id_hdad,
-    nombre: h.nombre,
-    slug: h.slug,
-    diaSlug: h.dia,
-    diaNombre: dia.nombre,
-    diaOrden: dia.orden,
-    nazarenos: n.nazarenos,
-    penitentes: n.penitentes,
-    noNaz: n.noNaz,
-    acolitos: n.acolitos,
-    monaguillos: n.monaguillos,
-    acompCortejo: n.acompCortejo,
-    noTotal: n.noTotal,
-    // % de esta hermandad respecto al total de su mismo día
-    pctNaz: t.noNaz ? (n.noNaz / t.noNaz) * 100 : 0,
-    pctTotal: t.noTotal ? (n.noTotal / t.noTotal) * 100 : 0,
-  };
-});
+/** Conjunto plano y limpio para exportar como datos abiertos (CSV / JSON) de un año. */
+export function getDatasetExport(anio) {
+  return getAnio(anio).registros.map((r) => ({
+    anio: r.anio,
+    id_hermandad: r.id_hdad,
+    hermandad: r.nombre,
+    dia: r.diaNombre,
+    dia_slug: r.diaSlug,
+    nazarenos: r.nazarenos,
+    penitentes: r.penitentes,
+    total_nazarenos: r.noNaz,
+    acolitos: r.acolitos,
+    monaguillos: r.monaguillos,
+    acompanamiento: r.acompCortejo,
+    total_cortejo: r.noTotal,
+    pct_nazarenos_dia: Math.round(r.pctNaz * 10) / 10,
+    pct_cortejo_dia: Math.round(r.pctTotal * 10) / 10,
+  }));
+}
 
-// Orden por defecto: por día litúrgico y, dentro del día, por nº total descendente.
-registros.sort((a, b) => a.diaOrden - b.diaOrden || b.noTotal - a.noTotal);
+// ---------- Comparativa entre años ----------
 
-/** Totales generales del conjunto. */
-export const totalGeneral = registros.reduce(
-  (acc, r) => {
-    for (const m of METRICAS) acc[m] += r[m];
-    return acc;
-  },
-  { hermandades: registros.length, ...Object.fromEntries(METRICAS.map((m) => [m, 0])) }
-);
+/** Comparativa por hermandad: para cada hermandad, sus cifras por año (o null si no salió). */
+export function getComparativaHermandades() {
+  return hermandadesRaw
+    .map((h) => {
+      const d = diaPorSlug.get(h.dia);
+      const porAnio = {};
+      for (const a of anios) {
+        const r = getAnio(a.anio).registros.find((x) => x.id_hdad === h.id_hdad);
+        porAnio[a.anio] = r ? { noNaz: r.noNaz, noTotal: r.noTotal, pctNaz: r.pctNaz, pctTotal: r.pctTotal } : null;
+      }
+      return { id_hdad: h.id_hdad, nombre: h.nombre, slug: h.slug, diaSlug: h.dia, diaNombre: d.nombre, diaOrden: d.orden, porAnio };
+    })
+    .sort((a, b) => a.diaOrden - b.diaOrden || a.nombre.localeCompare(b.nombre, 'es'));
+}
 
-/** Conjunto plano y limpio para exportar como datos abiertos (CSV / JSON). */
-export const datasetExport = registros.map((r) => ({
-  id_hermandad: r.id_hdad,
-  hermandad: r.nombre,
-  dia: r.diaNombre,
-  dia_slug: r.diaSlug,
-  nazarenos: r.nazarenos,
-  penitentes: r.penitentes,
-  total_nazarenos: r.noNaz,
-  acolitos: r.acolitos,
-  monaguillos: r.monaguillos,
-  acompanamiento: r.acompCortejo,
-  total_cortejo: r.noTotal,
-  pct_nazarenos_dia: Math.round(r.pctNaz * 10) / 10,
-  pct_cortejo_dia: Math.round(r.pctTotal * 10) / 10,
-}));
+/** Comparativa por día: para cada día, los totales por año (o null si no se contó ese año). */
+export function getComparativaDias() {
+  return dias.map((d) => {
+    const porAnio = {};
+    for (const a of anios) {
+      const t = getAnio(a.anio).totalesPorDia.find((x) => x.slug === d.slug);
+      porAnio[a.anio] = t ? { noNaz: t.noNaz, noTotal: t.noTotal, hermandades: t.hermandades } : null;
+    }
+    return { slug: d.slug, nombre: d.nombre, orden: d.orden, porAnio };
+  });
+}
+
+// ---------- Formato ----------
 
 /** Formatea un número entero al estilo español, agrupando siempre los miles (3.958). */
 export function fmt(n) {
@@ -103,4 +159,10 @@ export function fmt(n) {
 /** Formatea un porcentaje con un decimal (12,3 %). */
 export function fmtPct(n) {
   return `${Number(n).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+}
+
+/** Variación porcentual entre dos valores (para la comparativa). Devuelve null si no procede. */
+export function variacion(actual, anterior) {
+  if (actual == null || anterior == null || anterior === 0) return null;
+  return ((actual - anterior) / anterior) * 100;
 }

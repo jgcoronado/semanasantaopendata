@@ -1,10 +1,13 @@
 ---
 import '../styles/global.css';
+import { anios } from '../lib/datos.js';
 
 const {
   title,
   description,
   jsonLd = null,
+  anioActivo = null,
+  comparativaActiva = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -46,10 +49,10 @@ const anioActual = new Date().getFullYear();
       <div class="contenedor cabecera__inner">
         <a href="/" class="marca"><span class="marca__punto" aria-hidden="true"></span> Semana Santa Open Data</a>
         <nav class="nav" aria-label="Principal">
-          <a href="/">Inicio</a>
-          <a href="/#dias">Por día</a>
-          <a href="/#graficas">Gráficas</a>
-          <a href="/#descargas">Descargar datos</a>
+          {anios.map((a) => (
+            <a href={`/${a.slug}/`} class={anioActivo === a.anio ? 'activo' : ''} aria-current={anioActivo === a.anio ? 'page' : undefined}>{a.anio}</a>
+          ))}
+          <a href="/comparativa/" class={comparativaActiva ? 'activo' : ''} aria-current={comparativaActiva ? 'page' : undefined}>Comparativa</a>
         </nav>
       </div>
     </header>

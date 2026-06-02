@@ -1,0 +1,94 @@
+---
+import Base from '../../../layouts/Base.astro';
+import TablaNazarenos from '../../../components/TablaNazarenos.astro';
+import { anios, getAnio, fmt } from '../../../lib/datos.js';
+
+export function getStaticPaths() {
+  const paths = [];
+  for (const a of anios) {
+    for (const d of getAnio(a.anio).diasPresentes) {
+      paths.push({ params: { anio: a.slug, dia: d.slug } });
+    }
+  }
+  return paths;
+}
+
+const { anio, dia } = Astro.params;
+const anioNum = Number(anio);
+const { registros, diasPresentes, totalesPorDia } = getAnio(anioNum);
+
+const diaInfo = diasPresentes.find((d) => d.slug === dia);
+const totales = totalesPorDia.find((t) => t.slug === dia);
+const regs = registros.filter((r) => r.diaSlug === dia);
+
+const idx = diasPresentes.findIndex((d) => d.slug === dia);
+const anterior = diasPresentes[idx - 1];
+const siguiente = diasPresentes[idx + 1];
+
+const title = `Nazarenos del ${diaInfo.nombre} ${anio} · Semana Santa de Sevilla | Open Data`;
+const description =
+  `Conteo del ${diaInfo.nombre} de la Semana Santa de Sevilla ${anio}: ${fmt(totales.noNaz)} nazarenos y ` +
+  `${fmt(totales.noTotal)} participantes en el cortejo, repartidos en ${totales.hermandades} hermandades.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Conteo del ${diaInfo.nombre} — Semana Santa de Sevilla ${anio}`,
+  description,
+  url: new URL(`/${anio}/dia/${dia}/`, Astro.site).href,
+  inLanguage: 'es',
+  isPartOf: { '@type': 'Dataset', name: `Conteo de la Semana Santa de Sevilla ${anio}`, url: new URL(`/${anio}/`, Astro.site).href },
+  temporalCoverage: anio,
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  isAccessibleForFree: true,
+};
+
+const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTotal: totales.noTotal };
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
+  <section class="hero">
+    <div class="contenedor">
+      <nav class="migas" aria-label="Migas de pan">
+        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
+        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span>
+        <span>{diaInfo.nombre}</span>
+      </nav>
+      <h1>{diaInfo.nombre} {anio}</h1>
+      <p>
+        Nazarenos y participantes por hermandad en el {diaInfo.nombre} de la Semana Santa de
+        Sevilla {anio}. Ordena la tabla pulsando cualquier cabecera.
+      </p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totales.hermandades)}</div>
+          <div class="kpi__lbl">Hermandades</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totales.noNaz)}</div>
+          <div class="kpi__lbl">Nazarenos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totales.noTotal)}</div>
+          <div class="kpi__lbl">Participantes en el cortejo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor">
+    <div class="panel__cab"><h2>Hermandades del {diaInfo.nombre} ({anio})</h2></div>
+    <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} />
+
+    <nav class="dia-nav" aria-label="Navegación entre días">
+      {anterior
+        ? <a class="dia-nav__a" href={`/${anio}/dia/${anterior.slug}/`}>← {anterior.nombre}</a>
+        : <span></span>}
+      <a class="dia-nav__a dia-nav__centro" href={`/${anio}/#dias`}>Todos los días</a>
+      {siguiente
+        ? <a class="dia-nav__a dia-nav__der" href={`/${anio}/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>
+        : <span></span>}
+    </nav>
+  </section>
+</Base>

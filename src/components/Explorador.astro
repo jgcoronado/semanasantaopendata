@@ -1,5 +1,8 @@
 ---
-import { registros, totalesPorDia, dias } from '../lib/datos.js';
+import { getAnio } from '../lib/datos.js';
+
+const { anio } = Astro.props;
+const { registros, totalesPorDia, diasPresentes } = getAnio(anio);
 
 // Datos mínimos que necesita el cliente para las gráficas.
 const datosGraficas = {
@@ -26,7 +29,7 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
       Resaltar hermandad
       <select id="selector-hermandad">
         <option value="">— Ninguna —</option>
-        {dias.map((d) => (
+        {diasPresentes.map((d) => (
           <optgroup label={d.nombre}>
             {hermandadesDe(d.slug).map((h) => <option value={h.slug}>{h.nombre}</option>)}
           </optgroup>
@@ -36,7 +39,7 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
     <label class="campo">
       Día (gráficas de composición)
       <select id="selector-dia">
-        {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+        {diasPresentes.map((d) => <option value={d.slug}>{d.nombre}</option>)}
       </select>
     </label>
   </div>

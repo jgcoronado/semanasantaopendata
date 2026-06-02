@@ -1,19 +1,32 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { registros, totalesPorDia, fmt, fmtPct } from '../../lib/datos.js';
+import Base from '../../../layouts/Base.astro';
+import { anios, getAnio, fmt, fmtPct } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
-  return registros.map((r) => ({ params: { slug: r.slug } }));
+  const paths = [];
+  for (const a of anios) {
+    for (const r of getAnio(a.anio).registros) {
+      paths.push({ params: { anio: a.slug, slug: r.slug } });
+    }
+  }
+  return paths;
 }
 
-const { slug } = Astro.params;
+const { anio, slug } = Astro.params;
+const anioNum = Number(anio);
+const { registros } = getAnio(anioNum);
+
 const r = registros.find((x) => x.slug === slug);
-const totalesDia = totalesPorDia.find((t) => t.slug === r.diaSlug);
 const hermsDia = registros.filter((x) => x.diaSlug === r.diaSlug);
 
-// Posición dentro de su día (1 = más).
 const rankNaz = [...hermsDia].sort((a, b) => b.noNaz - a.noNaz).findIndex((x) => x.slug === slug) + 1;
 const rankTotal = [...hermsDia].sort((a, b) => b.noTotal - a.noTotal).findIndex((x) => x.slug === slug) + 1;
+
+// La misma hermandad en otros años (donde tenga datos).
+const enOtrosAnios = anios
+  .filter((a) => a.anio !== anioNum)
+  .map((a) => ({ anio: a.anio, presente: getAnio(a.anio).registros.some((x) => x.slug === slug) }))
+  .filter((x) => x.presente);
 
 const desglose = [
   { etiqueta: 'Nazarenos', valor: r.nazarenos },
@@ -25,35 +38,39 @@ const desglose = [
   { etiqueta: 'Total cortejo', valor: r.noTotal, fuerte: true },
 ];
 
-const title = `${r.nombre} (${r.diaNombre}) 2026 · nazarenos y cortejo | Semana Santa Open Data`;
+const title = `${r.nombre} (${r.diaNombre}) ${anio} · nazarenos y cortejo | Semana Santa Open Data`;
 const description =
-  `La hermandad ${r.nombre} procesionó el ${r.diaNombre} de 2026 con ${fmt(r.noNaz)} nazarenos ` +
+  `La hermandad ${r.nombre} procesionó el ${r.diaNombre} de ${anio} con ${fmt(r.noNaz)} nazarenos ` +
   `(${fmtPct(r.pctNaz)} de su día) y ${fmt(r.noTotal)} participantes en total.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Observation',
-  name: `${r.nombre} — conteo Semana Santa de Sevilla 2026`,
-  url: new URL(`/hermandad/${slug}/`, Astro.site).href,
+  name: `${r.nombre} — conteo Semana Santa de Sevilla ${anio}`,
+  url: new URL(`/${anio}/hermandad/${slug}/`, Astro.site).href,
   measuredProperty: 'Nazarenos y participantes del cortejo',
-  observationDate: '2026',
+  observationDate: anio,
   description,
 };
 ---
 
-<Base title={title} description={description} jsonLd={jsonLd}>
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
   <section class="hero">
     <div class="contenedor">
       <nav class="migas" aria-label="Migas de pan">
         <a href="/">Inicio</a> <span aria-hidden="true">›</span>
-        <a href={`/dia/${r.diaSlug}/`}>{r.diaNombre}</a> <span aria-hidden="true">›</span>
+        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span>
+        <a href={`/${anio}/dia/${r.diaSlug}/`}>{r.diaNombre}</a> <span aria-hidden="true">›</span>
         <span>{r.nombre}</span>
       </nav>
-      <h1>{r.nombre}</h1>
+      <h1>{r.nombre} <span class="h1-anio">{anio}</span></h1>
       <p>
-        Procesionó el <a href={`/dia/${r.diaSlug}/`}>{r.diaNombre}</a> de la Semana Santa de Sevilla
-        2026. Es la <strong>{rankNaz}.ª</strong> de su día por número de nazarenos y la
-        <strong>{rankTotal}.ª</strong> por cortejo total (de {totalesDia.hermandades}).
+        Procesionó el <a href={`/${anio}/dia/${r.diaSlug}/`}>{r.diaNombre}</a> de la Semana Santa de
+        Sevilla {anio}. Es la <strong>{rankNaz}.ª</strong> de su día por número de nazarenos y la
+        <strong>{rankTotal}.ª</strong> por cortejo total (de {hermsDia.length}).
+        {enOtrosAnios.length > 0 && (
+          <span> Ver esta hermandad en {enOtrosAnios.map((o, i) => (<>{i > 0 ? ', ' : ' '}<a href={`/${o.anio}/hermandad/${slug}/`}>{o.anio}</a></>))}, o en la <a href="/comparativa/">comparativa</a>.</span>
+        )}
       </p>
 
       <div class="kpis">
@@ -78,12 +95,10 @@ const jsonLd = {
   </section>
 
   <section class="panel contenedor">
-    <div class="panel__cab">
-      <h2>Desglose del cortejo</h2>
-    </div>
+    <div class="panel__cab"><h2>Desglose del cortejo</h2></div>
     <div class="tabla-wrap" style="max-width: 460px;">
       <table class="datos">
-        <caption>Composición de la hermandad {r.nombre} en {r.diaNombre} de 2026.</caption>
+        <caption>Composición de la hermandad {r.nombre} en {r.diaNombre} de {anio}.</caption>
         <tbody>
           {desglose.map((d) => (
             <tr>
@@ -95,8 +110,8 @@ const jsonLd = {
       </table>
     </div>
     <nav class="dia-nav" aria-label="Más">
-      <a class="dia-nav__a" href={`/dia/${r.diaSlug}/`}>← Todas las hermandades del {r.diaNombre}</a>
-      <a class="dia-nav__a dia-nav__der" href="/#graficas">Ver gráficas →</a>
+      <a class="dia-nav__a" href={`/${anio}/dia/${r.diaSlug}/`}>← Todas las hermandades del {r.diaNombre}</a>
+      <a class="dia-nav__a dia-nav__der" href="/comparativa/">Comparar años →</a>
     </nav>
   </section>
 </Base>

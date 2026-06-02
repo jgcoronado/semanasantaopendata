@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+import TablaNazarenos from '../../components/TablaNazarenos.astro';
+import Explorador from '../../components/Explorador.astro';
+import { anios, getAnio, fmt } from '../../lib/datos.js';
+
+export function getStaticPaths() {
+  return anios.map((a) => ({ params: { anio: a.slug } }));
+}
+
+const { anio } = Astro.params;
+const anioNum = Number(anio);
+const { registros, diasPresentes, totalesPorDia, totalGeneral } = getAnio(anioNum);
+
+const title = `Semana Santa de Sevilla ${anio} en datos: nazarenos por hermandad | Open Data`;
+const description =
+  `Datos abiertos del conteo oficial de la Semana Santa de Sevilla ${anio}: ${fmt(totalGeneral.noNaz)} nazarenos y ` +
+  `${fmt(totalGeneral.noTotal)} participantes de ${totalGeneral.hermandades} hermandades en ${totalGeneral.dias} días. ` +
+  `Tabla consultable, ordenable y filtrable, y gráficas comparativas.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Conteo de la Semana Santa de Sevilla ${anio}`,
+  description:
+    `Número de nazarenos y de participantes totales (cortejo) por hermandad en cada día de la Semana Santa de Sevilla ${anio}, según el conteo oficial del Consejo de Hermandades.`,
+  url: new URL(`/${anio}/`, Astro.site).href,
+  inLanguage: 'es',
+  keywords: ['Semana Santa', 'Sevilla', anio, 'nazarenos', 'hermandades', 'cofradías', 'datos abiertos'],
+  temporalCoverage: anio,
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  variableMeasured: ['Número de nazarenos', 'Participantes totales del cortejo'],
+  isAccessibleForFree: true,
+  creator: { '@type': 'Organization', name: 'Semana Santa Open Data' },
+  distribution: [
+    { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: new URL(`/${anio}/datos/conteo.csv`, Astro.site).href },
+    { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: new URL(`/${anio}/datos/conteo.json`, Astro.site).href },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
+  <section class="hero">
+    <div class="contenedor">
+      <h1>La Semana Santa de Sevilla {anio}, en datos abiertos</h1>
+      <p>
+        Conteo oficial de nazarenos y participantes por hermandad y día. Consulta y ordena la
+        tabla, explora las gráficas y resalta cualquier hermandad.
+      </p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.hermandades)}</div>
+          <div class="kpi__lbl">Hermandades</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.dias)}</div>
+          <div class="kpi__lbl">Días con conteo</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.noNaz)}</div>
+          <div class="kpi__lbl">Nazarenos (total)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmt(totalGeneral.noTotal)}</div>
+          <div class="kpi__lbl">Participantes en el cortejo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor" id="dias">
+    <div class="panel__cab"><h2>Explora por día</h2></div>
+    <div class="dias-grid">
+      {totalesPorDia.map((t) => (
+        <a class="dia-card" href={`/${anio}/dia/${t.slug}/`}>
+          <span class="dia-card__nombre">{t.nombre}</span>
+          <span class="dia-card__cifras"><strong>{fmt(t.noNaz)}</strong> nazarenos · {fmt(t.noTotal)} cortejo</span>
+          <span class="dia-card__meta">{fmt(t.hermandades)} hermandad{t.hermandades === 1 ? '' : 'es'} →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="panel contenedor" id="tabla">
+    <div class="panel__cab"><h2>Nazarenos por hermandad</h2></div>
+    <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} />
+  </section>
+
+  <Explorador anio={anioNum} />
+
+  <section class="panel contenedor" id="descargas">
+    <div class="panel__cab"><h2>Datos abiertos</h2></div>
+    <p class="descargas-intro">
+      Descarga el conjunto completo de {anio} ({fmt(totalGeneral.hermandades)} hermandades, con
+      todas las columnas) para reutilizarlo libremente citando la fuente.
+    </p>
+    <div class="descargas">
+      <a class="btn" href={`/${anio}/datos/conteo.csv`} download>⬇ Descargar CSV</a>
+      <a class="btn btn--sec" href={`/${anio}/datos/conteo.json`}>Ver JSON</a>
+    </div>
+  </section>
+</Base>

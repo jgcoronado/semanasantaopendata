@@ -1,101 +1,58 @@
 ---
 import Base from '../layouts/Base.astro';
-import TablaNazarenos from '../components/TablaNazarenos.astro';
-import Explorador from '../components/Explorador.astro';
-import { registros, dias, totalesPorDia, totalGeneral, fmt } from '../lib/datos.js';
+import { anios, getAnio, fmt } from '../lib/datos.js';
 
-const title = 'Semana Santa de Sevilla 2026 en datos: nazarenos por hermandad | Open Data';
+const title = 'Semana Santa de Sevilla en datos abiertos: nazarenos por año, día y hermandad';
 const description =
-  `Datos abiertos del conteo oficial de la Semana Santa de Sevilla 2026: ${fmt(totalGeneral.noNaz)} nazarenos y ` +
-  `${fmt(totalGeneral.noTotal)} participantes de ${totalGeneral.hermandades} hermandades en 9 días. Tabla consultable, ordenable y filtrable.`;
+  'Datos abiertos del conteo oficial de la Semana Santa de Sevilla por año. Tablas y gráficas de ' +
+  'nazarenos y participantes por hermandad y día, con comparativa entre años.';
+
+const resumen = anios.map((a) => ({ ...a, datos: getAnio(a.anio).totalGeneral }));
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Dataset',
-  name: 'Conteo de la Semana Santa de Sevilla 2026',
-  description:
-    'Número de nazarenos y de participantes totales (cortejo) por hermandad en cada día de la Semana Santa de Sevilla 2026, según el conteo oficial del Consejo de Hermandades.',
+  '@type': 'WebSite',
+  name: 'Semana Santa Open Data',
+  description,
   url: new URL('/', Astro.site).href,
   inLanguage: 'es',
-  keywords: ['Semana Santa', 'Sevilla', '2026', 'nazarenos', 'hermandades', 'cofradías', 'datos abiertos'],
-  temporalCoverage: '2026',
-  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
-  variableMeasured: ['Número de nazarenos', 'Participantes totales del cortejo'],
-  isAccessibleForFree: true,
-  creator: { '@type': 'Organization', name: 'Semana Santa Open Data' },
-  distribution: [
-    { '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: new URL('/datos/semana-santa-2026.csv', Astro.site).href },
-    { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: new URL('/datos/semana-santa-2026.json', Astro.site).href },
-  ],
 };
 ---
 
 <Base title={title} description={description} jsonLd={jsonLd}>
   <section class="hero">
     <div class="contenedor">
-      <h1>La Semana Santa de Sevilla 2026, en datos abiertos</h1>
+      <h1>La Semana Santa de Sevilla, en datos abiertos</h1>
       <p>
-        Conteo oficial de nazarenos y participantes por hermandad y día. Consulta, ordena y filtra
-        la tabla; pronto, gráficas comparativas por día y por hermandad.
+        El conteo oficial de nazarenos y participantes de cada cofradía, año a año. Consulta las
+        tablas y gráficas por día y por hermandad, descarga los datos y compara la evolución entre
+        años.
       </p>
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.hermandades)}</div>
-          <div class="kpi__lbl">Hermandades</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{dias.length}</div>
-          <div class="kpi__lbl">Días procesionales</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.noNaz)}</div>
-          <div class="kpi__lbl">Nazarenos (total)</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.noTotal)}</div>
-          <div class="kpi__lbl">Participantes en el cortejo</div>
-        </div>
-      </div>
     </div>
   </section>
 
-  <section class="panel contenedor" id="dias">
-    <div class="panel__cab">
-      <h2>Explora por día</h2>
-    </div>
-    <div class="dias-grid">
-      {totalesPorDia.map((t) => (
-        <a class="dia-card" href={`/dia/${t.slug}/`}>
-          <span class="dia-card__nombre">{t.nombre}</span>
-          <span class="dia-card__cifras"><strong>{fmt(t.noNaz)}</strong> nazarenos · {fmt(t.noTotal)} cortejo</span>
-          <span class="dia-card__meta">{fmt(t.hermandades)} hermandad{t.hermandades === 1 ? '' : 'es'} →</span>
+  <section class="panel contenedor">
+    <div class="panel__cab"><h2>Elige un año</h2></div>
+    <div class="anios-grid">
+      {resumen.map((a) => (
+        <a class="anio-card" href={`/${a.slug}/`}>
+          <span class="anio-card__anio">{a.anio}</span>
+          <span class="anio-card__datos">
+            <strong>{fmt(a.datos.noNaz)}</strong> nazarenos · {fmt(a.datos.noTotal)} en el cortejo
+          </span>
+          <span class="anio-card__meta">{fmt(a.datos.hermandades)} hermandades · {fmt(a.datos.dias)} días con conteo →</span>
         </a>
       ))}
     </div>
   </section>
 
-  <section class="panel contenedor" id="tabla">
-    <div class="panel__cab">
-      <h2>Nazarenos por hermandad</h2>
-    </div>
-    <TablaNazarenos registros={registros} dias={dias} totalGeneral={totalGeneral} />
-  </section>
-
-  <Explorador />
-
-  <section class="panel contenedor" id="descargas">
-    <div class="panel__cab">
-      <h2>Datos abiertos</h2>
-    </div>
-    <p class="descargas-intro">
-      Descarga el conjunto completo ({fmt(totalGeneral.hermandades)} hermandades, con todas las
-      columnas: nazarenos, penitentes, acólitos, monaguillos, acompañamiento y totales) para
-      reutilizarlo libremente citando la fuente.
-    </p>
-    <div class="descargas">
-      <a class="btn" href="/datos/semana-santa-2026.csv" download>⬇ Descargar CSV</a>
-      <a class="btn btn--sec" href="/datos/semana-santa-2026.json">Ver JSON</a>
+  <section class="panel contenedor">
+    <div class="comparativa-cta">
+      <div>
+        <h2>Comparativa entre años</h2>
+        <p>Evolución del número de nazarenos y del cortejo por hermandad y por día.</p>
+      </div>
+      <a class="btn" href="/comparativa/">Ver comparativa →</a>
     </div>
   </section>
 </Base>
