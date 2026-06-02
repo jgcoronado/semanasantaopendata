@@ -34,13 +34,16 @@ Todos los datos se han transcrito y verificado contra la fila TOTAL de cada imag
 - `/` — **hub**: presenta el proyecto, tarjetas por año y acceso a la comparativa.
 - `/2026/`, `/2025/` — portada de cada año (KPIs, días, tabla, gráficas, descargas).
 - `/2026/dia/[dia]/` — un día concreto (p. ej. `/2026/dia/madruga/`).
-- `/2026/hermandad/[slug]/` — una hermandad (con enlaces a otros años).
+- `/2026/hermandad/[slug]/` — ficha de una hermandad: datos de **todos los años** (tabla
+  resumen con incremento + matriz de desglose concepto×año), tartas con **% superpuesto** y
+  conmutador nazarenos/cortejo, e histograma.
 - `/2026/datos/conteo.csv` y `conteo.json` — descargas open data por año.
+- `/hermandades/` — índice con **buscador** en vivo de todas las hermandades.
 - `/comparativa/` — comparativa por día y por hermandad, con conmutador de métrica
-  (nazarenos / cortejo) y variación interanual.
+  (nazarenos / cortejo) y **selector del año base** de la variación.
 
-La cabecera tiene **pestañas por año** + **Comparativa**. `public/_redirects` redirige las
-rutas antiguas (sitio de un solo año) a `/2026/...`.
+La cabecera tiene **pestañas por año** + **Hermandades** + **Comparativa**. `public/_redirects`
+redirige las rutas antiguas (sitio de un solo año) a `/2026/...`.
 
 ## Funcionalidad
 
