@@ -1,0 +1,612 @@
+[
+  {
+    "idHdad": 1,
+    "salida": "14:30",
+    "campana": "16:05",
+    "sierpes": "16:12",
+    "plaza": "16:45",
+    "catedral": "17:11",
+    "ultimoPasoFuera": "17:56",
+    "entrada": "19:00"
+  },
+  {
+    "idHdad": 2,
+    "salida": "16:15",
+    "campana": "18:46",
+    "sierpes": "18:53",
+    "plaza": "19:26",
+    "catedral": "19:52",
+    "ultimoPasoFuera": "20:47",
+    "entrada": "23:40"
+  },
+  {
+    "idHdad": 3,
+    "salida": "14:20",
+    "campana": "16:31",
+    "sierpes": "16:38",
+    "plaza": "17:11",
+    "catedral": "17:37",
+    "ultimoPasoFuera": "18:25",
+    "entrada": "23:00"
+  },
+  {
+    "idHdad": 4,
+    "salida": "13:00",
+    "campana": "17:00",
+    "sierpes": "17:07",
+    "plaza": "17:40",
+    "catedral": "18:06",
+    "ultimoPasoFuera": "19:10",
+    "entrada": "00:30"
+  },
+  {
+    "idHdad": 5,
+    "salida": "13:00",
+    "campana": "17:45",
+    "sierpes": "17:52",
+    "plaza": "18:25",
+    "catedral": "18:51",
+    "ultimoPasoFuera": "20:11",
+    "entrada": "01:00"
+  },
+  {
+    "idHdad": 6,
+    "salida": "16:35",
+    "campana": "19:22",
+    "sierpes": "19:29",
+    "plaza": "20:02",
+    "catedral": "20:28",
+    "ultimoPasoFuera": "21:22",
+    "entrada": "01:10"
+  },
+  {
+    "idHdad": 7,
+    "salida": "17:45",
+    "campana": "20:37",
+    "sierpes": "20:44",
+    "plaza": "21:17",
+    "catedral": "21:43",
+    "ultimoPasoFuera": "23:12",
+    "entrada": "03:30"
+  },
+  {
+    "idHdad": 8,
+    "salida": "18:25",
+    "campana": "19:57",
+    "sierpes": "20:04",
+    "plaza": "20:37",
+    "catedral": "21:03",
+    "ultimoPasoFuera": "22:02",
+    "entrada": "01:05"
+  },
+  {
+    "idHdad": 9,
+    "salida": "20:50",
+    "campana": "21:47",
+    "sierpes": "21:54",
+    "plaza": "22:27",
+    "catedral": "22:53",
+    "ultimoPasoFuera": "00:06",
+    "entrada": "01:25"
+  },
+  {
+    "idHdad": 10,
+    "salida": "11:30",
+    "campana": "16:25",
+    "sierpes": "16:32",
+    "plaza": "17:05",
+    "catedral": "17:31",
+    "ultimoPasoFuera": "18:24",
+    "entrada": "01:50"
+  },
+  {
+    "idHdad": 11,
+    "salida": "14:45",
+    "campana": "16:59",
+    "sierpes": "17:06",
+    "plaza": "17:39",
+    "catedral": "18:05",
+    "ultimoPasoFuera": "19:11",
+    "entrada": "00:00"
+  },
+  {
+    "idHdad": 12,
+    "salida": "12:25",
+    "campana": "17:46",
+    "sierpes": "17:53",
+    "plaza": "18:26",
+    "catedral": "18:52",
+    "ultimoPasoFuera": "20:12",
+    "entrada": "02:10"
+  },
+  {
+    "idHdad": 13,
+    "salida": "18:10",
+    "campana": "18:47",
+    "sierpes": "18:54",
+    "plaza": "19:27",
+    "catedral": "19:53",
+    "ultimoPasoFuera": "20:44",
+    "entrada": "22:20"
+  },
+  {
+    "idHdad": 14,
+    "salida": "15:00",
+    "campana": "19:19",
+    "sierpes": "19:26",
+    "plaza": "19:59",
+    "catedral": "20:25",
+    "ultimoPasoFuera": "22:00",
+    "entrada": "03:00"
+  },
+  {
+    "idHdad": 15,
+    "salida": "19:35",
+    "campana": "20:35",
+    "sierpes": "20:42",
+    "plaza": "21:15",
+    "catedral": "21:41",
+    "ultimoPasoFuera": "22:31",
+    "entrada": "01:00"
+  },
+  {
+    "idHdad": 16,
+    "salida": "20:00",
+    "campana": "21:06",
+    "sierpes": "21:13",
+    "plaza": "21:46",
+    "catedral": "22:12",
+    "ultimoPasoFuera": "23:03",
+    "entrada": "01:55"
+  },
+  {
+    "idHdad": 17,
+    "salida": "18:15",
+    "campana": "21:38",
+    "sierpes": "21:45",
+    "plaza": "22:18",
+    "catedral": "22:44",
+    "ultimoPasoFuera": "23:34",
+    "entrada": "01:20"
+  },
+  {
+    "idHdad": 18,
+    "salida": "20:40",
+    "campana": "22:09",
+    "sierpes": "22:16",
+    "plaza": "22:49",
+    "catedral": "23:15",
+    "ultimoPasoFuera": "00:15",
+    "entrada": "03:15"
+  },
+  {
+    "idHdad": 19,
+    "salida": "11:40",
+    "campana": "16:40",
+    "sierpes": "16:47",
+    "plaza": "17:20",
+    "catedral": "17:46",
+    "ultimoPasoFuera": "19:09",
+    "entrada": "02:00"
+  },
+  {
+    "idHdad": 20,
+    "salida": "17:30",
+    "campana": "20:34",
+    "sierpes": "20:41",
+    "plaza": "21:14",
+    "catedral": "21:40",
+    "ultimoPasoFuera": "22:46",
+    "entrada": "01:35"
+  },
+  {
+    "idHdad": 21,
+    "salida": "17:04",
+    "campana": "19:42",
+    "sierpes": "19:49",
+    "plaza": "20:22",
+    "catedral": "20:48",
+    "ultimoPasoFuera": "21:59",
+    "entrada": "01:56"
+  },
+  {
+    "idHdad": 22,
+    "salida": "14:30",
+    "campana": "17:44",
+    "sierpes": "17:51",
+    "plaza": "18:24",
+    "catedral": "18:50",
+    "ultimoPasoFuera": "20:27",
+    "entrada": "00:15"
+  },
+  {
+    "idHdad": 23,
+    "salida": "17:15",
+    "campana": "19:02",
+    "sierpes": "19:09",
+    "plaza": "19:42",
+    "catedral": "20:08",
+    "ultimoPasoFuera": "21:07",
+    "entrada": "01:15"
+  },
+  {
+    "idHdad": 24,
+    "salida": "19:40",
+    "campana": "21:21",
+    "sierpes": "21:28",
+    "plaza": "22:01",
+    "catedral": "22:27",
+    "ultimoPasoFuera": "23:11",
+    "entrada": "02:15"
+  },
+  {
+    "idHdad": 25,
+    "salida": "18:50",
+    "campana": "21:46",
+    "sierpes": "21:53",
+    "plaza": "22:26",
+    "catedral": "22:52",
+    "ultimoPasoFuera": "00:16",
+    "entrada": "01:45"
+  },
+  {
+    "idHdad": 26,
+    "salida": "19:50",
+    "campana": "22:51",
+    "sierpes": "22:58",
+    "plaza": "23:31",
+    "catedral": "23:57",
+    "ultimoPasoFuera": "00:50",
+    "entrada": "01:40"
+  },
+  {
+    "idHdad": 27,
+    "salida": "15:00",
+    "campana": "16:43",
+    "sierpes": "16:50",
+    "plaza": "17:23",
+    "catedral": "17:49",
+    "ultimoPasoFuera": "18:37",
+    "entrada": "00:00"
+  },
+  {
+    "idHdad": 28,
+    "salida": "15:50",
+    "campana": "17:58",
+    "sierpes": "18:05",
+    "plaza": "18:38",
+    "catedral": "19:04",
+    "ultimoPasoFuera": "19:58",
+    "entrada": "00:00"
+  },
+  {
+    "idHdad": 29,
+    "salida": "12:00",
+    "campana": "17:12",
+    "sierpes": "17:19",
+    "plaza": "17:52",
+    "catedral": "18:18",
+    "ultimoPasoFuera": "19:23",
+    "entrada": "01:20"
+  },
+  {
+    "idHdad": 30,
+    "salida": "14:15",
+    "campana": "18:33",
+    "sierpes": "18:40",
+    "plaza": "19:13",
+    "catedral": "19:39",
+    "ultimoPasoFuera": "21:07",
+    "entrada": "01:30"
+  },
+  {
+    "idHdad": 31,
+    "salida": "17:00",
+    "campana": "19:42",
+    "sierpes": "19:49",
+    "plaza": "20:22",
+    "catedral": "20:48",
+    "ultimoPasoFuera": "21:38",
+    "entrada": "01:00"
+  },
+  {
+    "idHdad": 32,
+    "salida": "17:10",
+    "campana": "20:13",
+    "sierpes": "20:20",
+    "plaza": "20:53",
+    "catedral": "21:19",
+    "ultimoPasoFuera": "22:48",
+    "entrada": "01:30"
+  },
+  {
+    "idHdad": 33,
+    "salida": "20:00",
+    "campana": "21:23",
+    "sierpes": "21:30",
+    "plaza": "22:03",
+    "catedral": "22:29",
+    "ultimoPasoFuera": "23:26",
+    "entrada": "02:10"
+  },
+  {
+    "idHdad": 34,
+    "salida": "21:00",
+    "campana": "22:31",
+    "sierpes": "22:38",
+    "plaza": "23:11",
+    "catedral": "23:37",
+    "ultimoPasoFuera": "00:21",
+    "entrada": "02:45"
+  },
+  {
+    "idHdad": 35,
+    "salida": "20:30",
+    "campana": "22:01",
+    "sierpes": "22:08",
+    "plaza": "22:41",
+    "catedral": "23:07",
+    "ultimoPasoFuera": "23:56",
+    "entrada": "02:15"
+  },
+  {
+    "idHdad": 36,
+    "salida": "15:00",
+    "campana": "17:40",
+    "sierpes": "17:47",
+    "plaza": "18:20",
+    "catedral": "18:46",
+    "ultimoPasoFuera": "19:43",
+    "entrada": "23:20"
+  },
+  {
+    "idHdad": 37,
+    "salida": "15:55",
+    "campana": "18:18",
+    "sierpes": "18:25",
+    "plaza": "18:58",
+    "catedral": "19:24",
+    "ultimoPasoFuera": "20:18",
+    "entrada": "23:40"
+  },
+  {
+    "idHdad": 38,
+    "salida": "17:00",
+    "campana": "18:53",
+    "sierpes": "19:00",
+    "plaza": "19:33",
+    "catedral": "19:59",
+    "ultimoPasoFuera": "20:50",
+    "entrada": "00:35"
+  },
+  {
+    "idHdad": 39,
+    "salida": "17:30",
+    "campana": "19:25",
+    "sierpes": "19:32",
+    "plaza": "20:05",
+    "catedral": "20:31",
+    "ultimoPasoFuera": "21:35",
+    "entrada": "01:30"
+  },
+  {
+    "idHdad": 40,
+    "salida": "19:30",
+    "campana": "20:10",
+    "sierpes": "20:17",
+    "plaza": "20:50",
+    "catedral": "21:16",
+    "ultimoPasoFuera": "22:10",
+    "entrada": "00:00"
+  },
+  {
+    "idHdad": 41,
+    "salida": "19:25",
+    "campana": "20:45",
+    "sierpes": "20:52",
+    "plaza": "21:25",
+    "catedral": "21:51",
+    "ultimoPasoFuera": "22:51",
+    "entrada": "00:45"
+  },
+  {
+    "idHdad": 42,
+    "salida": "20:15",
+    "campana": "21:26",
+    "sierpes": "21:33",
+    "plaza": "22:06",
+    "catedral": "22:32",
+    "ultimoPasoFuera": "23:50",
+    "entrada": "01:15"
+  },
+  {
+    "idHdad": 43,
+    "salida": "01:00",
+    "campana": "01:15",
+    "sierpes": "01:22",
+    "plaza": "01:55",
+    "catedral": "02:21",
+    "ultimoPasoFuera": "03:20",
+    "entrada": "06:05"
+  },
+  {
+    "idHdad": 44,
+    "salida": "01:00",
+    "campana": "01:55",
+    "sierpes": "02:02",
+    "plaza": "02:35",
+    "catedral": "03:01",
+    "ultimoPasoFuera": "04:29",
+    "entrada": "08:00"
+  },
+  {
+    "idHdad": 45,
+    "salida": "00:00",
+    "campana": "03:04",
+    "sierpes": "03:11",
+    "plaza": "03:44",
+    "catedral": "04:10",
+    "ultimoPasoFuera": "06:14",
+    "entrada": "13:30"
+  },
+  {
+    "idHdad": 46,
+    "salida": "04:00",
+    "campana": "04:49",
+    "sierpes": "04:56",
+    "plaza": "05:29",
+    "catedral": "05:55",
+    "ultimoPasoFuera": "06:42",
+    "entrada": "08:00"
+  },
+  {
+    "idHdad": 47,
+    "salida": "01:35",
+    "campana": "05:17",
+    "sierpes": "05:24",
+    "plaza": "05:57",
+    "catedral": "06:23",
+    "ultimoPasoFuera": "08:03",
+    "entrada": "14:00"
+  },
+  {
+    "idHdad": 48,
+    "salida": "02:30",
+    "campana": "06:38",
+    "sierpes": "06:45",
+    "plaza": "07:18",
+    "catedral": "07:44",
+    "ultimoPasoFuera": "09:11",
+    "entrada": "13:45"
+  },
+  {
+    "idHdad": 49,
+    "salida": "16:25",
+    "campana": "18:20",
+    "sierpes": "18:27",
+    "plaza": "19:00",
+    "catedral": "19:26",
+    "ultimoPasoFuera": "20:15",
+    "entrada": "22:15"
+  },
+  {
+    "idHdad": 50,
+    "salida": "17:50",
+    "campana": "18:50",
+    "sierpes": "18:57",
+    "plaza": "19:30",
+    "catedral": "19:56",
+    "ultimoPasoFuera": "20:35",
+    "entrada": "22:45"
+  },
+  {
+    "idHdad": 51,
+    "salida": "15:45",
+    "campana": "19:10",
+    "sierpes": "19:17",
+    "plaza": "19:50",
+    "catedral": "20:16",
+    "ultimoPasoFuera": "21:53",
+    "entrada": "02:35"
+  },
+  {
+    "idHdad": 52,
+    "salida": "18:00",
+    "campana": "20:28",
+    "sierpes": "20:35",
+    "plaza": "21:08",
+    "catedral": "21:34",
+    "ultimoPasoFuera": "22:32",
+    "entrada": "02:45"
+  },
+  {
+    "idHdad": 53,
+    "salida": "19:40",
+    "campana": "21:07",
+    "sierpes": "21:14",
+    "plaza": "21:47",
+    "catedral": "22:13",
+    "ultimoPasoFuera": "23:06",
+    "entrada": "00:15"
+  },
+  {
+    "idHdad": 54,
+    "salida": "20:30",
+    "campana": "21:41",
+    "sierpes": "21:48",
+    "plaza": "22:21",
+    "catedral": "22:47",
+    "ultimoPasoFuera": "23:40",
+    "entrada": "02:30"
+  },
+  {
+    "idHdad": 55,
+    "salida": "20:00",
+    "campana": "22:15",
+    "sierpes": "22:22",
+    "plaza": "22:55",
+    "catedral": "23:21",
+    "ultimoPasoFuera": "00:00",
+    "entrada": "02:00"
+  },
+  {
+    "idHdad": 56,
+    "salida": "12:45",
+    "campana": "17:15",
+    "sierpes": "17:22",
+    "plaza": "17:55",
+    "catedral": "18:21",
+    "ultimoPasoFuera": "19:00",
+    "entrada": "22:45"
+  },
+  {
+    "idHdad": 57,
+    "salida": "15:20",
+    "campana": "17:35",
+    "sierpes": "17:42",
+    "plaza": "18:15",
+    "catedral": "18:41",
+    "ultimoPasoFuera": "19:32",
+    "entrada": "22:40"
+  },
+  {
+    "idHdad": 58,
+    "salida": "15:30",
+    "campana": "18:07",
+    "sierpes": "18:14",
+    "plaza": "18:47",
+    "catedral": "19:13",
+    "ultimoPasoFuera": "20:27",
+    "entrada": "01:30"
+  },
+  {
+    "idHdad": 59,
+    "salida": "18:45",
+    "campana": "19:02",
+    "sierpes": "19:09",
+    "plaza": "19:42",
+    "catedral": "20:08",
+    "ultimoPasoFuera": "21:12",
+    "entrada": "23:00"
+  },
+  {
+    "idHdad": 60,
+    "salida": "18:50",
+    "campana": "19:47",
+    "sierpes": "19:54",
+    "plaza": "20:27",
+    "catedral": "20:53",
+    "ultimoPasoFuera": "21:55",
+    "entrada": "00:15"
+  },
+  {
+    "idHdad": 61,
+    "salida": "08:30",
+    "campana": "11:00",
+    "sierpes": "11:07",
+    "plaza": "11:40",
+    "catedral": "12:06",
+    "ultimoPasoFuera": "13:00",
+    "entrada": "16:30"
+  }
+]

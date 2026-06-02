@@ -1,0 +1,121 @@
+---
+import Base from '../../../layouts/Base.astro';
+import GraficasAnalisis from '../../../components/GraficasAnalisis.astro';
+import {
+  aniosConHorarios,
+  getCruceNazarenosHorarios,
+  getHorariosEnCalle,
+  fmt,
+  fmtDur,
+} from '../../../lib/datos.js';
+
+export function getStaticPaths() {
+  return aniosConHorarios.map((a) => ({ params: { anio: a.slug } }));
+}
+
+const { anio } = Astro.params;
+const anioNum = Number(anio);
+const { registros, diasPresentes } = getCruceNazarenosHorarios(anioNum);
+const { porDia } = getHorariosEnCalle(anioNum);
+
+const conDatos  = registros.filter((r) => r.incidencia === null);
+const sinDatos  = registros.filter((r) => r.incidencia !== null);
+
+// KPIs
+const durMedia   = Math.round(conDatos.reduce((s, r) => s + r.duracionMin, 0) / conDatos.length);
+const densList   = conDatos.filter((r) => r.totalPorMinuto != null);
+const masDensa   = densList.reduce((a, b) => b.totalPorMinuto > a.totalPorMinuto ? b : a);
+const menosDensa = densList.reduce((a, b) => b.totalPorMinuto < a.totalPorMinuto ? b : a);
+
+// Comparativa con el año anterior con horarios (si existe)
+const anioAnterior = aniosConHorarios.find((a) => a.anio < anioNum);
+let comparativaRows = [];
+let comparativaAnio = null;
+
+if (anioAnterior) {
+  comparativaAnio = anioAnterior.anio;
+  const otroRegistros = getCruceNazarenosHorarios(anioAnterior.anio).registros;
+  const otroMap = new Map(otroRegistros.map((r) => [r.id_hdad, r]));
+
+  comparativaRows = conDatos.map((r) => {
+    const otro = otroMap.get(r.id_hdad);
+    const otroSinDatos = otro?.incidencia === 'sin_datos';
+    return {
+      nombre:        r.nombre,
+      diaNombre:     r.diaNombre,
+      diaOrden:      r.diaOrden,
+      noTotal:       r.noTotal,
+      duracionMin:   r.duracionMin,
+      otroNoTotal:   otroSinDatos || !otro ? null : otro.noTotal,
+      otroDuracionMin: otroSinDatos || !otro ? null : otro.duracionMin,
+      otroSinDatos,
+    };
+  });
+  comparativaRows.sort((a, b) => a.diaOrden - b.diaOrden || (b.noTotal ?? 0) - (a.noTotal ?? 0));
+}
+
+const title       = `Análisis · Semana Santa de Sevilla ${anio} | Open Data`;
+const description = `Análisis cruzado de nazarenos y horarios de la Semana Santa de Sevilla ${anio}: duración, composición del cortejo, nazarenos en la calle y densidad del desfile.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Análisis cruzado Semana Santa de Sevilla ${anio}`,
+  description,
+  url: new URL(`/${anio}/analisis/`, Astro.site).href,
+  inLanguage: 'es',
+  isPartOf: { '@type': 'Dataset', name: `Conteo de la Semana Santa de Sevilla ${anio}`, url: new URL(`/${anio}/`, Astro.site).href },
+  temporalCoverage: anio,
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  isAccessibleForFree: true,
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum} analisisActiva={true}>
+  <section class="hero">
+    <div class="contenedor">
+      <nav class="migas" aria-label="Migas de pan">
+        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
+        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span> <span>Análisis</span>
+      </nav>
+      <h1>Análisis {anio}</h1>
+      <p>
+        Cruce entre el conteo de nazarenos y los horarios oficiales: duración de la estación de
+        penitencia, composición del cortejo, nazarenos simultáneos en la calle y densidad del desfile.
+        {sinDatos.length > 0 && (
+          <> <strong>{sinDatos.length} hermandad{sinDatos.length > 1 ? 'es' : ''} sin datos</strong> ese
+          año (posible lluvia o suspensión); excluidas de las gráficas.</>
+        )}
+      </p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(conDatos.length)}</div>
+          <div class="kpi__lbl">Cofradías con datos</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{fmtDur(durMedia)}</div>
+          <div class="kpi__lbl">Duración media</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num" style="font-size:1.1rem">{masDensa.nombre}</div>
+          <div class="kpi__lbl">Desfile más denso · {masDensa.totalPorMinuto} part./min</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num" style="font-size:1.1rem">{menosDensa.nombre}</div>
+          <div class="kpi__lbl">Desfile más espaciado · {menosDensa.totalPorMinuto} part./min</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <GraficasAnalisis
+    registros={conDatos}
+    sinDatos={sinDatos}
+    porDia={porDia}
+    dias={diasPresentes}
+    comparativaRows={comparativaRows}
+    comparativaAnio={comparativaAnio}
+    anioActual={anioNum}
+  />
+</Base>

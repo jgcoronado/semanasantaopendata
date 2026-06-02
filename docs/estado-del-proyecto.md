@@ -1,6 +1,6 @@
 # Estado del proyecto — Semana Santa Open Data
 
-_Última actualización: 2 de junio de 2026_
+_Última actualización: 2 de junio de 2026 — horarios 2025 añadidos_
 
 ## Resumen
 
@@ -14,11 +14,11 @@ Construida con **Astro 5** + **Chart.js** (HTML estático, SEO óptimo) y desple
 
 ## Datos disponibles
 
-| Año | Hermandades | Días | Nazarenos | Cortejo |
-| --- | --: | --: | --: | --: |
-| 2026 | 61 | 9 | 70.865 | 75.999 |
-| 2025 | 44 | 7 | 49.161 | 52.694 |
-| 2023 | 55 | 7 | 57.539 | 61.587 |
+| Año | Hermandades | Días | Nazarenos | Cortejo | Horarios |
+| --- | --: | --: | --: | --: | :--: |
+| 2026 | 61 | 9 | 70.865 | 75.999 | ✓ |
+| 2025 | 44 | 7 | 49.161 | 52.694 | ✓ |
+| 2023 | 55 | 7 | 57.539 | 61.587 | — |
 
 > Días no contados (el modelo los contempla; una hermandad simplemente no tiene registro el año
 > que no salió, y la home del año lo avisa):
@@ -37,6 +37,8 @@ Todos los datos se han transcrito y verificado contra la fila TOTAL de cada imag
 - `/2026/hermandad/[slug]/` — ficha de una hermandad: datos de **todos los años** (tabla
   resumen con incremento + matriz de desglose concepto×año), tartas con **% superpuesto** y
   conmutador nazarenos/cortejo, e histograma.
+- `/2026/horarios/`, `/2025/horarios/` — horarios oficiales: tabla y 4 gráficas (Gantt,
+  ocupación Carrera Oficial, dispersión salida/duración, duración por hermandad).
 - `/2026/datos/conteo.csv` y `conteo.json` — descargas open data por año.
 - `/hermandades/` — índice con **buscador** en vivo de todas las hermandades.
 - `/comparativa/` — comparativa por día y por hermandad, con conmutador de métrica

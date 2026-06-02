@@ -6,11 +6,12 @@ const { registros, totalesPorDia, diasPresentes } = getAnio(anio);
 
 // Datos mínimos que necesita el cliente para las gráficas.
 const datosGraficas = {
-  dias: totalesPorDia.map((t) => ({ slug: t.slug, nombre: t.nombre, noNaz: t.noNaz, noTotal: t.noTotal })),
+  dias: totalesPorDia.map((t) => ({ slug: t.slug, nombre: t.nombre, orden: t.orden, noNaz: t.noNaz, noTotal: t.noTotal })),
   hermandades: registros.map((r) => ({
     slug: r.slug,
     nombre: r.nombre,
     diaSlug: r.diaSlug,
+    diaOrden: r.diaOrden,
     pctNaz: Math.round(r.pctNaz * 10) / 10,
     pctTotal: Math.round(r.pctTotal * 10) / 10,
   })),
@@ -68,10 +69,14 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
   Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
   const datos = JSON.parse(document.getElementById('datos-graficas').textContent);
-  const MORADO = '#5b2a86';
+
+  // Colores oficiales por orden litúrgico
+  const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
   const ORO = '#c8a24a';
   const TINTA = '#1c1a22';
   const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+
+  const colDia = (orden) => COLORES_9[(orden - 1) % 9];
 
   const selHdad = document.getElementById('selector-hermandad');
   const selDia = document.getElementById('selector-dia');
@@ -85,20 +90,41 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
   let hdadActual = null;
 
   // ---- Gráfica A: participantes por día ----
+  // Cada día con su color oficial; nazarenos = color sólido, cortejo = mismo color 50% opacidad
+  const coloresDiasNaz   = datos.dias.map((d) => colDia(d.orden));
+  const coloresDiasCortejo = datos.dias.map((d) => colDia(d.orden) + '80');
+
   const chartA = new Chart(document.getElementById('grafica-dias'), {
     type: 'bar',
     data: {
       labels: datos.dias.map((d) => d.nombre),
       datasets: [
-        { label: 'Nazarenos', data: datos.dias.map((d) => d.noNaz), backgroundColor: MORADO, borderColor: TINTA, borderWidth: 0 },
-        { label: 'Cortejo total', data: datos.dias.map((d) => d.noTotal), backgroundColor: ORO, borderColor: TINTA, borderWidth: 0 },
+        {
+          label: 'Nazarenos',
+          data: datos.dias.map((d) => d.noNaz),
+          backgroundColor: coloresDiasNaz,
+          borderColor: TINTA,
+          borderWidth: 0,
+        },
+        {
+          label: 'Cortejo total',
+          data: datos.dias.map((d) => d.noTotal),
+          backgroundColor: coloresDiasCortejo,
+          borderColor: TINTA,
+          borderWidth: 0,
+        },
       ],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { position: 'bottom' },
-        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${nf.format(c.parsed.y)}` } },
+        tooltip: {
+          callbacks: {
+            title: (items) => items[0]?.label ?? '',
+            label: (c) => `${c.dataset.label}: ${nf.format(c.parsed.y)}`,
+          },
+        },
       },
       scales: { y: { beginAtZero: true, ticks: { callback: (v) => nf.format(v) } } },
     },
@@ -110,9 +136,17 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
     onClick: (_e, els) => { if (els.length) onPick(els[0].index); },
     plugins: {
       legend: { display: false },
-      tooltip: { callbacks: { label: (c) => `${c.parsed.y} %` } },
+      tooltip: {
+        callbacks: {
+          title: (items) => items[0] ? (hermsDe(diaActual)[items[0].dataIndex]?.nombre ?? '') : '',
+          label: (c) => `${c.parsed.y} %`,
+        },
+      },
     },
-    scales: { y: { beginAtZero: true, ticks: { callback: (v) => v + ' %' } }, x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } } },
+    scales: {
+      y: { beginAtZero: true, ticks: { callback: (v) => v + ' %' } },
+      x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
+    },
   });
 
   const elegirEnComposicion = (i) => { const h = hermsDe(diaActual)[i]; if (h) seleccionar(h.slug); };
@@ -124,7 +158,11 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
     type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: [] }] }, options: opcionesPct(elegirEnComposicion),
   });
 
-  const coloresComposicion = (herms) => herms.map((h) => (h.slug === hdadActual ? ORO : MORADO));
+  function coloresComposicion(herms) {
+    const diaOrden = herms[0]?.diaOrden ?? 1;
+    const base = colDia(diaOrden);
+    return herms.map((h) => (h.slug === hdadActual ? ORO : base + 'cc'));
+  }
 
   function pintarComposicion() {
     const herms = hermsDe(diaActual);

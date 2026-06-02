@@ -252,3 +252,153 @@ export function variacion(actual, anterior) {
   if (actual == null || anterior == null || anterior === 0) return null;
   return ((actual - anterior) / anterior) * 100;
 }
+
+// ---------- ANÁLISIS CRUZADO: NAZARENOS × HORARIOS ----------
+
+/**
+ * Cruce entre nazarenos y horarios de un año.
+ * Devuelve una lista de hermandades con métricas derivadas de ambos datasets.
+ * Las hermandades que Nazarenos indique que no salieron ese año aparecen con
+ * `incidencia: 'sin_datos'` (posible lluvia o suspensión) y sus métricas a null.
+ */
+export function getCruceNazarenosHorarios(anio) {
+  const horarios = getHorariosAnio(anio);
+  const anioData = getAnio(anio);
+
+  // Mapa de nazarenos por idHdad para búsqueda rápida
+  const nazarenosPorHdad = new Map(anioData.registros.map(r => [r.id_hdad, r]));
+
+  const registros = horarios.registros.map(h => {
+    const nazarenos = nazarenosPorHdad.get(h.id_hdad);
+
+    // Si no hay datos de nazarenos, marcar como posible suspensión/lluvia
+    const incidencia = nazarenos ? null : 'sin_datos';
+
+    // Métricas derivadas (solo si hay datos de nazarenos)
+    const nazarenosPorMinuto = nazarenos && h.duracionMin ?
+      Math.round((nazarenos.noNaz / h.duracionMin) * 10) / 10 : null;
+    const totalPorMinuto = nazarenos && h.duracionMin ?
+      Math.round((nazarenos.noTotal / h.duracionMin) * 10) / 10 : null;
+
+    return {
+      ...h,
+      // Datos de nazarenos (null si no salió ese año)
+      nazarenos: nazarenos ? nazarenos.nazarenos : null,
+      penitentes: nazarenos ? nazarenos.penitentes : null,
+      noNaz: nazarenos ? nazarenos.noNaz : null,
+      acolitos: nazarenos ? nazarenos.acolitos : null,
+      monaguillos: nazarenos ? nazarenos.monaguillos : null,
+      acompCortejo: nazarenos ? nazarenos.acompCortejo : null,
+      noTotal: nazarenos ? nazarenos.noTotal : null,
+
+      // % respecto al día (solo si hay datos)
+      pctNaz: nazarenos ? nazarenos.pctNaz : null,
+      pctTotal: nazarenos ? nazarenos.pctTotal : null,
+
+      // Métricas derivadas del cruce
+      incidencia, // null = normal, 'sin_datos' = posible lluvia/suspensión
+      nazarenosPorMinuto,
+      totalPorMinuto,
+    };
+  });
+
+  // Ordenar: primero por día litúrgico, luego por hermandades con datos (más grande primero),
+  // finalmente las sin datos
+  registros.sort((a, b) => {
+    if (a.diaOrden !== b.diaOrden) return a.diaOrden - b.diaOrden;
+    // Ambos tienen datos
+    if (a.incidencia === null && b.incidencia === null)
+      return (b.noTotal || 0) - (a.noTotal || 0);
+    // a tiene datos, b no
+    if (a.incidencia === null && b.incidencia !== null) return -1;
+    // b tiene datos, a no
+    if (a.incidencia !== null && b.incidencia === null) return 1;
+    // Ambos sin datos: orden alfabético
+    return a.nombre.localeCompare(b.nombre, 'es');
+  });
+
+  return {
+    anio: horarios.anio,
+    registros,
+    diasPresentes: horarios.diasPresentes,
+  };
+}
+
+/**
+ * Calcula cuántos nazarenos hay simultáneamente en la calle por cada minuto del día.
+ * Útil para gráficas de área que muestren la concentración a lo largo de la jornada.
+ * Excluye hermandades marcadas como 'sin_datos'.
+ */
+/**
+ * Nazarenos simultáneos en la calle por minuto, segregados por día litúrgico.
+ * Muestreado cada 5 minutos (288 puntos/día) para las gráficas de área.
+ * Excluye hermandades sin datos (posible lluvia/suspensión).
+ */
+export function getHorariosEnCalle(anio) {
+  const crucero = getCruceNazarenosHorarios(anio);
+
+  const diasSlug = [...new Set(crucero.registros.map((r) => r.diaSlug))];
+  const porDia = {};
+
+  for (const diaSlug of diasSlug) {
+    const regs = crucero.registros.filter(
+      (h) => h.diaSlug === diaSlug && h.incidencia === null && h.noNaz,
+    );
+    if (!regs.length) continue;
+
+    // Usar minutos monotónicos para respetar el orden cronológico real
+    // (los tiempos de madrugada superan 1440 y aparecen al FINAL, no al principio)
+    const paso = 5;
+    const iniMon = Math.floor(Math.min(...regs.map((r) => r.salidaMin)) / paso) * paso;
+    const finMon = Math.ceil(Math.max(...regs.map((r) => r.entradaMin)) / paso) * paso;
+
+    const serieTiempo = [];
+    let maxNazarenos = 0;
+
+    for (let m = iniMon; m <= finMon; m += paso) {
+      let nazarenos = 0;
+      for (const h of regs) {
+        if (m >= h.salidaMin && m <= h.entradaMin) nazarenos += h.noNaz;
+      }
+      const minMod = ((m % 1440) + 1440) % 1440;
+      serieTiempo.push({
+        hhmm: `${String(Math.floor(minMod / 60)).padStart(2, '0')}:${String(minMod % 60).padStart(2, '0')}`,
+        nazarenos,
+      });
+      if (nazarenos > maxNazarenos) maxNazarenos = nazarenos;
+    }
+
+    porDia[diaSlug] = { serieTiempo, maxNazarenos };
+  }
+
+  return { anio: crucero.anio, porDia };
+}
+
+// ---------- Exportación de datos para el análisis cruzado ----------
+
+/** Dataset plano para exportar el análisis cruzado (CSV/JSON). */
+export function getCruceExport(anio) {
+  const cruzado = getCruceNazarenosHorarios(anio);
+  return cruzado.registros.map(r => ({
+    anio: r.anio,
+    id_hermandad: r.id_hdad,
+    hermandad: r.nombre,
+    dia: r.diaNombre,
+    dia_slug: r.diaSlug,
+    salida: r.horas.salida,
+    entrada: r.horas.entrada,
+    duracion_min: r.duracionMin,
+    nazarenos: r.nazarenos,
+    penitentes: r.penitentes,
+    total_nazarenos: r.noNaz,
+    acolitos: r.acolitos,
+    monaguillos: r.monaguillos,
+    acompañamiento: r.acompCortejo,
+    total_cortejo: r.noTotal,
+    nazarenos_por_minuto: r.nazarenosPorMinuto,
+    total_por_minuto: r.totalPorMinuto,
+    pct_nazarenos_dia: r.pctNaz ? Math.round(r.pctNaz * 10) / 10 : null,
+    pct_cortejo_dia: r.pctTotal ? Math.round(r.pctTotal * 10) / 10 : null,
+    incidencia: r.incidencia, // null o 'sin_datos'
+  }));
+}

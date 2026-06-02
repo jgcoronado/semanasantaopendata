@@ -99,7 +99,7 @@ a { color: var(--morado); }
 .dia-nav__der { margin-left: auto; }
 
 /* ---------- Descargas ---------- */
-.descargas-intro { color: var(--gris); max-width: 70ch; margin-top: -0.2rem; }
+.descargas-intro { color: var(--gris); margin-top: -0.2rem; }
 .descargas { display: flex; flex-wrap: wrap; gap: 0.8rem; }
 .btn {
   display: inline-block; font-weight: 600; font-size: 0.95rem; text-decoration: none;
@@ -149,8 +149,7 @@ table.datos th[aria-sort] .flecha { opacity: 1; color: var(--oro); }
 table.datos tbody td { padding: 0.55rem 0.8rem; text-align: right; border-bottom: 1px solid var(--linea); white-space: nowrap; }
 table.datos tbody td.txt { text-align: left; }
 table.datos tbody td.fuerte { font-weight: 700; color: var(--morado-osc); }
-table.datos tbody tr:nth-child(even) { background: #fbfafd; }
-table.datos tbody tr:hover { background: var(--fondo-alt); }
+table.datos tbody tr:hover { background: var(--fondo-alt) !important; }
 .pildora-dia { display: inline-block; font-size: 0.78rem; padding: 0.12rem 0.5rem; border-radius: 999px; background: var(--fondo-alt); color: var(--morado-osc); border: 1px solid var(--linea); }
 
 table.datos tfoot td { padding: 0.6rem 0.8rem; text-align: right; font-weight: 700; border-top: 2px solid var(--linea); background: var(--fondo-alt); }

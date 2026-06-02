@@ -6,9 +6,14 @@ Esta guía recoge todo lo necesario para incorporar los horarios oficiales de un
 
 ---
 
-## 1. Qué se construyó para 2026 (referencia)
+## 1. Años con horarios ya integrados
 
-### Ficheros creados
+| Año | Script | JSON | Notas |
+|---|---|---|---|
+| 2026 | `scripts/generar-horarios-2026.mjs` | `src/data/horarios-2026.json` | Referencia original |
+| 2025 | `scripts/generar-horarios-2025.mjs` | `src/data/horarios-2025.json` | CSV del Consejo; alias "javieres" y acento en "jesús despojado" |
+
+### Ficheros compartidos (creados para 2026, reutilizados por todos los años)
 
 | Fichero | Función |
 |---|---|
@@ -72,7 +77,7 @@ columnas: nombre, salida, campana, sierpes, plaza, catedral, último paso fuera,
    separador `;`:
    ```
    nombre;salida;campana;sierpes;plaza;catedral;ultimoPasoFuera;entrada
-   sagrada entrada;14:15;15:35;...
+   la borriquita;14:15;15:35;...
    ```
 2. **Verificar que los nombres** coinciden con el mapeo `idPorNombre` del script (ver
    sección 4). Si hay nombres nuevos o variantes (p. ej. "Las Tres Caídas" vs "San
@@ -99,6 +104,10 @@ Copiar `scripts/generar-horarios-2026.mjs` y:
    > **Precaución 2026:** en Martes Santo el CSV del Consejo tenía invertidos los-javieres
    > y dulce-nombre respecto al orden del catálogo. El mapeo por nombre (no por posición)
    > lo corrigió automáticamente.
+   >
+   > **Precaución 2025:** el CSV usaba "javieres" (sin "los") y "jesús despojado" (con tilde).
+   > Ambos se resuelven con alias en `idPorNombre`. Además, una celda de cerro venía con punto
+   > decimal ("16.47") en vez de coma; el parser normaliza `.` → `,` antes de parsear.
 
 2. **Pegar el CSV** como template literal en la variable `datos`.
 

@@ -1,5 +1,5 @@
 [
-  { "id_hdad": 1,  "nombre": "Sagrada Entrada",             "dia": "domingo-de-ramos",     "slug": "sagrada-entrada" },
+  { "id_hdad": 1,  "nombre": "La Borriquita",             "dia": "domingo-de-ramos",     "slug": "la-borriquita" },
   { "id_hdad": 2,  "nombre": "La Cena",                     "dia": "domingo-de-ramos",     "slug": "la-cena" },
   { "id_hdad": 3,  "nombre": "Jesús Despojado",             "dia": "domingo-de-ramos",     "slug": "jesus-despojado" },
   { "id_hdad": 4,  "nombre": "La Hiniesta",                 "dia": "domingo-de-ramos",     "slug": "la-hiniesta" },
@@ -65,7 +65,7 @@
   { "id_hdad": 57, "nombre": "Los Servitas",              "dia": "sabado-santo",         "slug": "los-servitas" },
   { "id_hdad": 58, "nombre": "La Trinidad",                "dia": "sabado-santo",         "slug": "la-trinidad" },
   { "id_hdad": 59, "nombre": "Santo Entierro",            "dia": "sabado-santo",         "slug": "santo-entierro" },
-  { "id_hdad": 60, "nombre": "La Soledad",                 "dia": "sabado-santo",         "slug": "la-soledad" },
+  { "id_hdad": 60, "nombre": "Soledad de San Lorenzo",                 "dia": "sabado-santo",         "slug": "soledad-de-san-lorenzo" },
 
   { "id_hdad": 61, "nombre": "La Resurrección",            "dia": "domingo-resurreccion", "slug": "la-resurreccion" }
 ]
