@@ -18,10 +18,14 @@ Construida con **Astro 5** + **Chart.js** (HTML estático, SEO óptimo) y desple
 | --- | --: | --: | --: | --: |
 | 2026 | 61 | 9 | 70.865 | 75.999 |
 | 2025 | 44 | 7 | 49.161 | 52.694 |
+| 2023 | 55 | 7 | 57.539 | 61.587 |
 
-> En 2025 **no hay Lunes ni Martes Santo**: el Consejo no publicó esos días porque no todas las
-> hermandades hicieron estación. El modelo lo contempla (una hermandad simplemente no tiene
-> registro el año que no salió).
+> Días no contados (el modelo los contempla; una hermandad simplemente no tiene registro el año
+> que no salió, y la home del año lo avisa):
+> - **2025**: sin Lunes ni Martes Santo (no todas las hermandades hicieron estación).
+> - **2023**: sin Sábado Santo (distorsión por el Santo Entierro Magno) ni Domingo de Resurrección.
+>
+> Reconciliación de nombres en 2023: «Tres Caídas» = San Isidoro; «Sagrada Mortaja» = La Mortaja.
 
 Todos los datos se han transcrito y verificado contra la fila TOTAL de cada imagen oficial.
 
