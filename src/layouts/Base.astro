@@ -13,6 +13,9 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const anioActual = new Date().getFullYear();
+
+const aniosAsc = [...anios].map((a) => a.anio).sort((x, y) => x - y);
+const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.slice(0, -1).join(', ') + ' y ' + aniosAsc.at(-1);
 ---
 
 <!doctype html>
@@ -66,14 +69,16 @@ const anioActual = new Date().getFullYear();
     <footer class="pie">
       <div class="contenedor pie__inner">
         <div>
-          <strong>Semana Santa Open Data</strong> — datos abiertos del conteo de la Semana Santa de Sevilla {2026}.
+          <strong>Semana Santa Open Data</strong> — datos abiertos del conteo oficial de la Semana
+          Santa de Sevilla. Tablas, gráficas y comparativa por año, día y hermandad, con descargas
+          en CSV y JSON. Años disponibles: {listaAnios}.
         </div>
         <div>
-          Fuente original: <a href="https://www.hermandades-de-sevilla.org/consejo/el-consejo-completa-el-conteo-de-la-semana-santa-2026/" rel="nofollow noopener" target="_blank">Consejo General de Hermandades y Cofradías de Sevilla</a>.
+          Fuente original: <a href="https://www.hermandades-de-sevilla.org/" rel="nofollow noopener" target="_blank">Consejo General de Hermandades y Cofradías de Sevilla</a>.
           Datos transcritos de las tablas oficiales de conteo; este sitio no es oficial.
         </div>
         <div>
-          Página creada por <a href="https://x.com/JaviWarSVQ" rel="noopener" target="_blank">@JaviWarSVQ</a> en X.
+          Página creada por <a href="https://x.com/JaviWarSVQ" rel="noopener" target="_blank">@JaviWarSVQ</a>.
           · © {anioActual} · Proyecto de datos abiertos sin ánimo de lucro.
         </div>
       </div>

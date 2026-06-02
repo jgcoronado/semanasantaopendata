@@ -129,17 +129,19 @@ const hayVariosAnios = datos.length >= 2;
     r.addEventListener('change', () => { if (r.checked) aplicarMetrica(r.value); });
   });
 
-  // Histograma: valores por año (nazarenos y cortejo).
+  // Histograma: agrupado por magnitud (Nazarenos / Cortejo), una barra por año.
+  const PALETA_ANIOS = ['#5b2a86', '#c8a24a', '#3d8a6b', '#b5462f', '#2f6fb5'];
   const cvHist = document.getElementById('hist-hdad');
   if (cvHist) {
     new Chart(cvHist, {
       type: 'bar',
       data: {
-        labels: datos.anios.map(String),
-        datasets: [
-          { label: 'Nazarenos', data: datos.noNaz, backgroundColor: MORADO },
-          { label: 'Cortejo total', data: datos.noTotal, backgroundColor: ORO },
-        ],
+        labels: ['Nazarenos', 'Cortejo total'],
+        datasets: datos.anios.map((an, i) => ({
+          label: String(an),
+          data: [datos.noNaz[i], datos.noTotal[i]],
+          backgroundColor: PALETA_ANIOS[(datos.anios.length - 1 - i) % PALETA_ANIOS.length],
+        })),
       },
       options: {
         responsive: true, maintainAspectRatio: false,

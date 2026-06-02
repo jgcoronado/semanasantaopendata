@@ -142,12 +142,6 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
     tituloTotal.textContent = nombreDia(diaActual);
   }
 
-  function pintarDiaResaltado() {
-    const border = datos.dias.map((d) => (d.slug === diaActual ? 3 : 0));
-    chartA.data.datasets.forEach((ds) => { ds.borderWidth = border; });
-    chartA.update();
-  }
-
   // Notifica a la tabla (y a quien escuche) la hermandad resaltada.
   function emitir() {
     document.dispatchEvent(new CustomEvent('hdad-sel', { detail: { slug: hdadActual } }));
@@ -161,7 +155,6 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
     }
     selHdad.value = hdadActual || '';
     pintarComposicion();
-    pintarDiaResaltado();
     emitir();
   }
 
@@ -170,9 +163,7 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
     diaActual = selDia.value;
     if (hdadActual && !hermsDe(diaActual).some((h) => h.slug === hdadActual)) { hdadActual = null; selHdad.value = ''; emitir(); }
     pintarComposicion();
-    pintarDiaResaltado();
   });
 
   pintarComposicion();
-  pintarDiaResaltado();
 </script>
