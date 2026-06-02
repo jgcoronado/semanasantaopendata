@@ -1,0 +1,96 @@
+---
+// Gráficas de una hermandad a lo largo de los años:
+//  - una tarta por año con su % de nazarenos sobre el total del día,
+//  - un histograma (barras agrupadas) con nazarenos y cortejo por año.
+// `datos` llega ordenado ascendente por año.
+const { nombre, datos } = Astro.props;
+
+const datosCliente = {
+  nombre,
+  anios: datos.map((x) => x.anio),
+  noNaz: datos.map((x) => x.noNaz),
+  noTotal: datos.map((x) => x.noTotal),
+  pies: datos.map((x) => ({ anio: x.anio, hdad: x.noNaz, resto: Math.max(x.diaNoNaz - x.noNaz, 0), pct: Math.round(x.pctNaz * 10) / 10 })),
+};
+const hayVariosAnios = datos.length >= 2;
+---
+
+<div class="pies-grid">
+  {datos.map((x) => (
+    <figure class="grafica">
+      <figcaption>% de nazarenos sobre el día — <strong>{x.anio}</strong></figcaption>
+      <div class="grafica__lienzo grafica__lienzo--pie"><canvas class="pie-anio" data-anio={x.anio} aria-label={`Porcentaje sobre el día en ${x.anio}`}></canvas></div>
+    </figure>
+  ))}
+</div>
+
+{hayVariosAnios && (
+  <figure class="grafica grafica--ancha" style="margin-top:1.2rem">
+    <figcaption>Nazarenos y cortejo por año</figcaption>
+    <div class="grafica__lienzo"><canvas id="hist-hdad" aria-label="Nazarenos y cortejo por año"></canvas></div>
+  </figure>
+)}
+
+<script type="application/json" id="datos-graficas-hdad" set:html={JSON.stringify(datosCliente)}></script>
+<script>
+  import { Chart, PieController, ArcElement, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+  Chart.register(PieController, ArcElement, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+  const datos = JSON.parse(document.getElementById('datos-graficas-hdad').textContent);
+  const MORADO = '#5b2a86';
+  const ORO = '#c8a24a';
+  const MORADO_CLARO = '#ddd2ec';
+  const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+
+  // Tartas: una por año.
+  document.querySelectorAll('canvas.pie-anio').forEach((cv) => {
+    const anio = Number(cv.dataset.anio);
+    const p = datos.pies.find((x) => x.anio === anio);
+    if (!p) return;
+    new Chart(cv, {
+      type: 'pie',
+      data: {
+        labels: [datos.nombre, 'Resto del día'],
+        datasets: [{ data: [p.hdad, p.resto], backgroundColor: [ORO, MORADO_CLARO], borderColor: '#fff', borderWidth: 2 }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' },
+          tooltip: {
+            callbacks: {
+              label: (c) => {
+                const total = p.hdad + p.resto;
+                const pct = total ? ((c.parsed / total) * 100).toFixed(1) : '0';
+                return `${c.label}: ${nf.format(c.parsed)} (${pct} %)`;
+              },
+            },
+          },
+        },
+      },
+    });
+  });
+
+  // Histograma: valores por año (nazarenos y cortejo).
+  const cvHist = document.getElementById('hist-hdad');
+  if (cvHist) {
+    new Chart(cvHist, {
+      type: 'bar',
+      data: {
+        labels: datos.anios.map(String),
+        datasets: [
+          { label: 'Nazarenos', data: datos.noNaz, backgroundColor: MORADO },
+          { label: 'Cortejo total', data: datos.noTotal, backgroundColor: ORO },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' },
+          tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${nf.format(c.parsed.y)}` } },
+        },
+        scales: { y: { beginAtZero: true, ticks: { callback: (v) => nf.format(v) } } },
+      },
+    });
+  }
+</script>

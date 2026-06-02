@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { anios, getAnio, fmt, fmtPct } from '../../../lib/datos.js';
+import GraficasHermandad from '../../../components/GraficasHermandad.astro';
+import { anios, getAnio, fmt, fmtPct, variacion } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -27,6 +28,25 @@ const enOtrosAnios = anios
   .filter((a) => a.anio !== anioNum)
   .map((a) => ({ anio: a.anio, presente: getAnio(a.anio).registros.some((x) => x.slug === slug) }))
   .filter((x) => x.presente);
+
+// Esta hermandad en todos los años (ascendente) para la tabla de evolución y las gráficas.
+const porAnioAsc = [...anios]
+  .sort((a, b) => a.anio - b.anio)
+  .map((a) => {
+    const d = getAnio(a.anio);
+    const reg = d.registros.find((x) => x.slug === slug);
+    if (!reg) return null;
+    const tot = d.totalesPorDia.find((t) => t.slug === reg.diaSlug);
+    return { anio: a.anio, noNaz: reg.noNaz, noTotal: reg.noTotal, pctNaz: reg.pctNaz, pctTotal: reg.pctTotal, diaNoNaz: tot.noNaz, diaNoTotal: tot.noTotal };
+  })
+  .filter(Boolean);
+
+const filasAnios = porAnioAsc.map((x, i) => {
+  const prev = porAnioAsc[i - 1];
+  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null };
+});
+
+const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
 
 const desglose = [
   { etiqueta: 'Nazarenos', valor: r.nazarenos },
@@ -95,7 +115,7 @@ const jsonLd = {
   </section>
 
   <section class="panel contenedor">
-    <div class="panel__cab"><h2>Desglose del cortejo</h2></div>
+    <div class="panel__cab"><h2>Desglose del cortejo ({anio})</h2></div>
     <div class="tabla-wrap" style="max-width: 460px;">
       <table class="datos">
         <caption>Composición de la hermandad {r.nombre} en {r.diaNombre} de {anio}.</caption>
@@ -109,6 +129,46 @@ const jsonLd = {
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section class="panel contenedor">
+    <div class="panel__cab"><h2>Datos por año</h2></div>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <caption>Cifras de {r.nombre} por año. La variación compara cada año con el anterior disponible.</caption>
+        <thead>
+          <tr>
+            <th class="txt" scope="col">Año</th>
+            <th scope="col">Nazarenos</th>
+            <th scope="col">Var.</th>
+            <th scope="col">Cortejo</th>
+            <th scope="col">Var.</th>
+            <th scope="col">% día (naz.)</th>
+            <th scope="col">% día (cortejo)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filasAnios.map((f) => {
+            const vn = celdaVar(f.varNaz);
+            const vt = celdaVar(f.varTotal);
+            return (
+              <tr class={f.anio === anioNum ? 'fila-resaltada' : ''}>
+                <td class="txt fuerte"><a href={`/${f.anio}/hermandad/${slug}/`}>{f.anio}</a></td>
+                <td>{fmt(f.noNaz)}</td>
+                <td class={`var ${vn.cls}`}>{vn.txt}</td>
+                <td>{fmt(f.noTotal)}</td>
+                <td class={`var ${vt.cls}`}>{vt.txt}</td>
+                <td>{fmtPct(f.pctNaz)}</td>
+                <td>{fmtPct(f.pctTotal)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+
+    <GraficasHermandad nombre={r.nombre} datos={porAnioAsc} />
+
     <nav class="dia-nav" aria-label="Más">
       <a class="dia-nav__a" href={`/${anio}/dia/${r.diaSlug}/`}>← Todas las hermandades del {r.diaNombre}</a>
       <a class="dia-nav__a dia-nav__der" href="/comparativa/">Comparar años →</a>

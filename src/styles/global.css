@@ -166,6 +166,8 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 .grafica figcaption strong { color: var(--morado); }
 .grafica__lienzo { position: relative; height: 340px; }
 .grafica__nota { color: var(--gris); font-size: 0.85rem; margin-top: 0.9rem; }
+.pies-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; }
+.grafica__lienzo--pie { height: 260px; }
 @media (max-width: 720px) {
   .graficas-grid { grid-template-columns: 1fr; }
   .grafica__lienzo { height: 300px; }
