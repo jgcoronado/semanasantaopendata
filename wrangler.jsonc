@@ -1,0 +1,10 @@
+{
+  // Sitio 100% estático servido como Worker de solo-assets (sin código de servidor).
+  // `wrangler deploy` (producción) y `wrangler versions upload` (preview) usan esta config
+  // para encontrar la carpeta de salida del build de Astro.
+  "name": "semanasantaopendata",
+  "compatibility_date": "2026-06-02",
+  "assets": {
+    "directory": "./dist"
+  }
+}
