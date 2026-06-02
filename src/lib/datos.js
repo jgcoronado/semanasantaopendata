@@ -329,56 +329,38 @@ export function getCruceNazarenosHorarios(anio) {
  * Útil para gráficas de área que muestren la concentración a lo largo de la jornada.
  * Excluye hermandades marcadas como 'sin_datos'.
  */
+/**
+ * Nazarenos simultáneos en la calle por minuto, segregados por día litúrgico.
+ * Muestreado cada 5 minutos (288 puntos/día) para las gráficas de área.
+ * Excluye hermandades sin datos (posible lluvia/suspensión).
+ */
 export function getHorariosEnCalle(anio) {
   const crucero = getCruceNazarenosHorarios(anio);
 
-  // Array de 24*60 minutos (00:00 a 23:59)
-  const minutoConcentracion = new Array(24 * 60).fill(0);
+  const diasSlug = [...new Set(crucero.registros.map((r) => r.diaSlug))];
+  const porDia = {};
 
-  for (const h of cruzero.registros) {
-    // Saltar hermandades sin datos (posible lluvia)
-    if (h.incidencia === 'sin_datos' || !h.noNaz) continue;
-
-    const inicio = h.salidaMin % (24 * 60); // Asegurar rango 0-1439
-    const fin = h.entradaMin % (24 * 60);
-
-    // Handle processions that cross midnight
-    if (fin < inicio) {
-      // Desde inicio hasta 23:59
-      for (let m = inicio; m < 24 * 60; m++) {
-        minutoConcentracion[m] += h.noNaz;
-      }
-      // Desde 00:00 hasta fin
-      for (let m = 0; m <= fin; m++) {
-        minutoConcentracion[m] += h.noNaz;
-      }
-    } else {
-      // Normal: mismo día
-      for (let m = inicio; m <= fin; m++) {
-        minutoConcentracion[m] += h.noNaz;
+  for (const diaSlug of diasSlug) {
+    const concentracion = new Array(24 * 60).fill(0);
+    for (const h of crucero.registros) {
+      if (h.diaSlug !== diaSlug || h.incidencia === 'sin_datos' || !h.noNaz) continue;
+      for (let m = h.salidaMin; m <= h.entradaMin; m++) {
+        concentracion[m % (24 * 60)] += h.noNaz;
       }
     }
-  }
-
-  // Convertir a formato legible para gráficas
-  const serieTiempo = [];
-  for (let hora = 0; hora < 24; hora++) {
-    for (let minuto = 0; minuto < 60; minuto++) {
-      const indice = hora * 60 + minuto;
+    const serieTiempo = [];
+    for (let i = 0; i < 24 * 60; i += 5) {
+      const hora = Math.floor(i / 60);
+      const minuto = i % 60;
       serieTiempo.push({
-        hora: hora,
-        minuto: minuto,
         hhmm: `${String(hora).padStart(2, '0')}:${String(minuto).padStart(2, '0')}`,
-        nazarenos: minutoConcentracion[indice]
+        nazarenos: concentracion[i],
       });
     }
+    porDia[diaSlug] = { serieTiempo, maxNazarenos: Math.max(...concentracion) };
   }
 
-  return {
-    anio: cruzero.anio,
-    serieTiempo,
-    maxNazarenos: Math.min(...minutoConcentracion.filter(v => v > 0)), // Ignorar ceros si es posible
-  };
+  return { anio: crucero.anio, porDia };
 }
 
 // ---------- Exportación de datos para el análisis cruzado ----------
