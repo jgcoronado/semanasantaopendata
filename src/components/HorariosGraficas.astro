@@ -1,10 +1,25 @@
 ---
 const { registros, dias } = Astro.props;
 
+const diasOrd = [...dias].sort((a, b) => a.orden - b.orden);
+
+// Codificación visual por día (max 5 colores, símbolo único por par color+forma)
+// Días 1-5: raya /, días 6-9: raya \ (mismos colores → dirección distingue el grupo)
+const COLORES_5 = ['#5b2a86', '#c8a24a', '#3d8a6b', '#b5462f', '#2f6fb5'];
+const SIMBOLOS_9 = ['circle', 'triangle', 'rect', 'star', 'crossRot', 'triangle', 'rect', 'star', 'crossRot'];
+const estilosDias = diasOrd.map((d) => ({
+  nombre: d.nombre,
+  orden: d.orden,
+  color: COLORES_5[(d.orden - 1) % COLORES_5.length],
+  simbolo: SIMBOLOS_9[(d.orden - 1) % SIMBOLOS_9.length],
+  raya: d.orden <= 5 ? '/' : '\\',
+}));
+
+const altoBarras = Math.max(420, registros.length * 22);
+
 const datosCliente = {
-  dias: dias.map((d) => ({ slug: d.slug, nombre: d.nombre })),
+  dias: diasOrd.map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden })),
   registros: registros.map((r) => ({
-    slug: r.slug,
     nombre: r.nombre,
     diaSlug: r.diaSlug,
     diaOrden: r.diaOrden,
@@ -14,20 +29,18 @@ const datosCliente = {
     ultimoPasoFueraMin: r.min.ultimoPasoFuera,
     duracionMin: r.duracionMin,
     noTotal: r.noTotal,
-    partPorHora: r.partPorHora,
   })),
 };
-// Altura para las barras globales (una fila por hermandad).
-const altoGlobal = Math.max(420, registros.length * 20);
 ---
 
+<!-- ======================== POR DÍA ======================== -->
 <section class="panel contenedor" id="cronograma">
   <div class="panel__cab"><h2>Por día</h2></div>
   <div class="controles">
     <label class="campo">
       Día
       <select id="sel-dia-crono">
-        {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+        {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
       </select>
     </label>
   </div>
@@ -35,50 +48,109 @@ const altoGlobal = Math.max(420, registros.length * 20);
   <div class="graficas-grid">
     <figure class="grafica grafica--ancha">
       <figcaption>Cronograma: tiempo de cada cofradía en la calle (salida → entrada)</figcaption>
-      <div class="grafica__lienzo" style="height:460px"><canvas id="gantt" aria-label="Cronograma de cofradías por día"></canvas></div>
+      <div class="grafica__lienzo" style="height:460px">
+        <canvas id="gantt" aria-label="Cronograma por día"></canvas>
+      </div>
     </figure>
     <figure class="grafica grafica--ancha">
       <figcaption>Cofradías a la vez en la Carrera Oficial (pasa el ratón para ver cuáles)</figcaption>
-      <div class="grafica__lienzo"><canvas id="ocupacion" aria-label="Ocupación de la Carrera Oficial"></canvas></div>
+      <div class="grafica__lienzo">
+        <canvas id="ocupacion" aria-label="Ocupación de la Carrera Oficial"></canvas>
+      </div>
     </figure>
   </div>
 </section>
 
+<!-- ======================== GLOBAL ======================== -->
 <section class="panel contenedor" id="global-horarios">
   <div class="panel__cab"><h2>Comparativa global</h2></div>
-  <p class="descargas-intro">Cada punto/barra es una hermandad (color por día). La dispersión cruza tamaño y duración.</p>
 
-  <figure class="grafica grafica--ancha">
+  <!-- Leyenda de días (compartida por ambas gráficas globales) -->
+  <ul class="leyenda-dias" aria-label="Días procesionales">
+    {estilosDias.map((e) => (
+      <li class="leyenda-dias__item">
+        <svg width="26" height="16" aria-hidden="true">
+          <defs>
+            <pattern id={`pat-ley-${e.orden}`} width="8" height="8" patternUnits="userSpaceOnUse">
+              {e.raya === '/' ?
+                <line x1="0" y1="8" x2="8" y2="0" stroke={e.color} stroke-width="2" />
+                :
+                <line x1="0" y1="0" x2="8" y2="8" stroke={e.color} stroke-width="2" />
+              }
+            </pattern>
+          </defs>
+          <rect width="26" height="16" rx="3" fill={`url(#pat-ley-${e.orden})`} stroke={e.color} stroke-width="1.5" />
+        </svg>
+        <span>{e.nombre}</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="descargas-intro" style="margin-top:.6rem">
+    Cada día tiene un color y símbolo únicos. Las barras con rayas <strong>/</strong> (Domingo de Ramos → Jueves Santo)
+    y <strong>\</strong> (Madrugá → Domingo de Resurrección) indican el grupo de días.
+  </p>
+
+  <figure class="grafica grafica--ancha" style="margin-bottom:1.2rem">
     <figcaption>Duración (horas) frente a participantes del cortejo</figcaption>
-    <div class="grafica__lienzo" style="height:420px"><canvas id="dispersion-dur" aria-label="Duración frente a participantes"></canvas></div>
+    <div class="grafica__lienzo" style="height:420px">
+      <canvas id="dispersion-dur" aria-label="Duración frente a participantes"></canvas>
+    </div>
   </figure>
 
-  <div class="graficas-grid" style="margin-top:1.2rem">
-    <figure class="grafica grafica--ancha">
-      <figcaption>Duración total por hermandad</figcaption>
-      <div class="grafica__lienzo" style={`height:${altoGlobal}px`}><canvas id="dur-hdad" aria-label="Duración por hermandad"></canvas></div>
-    </figure>
-  </div>
+  <figure class="grafica grafica--ancha">
+    <figcaption>Duración total por hermandad</figcaption>
+    <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
+      <canvas id="dur-hdad" aria-label="Duración total por hermandad"></canvas>
+    </div>
+  </figure>
 </section>
 
 <script type="application/json" id="datos-horarios" set:html={JSON.stringify(datosCliente)}></script>
 <script>
-  import { Chart, BarController, BarElement, LineController, LineElement, PointElement, ScatterController, CategoryScale, LinearScale, Tooltip, Legend, Filler } from 'chart.js';
+  import {
+    Chart, BarController, BarElement, LineController, LineElement,
+    PointElement, ScatterController, CategoryScale, LinearScale,
+    Tooltip, Legend, Filler,
+  } from 'chart.js';
   Chart.register(BarController, BarElement, LineController, LineElement, PointElement, ScatterController, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
   const datos = JSON.parse(document.getElementById('datos-horarios').textContent);
-  const MORADO = '#5b2a86';
-  const ORO = '#c8a24a';
-  // Paleta por día (índice = diaOrden - 1).
-  const DIA_COL = ['#5b2a86', '#c8a24a', '#2f6fb5', '#3d8a6b', '#b5462f', '#8a5cc0', '#caa53a', '#3a8f8f', '#b07d2a'];
-  const colorDia = (orden) => DIA_COL[(orden - 1) % DIA_COL.length];
+
   const reloj = (m) => `${String(Math.floor((((m % 1440) + 1440) % 1440) / 60)).padStart(2, '0')}:${String(((m % 60) + 60) % 60).padStart(2, '0')}`;
   const dur = (m) => { const h = Math.floor(m / 60); return h > 0 ? `${h} h ${String(m % 60).padStart(2, '0')} min` : `${m} min`; };
 
-  // ---------- Por día: Gantt ----------
+  // ── Codificación visual (debe coincidir con el frontmatter) ──
+  const COLORES_5 = ['#5b2a86', '#c8a24a', '#3d8a6b', '#b5462f', '#2f6fb5'];
+  const SIMBOLOS_9 = ['circle', 'triangle', 'rect', 'star', 'crossRot', 'triangle', 'rect', 'star', 'crossRot'];
+  const estiloDia = (orden) => ({
+    color: COLORES_5[(orden - 1) % COLORES_5.length],
+    simbolo: SIMBOLOS_9[(orden - 1) % SIMBOLOS_9.length],
+    raya: orden <= 5 ? '/' : '\\',
+  });
+
+  // ── Patron de rayas (CanvasPattern) ──
+  const _patCtx = document.createElement('canvas').getContext('2d');
+  function hachurado(color, tipo, s = 8, grosor = 2) {
+    const tile = document.createElement('canvas');
+    tile.width = tile.height = s;
+    const ctx = tile.getContext('2d');
+    ctx.strokeStyle = color;
+    ctx.lineWidth = grosor;
+    ctx.beginPath();
+    if (tipo === '/') { ctx.moveTo(0, s); ctx.lineTo(s, 0); }
+    else              { ctx.moveTo(0, 0); ctx.lineTo(s, s); }
+    ctx.stroke();
+    return _patCtx.createPattern(tile, 'repeat');
+  }
+
+  const MORADO = '#5b2a86';
+  const ORO = '#c8a24a';
+
+  // ── Gantt ──
   const chartGantt = new Chart(document.getElementById('gantt'), {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'En la calle', data: [], backgroundColor: 'rgba(91,42,134,0.78)', borderColor: MORADO, borderWidth: 1, borderSkipped: false }] },
+    data: { labels: [], datasets: [{ data: [], backgroundColor: 'rgba(91,42,134,0.78)', borderColor: MORADO, borderWidth: 1, borderSkipped: false }] },
     options: {
       indexAxis: 'y', responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${reloj(c.raw[0])} – ${reloj(c.raw[1])} (${dur(c.raw[1] - c.raw[0])})` } } },
@@ -86,19 +158,18 @@ const altoGlobal = Math.max(420, registros.length * 20);
     },
   });
 
-  // ---------- Por día: ocupación de la Carrera Oficial ----------
+  // ── Ocupación Carrera Oficial ──
   let ocupNombres = [];
   const chartOcup = new Chart(document.getElementById('ocupacion'), {
     type: 'line',
-    data: { labels: [], datasets: [{ label: 'Cofradías en la Carrera Oficial', data: [], borderColor: ORO, backgroundColor: 'rgba(200,162,74,0.25)', fill: true, tension: 0.25, pointRadius: 0, pointHoverRadius: 4 }] },
+    data: { labels: [], datasets: [{ data: [], borderColor: ORO, backgroundColor: 'rgba(200,162,74,0.25)', fill: true, tension: 0.25, pointRadius: 0, pointHoverRadius: 4 }] },
     options: {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
-          mode: 'index',
-          intersect: false,
+          mode: 'index', intersect: false,
           callbacks: {
             title: (items) => items[0]?.label ?? '',
             label: (c) => `${c.parsed.y} cofradía${c.parsed.y === 1 ? '' : 's'} en Carrera Oficial`,
@@ -113,17 +184,12 @@ const altoGlobal = Math.max(420, registros.length * 20);
   const selDia = document.getElementById('sel-dia-crono');
   function pintarDia() {
     const regs = datos.registros.filter((r) => r.diaSlug === selDia.value).sort((a, b) => a.salidaMin - b.salidaMin);
-
-    // Gantt con eje X ajustado al rango real del día (margen de 20 min).
     chartGantt.data.labels = regs.map((r) => r.nombre);
     chartGantt.data.datasets[0].data = regs.map((r) => [r.salidaMin, r.entradaMin]);
-    const minX = Math.min(...regs.map((r) => r.salidaMin)) - 20;
-    const maxX = Math.max(...regs.map((r) => r.entradaMin)) + 20;
-    chartGantt.options.scales.x.min = minX;
-    chartGantt.options.scales.x.max = maxX;
+    chartGantt.options.scales.x.min = Math.min(...regs.map((r) => r.salidaMin)) - 20;
+    chartGantt.options.scales.x.max = Math.max(...regs.map((r) => r.entradaMin)) + 20;
     chartGantt.update();
 
-    // Ocupación (paso de 5 min) + nombres para el tooltip.
     const paso = 5;
     const ini = Math.floor(Math.min(...regs.map((r) => r.campanaMin)) / paso) * paso;
     const fin = Math.max(...regs.map((r) => r.ultimoPasoFueraMin));
@@ -142,29 +208,65 @@ const altoGlobal = Math.max(420, registros.length * 20);
   selDia.addEventListener('change', pintarDia);
   pintarDia();
 
-  // ---------- Global: dispersión duración vs tamaño ----------
+  // ── Dispersión: un dataset por día (leyenda con símbolo correcto) ──
+  const scatterDatasets = datos.dias
+    .filter((d) => datos.registros.some((r) => r.diaSlug === d.slug && r.noTotal != null))
+    .map((d) => {
+      const e = estiloDia(d.orden);
+      return {
+        label: d.nombre,
+        data: datos.registros
+          .filter((r) => r.diaSlug === d.slug && r.noTotal != null)
+          .map((r) => ({ x: r.noTotal, y: +(r.duracionMin / 60).toFixed(1), nombre: r.nombre })),
+        backgroundColor: e.color + 'bb',
+        borderColor: e.color,
+        pointStyle: e.simbolo,
+        pointRadius: 7,
+        pointHoverRadius: 9,
+      };
+    });
+
   new Chart(document.getElementById('dispersion-dur'), {
     type: 'scatter',
-    data: { datasets: [{ label: 'Hermandades', data: datos.registros.map((r) => ({ x: r.noTotal, y: Math.round((r.duracionMin / 60) * 10) / 10, nombre: r.nombre })), backgroundColor: datos.registros.map((r) => colorDia(r.diaOrden)), pointRadius: 5, pointHoverRadius: 7 }] },
+    data: { datasets: scatterDatasets },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.raw.nombre}: ${c.raw.x.toLocaleString('es-ES')} participantes · ${c.raw.y} h` } } },
-      scales: { x: { title: { display: true, text: 'Participantes (cortejo)' }, beginAtZero: true }, y: { title: { display: true, text: 'Duración (horas)' }, beginAtZero: true } },
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, pointStyleWidth: 14, padding: 14 } },
+        tooltip: { callbacks: { label: (c) => `${c.raw.nombre}: ${c.raw.x.toLocaleString('es-ES')} part. · ${c.raw.y} h` } },
+      },
+      scales: {
+        x: { title: { display: true, text: 'Participantes (cortejo)' }, beginAtZero: true },
+        y: { title: { display: true, text: 'Duración (horas)' }, beginAtZero: true },
+      },
     },
   });
 
-  // ---------- Global: barras por hermandad (color por día) ----------
-  function barrasGlobales(canvasId, valor, fmtTip) {
-    const orden = [...datos.registros].sort((a, b) => valor(b) - valor(a));
-    new Chart(document.getElementById(canvasId), {
-      type: 'bar',
-      data: { labels: orden.map((r) => r.nombre), datasets: [{ data: orden.map(valor), backgroundColor: orden.map((r) => colorDia(r.diaOrden)) }] },
-      options: {
-        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => fmtTip(c.raw) } } },
-        scales: { x: { beginAtZero: true }, y: { ticks: { autoSkip: false, font: { size: 10 } } } },
+  // ── Barras de duración con patrones de rayas ──
+  const ordenDur = [...datos.registros].sort((a, b) => b.duracionMin - a.duracionMin);
+  const bgPatrones = ordenDur.map((r) => {
+    const e = estiloDia(r.diaOrden);
+    return hachurado(e.color, e.raya);
+  });
+
+  new Chart(document.getElementById('dur-hdad'), {
+    type: 'bar',
+    data: {
+      labels: ordenDur.map((r) => r.nombre),
+      datasets: [{
+        data: ordenDur.map((r) => r.duracionMin),
+        backgroundColor: bgPatrones,
+        borderColor: ordenDur.map((r) => estiloDia(r.diaOrden).color),
+        borderWidth: 1.5,
+      }],
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => dur(c.raw) } } },
+      scales: {
+        x: { beginAtZero: true, ticks: { callback: (v) => dur(v) } },
+        y: { ticks: { autoSkip: false, font: { size: 10 } } },
       },
-    });
-  }
-  barrasGlobales('dur-hdad', (r) => r.duracionMin, (v) => dur(v));
+    },
+  });
 </script>
