@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import { getComparativaHermandades, anios, anioPrincipal } from '../lib/datos.js';
+
+const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+const hermandades = getComparativaHermandades()
+  .slice()
+  .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
+  .map((h) => {
+    const aniosConDatos = anios.filter((a) => h.porAnio[a.anio]).map((a) => a.anio);
+    const anioEnlace = aniosConDatos[0] ?? anioPrincipal;
+    return { ...h, aniosConDatos, anioEnlace, busqueda: norm(h.nombre) };
+  });
+
+const title = 'Hermandades de la Semana Santa de Sevilla — buscador | Open Data';
+const description =
+  'Listado y buscador de todas las hermandades de la Semana Santa de Sevilla, con acceso a sus datos de conteo por año (nazarenos y cortejo).';
+---
+
+<Base title={title} description={description} hermandadesActiva={true}>
+  <section class="hero">
+    <div class="contenedor">
+      <h1>Hermandades</h1>
+      <p>Busca una hermandad para ver su ficha con los datos de todos los años.</p>
+      <div class="buscador">
+        <input
+          type="search"
+          id="buscador-hdad"
+          placeholder="Escribe el nombre de una hermandad…"
+          aria-label="Buscar hermandad"
+          autocomplete="off"
+        />
+        <span class="buscador__contador" id="buscador-contador" aria-live="polite">{hermandades.length} hermandades</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor">
+    <ul class="hdad-lista" id="hdad-lista">
+      {hermandades.map((h) => (
+        <li class="hdad-item" data-nombre={h.busqueda}>
+          <a href={`/${h.anioEnlace}/hermandad/${h.slug}/`}>
+            <span class="hdad-item__nombre">{h.nombre}</span>
+            <span class="hdad-item__meta">
+              <span class="pildora-dia">{h.diaNombre}</span>
+              <span class="hdad-item__anios">{h.aniosConDatos.join(' · ')}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+      <li class="hdad-vacio" id="hdad-vacio" hidden>No hay ninguna hermandad con ese nombre.</li>
+    </ul>
+  </section>
+
+  <script>
+    const input = document.getElementById('buscador-hdad');
+    const items = Array.from(document.querySelectorAll('.hdad-item'));
+    const vacio = document.getElementById('hdad-vacio');
+    const contador = document.getElementById('buscador-contador');
+    const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+    function filtrar() {
+      const q = norm(input.value.trim());
+      let n = 0;
+      for (const it of items) {
+        const ok = !q || it.dataset.nombre.includes(q);
+        it.hidden = !ok;
+        if (ok) n++;
+      }
+      vacio.hidden = n !== 0;
+      contador.textContent = `${n} hermandad${n === 1 ? '' : 'es'}`;
+    }
+
+    input.addEventListener('input', filtrar);
+  </script>
+</Base>

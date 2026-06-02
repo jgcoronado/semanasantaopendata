@@ -37,7 +37,13 @@ const porAnioAsc = [...anios]
     const reg = d.registros.find((x) => x.slug === slug);
     if (!reg) return null;
     const tot = d.totalesPorDia.find((t) => t.slug === reg.diaSlug);
-    return { anio: a.anio, noNaz: reg.noNaz, noTotal: reg.noTotal, pctNaz: reg.pctNaz, pctTotal: reg.pctTotal, diaNoNaz: tot.noNaz, diaNoTotal: tot.noTotal };
+    return {
+      anio: a.anio,
+      nazarenos: reg.nazarenos, penitentes: reg.penitentes, acolitos: reg.acolitos,
+      monaguillos: reg.monaguillos, acompCortejo: reg.acompCortejo,
+      noNaz: reg.noNaz, noTotal: reg.noTotal, pctNaz: reg.pctNaz, pctTotal: reg.pctTotal,
+      diaNoNaz: tot.noNaz, diaNoTotal: tot.noTotal,
+    };
   })
   .filter(Boolean);
 
@@ -48,14 +54,14 @@ const filasAnios = porAnioAsc.map((x, i) => {
 
 const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
 
-const desglose = [
-  { etiqueta: 'Nazarenos', valor: r.nazarenos },
-  { etiqueta: 'Penitentes', valor: r.penitentes },
-  { etiqueta: 'Total nazarenos', valor: r.noNaz, fuerte: true },
-  { etiqueta: 'Acólitos', valor: r.acolitos },
-  { etiqueta: 'Monaguillos', valor: r.monaguillos },
-  { etiqueta: 'Acompañamiento en el cortejo', valor: r.acompCortejo },
-  { etiqueta: 'Total cortejo', valor: r.noTotal, fuerte: true },
+const metricasDesglose = [
+  { etiqueta: 'Nazarenos', key: 'nazarenos' },
+  { etiqueta: 'Penitentes', key: 'penitentes' },
+  { etiqueta: 'Total nazarenos', key: 'noNaz', fuerte: true },
+  { etiqueta: 'Acólitos', key: 'acolitos' },
+  { etiqueta: 'Monaguillos', key: 'monaguillos' },
+  { etiqueta: 'Acompañamiento', key: 'acompCortejo' },
+  { etiqueta: 'Total cortejo', key: 'noTotal', fuerte: true },
 ];
 
 const title = `${r.nombre} (${r.diaNombre}) ${anio} · nazarenos y cortejo | Semana Santa Open Data`;
@@ -115,15 +121,23 @@ const jsonLd = {
   </section>
 
   <section class="panel contenedor">
-    <div class="panel__cab"><h2>Desglose del cortejo ({anio})</h2></div>
-    <div class="tabla-wrap" style="max-width: 460px;">
+    <div class="panel__cab"><h2>Desglose por año</h2></div>
+    <div class="tabla-wrap">
       <table class="datos">
-        <caption>Composición de la hermandad {r.nombre} en {r.diaNombre} de {anio}.</caption>
+        <caption>Composición completa de {r.nombre} por año (la columna de {anio}, el año que estás viendo, va resaltada).</caption>
+        <thead>
+          <tr>
+            <th class="txt" scope="col">Concepto</th>
+            {porAnioAsc.map((x) => <th scope="col" class={x.anio === anioNum ? 'col-actual' : ''}>{x.anio}</th>)}
+          </tr>
+        </thead>
         <tbody>
-          {desglose.map((d) => (
+          {metricasDesglose.map((m) => (
             <tr>
-              <td class="txt">{d.etiqueta}</td>
-              <td class={d.fuerte ? 'fuerte' : ''}>{fmt(d.valor)}</td>
+              <td class="txt">{m.etiqueta}</td>
+              {porAnioAsc.map((x) => (
+                <td class={`${m.fuerte ? 'fuerte' : ''} ${x.anio === anioNum ? 'col-actual' : ''}`.trim()}>{fmt(x[m.key])}</td>
+              ))}
             </tr>
           ))}
         </tbody>

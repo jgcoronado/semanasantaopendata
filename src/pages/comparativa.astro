@@ -2,15 +2,16 @@
 import Base from '../layouts/Base.astro';
 import { anios, getComparativaDias, getComparativaHermandades, fmt, fmtPct, variacion } from '../lib/datos.js';
 
-const aniosOrden = anios.map((a) => a.anio); // descendente, p. ej. [2026, 2025]
+const aniosOrden = anios.map((a) => a.anio); // descendente, p. ej. [2026, 2025, 2023]
 const aLatest = aniosOrden[0];
-const aPrev = aniosOrden[1];
+const basesPosibles = aniosOrden.slice(1); // años contra los que comparar
+const baseInicial = basesPosibles[0];
 
 const compDias = getComparativaDias();
 const compHerms = getComparativaHermandades();
 
-// Variación interanual (último año disponible vs anterior) para una métrica.
-const varDe = (porAnio, metrica) => variacion(porAnio[aLatest]?.[metrica] ?? null, porAnio[aPrev]?.[metrica] ?? null);
+// Variación interanual (año más reciente vs un año base) para una métrica.
+const varDe = (porAnio, metrica, base) => variacion(porAnio[aLatest]?.[metrica] ?? null, porAnio[base]?.[metrica] ?? null);
 const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
 
 // Datos para el gráfico (por día, una serie por año).
@@ -35,12 +36,11 @@ const description =
       </nav>
       <h1>Comparativa entre años</h1>
       <p>
-        Evolución del conteo de la Semana Santa de Sevilla por día y por hermandad. La variación
-        compara <strong>{aLatest}</strong> con <strong>{aPrev}</strong>. Un guion (<strong>—</strong>)
-        significa que ese día/hermandad no se contó ese año.
+        Evolución del conteo de la Semana Santa de Sevilla por día y por hermandad. Un guion
+        (<strong>—</strong>) significa que ese día/hermandad no se contó ese año.
       </p>
 
-      <div class="controles" role="group" aria-label="Métrica">
+      <div class="controles">
         <span class="campo" style="gap:.4rem">
           Métrica
           <span class="segmento">
@@ -48,6 +48,12 @@ const description =
             <label><input type="radio" name="metrica" value="noTotal" /> Cortejo total</label>
           </span>
         </span>
+        <label class="campo">
+          Comparar {aLatest} con
+          <select id="selector-base">
+            {basesPosibles.map((b) => <option value={b}>{b}</option>)}
+          </select>
+        </label>
       </div>
     </div>
   </section>
@@ -61,26 +67,26 @@ const description =
 
     <div class="tabla-wrap" style="margin-top:1.2rem">
       <table class="datos">
-        <caption>Totales por día y año. La variación es {aLatest} respecto a {aPrev}.</caption>
+        <caption>Totales por día y año. La variación es {aLatest} respecto al año elegido.</caption>
         <thead>
           <tr>
             <th class="txt" scope="col">Día</th>
             {aniosOrden.map((an) => <th scope="col">{an}</th>)}
-            <th scope="col">Var. {aLatest}/{aPrev}</th>
+            <th scope="col">Var. {aLatest}/<span class="anio-base-lbl">{baseInicial}</span></th>
           </tr>
         </thead>
         <tbody>
           {compDias.map((d) => {
-            const v = celdaVar(varDe(d.porAnio, 'noNaz'));
+            const v = celdaVar(varDe(d.porAnio, 'noNaz', baseInicial));
             return (
               <tr>
                 <td class="txt">{d.nombre}</td>
                 {aniosOrden.map((an) => (
-                  <td data-naz={d.porAnio[an]?.noNaz ?? ''} data-total={d.porAnio[an]?.noTotal ?? ''}>
+                  <td data-anio={an} data-naz={d.porAnio[an]?.noNaz ?? ''} data-total={d.porAnio[an]?.noTotal ?? ''}>
                     {d.porAnio[an] ? fmt(d.porAnio[an].noNaz) : '—'}
                   </td>
                 ))}
-                <td class={`var ${v.cls}`} data-vnaz={varDe(d.porAnio, 'noNaz') ?? ''} data-vtotal={varDe(d.porAnio, 'noTotal') ?? ''}>{v.txt}</td>
+                <td class={`var ${v.cls}`}>{v.txt}</td>
               </tr>
             );
           })}
@@ -93,28 +99,28 @@ const description =
     <div class="panel__cab"><h2>Por hermandad</h2></div>
     <div class="tabla-wrap">
       <table class="datos">
-        <caption>Cifras por hermandad y año, agrupadas por día. La variación es {aLatest} respecto a {aPrev}.</caption>
+        <caption>Cifras por hermandad y año, agrupadas por día. La variación es {aLatest} respecto al año elegido.</caption>
         <thead>
           <tr>
             <th class="txt" scope="col">Día</th>
             <th class="txt" scope="col">Hermandad</th>
             {aniosOrden.map((an) => <th scope="col">{an}</th>)}
-            <th scope="col">Var. {aLatest}/{aPrev}</th>
+            <th scope="col">Var. {aLatest}/<span class="anio-base-lbl">{baseInicial}</span></th>
           </tr>
         </thead>
         <tbody>
           {compHerms.map((h) => {
-            const v = celdaVar(varDe(h.porAnio, 'noNaz'));
+            const v = celdaVar(varDe(h.porAnio, 'noNaz', baseInicial));
             return (
               <tr>
                 <td class="txt"><span class="pildora-dia">{h.diaNombre}</span></td>
-                <td class="txt">{h.nombre}</td>
+                <td class="txt"><a href={`/${h.porAnio[aLatest] ? aLatest : aniosOrden.find((an) => h.porAnio[an])}/hermandad/${h.slug}/`}>{h.nombre}</a></td>
                 {aniosOrden.map((an) => (
-                  <td data-naz={h.porAnio[an]?.noNaz ?? ''} data-total={h.porAnio[an]?.noTotal ?? ''}>
+                  <td data-anio={an} data-naz={h.porAnio[an]?.noNaz ?? ''} data-total={h.porAnio[an]?.noTotal ?? ''}>
                     {h.porAnio[an] ? fmt(h.porAnio[an].noNaz) : '—'}
                   </td>
                 ))}
-                <td class={`var ${v.cls}`} data-vnaz={varDe(h.porAnio, 'noNaz') ?? ''} data-vtotal={varDe(h.porAnio, 'noTotal') ?? ''}>{v.txt}</td>
+                <td class={`var ${v.cls}`}>{v.txt}</td>
               </tr>
             );
           })}
@@ -133,17 +139,15 @@ const description =
     const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
     const pf = (v) => `${(v > 0 ? '+' : '')}${v.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
 
+    const A_LATEST = datos.anios[0];
     let metrica = 'noNaz';
+    let base = datos.anios[1];
 
     const chart = new Chart(document.getElementById('grafica-comparativa'), {
       type: 'bar',
       data: {
         labels: datos.dias,
-        datasets: datos.anios.map((an, i) => ({
-          label: String(an),
-          data: datos[metrica][an],
-          backgroundColor: PALETA[i % PALETA.length],
-        })),
+        datasets: datos.anios.map((an, i) => ({ label: String(an), data: datos[metrica][an], backgroundColor: PALETA[i % PALETA.length] })),
       },
       options: {
         responsive: true, maintainAspectRatio: false,
@@ -156,30 +160,35 @@ const description =
     });
 
     const tituloMetrica = document.getElementById('titulo-metrica');
+    const selBase = document.getElementById('selector-base');
 
-    function aplicar(m) {
-      metrica = m;
-      const claveData = m === 'noNaz' ? 'naz' : 'total';
-      const claveVar = m === 'noNaz' ? 'vnaz' : 'vtotal';
-      document.querySelectorAll('td[data-naz]').forEach((td) => {
-        const v = td.dataset[claveData];
+    function aplicar() {
+      const cd = metrica === 'noNaz' ? 'naz' : 'total';
+      document.querySelectorAll('td[data-anio]').forEach((td) => {
+        const v = td.dataset[cd];
         td.textContent = v === '' ? '—' : nf.format(+v);
       });
       document.querySelectorAll('td.var').forEach((td) => {
-        const v = td.dataset[claveVar];
+        const tr = td.closest('tr');
+        const a = tr.querySelector(`td[data-anio="${A_LATEST}"]`)?.dataset[cd];
+        const b = tr.querySelector(`td[data-anio="${base}"]`)?.dataset[cd];
         td.classList.remove('pos', 'neg');
-        if (v === '') { td.textContent = '—'; return; }
-        const n = parseFloat(v);
-        td.textContent = pf(n);
-        td.classList.add(n > 0 ? 'pos' : n < 0 ? 'neg' : '');
+        if (a == null || a === '' || b == null || b === '' || +b === 0) { td.textContent = '—'; return; }
+        const vv = ((+a - +b) / +b) * 100;
+        td.textContent = pf(vv);
+        td.classList.add(vv > 0 ? 'pos' : vv < 0 ? 'neg' : '');
       });
-      chart.data.datasets.forEach((ds, i) => { ds.data = datos[m][datos.anios[i]]; });
+      chart.data.datasets.forEach((ds, i) => { ds.data = datos[metrica][datos.anios[i]]; });
       chart.update();
-      tituloMetrica.textContent = m === 'noNaz' ? 'nazarenos' : 'cortejo total';
+      document.querySelectorAll('.anio-base-lbl').forEach((el) => { el.textContent = base; });
+      tituloMetrica.textContent = metrica === 'noNaz' ? 'nazarenos' : 'cortejo total';
     }
 
     document.querySelectorAll('input[name="metrica"]').forEach((r) => {
-      r.addEventListener('change', () => { if (r.checked) aplicar(r.value); });
+      r.addEventListener('change', () => { if (r.checked) { metrica = r.value; aplicar(); } });
     });
+    selBase.addEventListener('change', () => { base = Number(selBase.value); aplicar(); });
+
+    aplicar();
   </script>
 </Base>

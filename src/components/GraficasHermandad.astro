@@ -57,6 +57,29 @@ const hayVariosAnios = datos.length >= 2;
   const MORADO_CLARO = '#ddd2ec';
   const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
 
+  // Plugin inline: dibuja el % de cada porción dentro de la tarta.
+  const pctEnTarta = {
+    id: 'pctEnTarta',
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      const ds = chart.data.datasets[0];
+      const total = ds.data.reduce((a, b) => a + b, 0);
+      if (!total) return;
+      chart.getDatasetMeta(0).data.forEach((arco, i) => {
+        const pct = (ds.data[i] / total) * 100;
+        if (pct < 6) return; // no etiquetar porciones diminutas
+        const { x, y } = arco.tooltipPosition();
+        ctx.save();
+        ctx.font = 'bold 14px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#1c1a22';
+        ctx.fillText(`${pct.toFixed(1)} %`, x, y);
+        ctx.restore();
+      });
+    },
+  };
+
   let metrica = 'naz';
   const datosPie = (anio) => datos.pies.find((x) => x.anio === anio)[metrica];
 
@@ -67,6 +90,7 @@ const hayVariosAnios = datos.length >= 2;
     const p = datosPie(anio);
     const ch = new Chart(cv, {
       type: 'pie',
+      plugins: [pctEnTarta],
       data: {
         labels: [datos.nombre, 'Resto del día'],
         datasets: [{ data: [p.hdad, p.resto], backgroundColor: [ORO, MORADO_CLARO], borderColor: '#fff', borderWidth: 2 }],

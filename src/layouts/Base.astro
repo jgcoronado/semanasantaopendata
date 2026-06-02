@@ -8,6 +8,7 @@ const {
   jsonLd = null,
   anioActivo = null,
   comparativaActiva = false,
+  hermandadesActiva = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -52,6 +53,7 @@ const anioActual = new Date().getFullYear();
           {anios.map((a) => (
             <a href={`/${a.slug}/`} class={anioActivo === a.anio ? 'activo' : ''} aria-current={anioActivo === a.anio ? 'page' : undefined}>{a.anio}</a>
           ))}
+          <a href="/hermandades/" class={hermandadesActiva ? 'activo' : ''} aria-current={hermandadesActiva ? 'page' : undefined}>Hermandades</a>
           <a href="/comparativa/" class={comparativaActiva ? 'activo' : ''} aria-current={comparativaActiva ? 'page' : undefined}>Comparativa</a>
         </nav>
       </div>
