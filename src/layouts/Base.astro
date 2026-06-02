@@ -56,12 +56,22 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
       <div class="contenedor cabecera__inner">
         <a href="/" class="marca"><span class="marca__punto" aria-hidden="true"></span> Semana Santa Open Data</a>
         <nav class="nav" aria-label="Principal">
-          {anios.map((a) => (
-            <a href={`/${a.slug}/`} class={anioActivo === a.anio ? 'activo' : ''} aria-current={anioActivo === a.anio ? 'page' : undefined}>{a.anio}</a>
-          ))}
-          {slugHorarios && (
-            <a href={`/${slugHorarios}/horarios/`} class={horariosActiva ? 'activo' : ''} aria-current={horariosActiva ? 'page' : undefined}>Horarios</a>
-          )}
+          {anios.map((a) => {
+            const tieneHorarios = aniosConHorarios.some((h) => h.anio === a.anio);
+            const esActivo = anioActivo === a.anio;
+            if (!tieneHorarios) {
+              return <a href={`/${a.slug}/`} class={esActivo ? 'activo' : ''} aria-current={esActivo ? 'page' : undefined}>{a.anio}</a>;
+            }
+            return (
+              <details class={`nav-dd${esActivo ? ' nav-dd--activo' : ''}`} open={esActivo || undefined}>
+                <summary class={`nav-dd__btn${esActivo ? ' activo' : ''}`}>{a.anio} <span class="nav-dd__flecha" aria-hidden="true">▾</span></summary>
+                <div class="nav-dd__panel">
+                  <a href={`/${a.slug}/`} class={esActivo && !horariosActiva ? 'activo' : ''}>Nazarenos</a>
+                  <a href={`/${a.slug}/horarios/`} class={esActivo && horariosActiva ? 'activo' : ''}>Horarios</a>
+                </div>
+              </details>
+            );
+          })}
           <a href="/hermandades/" class={hermandadesActiva ? 'activo' : ''} aria-current={hermandadesActiva ? 'page' : undefined}>Hermandades</a>
           <a href="/comparativa/" class={comparativaActiva ? 'activo' : ''} aria-current={comparativaActiva ? 'page' : undefined}>Comparativa</a>
         </nav>
