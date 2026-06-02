@@ -20,8 +20,17 @@ npm run build && npm run preview
 ```
 
 ### En web (URL de preview de Cloudflare)
-Con los builds de ramas no-producción activados (ver más abajo), cada push a `pre` genera una
-**URL de preview** aparte. Producción (`main`) no se toca.
+Ya activado. Cada push a `pre` se publica en la **URL estable de PRE**:
+
+> **https://pre-semanasantaopendata.jaguerra27.workers.dev**
+
+Producción (`main`) no se toca. Cada build de `pre` muestra además una URL por versión
+(`https://<id>-semanasantaopendata…workers.dev`) en su log.
+
+> Nota técnica: el deploy de preview usa `npx wrangler versions upload`, que necesita el fichero
+> **`wrangler.jsonc`** en la raíz (config de *solo-assets*, sin adaptador SSR; somos 100%
+> estáticos). Está en la rama `pre` y llegará a `main` con el primer merge de feature. Producción
+> usa `npx wrangler deploy`, que ya autodetecta los assets.
 
 ## Pasar de PRE a producción
 
