@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import TablaNazarenos from '../../components/TablaNazarenos.astro';
 import Explorador from '../../components/Explorador.astro';
-import { anios, getAnio, fmt } from '../../lib/datos.js';
+import { anios, dias, getAnio, fmt } from '../../lib/datos.js';
 
 export function getStaticPaths() {
   return anios.map((a) => ({ params: { anio: a.slug } }));
@@ -11,6 +11,11 @@ export function getStaticPaths() {
 const { anio } = Astro.params;
 const anioNum = Number(anio);
 const { registros, diasPresentes, totalesPorDia, totalGeneral } = getAnio(anioNum);
+
+// Días del calendario que no se contaron ese año (para avisar).
+const presentes = new Set(diasPresentes.map((d) => d.slug));
+const diasFaltan = dias.filter((d) => !presentes.has(d.slug)).map((d) => d.nombre);
+const listaFaltan = diasFaltan.length <= 1 ? (diasFaltan[0] ?? '') : diasFaltan.slice(0, -1).join(', ') + ' y ' + diasFaltan.at(-1);
 
 const title = `Semana Santa de Sevilla ${anio} en datos: nazarenos por hermandad | Open Data`;
 const description =
@@ -47,6 +52,13 @@ const jsonLd = {
         Conteo oficial de nazarenos y participantes por hermandad y día. Consulta y ordena la
         tabla, explora las gráficas y resalta cualquier hermandad.
       </p>
+
+      {diasFaltan.length > 0 && (
+        <p class="nota-aviso">
+          ℹ️ En {anio} no se publicó el conteo oficial de <strong>{listaFaltan}</strong>
+          (no todas las hermandades hicieron estación de penitencia esos días), por lo que no aparecen.
+        </p>
+      )}
 
       <div class="kpis">
         <div class="kpi">

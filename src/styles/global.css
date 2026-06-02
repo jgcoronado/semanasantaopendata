@@ -68,6 +68,9 @@ a { color: var(--morado); }
 .kpi__num { font-size: 1.8rem; font-weight: 800; color: var(--morado); line-height: 1; }
 .kpi__lbl { color: var(--gris); font-size: 0.85rem; margin-top: 0.35rem; }
 
+.nota-aviso { margin-top: 1.2rem; padding: 0.8rem 1rem; background: #fff8e6; border: 1px solid var(--oro); border-left-width: 4px; border-radius: 8px; color: #5e4a16; font-size: 0.93rem; max-width: 72ch; }
+.nota-aviso strong { color: #4a3a10; }
+
 /* ---------- Migas de pan ---------- */
 .migas { font-size: 0.9rem; color: var(--gris); margin-bottom: 0.6rem; }
 .migas a { color: var(--morado); text-decoration: none; }

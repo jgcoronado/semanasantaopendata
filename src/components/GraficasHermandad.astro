@@ -1,24 +1,39 @@
 ---
 // Gráficas de una hermandad a lo largo de los años:
-//  - una tarta por año con su % de nazarenos sobre el total del día,
+//  - una tarta por año con su % sobre el total del día (conmutable: nazarenos / cortejo),
 //  - un histograma (barras agrupadas) con nazarenos y cortejo por año.
 // `datos` llega ordenado ascendente por año.
 const { nombre, datos } = Astro.props;
 
+const r1 = (n) => Math.round(n * 10) / 10;
 const datosCliente = {
   nombre,
   anios: datos.map((x) => x.anio),
   noNaz: datos.map((x) => x.noNaz),
   noTotal: datos.map((x) => x.noTotal),
-  pies: datos.map((x) => ({ anio: x.anio, hdad: x.noNaz, resto: Math.max(x.diaNoNaz - x.noNaz, 0), pct: Math.round(x.pctNaz * 10) / 10 })),
+  pies: datos.map((x) => ({
+    anio: x.anio,
+    naz: { hdad: x.noNaz, resto: Math.max(x.diaNoNaz - x.noNaz, 0), pct: r1(x.pctNaz) },
+    total: { hdad: x.noTotal, resto: Math.max(x.diaNoTotal - x.noTotal, 0), pct: r1(x.pctTotal) },
+  })),
 };
 const hayVariosAnios = datos.length >= 2;
 ---
 
+<div class="controles" role="group" aria-label="Métrica de las tartas">
+  <span class="campo" style="gap:.4rem">
+    Métrica de las tartas
+    <span class="segmento">
+      <label><input type="radio" name="metrica-hdad" value="naz" checked /> Nazarenos</label>
+      <label><input type="radio" name="metrica-hdad" value="total" /> Cortejo total</label>
+    </span>
+  </span>
+</div>
+
 <div class="pies-grid">
   {datos.map((x) => (
     <figure class="grafica">
-      <figcaption>% de nazarenos sobre el día — <strong>{x.anio}</strong></figcaption>
+      <figcaption><strong>{x.anio}</strong> · <span class="pie-metrica">% de nazarenos</span> sobre el día</figcaption>
       <div class="grafica__lienzo grafica__lienzo--pie"><canvas class="pie-anio" data-anio={x.anio} aria-label={`Porcentaje sobre el día en ${x.anio}`}></canvas></div>
     </figure>
   ))}
@@ -42,12 +57,15 @@ const hayVariosAnios = datos.length >= 2;
   const MORADO_CLARO = '#ddd2ec';
   const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
 
-  // Tartas: una por año.
+  let metrica = 'naz';
+  const datosPie = (anio) => datos.pies.find((x) => x.anio === anio)[metrica];
+
+  // Tartas: una por año (conmutables entre nazarenos y cortejo).
+  const tartas = new Map();
   document.querySelectorAll('canvas.pie-anio').forEach((cv) => {
     const anio = Number(cv.dataset.anio);
-    const p = datos.pies.find((x) => x.anio === anio);
-    if (!p) return;
-    new Chart(cv, {
+    const p = datosPie(anio);
+    const ch = new Chart(cv, {
       type: 'pie',
       data: {
         labels: [datos.nombre, 'Resto del día'],
@@ -60,7 +78,7 @@ const hayVariosAnios = datos.length >= 2;
           tooltip: {
             callbacks: {
               label: (c) => {
-                const total = p.hdad + p.resto;
+                const total = c.dataset.data[0] + c.dataset.data[1];
                 const pct = total ? ((c.parsed / total) * 100).toFixed(1) : '0';
                 return `${c.label}: ${nf.format(c.parsed)} (${pct} %)`;
               },
@@ -69,6 +87,22 @@ const hayVariosAnios = datos.length >= 2;
         },
       },
     });
+    tartas.set(anio, ch);
+  });
+
+  function aplicarMetrica(m) {
+    metrica = m;
+    tartas.forEach((ch, anio) => {
+      const p = datosPie(anio);
+      ch.data.datasets[0].data = [p.hdad, p.resto];
+      ch.update();
+    });
+    const palabra = m === 'naz' ? '% de nazarenos' : '% del cortejo';
+    document.querySelectorAll('.pie-metrica').forEach((el) => { el.textContent = palabra; });
+  }
+
+  document.querySelectorAll('input[name="metrica-hdad"]').forEach((r) => {
+    r.addEventListener('change', () => { if (r.checked) aplicarMetrica(r.value); });
   });
 
   // Histograma: valores por año (nazarenos y cortejo).
