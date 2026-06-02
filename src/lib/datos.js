@@ -341,23 +341,34 @@ export function getHorariosEnCalle(anio) {
   const porDia = {};
 
   for (const diaSlug of diasSlug) {
-    const concentracion = new Array(24 * 60).fill(0);
-    for (const h of crucero.registros) {
-      if (h.diaSlug !== diaSlug || h.incidencia === 'sin_datos' || !h.noNaz) continue;
-      for (let m = h.salidaMin; m <= h.entradaMin; m++) {
-        concentracion[m % (24 * 60)] += h.noNaz;
-      }
-    }
+    const regs = crucero.registros.filter(
+      (h) => h.diaSlug === diaSlug && h.incidencia === null && h.noNaz,
+    );
+    if (!regs.length) continue;
+
+    // Usar minutos monotónicos para respetar el orden cronológico real
+    // (los tiempos de madrugada superan 1440 y aparecen al FINAL, no al principio)
+    const paso = 5;
+    const iniMon = Math.floor(Math.min(...regs.map((r) => r.salidaMin)) / paso) * paso;
+    const finMon = Math.ceil(Math.max(...regs.map((r) => r.entradaMin)) / paso) * paso;
+
     const serieTiempo = [];
-    for (let i = 0; i < 24 * 60; i += 5) {
-      const hora = Math.floor(i / 60);
-      const minuto = i % 60;
+    let maxNazarenos = 0;
+
+    for (let m = iniMon; m <= finMon; m += paso) {
+      let nazarenos = 0;
+      for (const h of regs) {
+        if (m >= h.salidaMin && m <= h.entradaMin) nazarenos += h.noNaz;
+      }
+      const minMod = ((m % 1440) + 1440) % 1440;
       serieTiempo.push({
-        hhmm: `${String(hora).padStart(2, '0')}:${String(minuto).padStart(2, '0')}`,
-        nazarenos: concentracion[i],
+        hhmm: `${String(Math.floor(minMod / 60)).padStart(2, '0')}:${String(minMod % 60).padStart(2, '0')}`,
+        nazarenos,
       });
+      if (nazarenos > maxNazarenos) maxNazarenos = nazarenos;
     }
-    porDia[diaSlug] = { serieTiempo, maxNazarenos: Math.max(...concentracion) };
+
+    porDia[diaSlug] = { serieTiempo, maxNazarenos };
   }
 
   return { anio: crucero.anio, porDia };
