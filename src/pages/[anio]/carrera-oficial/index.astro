@@ -12,9 +12,8 @@ const { anio } = Astro.params;
 const anioNum = Number(anio);
 const { registros, diasPresentes } = getPasoReal(anioNum);
 
-const conRetraso = registros.filter((r) => r.retrasoIndividual != null);
-const masRetrasada = conRetraso.length ? conRetraso.reduce((a, b) => (b.retrasoIndividual > a.retrasoIndividual ? b : a)) : null;
-const masPuntual = conRetraso.length ? conRetraso.reduce((a, b) => (b.retrasoIndividual < a.retrasoIndividual ? b : a)) : null;
+const masRetrasada = registros.reduce((a, b) => (b.retrasoRealCampana > a.retrasoRealCampana ? b : a));
+const masPuntual   = registros.reduce((a, b) => (b.retrasoRealCampana < a.retrasoRealCampana ? b : a));
 
 const acumuladoFinalPorDia = diasPresentes.map((d) => {
   const regsDelDia = registros.filter((r) => r.diaSlug === d.slug);
@@ -79,18 +78,14 @@ const jsonLd = {
             <div class="kpi__lbl">Máx. acumulado — {diaMaxAcumulado.dia}</div>
           </div>
         )}
-        {masRetrasada && (
-          <div class="kpi">
-            <div class="kpi__num" style="font-size:1.1rem">{masRetrasada.nombre}</div>
-            <div class="kpi__lbl">Mayor retraso individual — {fmtMin(masRetrasada.retrasoIndividual)}</div>
-          </div>
-        )}
-        {masPuntual && (
-          <div class="kpi">
-            <div class="kpi__num" style="font-size:1.1rem">{masPuntual.nombre}</div>
-            <div class="kpi__lbl">Más puntual — {fmtMin(masPuntual.retrasoIndividual)}</div>
-          </div>
-        )}
+        <div class="kpi">
+          <div class="kpi__num" style="font-size:1.1rem">{masRetrasada.nombre}</div>
+          <div class="kpi__lbl">Mayor retraso en Campana — {fmtMin(masRetrasada.retrasoRealCampana)}</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num" style="font-size:1.1rem">{masPuntual.nombre}</div>
+          <div class="kpi__lbl">Más rápida en Campana — {fmtMin(masPuntual.retrasoRealCampana)}</div>
+        </div>
       </div>
     </div>
   </section>

@@ -13,8 +13,7 @@ const estilosDias = diasOrd.map((d) => ({
   simbolo: SIMBOLOS_3[(d.orden - 1) % 3],
 }));
 
-const altoRecortado = Math.max(360, registros.length * 20);
-const altoRetraso = Math.max(360, registros.length * 20);
+const altoBarras = Math.max(360, registros.length * 20);
 
 const datosCliente = {
   dias: diasOrd.map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden })),
@@ -22,12 +21,14 @@ const datosCliente = {
     nombre: r.nombre,
     diaSlug: r.diaSlug,
     diaOrden: r.diaOrden,
-    cruzGuiaCampana: r.cruzGuiaCampana,
-    tiempoPasoMin: r.tiempoPasoMin,
-    acumuladoCampana: r.acumuladoCampana,
-    acumuladoCatedral: r.acumuladoCatedral,
-    tiempoRecortado: r.tiempoRecortado,
-    retrasoIndividual: r.retrasoIndividual,
+    tiempoPasoOficial:      r.tiempoPasoOficial,
+    retrasoRealCampana:     r.retrasoRealCampana,
+    tiempoPasoRealCampana:  r.tiempoPasoRealCampana,
+    retrasoRealCatedral:    r.retrasoRealCatedral,
+    tiempoPasoRealCatedral: r.tiempoPasoRealCatedral,
+    tiempoRecortado:        r.tiempoRecortado,
+    acumuladoCampana:       r.acumuladoCampana,
+    acumuladoCatedral:      r.acumuladoCatedral,
     noNaz: r.noNaz,
   })),
 };
@@ -37,16 +38,13 @@ const datosCliente = {
 <section class="panel contenedor" id="evolucion-acumulado">
   <div class="panel__cab"><h2>Evolución del acumulado</h2></div>
   <p class="panel__desc">
-    Cómo va creciendo (o menguando) el retraso acumulado de toda la jornada a medida que pasan
-    las hermandades por La Campana (línea sólida) y La Catedral (línea punteada).
+    Cómo crece (o mengua) el retraso acumulado de la jornada a medida que van pasando las hermandades
+    por <strong>La Campana</strong> (línea sólida) y <strong>La Catedral</strong> (línea punteada).
   </p>
   <div class="controles">
-    <label class="campo">
-      Día
-      <select id="sel-dia-acum">
-        {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
-      </select>
-    </label>
+    <label class="campo">Día <select id="sel-dia-acum">
+      {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+    </select></label>
   </div>
   <figure class="grafica grafica--ancha">
     <figcaption>Acumulado por hermandad a lo largo del día (minutos)</figcaption>
@@ -56,48 +54,71 @@ const datosCliente = {
   </figure>
 </section>
 
-<!-- ======================== TIEMPO RECORTADO ======================== -->
-<section class="panel contenedor" id="tiempo-recortado-sec">
-  <div class="panel__cab"><h2>Tiempo recortado entre Campana y Catedral</h2></div>
+<!-- ======================== RETRASO REAL POR HERMANDAD ======================== -->
+<section class="panel contenedor" id="retraso-sec">
+  <div class="panel__cab"><h2>Retraso real individual</h2></div>
   <p class="panel__desc">
-    Diferencia entre el acumulado en La Campana y el acumulado en La Catedral. Verde = la hermandad
-    recuperó tiempo (fue más rápida de lo esperado entre los dos puntos). Rojo = añadió más retraso.
+    Minutos que cada hermandad añadió (rojo) o recuperó (verde) al acumulado del día en
+    <strong>La Campana</strong> y en <strong>La Catedral</strong>.
+    Este es su contribución propia, descontando lo que ya acumulaban las hermandades anteriores.
   </p>
   <div class="controles">
-    <label class="campo">
-      Día
-      <select id="sel-dia-recortado">
-        {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
-      </select>
-    </label>
+    <label class="campo">Día <select id="sel-dia-retraso">
+      {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+    </select></label>
+  </div>
+  <div class="graficas-grid">
+    <figure class="grafica grafica--ancha">
+      <figcaption>Retraso real en Campana (min por hermandad)</figcaption>
+      <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
+        <canvas id="barras-retraso-campana" aria-label="Retraso real en Campana"></canvas>
+      </div>
+    </figure>
+    <figure class="grafica grafica--ancha">
+      <figcaption>Retraso real en Catedral (min por hermandad)</figcaption>
+      <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
+        <canvas id="barras-retraso-catedral" aria-label="Retraso real en Catedral"></canvas>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================== DURACIÓN REAL VS OFICIAL ======================== -->
+<section class="panel contenedor" id="duracion-sec">
+  <div class="panel__cab"><h2>Duración real vs oficial por hermandad</h2></div>
+  <p class="panel__desc">
+    Comparativa entre la duración oficial de paso por La Campana (tiempo entre la cruz de guía y
+    el último paso según el programa) y la duración real que tardaron en realidad, en Campana y en Catedral.
+  </p>
+  <div class="controles">
+    <label class="campo">Día <select id="sel-dia-duracion">
+      {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+    </select></label>
   </div>
   <figure class="grafica grafica--ancha">
-    <figcaption>Tiempo recortado por hermandad (minutos, positivo = recuperó)</figcaption>
-    <div class="grafica__lienzo" style={`height:${altoRecortado}px`}>
-      <canvas id="barras-recortado" aria-label="Tiempo recortado por hermandad"></canvas>
+    <figcaption>Duración oficial, real Campana y real Catedral por hermandad (min)</figcaption>
+    <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
+      <canvas id="barras-duracion" aria-label="Duración real vs oficial"></canvas>
     </div>
   </figure>
 </section>
 
-<!-- ======================== RETRASO INDIVIDUAL ======================== -->
-<section class="panel contenedor" id="retraso-individual-sec">
-  <div class="panel__cab"><h2>Puntualidad de entrada a La Campana</h2></div>
+<!-- ======================== TIEMPO RECORTADO ======================== -->
+<section class="panel contenedor" id="tiempo-recortado-sec">
+  <div class="panel__cab"><h2>Tiempo recortado (Campana vs Catedral)</h2></div>
   <p class="panel__desc">
-    Diferencia entre la hora real de la cruz de guía en La Campana y la hora programada en el
-    horario oficial. Positivo = llegó tarde. Negativo = llegó antes de lo previsto.
+    Diferencia entre el retraso real en Campana y en Catedral. Verde = la hermandad fue más rápida
+    entre los dos puntos de lo que marcaba el acumulado (recortó tiempo). Rojo = añadió más.
   </p>
   <div class="controles">
-    <label class="campo">
-      Día
-      <select id="sel-dia-retraso">
-        {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
-      </select>
-    </label>
+    <label class="campo">Día <select id="sel-dia-recortado">
+      {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+    </select></label>
   </div>
   <figure class="grafica grafica--ancha">
-    <figcaption>Retraso individual de entrada (minutos respecto al horario oficial)</figcaption>
-    <div class="grafica__lienzo" style={`height:${altoRetraso}px`}>
-      <canvas id="barras-retraso" aria-label="Retraso individual por hermandad"></canvas>
+    <figcaption>Tiempo recortado por hermandad (min)</figcaption>
+    <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
+      <canvas id="barras-recortado" aria-label="Tiempo recortado por hermandad"></canvas>
     </div>
   </figure>
 </section>
@@ -123,14 +144,14 @@ const datosCliente = {
   </ul>
 
   <figure class="grafica grafica--ancha" style="margin-top:1rem;margin-bottom:1.5rem">
-    <figcaption>Nazarenos de la hermandad frente a su retraso individual de entrada a La Campana</figcaption>
+    <figcaption>Nazarenos de la hermandad frente a su retraso real en Campana</figcaption>
     <div class="grafica__lienzo" style="height:420px">
-      <canvas id="dispersion-retraso" aria-label="Nazarenos vs retraso individual"></canvas>
+      <canvas id="dispersion-retraso" aria-label="Nazarenos vs retraso real Campana"></canvas>
     </div>
   </figure>
 
   <figure class="grafica grafica--ancha">
-    <figcaption>Acumulado final en Campana y Catedral por día (minutos de desfase al terminar el día)</figcaption>
+    <figcaption>Acumulado final del día en Campana y Catedral (minutos al terminar el día)</figcaption>
     <div class="grafica__lienzo" style="height:320px">
       <canvas id="barras-acum-dia" aria-label="Acumulado final por día"></canvas>
     </div>
@@ -151,9 +172,9 @@ const datosCliente = {
 
   const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
   const SIMBOLOS_3 = ['circle','triangle','rect'];
-  const COLOR_POSITIVO = '#198038';
-  const COLOR_NEGATIVO = '#da1e28';
-  const COLOR_NEUTRO   = '#6b6776';
+  const COLOR_POS = '#198038';
+  const COLOR_NEG = '#da1e28';
+  const COLOR_NEU = '#6b6776';
 
   const estiloDia = (orden) => ({ color: COLORES_9[(orden-1)%9], simbolo: SIMBOLOS_3[(orden-1)%3] });
   const fmtMin = (n) => {
@@ -163,6 +184,20 @@ const datosCliente = {
     const str = h > 0 ? `${h} h ${String(m).padStart(2,'0')} min` : `${m} min`;
     return (n > 0 ? '+' : n < 0 ? '−' : '') + str;
   };
+  const durStr = (n) => {
+    const abs = Math.abs(n), h = Math.floor(abs/60), m = abs%60;
+    return h > 0 ? `${h} h ${String(m).padStart(2,'0')} min` : `${m} min`;
+  };
+
+  // Colores para barras positivo/negativo/neutro
+  const colBar = (v, invert = false) =>
+    v > 0 ? (invert ? COLOR_NEG : COLOR_POS) + 'cc'
+  : v < 0 ? (invert ? COLOR_POS : COLOR_NEG) + 'cc'
+  : COLOR_NEU + '88';
+  const colBorder = (v, invert = false) =>
+    v > 0 ? (invert ? COLOR_NEG : COLOR_POS)
+  : v < 0 ? (invert ? COLOR_POS : COLOR_NEG)
+  : COLOR_NEU;
 
   // ── Línea de acumulado por día ──
   const chartAcum = new Chart(document.getElementById('linea-acumulado'), {
@@ -172,12 +207,10 @@ const datosCliente = {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: true, position: 'top' },
-        tooltip: {
-          callbacks: {
-            title: (items) => items[0]?.label ?? '',
-            label: (c) => `${c.dataset.label}: ${fmtMin(c.raw)}`,
-          },
-        },
+        tooltip: { callbacks: {
+          title: (items) => items[0]?.label ?? '',
+          label: (c) => `${c.dataset.label}: ${fmtMin(c.raw)}`,
+        }},
       },
       scales: {
         x: { ticks: { maxRotation: 45, autoSkip: false, font: { size: 10 } } },
@@ -192,52 +225,108 @@ const datosCliente = {
     const regs = datos.registros.filter(r => r.diaSlug === slug);
     const diaInfo = datos.dias.find(d => d.slug === slug);
     const col = COLORES_9[(diaInfo.orden-1)%9];
-
     chartAcum.data.labels = regs.map(r => r.nombre);
     chartAcum.data.datasets = [
-      {
-        label: 'Acum. Campana',
-        data: regs.map(r => r.acumuladoCampana),
-        borderColor: col,
-        backgroundColor: col + '22',
-        borderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.25,
-        fill: false,
-      },
-      {
-        label: 'Acum. Catedral',
-        data: regs.map(r => r.acumuladoCatedral),
-        borderColor: col,
-        backgroundColor: col + '11',
-        borderWidth: 2,
-        borderDash: [6, 4],
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        tension: 0.25,
-        fill: false,
-      },
+      { label: 'Acum. Campana', data: regs.map(r => r.acumuladoCampana),
+        borderColor: col, backgroundColor: col+'22', borderWidth: 2,
+        pointRadius: 4, pointHoverRadius: 6, tension: 0.25, fill: false },
+      { label: 'Acum. Catedral', data: regs.map(r => r.acumuladoCatedral),
+        borderColor: col, backgroundColor: col+'11', borderWidth: 2, borderDash: [6,4],
+        pointRadius: 3, pointHoverRadius: 5, tension: 0.25, fill: false },
     ];
     chartAcum.update();
   }
   document.getElementById('sel-dia-acum').addEventListener('change', pintarAcumulado);
   pintarAcumulado();
 
-  // ── Barras horizontales: tiempo recortado por hermandad ──
+  // ── Barras retraso real: Campana y Catedral ──
+  const makeBarChart = (canvasId) => new Chart(document.getElementById(canvasId), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderColor: [], borderWidth: 1 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: {
+          title: (items) => items[0]?.label ?? '',
+          label: (c) => fmtMin(c.raw),
+        }},
+      },
+      scales: {
+        x: { title: { display: true, text: 'Minutos' }, ticks: { callback: (v) => fmtMin(v) } },
+        y: { ticks: { autoSkip: false, font: { size: 10 } } },
+      },
+    },
+  });
+
+  const chartRetrasoCampana  = makeBarChart('barras-retraso-campana');
+  const chartRetrasoCatedral = makeBarChart('barras-retraso-catedral');
+
+  function pintarRetrasos() {
+    const slug = document.getElementById('sel-dia-retraso').value;
+    const regs = [...datos.registros.filter(r => r.diaSlug === slug)];
+
+    // Campana: retraso > 0 es malo (más tiempo del programado)
+    chartRetrasoCampana.data.labels = regs.map(r => r.nombre);
+    chartRetrasoCampana.data.datasets[0].data = regs.map(r => r.retrasoRealCampana);
+    chartRetrasoCampana.data.datasets[0].backgroundColor = regs.map(r => colBar(r.retrasoRealCampana, true));
+    chartRetrasoCampana.data.datasets[0].borderColor     = regs.map(r => colBorder(r.retrasoRealCampana, true));
+    chartRetrasoCampana.update();
+
+    chartRetrasoCatedral.data.labels = regs.map(r => r.nombre);
+    chartRetrasoCatedral.data.datasets[0].data = regs.map(r => r.retrasoRealCatedral);
+    chartRetrasoCatedral.data.datasets[0].backgroundColor = regs.map(r => colBar(r.retrasoRealCatedral, true));
+    chartRetrasoCatedral.data.datasets[0].borderColor     = regs.map(r => colBorder(r.retrasoRealCatedral, true));
+    chartRetrasoCatedral.update();
+  }
+  document.getElementById('sel-dia-retraso').addEventListener('change', pintarRetrasos);
+  pintarRetrasos();
+
+  // ── Barras agrupadas: duración oficial vs real Campana vs real Catedral ──
+  const chartDuracion = new Chart(document.getElementById('barras-duracion'), {
+    type: 'bar',
+    data: { labels: [], datasets: [
+      { label: 'Dur. oficial',      data: [], backgroundColor: '#6b6776aa', borderColor: '#6b6776', borderWidth: 1 },
+      { label: 'Dur. real Campana', data: [], backgroundColor: '#1192e8cc', borderColor: '#1192e8', borderWidth: 1 },
+      { label: 'Dur. real Catedral',data: [], backgroundColor: '#9f1853cc', borderColor: '#9f1853', borderWidth: 1 },
+    ]},
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' },
+        tooltip: { callbacks: {
+          title: (items) => items[0]?.label ?? '',
+          label: (c) => `${c.dataset.label}: ${durStr(c.raw)}`,
+        }},
+      },
+      scales: {
+        x: { title: { display: true, text: 'Minutos' }, ticks: { callback: (v) => durStr(v) } },
+        y: { ticks: { autoSkip: false, font: { size: 10 } } },
+      },
+    },
+  });
+
+  function pintarDuracion() {
+    const slug = document.getElementById('sel-dia-duracion').value;
+    const regs = datos.registros.filter(r => r.diaSlug === slug);
+    chartDuracion.data.labels = regs.map(r => r.nombre);
+    chartDuracion.data.datasets[0].data = regs.map(r => r.tiempoPasoOficial);
+    chartDuracion.data.datasets[1].data = regs.map(r => r.tiempoPasoRealCampana);
+    chartDuracion.data.datasets[2].data = regs.map(r => r.tiempoPasoRealCatedral);
+    chartDuracion.update();
+  }
+  document.getElementById('sel-dia-duracion').addEventListener('change', pintarDuracion);
+  pintarDuracion();
+
+  // ── Barras tiempo recortado ──
   const chartRecortado = new Chart(document.getElementById('barras-recortado'), {
     type: 'bar',
     data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderColor: [], borderWidth: 1 }] },
     options: {
       indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title: (items) => items[0]?.label ?? '',
-            label: (c) => `Tiempo recortado: ${fmtMin(c.raw)}`,
-          },
-        },
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: {
+          title: (items) => items[0]?.label ?? '',
+          label: (c) => `Tiempo recortado: ${fmtMin(c.raw)}`,
+        }},
       },
       scales: {
         x: { title: { display: true, text: 'Minutos' }, ticks: { callback: (v) => fmtMin(v) } },
@@ -250,76 +339,27 @@ const datosCliente = {
     const slug = document.getElementById('sel-dia-recortado').value;
     const regs = [...datos.registros.filter(r => r.diaSlug === slug)]
       .sort((a, b) => b.tiempoRecortado - a.tiempoRecortado);
-
     chartRecortado.data.labels = regs.map(r => r.nombre);
     chartRecortado.data.datasets[0].data = regs.map(r => r.tiempoRecortado);
-    chartRecortado.data.datasets[0].backgroundColor = regs.map(r =>
-      r.tiempoRecortado > 0 ? COLOR_POSITIVO + 'cc' : r.tiempoRecortado < 0 ? COLOR_NEGATIVO + 'cc' : COLOR_NEUTRO + '88'
-    );
-    chartRecortado.data.datasets[0].borderColor = regs.map(r =>
-      r.tiempoRecortado > 0 ? COLOR_POSITIVO : r.tiempoRecortado < 0 ? COLOR_NEGATIVO : COLOR_NEUTRO
-    );
+    chartRecortado.data.datasets[0].backgroundColor = regs.map(r => colBar(r.tiempoRecortado));
+    chartRecortado.data.datasets[0].borderColor     = regs.map(r => colBorder(r.tiempoRecortado));
     chartRecortado.update();
   }
   document.getElementById('sel-dia-recortado').addEventListener('change', pintarRecortado);
   pintarRecortado();
 
-  // ── Barras horizontales: retraso individual ──
-  const chartRetraso = new Chart(document.getElementById('barras-retraso'), {
-    type: 'bar',
-    data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderColor: [], borderWidth: 1 }] },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title: (items) => items[0]?.label ?? '',
-            label: (c) => `Retraso individual: ${fmtMin(c.raw)}`,
-          },
-        },
-      },
-      scales: {
-        x: { title: { display: true, text: 'Minutos (respecto al horario oficial)' },
-             ticks: { callback: (v) => fmtMin(v) } },
-        y: { ticks: { autoSkip: false, font: { size: 10 } } },
-      },
-    },
-  });
-
-  function pintarRetraso() {
-    const slug = document.getElementById('sel-dia-retraso').value;
-    const regs = [...datos.registros.filter(r => r.diaSlug === slug && r.retrasoIndividual != null)]
-      .sort((a, b) => b.retrasoIndividual - a.retrasoIndividual);
-
-    chartRetraso.data.labels = regs.map(r => r.nombre);
-    chartRetraso.data.datasets[0].data = regs.map(r => r.retrasoIndividual);
-    chartRetraso.data.datasets[0].backgroundColor = regs.map(r =>
-      r.retrasoIndividual > 0 ? COLOR_NEGATIVO + 'cc' : r.retrasoIndividual < 0 ? COLOR_POSITIVO + 'cc' : COLOR_NEUTRO + '88'
-    );
-    chartRetraso.data.datasets[0].borderColor = regs.map(r =>
-      r.retrasoIndividual > 0 ? COLOR_NEGATIVO : r.retrasoIndividual < 0 ? COLOR_POSITIVO : COLOR_NEUTRO
-    );
-    chartRetraso.update();
-  }
-  document.getElementById('sel-dia-retraso').addEventListener('change', pintarRetraso);
-  pintarRetraso();
-
-  // ── Dispersión: nazarenos vs retraso individual ──
+  // ── Dispersión: nazarenos vs retraso real Campana ──
   const scatterDatasets = datos.dias
-    .filter(d => datos.registros.some(r => r.diaSlug === d.slug && r.retrasoIndividual != null && r.noNaz != null))
+    .filter(d => datos.registros.some(r => r.diaSlug === d.slug && r.noNaz != null))
     .map(d => {
       const e = estiloDia(d.orden);
       return {
         label: d.nombre,
         data: datos.registros
-          .filter(r => r.diaSlug === d.slug && r.retrasoIndividual != null && r.noNaz != null)
-          .map(r => ({ x: r.noNaz, y: r.retrasoIndividual, nombre: r.nombre })),
-        backgroundColor: e.color + 'bb',
-        borderColor: e.color,
-        pointStyle: e.simbolo,
-        pointRadius: 7,
-        pointHoverRadius: 9,
+          .filter(r => r.diaSlug === d.slug && r.noNaz != null)
+          .map(r => ({ x: r.noNaz, y: r.retrasoRealCampana, nombre: r.nombre })),
+        backgroundColor: e.color + 'bb', borderColor: e.color,
+        pointStyle: e.simbolo, pointRadius: 7, pointHoverRadius: 9,
       };
     });
 
@@ -330,17 +370,14 @@ const datosCliente = {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { position: 'bottom', labels: { usePointStyle: true, pointStyleWidth: 14, padding: 14 } },
-        tooltip: {
-          usePointStyle: true,
-          callbacks: {
-            title: (items) => items[0]?.raw?.nombre ?? '',
-            label: (c) => `${c.raw.x.toLocaleString('es-ES')} naz. · Retraso: ${fmtMin(c.raw.y)}`,
-          },
-        },
+        tooltip: { usePointStyle: true, callbacks: {
+          title: (items) => items[0]?.raw?.nombre ?? '',
+          label: (c) => `${c.raw.x.toLocaleString('es-ES')} naz. · Retraso: ${fmtMin(c.raw.y)}`,
+        }},
       },
       scales: {
         x: { title: { display: true, text: 'Nazarenos' }, beginAtZero: true },
-        y: { title: { display: true, text: 'Retraso individual (min)' },
+        y: { title: { display: true, text: 'Retraso real Campana (min)' },
              ticks: { callback: (v) => fmtMin(v) } },
       },
     },
@@ -350,12 +387,8 @@ const datosCliente = {
   const acumPorDia = datos.dias.map(d => {
     const regsDelDia = datos.registros.filter(r => r.diaSlug === d.slug);
     const ultimo = regsDelDia[regsDelDia.length - 1];
-    return {
-      nombre: d.nombre,
-      orden: d.orden,
-      campana: ultimo?.acumuladoCampana ?? 0,
-      catedral: ultimo?.acumuladoCatedral ?? 0,
-    };
+    return { nombre: d.nombre, orden: d.orden,
+             campana: ultimo?.acumuladoCampana ?? 0, catedral: ultimo?.acumuladoCatedral ?? 0 };
   });
 
   new Chart(document.getElementById('barras-acum-dia'), {
@@ -363,32 +396,22 @@ const datosCliente = {
     data: {
       labels: acumPorDia.map(d => d.nombre),
       datasets: [
-        {
-          label: 'Acum. Campana (final)',
+        { label: 'Acum. Campana (final)',
           data: acumPorDia.map(d => d.campana),
-          backgroundColor: acumPorDia.map(d => COLORES_9[(d.orden-1)%9] + 'cc'),
+          backgroundColor: acumPorDia.map(d => COLORES_9[(d.orden-1)%9]+'cc'),
           borderColor:     acumPorDia.map(d => COLORES_9[(d.orden-1)%9]),
-          borderWidth: 1,
-        },
-        {
-          label: 'Acum. Catedral (final)',
+          borderWidth: 1 },
+        { label: 'Acum. Catedral (final)',
           data: acumPorDia.map(d => d.catedral),
-          backgroundColor: acumPorDia.map(d => COLORES_9[(d.orden-1)%9] + '66'),
+          backgroundColor: acumPorDia.map(d => COLORES_9[(d.orden-1)%9]+'66'),
           borderColor:     acumPorDia.map(d => COLORES_9[(d.orden-1)%9]),
-          borderWidth: 1,
-          borderDash: [4, 3],
-        },
+          borderWidth: 1, borderDash: [4,3] },
       ],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: (c) => `${c.dataset.label}: ${fmtMin(c.raw)}`,
-          },
-        },
+      plugins: { legend: { position: 'top' },
+        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${fmtMin(c.raw)}` } },
       },
       scales: {
         x: { ticks: { maxRotation: 35, font: { size: 10 } } },

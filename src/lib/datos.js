@@ -393,24 +393,17 @@ function construirPasoReal(anio) {
   const lista = pasoRealPorAnio[anio];
   if (!lista) throw new Error(`[datos] No hay paso real (paso-real-${anio}.json) para ${anio}.`);
 
-  const horarios = horariosPorAnio[anio] || null;
-  const horarioPorId = horarios ? new Map(horarios.map((h) => [h.idHdad, h])) : new Map();
   const nazPorId = new Map(getAnio(anio).registros.map((r) => [r.id_hdad, r]));
 
+  // Paso 1: enriquecer con metadatos de hermandad/día y calcular tiempoPasoOficial
   const registros = lista.map((p) => {
     const hdad = hdadPorId.get(p.idHdad);
     if (!hdad) throw new Error(`[datos] paso-real ${anio}: idHdad ${p.idHdad} no existe.`);
     const dia = diaPorSlug.get(hdad.dia);
-    const horario = horarioPorId.get(p.idHdad);
     const naz = nazPorId.get(p.idHdad) || null;
 
-    const campanaProgramada = horario?.campana ?? null;
-    let retrasoIndividual = null;
-    if (campanaProgramada) {
-      const realMin = aMin(p.cruzGuiaCampana);
-      const progMin = aMin(campanaProgramada);
-      retrasoIndividual = realMin - progMin;
-    }
+    // Duración oficial = diferencia real entre las dos horas del CSV
+    const tiempoPasoOficial = aMin(p.ultimoPasoCampana) - aMin(p.cruzGuiaCampana);
 
     return {
       anio,
@@ -422,18 +415,38 @@ function construirPasoReal(anio) {
       diaOrden: dia.orden,
       cruzGuiaCampana: p.cruzGuiaCampana,
       ultimoPasoCampana: p.ultimoPasoCampana,
-      tiempoPasoMin: p.tiempoPasoMin,
+      tiempoPasoOficial,
       acumuladoCampana: p.acumuladoCampana,
       acumuladoCatedral: p.acumuladoCatedral,
-      tiempoRecortado: p.tiempoRecortado,
-      campanaProgramada,
-      retrasoIndividual,
       noNaz: naz?.noNaz ?? null,
       noTotal: naz?.noTotal ?? null,
     };
   });
 
+  // Paso 2: ordenar cronológicamente dentro de cada día
   registros.sort((a, b) => a.diaOrden - b.diaOrden || aMin(a.cruzGuiaCampana) - aMin(b.cruzGuiaCampana));
+
+  // Paso 3: calcular retrasos individuales (diferencia con el acumulado de la hermandad anterior del mismo día)
+  // retrasoRealCampana[i] = acumuladoCampana[i] - acumuladoCampana[i-1]  (0 si es la primera del día)
+  // tiempoPasoRealCampana[i] = tiempoPasoOficial[i] + retrasoRealCampana[i]
+  // Ídem para Catedral
+  // tiempoRecortado = retrasoRealCampana - retrasoRealCatedral
+  //   (positivo → fue más rápida entre Campana y Catedral de lo que marcaba el acumulado)
+  let prevDia = null, prevAcumC = 0, prevAcumK = 0;
+  for (const r of registros) {
+    if (r.diaSlug !== prevDia) {
+      prevDia = r.diaSlug;
+      prevAcumC = 0;
+      prevAcumK = 0;
+    }
+    r.retrasoRealCampana  = r.acumuladoCampana  - prevAcumC;
+    r.retrasoRealCatedral = r.acumuladoCatedral - prevAcumK;
+    r.tiempoPasoRealCampana  = r.tiempoPasoOficial + r.retrasoRealCampana;
+    r.tiempoPasoRealCatedral = r.tiempoPasoOficial + r.retrasoRealCatedral;
+    r.tiempoRecortado = r.retrasoRealCampana - r.retrasoRealCatedral;
+    prevAcumC = r.acumuladoCampana;
+    prevAcumK = r.acumuladoCatedral;
+  }
 
   const diasPresentes = [...new Map(registros.map((r) => [r.diaSlug, { slug: r.diaSlug, nombre: r.diaNombre, orden: r.diaOrden }])).values()]
     .sort((a, b) => a.orden - b.orden);

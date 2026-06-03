@@ -9,17 +9,20 @@ const fmtMin = (n) => {
   const str = h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
   return (n > 0 ? '+' : n < 0 ? '−' : '') + str;
 };
+const durMin = (n) => {
+  const h = Math.floor(n / 60), m = n % 60;
+  return h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
+};
 
 const columnas = [
-  { key: 'diaOrden',          etiqueta: 'Día',             tipo: 'num', txt: true,  soloConDia: true },
-  { key: 'nombre',            etiqueta: 'Hermandad',       tipo: 'txt', txt: true  },
-  { key: 'campanaProgramada', etiqueta: 'Prog. Campana',   tipo: 'txt'             },
-  { key: 'cruzGuiaCampana',   etiqueta: 'Real Campana',    tipo: 'txt'             },
-  { key: 'retrasoIndividual', etiqueta: 'Retraso entrada', tipo: 'num', fuerte: true },
-  { key: 'tiempoPasoMin',     etiqueta: 'Duración paso',   tipo: 'num'             },
-  { key: 'acumuladoCampana',  etiqueta: 'Acum. Campana',   tipo: 'num'             },
-  { key: 'acumuladoCatedral', etiqueta: 'Acum. Catedral',  tipo: 'num'             },
-  { key: 'tiempoRecortado',   etiqueta: 'Tiempo recortado',tipo: 'num', fuerte: true },
+  { key: 'diaOrden',              etiqueta: 'Día',               tipo: 'num', txt: true, soloConDia: true },
+  { key: 'nombre',                etiqueta: 'Hermandad',          tipo: 'txt', txt: true },
+  { key: 'tiempoPasoOficial',     etiqueta: 'Dur. oficial',       tipo: 'num' },
+  { key: 'retrasoRealCampana',    etiqueta: 'Retraso Campana',    tipo: 'num', fuerte: true },
+  { key: 'tiempoPasoRealCampana', etiqueta: 'Dur. real Campana',  tipo: 'num' },
+  { key: 'retrasoRealCatedral',   etiqueta: 'Retraso Catedral',   tipo: 'num', fuerte: true },
+  { key: 'tiempoPasoRealCatedral',etiqueta: 'Dur. real Catedral', tipo: 'num' },
+  { key: 'tiempoRecortado',       etiqueta: 'Tiempo recortado',   tipo: 'num', fuerte: true },
 ].filter((c) => conColumnaDia || !c.soloConDia);
 ---
 
@@ -39,10 +42,9 @@ const columnas = [
 <div class="tabla-wrap">
   <table class="datos" id="tabla-carrera">
     <caption>
-      <strong>Tiempos reales</strong> de paso por La Campana en {new Date().getFullYear() > 2026 ? 2026 : 'la Semana Santa'}.
-      «Retraso entrada» = diferencia entre la hora real de la cruz de guía y la hora programada.
-      «Acum.» = retraso acumulado de toda la jornada en ese punto. «Tiempo recortado» = Acum. Campana − Acum. Catedral
-      (positivo = recuperó tiempo). Pulsa una cabecera para ordenar.
+      «Retraso Campana/Catedral» = minutos que añadió (o recuperó) esa hermandad al acumulado del día en cada punto.
+      «Dur. real» = Dur. oficial + Retraso. «Tiempo recortado» = Retraso Campana − Retraso Catedral
+      (positivo → fue más rápida entre los dos puntos). Pulsa una cabecera para ordenar.
     </caption>
     <thead>
       <tr>
@@ -60,30 +62,24 @@ const columnas = [
           data-slug={r.slug}
           data-diaorden={r.diaOrden}
           data-nombre={r.nombre}
-          data-campanarogramada={r.campanaProgramada ?? ''}
-          data-cruzguiacampana={r.cruzGuiaCampana}
-          data-retrasoindividual={r.retrasoIndividual ?? ''}
-          data-tiempopasomin={r.tiempoPasoMin}
-          data-acumuladocampana={r.acumuladoCampana}
-          data-acumuladocatedral={r.acumuladoCatedral}
+          data-tiempopasooficial={r.tiempoPasoOficial}
+          data-retraso-real-campana={r.retrasoRealCampana}
+          data-tiempopasorealdecampana={r.tiempoPasoRealCampana}
+          data-retraso-real-catedral={r.retrasoRealCatedral}
+          data-tiempopasorealatedral={r.tiempoPasoRealCatedral}
           data-tiemporecortado={r.tiempoRecortado}
         >
           {conColumnaDia && <td class="txt"><span class="pildora-dia">{r.diaNombre}</span></td>}
           <td class="txt"><a href={`/${anio}/hermandad/${r.slug}/`}>{r.nombre}</a></td>
-          <td>{r.campanaProgramada ?? '—'}</td>
-          <td>{r.cruzGuiaCampana}</td>
-          <td class={`fuerte ${r.retrasoIndividual != null ? (r.retrasoIndividual > 0 ? 'negativo' : r.retrasoIndividual < 0 ? 'positivo' : '') : ''}`}>
-            {r.retrasoIndividual != null ? fmtMin(r.retrasoIndividual) : '—'}
+          <td>{durMin(r.tiempoPasoOficial)}</td>
+          <td class={`fuerte ${r.retrasoRealCampana > 0 ? 'negativo' : r.retrasoRealCampana < 0 ? 'positivo' : ''}`}>
+            {fmtMin(r.retrasoRealCampana)}
           </td>
-          <td>
-            {(() => { const h = Math.floor(r.tiempoPasoMin / 60); const m = r.tiempoPasoMin % 60; return h > 0 ? `${h} h ${String(m).padStart(2,'0')} min` : `${m} min`; })()}
+          <td>{durMin(r.tiempoPasoRealCampana)}</td>
+          <td class={`fuerte ${r.retrasoRealCatedral > 0 ? 'negativo' : r.retrasoRealCatedral < 0 ? 'positivo' : ''}`}>
+            {fmtMin(r.retrasoRealCatedral)}
           </td>
-          <td class={r.acumuladoCampana > 0 ? 'negativo' : r.acumuladoCampana < 0 ? 'positivo' : ''}>
-            {fmtMin(r.acumuladoCampana)}
-          </td>
-          <td class={r.acumuladoCatedral > 0 ? 'negativo' : r.acumuladoCatedral < 0 ? 'positivo' : ''}>
-            {fmtMin(r.acumuladoCatedral)}
-          </td>
+          <td>{durMin(r.tiempoPasoRealCatedral)}</td>
           <td class={`fuerte ${r.tiempoRecortado > 0 ? 'positivo' : r.tiempoRecortado < 0 ? 'negativo' : ''}`}>
             {fmtMin(r.tiempoRecortado)}
           </td>
@@ -109,9 +105,12 @@ const columnas = [
     const contador = document.getElementById('contador-car');
     let ordenKey = null, ordenAsc = true;
 
+    // Normalizar clave: quitar guiones para que coincida con dataset.*
+    const dataKey = (key) => key.replace(/-/g, '').toLowerCase();
+
     const valor = (f, key, tipo) => {
-      const raw = f.dataset[key.toLowerCase()];
-      return tipo === 'num' ? (raw === '' ? -Infinity : parseFloat(raw)) : (raw || '').toLowerCase();
+      const raw = f.dataset[dataKey(key)];
+      return tipo === 'num' ? (raw === '' || raw == null ? -Infinity : parseFloat(raw)) : (raw || '').toLowerCase();
     };
 
     function filtrar() {
