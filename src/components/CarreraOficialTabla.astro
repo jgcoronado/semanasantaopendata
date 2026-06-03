@@ -1,5 +1,5 @@
 ---
-const { registros, dias = [], anio, conColumnaDia = true, conFiltroDia = true } = Astro.props;
+const { registros, dias = [], anio, conColumnaDia = false, conFiltroDia = true } = Astro.props;
 
 const fmtMin = (n) => {
   if (n == null) return null;
@@ -22,7 +22,6 @@ const columnas = [
   { key: 'tiempoPasoRealCampana', etiqueta: 'Dur. real Campana',  tipo: 'num' },
   { key: 'retrasoRealCatedral',   etiqueta: 'Retraso Catedral',   tipo: 'num', fuerte: true },
   { key: 'tiempoPasoRealCatedral',etiqueta: 'Dur. real Catedral', tipo: 'num' },
-  { key: 'tiempoRecortado',       etiqueta: 'Tiempo recortado',   tipo: 'num', fuerte: true },
 ].filter((c) => conColumnaDia || !c.soloConDia);
 ---
 
@@ -80,9 +79,6 @@ const columnas = [
             {fmtMin(r.retrasoRealCatedral)}
           </td>
           <td>{durMin(r.tiempoPasoRealCatedral)}</td>
-          <td class={`fuerte ${r.tiempoRecortado > 0 ? 'positivo' : r.tiempoRecortado < 0 ? 'negativo' : ''}`}>
-            {fmtMin(r.tiempoRecortado)}
-          </td>
         </tr>
       ))}
       <tr class="sin-resultados" hidden><td colspan={columnas.length}>No hay hermandades para ese día.</td></tr>

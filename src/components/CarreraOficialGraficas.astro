@@ -13,7 +13,7 @@ const estilosDias = diasOrd.map((d) => ({
   simbolo: SIMBOLOS_3[(d.orden - 1) % 3],
 }));
 
-const altoBarras = Math.max(360, registros.length * 20);
+const altoBarras = Math.max(220, registros.length * 13);
 
 const datosCliente = {
   dias: diasOrd.map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden })),
@@ -48,7 +48,7 @@ const datosCliente = {
   </div>
   <figure class="grafica grafica--ancha">
     <figcaption>Acumulado por hermandad a lo largo del día (minutos)</figcaption>
-    <div class="grafica__lienzo" style="height:380px">
+    <div class="grafica__lienzo" style="height:240px">
       <canvas id="linea-acumulado" aria-label="Evolución del acumulado por día"></canvas>
     </div>
   </figure>
@@ -103,26 +103,6 @@ const datosCliente = {
   </figure>
 </section>
 
-<!-- ======================== TIEMPO RECORTADO ======================== -->
-<section class="panel contenedor" id="tiempo-recortado-sec">
-  <div class="panel__cab"><h2>Tiempo recortado (Campana vs Catedral)</h2></div>
-  <p class="panel__desc">
-    Diferencia entre el retraso real en Campana y en Catedral. Verde = la hermandad fue más rápida
-    entre los dos puntos de lo que marcaba el acumulado (recortó tiempo). Rojo = añadió más.
-  </p>
-  <div class="controles">
-    <label class="campo">Día <select id="sel-dia-recortado">
-      {diasOrd.map((d) => <option value={d.slug}>{d.nombre}</option>)}
-    </select></label>
-  </div>
-  <figure class="grafica grafica--ancha">
-    <figcaption>Tiempo recortado por hermandad (min)</figcaption>
-    <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
-      <canvas id="barras-recortado" aria-label="Tiempo recortado por hermandad"></canvas>
-    </div>
-  </figure>
-</section>
-
 <!-- ======================== GLOBAL ======================== -->
 <section class="panel contenedor" id="global-carrera">
   <div class="panel__cab"><h2>Comparativa global</h2></div>
@@ -145,14 +125,14 @@ const datosCliente = {
 
   <figure class="grafica grafica--ancha" style="margin-top:1rem;margin-bottom:1.5rem">
     <figcaption>Nazarenos de la hermandad frente a su retraso real en Campana</figcaption>
-    <div class="grafica__lienzo" style="height:420px">
+    <div class="grafica__lienzo" style="height:280px">
       <canvas id="dispersion-retraso" aria-label="Nazarenos vs retraso real Campana"></canvas>
     </div>
   </figure>
 
   <figure class="grafica grafica--ancha">
     <figcaption>Acumulado final del día en Campana y Catedral (minutos al terminar el día)</figcaption>
-    <div class="grafica__lienzo" style="height:320px">
+    <div class="grafica__lienzo" style="height:220px">
       <canvas id="barras-acum-dia" aria-label="Acumulado final por día"></canvas>
     </div>
   </figure>
@@ -315,38 +295,6 @@ const datosCliente = {
   }
   document.getElementById('sel-dia-duracion').addEventListener('change', pintarDuracion);
   pintarDuracion();
-
-  // ── Barras tiempo recortado ──
-  const chartRecortado = new Chart(document.getElementById('barras-recortado'), {
-    type: 'bar',
-    data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderColor: [], borderWidth: 1 }] },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false },
-        tooltip: { callbacks: {
-          title: (items) => items[0]?.label ?? '',
-          label: (c) => `Tiempo recortado: ${fmtMin(c.raw)}`,
-        }},
-      },
-      scales: {
-        x: { title: { display: true, text: 'Minutos' }, ticks: { callback: (v) => fmtMin(v) } },
-        y: { ticks: { autoSkip: false, font: { size: 10 } } },
-      },
-    },
-  });
-
-  function pintarRecortado() {
-    const slug = document.getElementById('sel-dia-recortado').value;
-    const regs = [...datos.registros.filter(r => r.diaSlug === slug)]
-      .sort((a, b) => b.tiempoRecortado - a.tiempoRecortado);
-    chartRecortado.data.labels = regs.map(r => r.nombre);
-    chartRecortado.data.datasets[0].data = regs.map(r => r.tiempoRecortado);
-    chartRecortado.data.datasets[0].backgroundColor = regs.map(r => colBar(r.tiempoRecortado));
-    chartRecortado.data.datasets[0].borderColor     = regs.map(r => colBorder(r.tiempoRecortado));
-    chartRecortado.update();
-  }
-  document.getElementById('sel-dia-recortado').addEventListener('change', pintarRecortado);
-  pintarRecortado();
 
   // ── Dispersión: nazarenos vs retraso real Campana ──
   const scatterDatasets = datos.dias
