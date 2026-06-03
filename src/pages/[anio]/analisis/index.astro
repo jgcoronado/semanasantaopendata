@@ -99,11 +99,11 @@ const jsonLd = {
         </div>
         <div class="kpi">
           <div class="kpi__num" style="font-size:1.1rem">{masDensa.nombre}</div>
-          <div class="kpi__lbl">Desfile más denso · {masDensa.totalPorMinuto} part./min</div>
+          <div class="kpi__lbl">Desfile más denso · {masDensa.totalPorMinuto} miemb./min</div>
         </div>
         <div class="kpi">
           <div class="kpi__num" style="font-size:1.1rem">{menosDensa.nombre}</div>
-          <div class="kpi__lbl">Desfile más espaciado · {menosDensa.totalPorMinuto} part./min</div>
+          <div class="kpi__lbl">Desfile más espaciado · {menosDensa.totalPorMinuto} miemb./min</div>
         </div>
       </div>
     </div>
@@ -119,3 +119,7 @@ const jsonLd = {
     anioActual={anioNum}
   />
 </Base>
+
+<style>
+  .hero h1, .hero p { max-width: none; }
+</style>

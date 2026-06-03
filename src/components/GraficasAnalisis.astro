@@ -147,11 +147,11 @@ const datosCliente = {
 <section class="panel contenedor" id="densidad">
   <div class="panel__cab"><h2>Densidad del desfile</h2></div>
   <p class="descargas-intro">
-    Participantes totales por minuto de estación de penitencia. Las cofradías con ratio alto
+    Miembros del cortejo por minuto de tiempo de paso. Las cofradías con ratio alto
     concentran su cortejo; las de ratio bajo lo espacian en el tiempo.
   </p>
   <figure class="grafica grafica--ancha">
-    <figcaption>Participantes por minuto de estación de penitencia</figcaption>
+    <figcaption>Miembros del cortejo por minuto de tiempo de paso</figcaption>
     <div class="grafica__lienzo" style={`height:${altoRanking}px`}>
       <canvas id="an-densidad" aria-label="Densidad del desfile por hermandad"></canvas>
     </div>
@@ -411,13 +411,22 @@ const datosCliente = {
     },
   });
 
+  const parseMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+  const fmtHHMM = (mins) => { const t = ((mins % 1440) + 1440) % 1440; return `${String(Math.floor(t / 60)).padStart(2,'0')}:${String(t % 60).padStart(2,'0')}`; };
+
   function pintarCalle() {
     const slug = selDia.value;
     const serie = datos.porDia[slug];
-    if (!serie) return;
+    if (!serie || !serie.serieTiempo.length) return;
+    const puntos = serie.serieTiempo;
+    const conPadding = [
+      { hhmm: fmtHHMM(parseMin(puntos[0].hhmm) - 60), nazarenos: 0 },
+      ...puntos,
+      { hhmm: fmtHHMM(parseMin(puntos[puntos.length - 1].hhmm) + 60), nazarenos: 0 },
+    ];
     const col = colorCalle();
-    chartCalle.data.labels = serie.serieTiempo.map((p) => p.hhmm);
-    chartCalle.data.datasets[0].data = serie.serieTiempo.map((p) => p.nazarenos);
+    chartCalle.data.labels = conPadding.map((p) => p.hhmm);
+    chartCalle.data.datasets[0].data = conPadding.map((p) => p.nazarenos);
     chartCalle.data.datasets[0].borderColor = col;
     chartCalle.data.datasets[0].backgroundColor = col + '2e';
     chartCalle.options.scales.y.max = serie.maxNazarenos + Math.ceil(serie.maxNazarenos * 0.05);
@@ -450,12 +459,12 @@ const datosCliente = {
         tooltip: {
           callbacks: {
             title: (items) => items[0]?.label ?? '',
-            label: (c) => `${c.raw.toLocaleString('es-ES')} part./min`,
+            label: (c) => `${c.raw.toLocaleString('es-ES')} miemb./min`,
           },
         },
       },
       scales: {
-        x: { beginAtZero: true, title: { display: true, text: 'Participantes por minuto' } },
+        x: { beginAtZero: true, title: { display: true, text: 'Miembros del cortejo por minuto' } },
         y: { ticks: { autoSkip: false, font: { size: 10 } } },
       },
     },

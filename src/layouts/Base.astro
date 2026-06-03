@@ -87,6 +87,18 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
       <slot />
     </main>
 
+    <script>
+      document.querySelectorAll('.nav-dd').forEach((dd) => {
+        dd.addEventListener('toggle', () => {
+          if (dd.open) {
+            document.querySelectorAll('.nav-dd').forEach((other) => {
+              if (other !== dd) other.removeAttribute('open');
+            });
+          }
+        });
+      });
+    </script>
+
     <footer class="pie">
       <div class="contenedor pie__inner">
         <div>
