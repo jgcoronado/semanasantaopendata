@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { anios, aniosConHorarios } from '../lib/datos.js';
+import { anios, aniosConHorarios, hayPasoReal } from '../lib/datos.js';
 
 const {
   title,
@@ -11,6 +11,7 @@ const {
   hermandadesActiva = false,
   horariosActiva = false,
   analisisActiva = false,
+  carreraActiva = false,
 } = Astro.props;
 
 const slugHorarios = aniosConHorarios[0]?.slug;
@@ -59,17 +60,19 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
         <nav class="nav" aria-label="Principal">
           {anios.map((a) => {
             const tieneHorarios = aniosConHorarios.some((h) => h.anio === a.anio);
+            const tieneCarrera = hayPasoReal(a.anio);
             const esActivo = anioActivo === a.anio;
-            if (!tieneHorarios) {
+            if (!tieneHorarios && !tieneCarrera) {
               return <a href={`/${a.slug}/`} class={esActivo ? 'activo' : ''} aria-current={esActivo ? 'page' : undefined}>{a.anio}</a>;
             }
             return (
               <details class={`nav-dd${esActivo ? ' nav-dd--activo' : ''}`} open={esActivo || undefined}>
                 <summary class={`nav-dd__btn${esActivo ? ' activo' : ''}`}>{a.anio} <span class="nav-dd__flecha" aria-hidden="true">▾</span></summary>
                 <div class="nav-dd__panel">
-                  <a href={`/${a.slug}/`} class={esActivo && !horariosActiva && !analisisActiva ? 'activo' : ''}>Nazarenos</a>
-                  <a href={`/${a.slug}/horarios/`} class={esActivo && horariosActiva ? 'activo' : ''}>Horarios</a>
-                  <a href={`/${a.slug}/analisis/`} class={esActivo && analisisActiva ? 'activo' : ''}>Análisis</a>
+                  <a href={`/${a.slug}/`} class={esActivo && !horariosActiva && !analisisActiva && !carreraActiva ? 'activo' : ''}>Nazarenos</a>
+                  {tieneHorarios && <a href={`/${a.slug}/horarios/`} class={esActivo && horariosActiva ? 'activo' : ''}>Horarios</a>}
+                  {tieneHorarios && <a href={`/${a.slug}/analisis/`} class={esActivo && analisisActiva ? 'activo' : ''}>Análisis</a>}
+                  {tieneCarrera && <a href={`/${a.slug}/carrera-oficial/`} class={esActivo && carreraActiva ? 'activo' : ''}>Carrera oficial</a>}
                 </div>
               </details>
             );

@@ -1,0 +1,104 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CarreraOficialTabla from '../../../components/CarreraOficialTabla.astro';
+import CarreraOficialGraficas from '../../../components/CarreraOficialGraficas.astro';
+import { aniosConPasoReal, getPasoReal, fmt } from '../../../lib/datos.js';
+
+export function getStaticPaths() {
+  return aniosConPasoReal.map((a) => ({ params: { anio: a.slug } }));
+}
+
+const { anio } = Astro.params;
+const anioNum = Number(anio);
+const { registros, diasPresentes } = getPasoReal(anioNum);
+
+const conRetraso = registros.filter((r) => r.retrasoIndividual != null);
+const masRetrasada = conRetraso.length ? conRetraso.reduce((a, b) => (b.retrasoIndividual > a.retrasoIndividual ? b : a)) : null;
+const masPuntual = conRetraso.length ? conRetraso.reduce((a, b) => (b.retrasoIndividual < a.retrasoIndividual ? b : a)) : null;
+
+const acumuladoFinalPorDia = diasPresentes.map((d) => {
+  const regsDelDia = registros.filter((r) => r.diaSlug === d.slug);
+  const ultimo = regsDelDia[regsDelDia.length - 1];
+  return { dia: d.nombre, acumulado: ultimo?.acumuladoCampana ?? 0 };
+});
+const diaMaxAcumulado = acumuladoFinalPorDia.reduce((a, b) => (b.acumulado > a.acumulado ? b : a), { dia: '—', acumulado: 0 });
+
+const totalRecuperado = registros.reduce((s, r) => s + (r.tiempoRecortado > 0 ? r.tiempoRecortado : 0), 0);
+
+const fmtMin = (n) => {
+  if (n == null) return '—';
+  const abs = Math.abs(n);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  const str = h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
+  return (n > 0 ? '+' : n < 0 ? '−' : '') + str;
+};
+
+const title = `Carrera Oficial ${anio}: tiempos reales de paso | Semana Santa de Sevilla Open Data`;
+const description =
+  `Tiempos reales de paso por La Campana y La Catedral en la Semana Santa de Sevilla ${anio}. ` +
+  `Retrasos acumulados, puntualidad de cada hermandad y análisis del tiempo recuperado en carrera.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Carrera Oficial ${anio}: tiempos reales de paso`,
+  description,
+  url: new URL(`/${anio}/carrera-oficial/`, Astro.site).href,
+  inLanguage: 'es',
+  isPartOf: { '@type': 'Dataset', name: `Conteo de la Semana Santa de Sevilla ${anio}`, url: new URL(`/${anio}/`, Astro.site).href },
+  temporalCoverage: anio,
+  spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
+  isAccessibleForFree: true,
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum} carreraActiva={true}>
+  <section class="hero">
+    <div class="contenedor">
+      <nav class="migas" aria-label="Migas de pan">
+        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
+        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span> <span>Carrera oficial</span>
+      </nav>
+      <h1>Carrera oficial {anio} — tiempos reales</h1>
+      <p>
+        Tiempos <strong>reales</strong> de paso de la cruz de guía y el último paso de cada hermandad
+        por <strong>La Campana</strong>. El acumulado mide cuántos minutos lleva de retraso (o adelanto)
+        la carrera en ese momento respecto al horario oficial. El tiempo recortado indica cuánto
+        recuperó (o perdió) cada hermandad entre La Campana y La Catedral.
+      </p>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{fmt(registros.length)}</div>
+          <div class="kpi__lbl">Hermandades</div>
+        </div>
+        {diaMaxAcumulado.acumulado > 0 && (
+          <div class="kpi">
+            <div class="kpi__num">{fmtMin(diaMaxAcumulado.acumulado)}</div>
+            <div class="kpi__lbl">Máx. acumulado — {diaMaxAcumulado.dia}</div>
+          </div>
+        )}
+        {masRetrasada && (
+          <div class="kpi">
+            <div class="kpi__num" style="font-size:1.1rem">{masRetrasada.nombre}</div>
+            <div class="kpi__lbl">Mayor retraso individual — {fmtMin(masRetrasada.retrasoIndividual)}</div>
+          </div>
+        )}
+        {masPuntual && (
+          <div class="kpi">
+            <div class="kpi__num" style="font-size:1.1rem">{masPuntual.nombre}</div>
+            <div class="kpi__lbl">Más puntual — {fmtMin(masPuntual.retrasoIndividual)}</div>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="panel contenedor" id="tabla-carrera-sec">
+    <div class="panel__cab"><h2>Tiempos por hermandad</h2></div>
+    <CarreraOficialTabla registros={registros} dias={diasPresentes} anio={anio} />
+  </section>
+
+  <CarreraOficialGraficas registros={registros} dias={diasPresentes} />
+</Base>

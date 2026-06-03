@@ -1,0 +1,144 @@
+---
+const { registros, dias = [], anio, conColumnaDia = true, conFiltroDia = true } = Astro.props;
+
+const fmtMin = (n) => {
+  if (n == null) return null;
+  const abs = Math.abs(n);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  const str = h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
+  return (n > 0 ? '+' : n < 0 ? '−' : '') + str;
+};
+
+const columnas = [
+  { key: 'diaOrden',          etiqueta: 'Día',             tipo: 'num', txt: true,  soloConDia: true },
+  { key: 'nombre',            etiqueta: 'Hermandad',       tipo: 'txt', txt: true  },
+  { key: 'campanaProgramada', etiqueta: 'Prog. Campana',   tipo: 'txt'             },
+  { key: 'cruzGuiaCampana',   etiqueta: 'Real Campana',    tipo: 'txt'             },
+  { key: 'retrasoIndividual', etiqueta: 'Retraso entrada', tipo: 'num', fuerte: true },
+  { key: 'tiempoPasoMin',     etiqueta: 'Duración paso',   tipo: 'num'             },
+  { key: 'acumuladoCampana',  etiqueta: 'Acum. Campana',   tipo: 'num'             },
+  { key: 'acumuladoCatedral', etiqueta: 'Acum. Catedral',  tipo: 'num'             },
+  { key: 'tiempoRecortado',   etiqueta: 'Tiempo recortado',tipo: 'num', fuerte: true },
+].filter((c) => conColumnaDia || !c.soloConDia);
+---
+
+{conFiltroDia && (
+  <div class="controles">
+    <label class="campo">
+      Filtrar por día
+      <select id="filtro-dia-car">
+        <option value="todos">Todos los días</option>
+        {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
+      </select>
+    </label>
+    <p class="contador" id="contador-car" aria-live="polite">{registros.length} hermandades</p>
+  </div>
+)}
+
+<div class="tabla-wrap">
+  <table class="datos" id="tabla-carrera">
+    <caption>
+      <strong>Tiempos reales</strong> de paso por La Campana en {new Date().getFullYear() > 2026 ? 2026 : 'la Semana Santa'}.
+      «Retraso entrada» = diferencia entre la hora real de la cruz de guía y la hora programada.
+      «Acum.» = retraso acumulado de toda la jornada en ese punto. «Tiempo recortado» = Acum. Campana − Acum. Catedral
+      (positivo = recuperó tiempo). Pulsa una cabecera para ordenar.
+    </caption>
+    <thead>
+      <tr>
+        {columnas.map((c) => (
+          <th class={`orden${c.txt ? ' txt' : ''}`} data-key={c.key} data-tipo={c.tipo} scope="col">
+            <button type="button"><span>{c.etiqueta}</span><span class="flecha" aria-hidden="true"></span></button>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {registros.map((r) => (
+        <tr
+          data-dia={r.diaSlug}
+          data-slug={r.slug}
+          data-diaorden={r.diaOrden}
+          data-nombre={r.nombre}
+          data-campanarogramada={r.campanaProgramada ?? ''}
+          data-cruzguiacampana={r.cruzGuiaCampana}
+          data-retrasoindividual={r.retrasoIndividual ?? ''}
+          data-tiempopasomin={r.tiempoPasoMin}
+          data-acumuladocampana={r.acumuladoCampana}
+          data-acumuladocatedral={r.acumuladoCatedral}
+          data-tiemporecortado={r.tiempoRecortado}
+        >
+          {conColumnaDia && <td class="txt"><span class="pildora-dia">{r.diaNombre}</span></td>}
+          <td class="txt"><a href={`/${anio}/hermandad/${r.slug}/`}>{r.nombre}</a></td>
+          <td>{r.campanaProgramada ?? '—'}</td>
+          <td>{r.cruzGuiaCampana}</td>
+          <td class={`fuerte ${r.retrasoIndividual != null ? (r.retrasoIndividual > 0 ? 'negativo' : r.retrasoIndividual < 0 ? 'positivo' : '') : ''}`}>
+            {r.retrasoIndividual != null ? fmtMin(r.retrasoIndividual) : '—'}
+          </td>
+          <td>
+            {(() => { const h = Math.floor(r.tiempoPasoMin / 60); const m = r.tiempoPasoMin % 60; return h > 0 ? `${h} h ${String(m).padStart(2,'0')} min` : `${m} min`; })()}
+          </td>
+          <td class={r.acumuladoCampana > 0 ? 'negativo' : r.acumuladoCampana < 0 ? 'positivo' : ''}>
+            {fmtMin(r.acumuladoCampana)}
+          </td>
+          <td class={r.acumuladoCatedral > 0 ? 'negativo' : r.acumuladoCatedral < 0 ? 'positivo' : ''}>
+            {fmtMin(r.acumuladoCatedral)}
+          </td>
+          <td class={`fuerte ${r.tiempoRecortado > 0 ? 'positivo' : r.tiempoRecortado < 0 ? 'negativo' : ''}`}>
+            {fmtMin(r.tiempoRecortado)}
+          </td>
+        </tr>
+      ))}
+      <tr class="sin-resultados" hidden><td colspan={columnas.length}>No hay hermandades para ese día.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .positivo { color: #198038; font-weight: 600; }
+  .negativo { color: #da1e28; font-weight: 600; }
+</style>
+
+<script>
+  const tabla = document.getElementById('tabla-carrera');
+  if (tabla) {
+    const tbody = tabla.querySelector('tbody');
+    const filas = Array.from(tbody.querySelectorAll('tr[data-slug]'));
+    const filaVacia = tbody.querySelector('.sin-resultados');
+    const select = document.getElementById('filtro-dia-car');
+    const contador = document.getElementById('contador-car');
+    let ordenKey = null, ordenAsc = true;
+
+    const valor = (f, key, tipo) => {
+      const raw = f.dataset[key.toLowerCase()];
+      return tipo === 'num' ? (raw === '' ? -Infinity : parseFloat(raw)) : (raw || '').toLowerCase();
+    };
+
+    function filtrar() {
+      const dia = select ? select.value : 'todos';
+      let n = 0;
+      for (const f of filas) { const ok = dia === 'todos' || f.dataset.dia === dia; f.hidden = !ok; if (ok) n++; }
+      if (contador) contador.textContent = `${n} hermandad${n === 1 ? '' : 'es'}`;
+      filaVacia.hidden = n !== 0;
+    }
+
+    function ordenar(key, tipo) {
+      ordenAsc = ordenKey === key ? !ordenAsc : true;
+      ordenKey = key;
+      const factor = ordenAsc ? 1 : -1;
+      [...filas].sort((a, b) => {
+        const va = valor(a, key, tipo), vb = valor(b, key, tipo);
+        return va < vb ? -factor : va > vb ? factor : 0;
+      }).forEach((f) => tbody.insertBefore(f, filaVacia));
+      tabla.querySelectorAll('thead th').forEach((th) => {
+        if (th.dataset.key === key) th.setAttribute('aria-sort', ordenAsc ? 'ascending' : 'descending');
+        else th.removeAttribute('aria-sort');
+      });
+    }
+
+    if (select) select.addEventListener('change', filtrar);
+    tabla.querySelectorAll('thead th.orden').forEach((th) => {
+      th.querySelector('button').addEventListener('click', () => ordenar(th.dataset.key, th.dataset.tipo));
+    });
+  }
+</script>

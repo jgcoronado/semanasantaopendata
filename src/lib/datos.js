@@ -374,6 +374,81 @@ export function getHorariosEnCalle(anio) {
   return { anio: crucero.anio, porDia };
 }
 
+// ---------- Paso real por La Campana ----------
+
+const ficherosPasoReal = import.meta.glob('../data/paso-real-*.json', { eager: true });
+const pasoRealPorAnio = {};
+for (const [ruta, mod] of Object.entries(ficherosPasoReal)) {
+  const m = ruta.match(/paso-real-(\d{4})\.json$/);
+  if (m) pasoRealPorAnio[Number(m[1])] = mod.default;
+}
+
+/** ¿Hay datos de paso real para este año? */
+export const hayPasoReal = (anio) => !!pasoRealPorAnio[Number(anio)];
+
+/** Años con datos de paso real (del más reciente al más antiguo). */
+export const aniosConPasoReal = anios.filter((a) => pasoRealPorAnio[a.anio]);
+
+function construirPasoReal(anio) {
+  const lista = pasoRealPorAnio[anio];
+  if (!lista) throw new Error(`[datos] No hay paso real (paso-real-${anio}.json) para ${anio}.`);
+
+  const horarios = horariosPorAnio[anio] || null;
+  const horarioPorId = horarios ? new Map(horarios.map((h) => [h.idHdad, h])) : new Map();
+  const nazPorId = new Map(getAnio(anio).registros.map((r) => [r.id_hdad, r]));
+
+  const registros = lista.map((p) => {
+    const hdad = hdadPorId.get(p.idHdad);
+    if (!hdad) throw new Error(`[datos] paso-real ${anio}: idHdad ${p.idHdad} no existe.`);
+    const dia = diaPorSlug.get(hdad.dia);
+    const horario = horarioPorId.get(p.idHdad);
+    const naz = nazPorId.get(p.idHdad) || null;
+
+    const campanaProgramada = horario?.campana ?? null;
+    let retrasoIndividual = null;
+    if (campanaProgramada) {
+      const realMin = aMin(p.cruzGuiaCampana);
+      const progMin = aMin(campanaProgramada);
+      retrasoIndividual = realMin - progMin;
+    }
+
+    return {
+      anio,
+      idHdad: p.idHdad,
+      nombre: hdad.nombre,
+      slug: hdad.slug,
+      diaSlug: hdad.dia,
+      diaNombre: dia.nombre,
+      diaOrden: dia.orden,
+      cruzGuiaCampana: p.cruzGuiaCampana,
+      ultimoPasoCampana: p.ultimoPasoCampana,
+      tiempoPasoMin: p.tiempoPasoMin,
+      acumuladoCampana: p.acumuladoCampana,
+      acumuladoCatedral: p.acumuladoCatedral,
+      tiempoRecortado: p.tiempoRecortado,
+      campanaProgramada,
+      retrasoIndividual,
+      noNaz: naz?.noNaz ?? null,
+      noTotal: naz?.noTotal ?? null,
+    };
+  });
+
+  registros.sort((a, b) => a.diaOrden - b.diaOrden || aMin(a.cruzGuiaCampana) - aMin(b.cruzGuiaCampana));
+
+  const diasPresentes = [...new Map(registros.map((r) => [r.diaSlug, { slug: r.diaSlug, nombre: r.diaNombre, orden: r.diaOrden }])).values()]
+    .sort((a, b) => a.orden - b.orden);
+
+  return { anio, registros, diasPresentes };
+}
+
+const cachePasoReal = new Map();
+/** Datos reales de paso por La Campana/Catedral de un año, enriquecidos con horario y nazarenos. */
+export function getPasoReal(anio) {
+  const a = Number(anio);
+  if (!cachePasoReal.has(a)) cachePasoReal.set(a, construirPasoReal(a));
+  return cachePasoReal.get(a);
+}
+
 // ---------- Exportación de datos para el análisis cruzado ----------
 
 /** Dataset plano para exportar el análisis cruzado (CSV/JSON). */
