@@ -158,6 +158,30 @@ const datosCliente = {
   </figure>
 </section>
 
+<!-- ======================== BOX PLOT: DISTRIBUCIÓN POR JORNADA ======================== -->
+<section class="panel contenedor" id="boxplot">
+  <div class="panel__cab"><h2>Distribución por jornada: nazarenos y duración</h2></div>
+  <p class="descargas-intro">
+    Diagrama de cajas y bigotes del total de nazarenos por cortejo y de la duración de cada
+    procesión, agrupados por día procesional. La caja muestra el rango intercuartílico (Q1–Q3),
+    la línea central la mediana y los bigotes el rango completo salvo valores atípicos.
+  </p>
+  <div class="boxplot-grid">
+    <figure class="grafica">
+      <figcaption>Nazarenos por cortejo</figcaption>
+      <div class="grafica__lienzo" style="height:360px">
+        <canvas id="an-box-naz" aria-label="Box plot: nazarenos por cortejo"></canvas>
+      </div>
+    </figure>
+    <figure class="grafica">
+      <figcaption>Duración de la estación de penitencia</figcaption>
+      <div class="grafica__lienzo" style="height:360px">
+        <canvas id="an-box-dur" aria-label="Box plot: duración de la estación de penitencia"></canvas>
+      </div>
+    </figure>
+  </div>
+</section>
+
 <!-- ======================== COMPARATIVA ENTRE AÑOS ======================== -->
 {comparativaRows && comparativaRows.length > 0 && (
   <section class="panel contenedor" id="comparativa-analisis">
@@ -262,10 +286,12 @@ const datosCliente = {
     LineController, LineElement, PointElement,
     CategoryScale, LinearScale, Tooltip, Legend, Filler,
   } from 'chart.js';
+  import { BoxPlotController, BoxAndWiskers } from '@sgratzl/chartjs-chart-boxplot';
   Chart.register(
     BarController, BarElement, ScatterController,
     LineController, LineElement, PointElement,
     CategoryScale, LinearScale, Tooltip, Legend, Filler,
+    BoxPlotController, BoxAndWiskers,
   );
 
   const datos = JSON.parse(document.getElementById('datos-analisis').textContent);
@@ -434,6 +460,83 @@ const datosCliente = {
       },
     },
   });
+
+  // ── §5 Box plots: distribución por jornada ──
+  const diasConBox = datos.dias
+    .filter((d) => datos.registros.some((r) => r.diaSlug === d.slug))
+    .sort((a, b) => a.orden - b.orden);
+
+  const labelsBox = ['Total', ...diasConBox.map((d) => d.nombre)];
+  const coloresBox = ['#888888', ...diasConBox.map((d) => COLORES_9[(d.orden - 1) % 9])];
+
+  const dataNzBox = [
+    datos.registros.filter((r) => r.noNaz != null).map((r) => r.noNaz),
+    ...diasConBox.map((d) =>
+      datos.registros.filter((r) => r.diaSlug === d.slug && r.noNaz != null).map((r) => r.noNaz)
+    ),
+  ];
+
+  const dataDurBox = [
+    datos.registros.filter((r) => r.duracionMin != null).map((r) => r.duracionMin),
+    ...diasConBox.map((d) =>
+      datos.registros.filter((r) => r.diaSlug === d.slug && r.duracionMin != null).map((r) => r.duracionMin)
+    ),
+  ];
+
+  const mkBoxOpts = (titleY, fmtVal) => ({
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items) => items[0]?.label ?? '',
+          label: (ctx) => {
+            const raw = ctx.parsed?._custom ?? ctx.parsed ?? {};
+            const r = (n) => (n != null ? fmtVal(n) : '—');
+            return [
+              `Mediana: ${r(raw.median)}`,
+              `Q1–Q3: ${r(raw.q1)} – ${r(raw.q3)}`,
+              `Mín–Máx: ${r(raw.min)} – ${r(raw.max)}`,
+            ];
+          },
+        },
+      },
+    },
+    scales: {
+      x: { ticks: { font: { size: 10 }, maxRotation: 40, minRotation: 20 } },
+      y: { beginAtZero: true, title: { display: true, text: titleY } },
+    },
+  });
+
+  new Chart(document.getElementById('an-box-naz'), {
+    type: 'boxplot',
+    data: {
+      labels: labelsBox,
+      datasets: [{
+        data: dataNzBox,
+        backgroundColor: coloresBox.map((c) => c + '55'),
+        borderColor: coloresBox,
+        borderWidth: 2,
+        outlierRadius: 3,
+      }],
+    },
+    options: mkBoxOpts('Nazarenos', (n) => Math.round(n).toLocaleString('es-ES')),
+  });
+
+  new Chart(document.getElementById('an-box-dur'), {
+    type: 'boxplot',
+    data: {
+      labels: labelsBox,
+      datasets: [{
+        data: dataDurBox,
+        backgroundColor: coloresBox.map((c) => c + '55'),
+        borderColor: coloresBox,
+        borderWidth: 2,
+        outlierRadius: 3,
+      }],
+    },
+    options: mkBoxOpts('Minutos', (n) => dur(Math.round(n))),
+  });
 </script>
 
 <style>
@@ -446,4 +549,6 @@ const datosCliente = {
   .sube { color:#2a7a3b; }
   .baja { color:#c0392b; }
   .sin-datos { color:var(--gris-medio, #888); font-style:italic; font-size:.85em; }
+  .boxplot-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+  @media (max-width:700px) { .boxplot-grid { grid-template-columns:1fr; } }
 </style>
