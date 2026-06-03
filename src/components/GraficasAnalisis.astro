@@ -143,20 +143,6 @@ const datosCliente = {
   </figure>
 </section>
 
-<!-- ======================== DENSIDAD DEL DESFILE ======================== -->
-<section class="panel contenedor" id="densidad">
-  <div class="panel__cab"><h2>Densidad del desfile</h2></div>
-  <p class="descargas-intro">
-    Miembros del cortejo por minuto de tiempo de paso. Las cofradías con ratio alto
-    concentran su cortejo; las de ratio bajo lo espacian en el tiempo.
-  </p>
-  <figure class="grafica grafica--ancha">
-    <figcaption>Miembros del cortejo por minuto de tiempo de paso</figcaption>
-    <div class="grafica__lienzo" style={`height:${altoRanking}px`}>
-      <canvas id="an-densidad" aria-label="Densidad del desfile por hermandad"></canvas>
-    </div>
-  </figure>
-</section>
 
 <!-- ======================== BOX PLOT: DISTRIBUCIÓN POR JORNADA ======================== -->
 <section class="panel contenedor" id="boxplot">
@@ -435,42 +421,7 @@ const datosCliente = {
   selDia.addEventListener('change', pintarCalle);
   pintarCalle();
 
-  // ── §4 Densidad del desfile ──
-  const ordenDens = [...datos.registros]
-    .filter((r) => r.totalPorMinuto != null)
-    .sort((a, b) => b.totalPorMinuto - a.totalPorMinuto);
-
-  new Chart(document.getElementById('an-densidad'), {
-    type: 'bar',
-    data: {
-      labels: ordenDens.map((r) => r.nombre),
-      datasets: [{
-        data: ordenDens.map((r) => r.totalPorMinuto),
-        backgroundColor: ordenDens.map((r) => COLORES_9[(r.diaOrden - 1) % 9] + 'cc'),
-        borderColor:     ordenDens.map((r) => COLORES_9[(r.diaOrden - 1) % 9]),
-        borderWidth: 1,
-      }],
-    },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false, axis: 'y' },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title: (items) => items[0]?.label ?? '',
-            label: (c) => `${c.raw.toLocaleString('es-ES')} miemb./min`,
-          },
-        },
-      },
-      scales: {
-        x: { beginAtZero: true, title: { display: true, text: 'Miembros del cortejo por minuto' } },
-        y: { ticks: { autoSkip: false, font: { size: 10 } } },
-      },
-    },
-  });
-
-  // ── §5 Box plots: distribución por jornada ──
+  // ── §4 Box plots: distribución por jornada ──
   const diasConBox = datos.dias
     .filter((d) => datos.registros.some((r) => r.diaSlug === d.slug))
     .sort((a, b) => a.orden - b.orden);

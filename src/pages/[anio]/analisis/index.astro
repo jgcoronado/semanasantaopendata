@@ -23,9 +23,6 @@ const sinDatos  = registros.filter((r) => r.incidencia !== null);
 
 // KPIs
 const durMedia   = Math.round(conDatos.reduce((s, r) => s + r.duracionMin, 0) / conDatos.length);
-const densList   = conDatos.filter((r) => r.totalPorMinuto != null);
-const masDensa   = densList.reduce((a, b) => b.totalPorMinuto > a.totalPorMinuto ? b : a);
-const menosDensa = densList.reduce((a, b) => b.totalPorMinuto < a.totalPorMinuto ? b : a);
 
 // Comparativa con el año anterior con horarios (si existe)
 const anioAnterior = aniosConHorarios.find((a) => a.anio < anioNum);
@@ -96,14 +93,6 @@ const jsonLd = {
         <div class="kpi">
           <div class="kpi__num">{fmtDur(durMedia)}</div>
           <div class="kpi__lbl">Duración media</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num" style="font-size:1.1rem">{masDensa.nombre}</div>
-          <div class="kpi__lbl">Desfile más denso · {masDensa.totalPorMinuto} miemb./min</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num" style="font-size:1.1rem">{menosDensa.nombre}</div>
-          <div class="kpi__lbl">Desfile más espaciado · {menosDensa.totalPorMinuto} miemb./min</div>
         </div>
       </div>
     </div>
