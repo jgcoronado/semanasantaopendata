@@ -2,6 +2,7 @@
 // Gráficas de una hermandad a lo largo de los años:
 //  - una tarta por año con su % sobre el total del día (conmutable: nazarenos / cortejo),
 //  - un histograma (barras agrupadas) con nazarenos y cortejo por año.
+//  - una barra apilada con la composición del cortejo por año.
 // `datos` llega ordenado ascendente por año.
 const { nombre, datos } = Astro.props;
 
@@ -15,6 +16,14 @@ const datosCliente = {
     anio: x.anio,
     naz: { hdad: x.noNaz, resto: Math.max(x.diaNoNaz - x.noNaz, 0), pct: r1(x.pctNaz) },
     total: { hdad: x.noTotal, resto: Math.max(x.diaNoTotal - x.noTotal, 0), pct: r1(x.pctTotal) },
+  })),
+  composicion: datos.map((x) => ({
+    anio: x.anio,
+    nazarenos:   x.nazarenos,
+    penitentes:  x.penitentes,
+    acolitos:    x.acolitos,
+    monaguillos: x.monaguillos,
+    acompCortejo:x.acompCortejo,
   })),
 };
 const hayVariosAnios = datos.length >= 2;
@@ -43,6 +52,13 @@ const hayVariosAnios = datos.length >= 2;
   <figure class="grafica grafica--ancha" style="margin-top:1.2rem">
     <figcaption>Nazarenos y cortejo por año</figcaption>
     <div class="grafica__lienzo"><canvas id="hist-hdad" aria-label="Nazarenos y cortejo por año"></canvas></div>
+  </figure>
+)}
+
+{hayVariosAnios && (
+  <figure class="grafica grafica--ancha" style="margin-top:1.2rem">
+    <figcaption>Composición del cortejo por año</figcaption>
+    <div class="grafica__lienzo" style="height:220px"><canvas id="comp-hdad" aria-label="Composición del cortejo por año"></canvas></div>
   </figure>
 )}
 
@@ -150,6 +166,55 @@ const hayVariosAnios = datos.length >= 2;
           tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${nf.format(c.parsed.y)}` } },
         },
         scales: { y: { beginAtZero: true, ticks: { callback: (v) => nf.format(v) } } },
+      },
+    });
+  }
+
+  // Composición apilada por año
+  const cvComp = document.getElementById('comp-hdad');
+  if (cvComp && datos.composicion) {
+    const COL_COMP = {
+      nazarenos:    '#6929c4',
+      penitentes:   '#1192e8',
+      acolitos:     '#198038',
+      monaguillos:  '#b28600',
+      acompCortejo: '#9f1853',
+    };
+    const CAPAS = [
+      { key: 'nazarenos',    label: 'Nazarenos' },
+      { key: 'penitentes',   label: 'Penitentes' },
+      { key: 'acolitos',     label: 'Acólitos' },
+      { key: 'monaguillos',  label: 'Monaguillos' },
+      { key: 'acompCortejo', label: 'Acompañamiento' },
+    ];
+    new Chart(cvComp, {
+      type: 'bar',
+      data: {
+        labels: datos.composicion.map((x) => String(x.anio)),
+        datasets: CAPAS.map((c) => ({
+          label: c.label,
+          data: datos.composicion.map((x) => x[c.key] ?? 0),
+          backgroundColor: COL_COMP[c.key] + 'dd',
+          borderColor: COL_COMP[c.key],
+          borderWidth: 0,
+          stack: 'comp',
+        })),
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'bottom', labels: { padding: 14 } },
+          tooltip: {
+            callbacks: {
+              footer: (items) => `Total: ${nf.format(items.reduce((s, i) => s + i.parsed.y, 0))}`,
+            },
+          },
+        },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true, ticks: { callback: (v) => nf.format(v) } },
+        },
       },
     });
   }

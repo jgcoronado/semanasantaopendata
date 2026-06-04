@@ -1,7 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
-import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio } from '../../../lib/datos.js';
+import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -37,12 +37,17 @@ const porAnioAsc = [...anios]
     const reg = d.registros.find((x) => x.slug === slug);
     if (!reg) return null;
     const tot = d.totalesPorDia.find((t) => t.slug === reg.diaSlug);
+    const hermsDiaAnio = d.registros.filter((x) => x.diaSlug === reg.diaSlug);
+    const rankNazAnio = [...hermsDiaAnio].sort((a, b) => b.noNaz - a.noNaz).findIndex((x) => x.slug === slug) + 1;
+    const rankTotalAnio = [...hermsDiaAnio].sort((a, b) => b.noTotal - a.noTotal).findIndex((x) => x.slug === slug) + 1;
     return {
       anio: a.anio,
       nazarenos: reg.nazarenos, penitentes: reg.penitentes, acolitos: reg.acolitos,
       monaguillos: reg.monaguillos, acompCortejo: reg.acompCortejo,
       noNaz: reg.noNaz, noTotal: reg.noTotal, pctNaz: reg.pctNaz, pctTotal: reg.pctTotal,
       diaNoNaz: tot.noNaz, diaNoTotal: tot.noTotal,
+      hdadesEnDia: hermsDiaAnio.length,
+      rankNaz: rankNazAnio, rankTotal: rankTotalAnio,
     };
   })
   .filter(Boolean);
@@ -67,6 +72,26 @@ const itinerario = horario
       { punto: 'Entrada', hora: horario.horas.entrada, sig: horario.entradaMin >= 1440 },
     ]
   : [];
+
+// Paso real por La Campana (si existe para el año mostrado).
+const pasoReal = hayPasoReal(anioNum) ? getPasoReal(anioNum).registros.find((x) => x.idHdad === r.id_hdad) : null;
+
+// Formatea un retraso en minutos con signo: +12 min / −5 min / En hora.
+const fmtRetraso = (min) => {
+  if (min === 0) return 'En hora';
+  const abs = Math.abs(min);
+  return `${min > 0 ? '+' : '−'}${abs} min`;
+};
+const clsRetraso = (min) => (min > 0 ? 'neg' : min < 0 ? 'pos' : '');
+
+// Evolución del horario en todos los años con datos de horario para esta hermandad.
+const horariosEvolucion = aniosConHorarios
+  .map((a) => {
+    const h = getHorariosAnio(a.anio).registros.find((x) => x.id_hdad === r.id_hdad);
+    return h ? { anio: a.anio, duracionMin: h.duracionMin, carreraOficialMin: h.carreraOficialMin, cruzCarreraMin: h.cruzCarreraMin, partPorHora: h.partPorHora, salida: h.horas.salida, entrada: h.horas.entrada, entradaMin: h.entradaMin } : null;
+  })
+  .filter(Boolean)
+  .sort((a, b) => a.anio - b.anio);
 
 const metricasDesglose = [
   { etiqueta: 'Nazarenos', key: 'nazarenos' },
@@ -140,7 +165,7 @@ const jsonLd = {
       <p class="descargas-intro">
         Duración <strong>{fmtDur(horario.duracionMin)}</strong> · en Carrera Oficial
         <strong>{fmtDur(horario.carreraOficialMin)}</strong>
-        {horario.partPorHora != null && <> · <strong>{fmt(horario.partPorHora)}</strong> participantes/hora</>}.
+        {horario.partPorHora != null && <> · <strong>{fmt(horario.partPorHora)}</strong> miembros/hora</>}.
       </p>
       <ul class="itinerario">
         {itinerario.map((it) => (
@@ -153,6 +178,89 @@ const jsonLd = {
       <nav class="dia-nav" aria-label="Más">
         <a class="dia-nav__a dia-nav__der" href={`/${anio}/horarios/`}>Ver todos los horarios →</a>
       </nav>
+    </section>
+  )}
+
+  {pasoReal && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>Paso real por La Campana {anio}</h2></div>
+      <p class="descargas-intro">
+        Tiempos reales registrados al paso por La Campana durante el desfile de {anio}.
+        El retraso acumulado mide los minutos de adelanto (−) o retraso (+) respecto al horario oficial.
+      </p>
+      <ul class="itinerario">
+        <li>
+          <span class="it-punto">Cruz de Guía en La Campana</span>
+          <span class="it-hora">{pasoReal.cruzGuiaCampana}</span>
+        </li>
+        <li>
+          <span class="it-punto">Último paso en La Campana</span>
+          <span class="it-hora">{pasoReal.ultimoPasoCampana}</span>
+        </li>
+      </ul>
+      <div class="kpis" style="margin-top:1rem">
+        <div class="kpi">
+          <div class="kpi__num">{pasoReal.tiempoPasoRealCampana} min</div>
+          <div class="kpi__lbl">Duración real del paso (Campana)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{pasoReal.tiempoPasoOficial} min</div>
+          <div class="kpi__lbl">Duración oficial del paso</div>
+        </div>
+        <div class="kpi">
+          <div class={`kpi__num var ${clsRetraso(pasoReal.acumuladoCampana)}`}>{fmtRetraso(pasoReal.acumuladoCampana)}</div>
+          <div class="kpi__lbl">Retraso acumulado en Campana</div>
+        </div>
+        <div class="kpi">
+          <div class={`kpi__num var ${clsRetraso(pasoReal.acumuladoCatedral)}`}>{fmtRetraso(pasoReal.acumuladoCatedral)}</div>
+          <div class="kpi__lbl">Retraso acumulado en Catedral</div>
+        </div>
+      </div>
+      {pasoReal.tiempoRecortado !== 0 && (
+        <p class="descargas-intro" style="margin-top:1rem">
+          Entre La Campana y la Catedral {pasoReal.tiempoRecortado > 0
+            ? <><strong class="var pos">recuperó {pasoReal.tiempoRecortado} min</strong> respecto al acumulado en Campana.</>
+            : <><strong class="var neg">perdió {Math.abs(pasoReal.tiempoRecortado)} min</strong> adicionales respecto al acumulado en Campana.</>
+          }
+        </p>
+      )}
+      <nav class="dia-nav" aria-label="Más">
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/carrera-oficial/`}>Ver todos los datos de la Carrera Oficial →</a>
+      </nav>
+    </section>
+  )}
+
+  {horariosEvolucion.length >= 2 && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>Evolución del horario</h2></div>
+      <p class="descargas-intro">Comparativa de duración y ritmo en los años con horario oficial disponible.</p>
+      <div class="tabla-wrap">
+        <table class="datos">
+          <caption>Duración, tiempo en Carrera Oficial y miembros por hora de {r.nombre} por año.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Año</th>
+              <th scope="col">Salida</th>
+              <th scope="col">Entrada</th>
+              <th scope="col">Duración</th>
+              <th scope="col">En Carrera Oficial</th>
+              <th scope="col">Miembros/hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            {horariosEvolucion.map((h) => (
+              <tr class={h.anio === anioNum ? 'fila-resaltada' : ''}>
+                <td class="txt fuerte">{h.anio}</td>
+                <td>{h.salida}</td>
+                <td>{h.entrada}{h.entradaMin >= 1440 && <span class="dia-sig"> +1</span>}</td>
+                <td>{fmtDur(h.duracionMin)}</td>
+                <td>{fmtDur(h.carreraOficialMin)}</td>
+                <td>{h.partPorHora != null ? fmt(h.partPorHora) : '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   )}
 
@@ -216,6 +324,40 @@ const jsonLd = {
         </tbody>
       </table>
     </div>
+  </section>
+
+  {porAnioAsc.length >= 2 && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>Posición en el día</h2></div>
+      <p class="descargas-intro">Posición de {r.nombre} entre las hermandades de su día, ordenadas por número de nazarenos o total del cortejo.</p>
+      <div class="tabla-wrap">
+        <table class="datos">
+          <caption>Ranking de {r.nombre} dentro de las hermandades del {r.diaNombre} por año.</caption>
+          <thead>
+            <tr>
+              <th class="txt" scope="col">Año</th>
+              <th scope="col">Hermandades ese día</th>
+              <th scope="col">Pos. por nazarenos</th>
+              <th scope="col">Pos. por cortejo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {porAnioAsc.map((f) => (
+              <tr class={f.anio === anioNum ? 'fila-resaltada' : ''}>
+                <td class="txt fuerte"><a href={`/${f.anio}/hermandad/${slug}/`}>{f.anio}</a></td>
+                <td>{f.hdadesEnDia}</td>
+                <td class="fuerte">{f.rankNaz}.ª de {f.hdadesEnDia}</td>
+                <td class="fuerte">{f.rankTotal}.ª de {f.hdadesEnDia}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  <section class="panel contenedor">
+    <div class="panel__cab"><h2>Gráficas</h2></div>
 
     <GraficasHermandad nombre={r.nombre} datos={porAnioAsc} />
 

@@ -1,17 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getComparativaHermandades, anios, anioPrincipal } from '../lib/datos.js';
+import { getComparativaHermandades, anios, anioPrincipal, dias } from '../lib/datos.js';
 
 const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
-const hermandades = getComparativaHermandades()
-  .slice()
-  .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
-  .map((h) => {
-    const aniosConDatos = anios.filter((a) => h.porAnio[a.anio]).map((a) => a.anio);
-    const anioEnlace = aniosConDatos[0] ?? anioPrincipal;
-    return { ...h, aniosConDatos, anioEnlace, busqueda: norm(h.nombre) };
-  });
+const todasHermandades = getComparativaHermandades().map((h) => {
+  const aniosConDatos = anios.filter((a) => h.porAnio[a.anio]);
+  const anioEnlace = aniosConDatos[0]?.anio ?? anioPrincipal;
+  return { ...h, anioEnlace, busqueda: norm(h.nombre) };
+});
+
+// Agrupar por día y ordenar dentro de cada día por id_hdad (orden de cortejo 2026)
+const herDia = {};
+for (const h of todasHermandades) {
+  if (!herDia[h.diaSlug]) herDia[h.diaSlug] = [];
+  herDia[h.diaSlug].push(h);
+}
+for (const slug of Object.keys(herDia)) {
+  herDia[slug].sort((a, b) => a.id_hdad - b.id_hdad);
+}
+
+const totalHermandades = todasHermandades.length;
 
 const title = 'Hermandades de la Semana Santa de Sevilla — buscador | Open Data';
 const description =
@@ -31,31 +40,42 @@ const description =
           aria-label="Buscar hermandad"
           autocomplete="off"
         />
-        <span class="buscador__contador" id="buscador-contador" aria-live="polite">{hermandades.length} hermandades</span>
+        <span class="buscador__contador" id="buscador-contador" aria-live="polite">{totalHermandades} hermandades</span>
       </div>
     </div>
   </section>
 
   <section class="panel contenedor">
-    <ul class="hdad-lista" id="hdad-lista">
-      {hermandades.map((h) => (
-        <li class="hdad-item" data-nombre={h.busqueda}>
-          <a href={`/${h.anioEnlace}/hermandad/${h.slug}/`}>
-            <span class="hdad-item__nombre">{h.nombre}</span>
-            <span class="hdad-item__meta">
-              <span class="pildora-dia">{h.diaNombre}</span>
-              <span class="hdad-item__anios">{h.aniosConDatos.join(' · ')}</span>
-            </span>
-          </a>
-        </li>
-      ))}
-      <li class="hdad-vacio" id="hdad-vacio" hidden>No hay ninguna hermandad con ese nombre.</li>
-    </ul>
+    <div id="hdad-contenido">
+      {dias.map((dia) => {
+        const hdades = herDia[dia.slug] ?? [];
+        if (!hdades.length) return null;
+        return (
+          <div class="hdad-dia" data-dia={dia.slug}>
+            <h2 class="hdad-dia__titulo">{dia.nombre}</h2>
+            <ul class="hdad-lista">
+              {hdades.map((h) => (
+                <li class="hdad-item" data-nombre={h.busqueda}>
+                  <a href={`/${h.anioEnlace}/hermandad/${h.slug}/`}>
+                    <span class="hdad-item__nombre">{h.nombre}</span>
+                    <span class="hdad-item__meta">
+                      <span class="hdad-item__cortejo">Cortejo de {h.porAnio[2026]?.noTotal.toLocaleString('es-ES')} personas en el año 2026</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+    <p class="hdad-vacio" id="hdad-vacio" hidden>No hay ninguna hermandad con ese nombre.</p>
   </section>
 
   <script>
     const input = document.getElementById('buscador-hdad');
     const items = Array.from(document.querySelectorAll('.hdad-item'));
+    const secciones = Array.from(document.querySelectorAll('.hdad-dia'));
     const vacio = document.getElementById('hdad-vacio');
     const contador = document.getElementById('buscador-contador');
     const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -67,6 +87,9 @@ const description =
         const ok = !q || it.dataset.nombre.includes(q);
         it.hidden = !ok;
         if (ok) n++;
+      }
+      for (const sec of secciones) {
+        sec.hidden = sec.querySelectorAll('.hdad-item:not([hidden])').length === 0;
       }
       vacio.hidden = n !== 0;
       contador.textContent = `${n} hermandad${n === 1 ? '' : 'es'}`;

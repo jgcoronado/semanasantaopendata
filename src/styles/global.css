@@ -234,8 +234,8 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 
 /* ---------- Variación interanual ---------- */
 td.var { font-weight: 600; white-space: nowrap; }
-td.var.pos { color: #1f7a4d; }
-td.var.neg { color: #b5462f; }
+.var.pos { color: #1f7a4d; }
+.var.neg { color: #b5462f; }
 
 /* ---------- Año en H1 de hermandad ---------- */
 .h1-anio { color: var(--oro); font-weight: 700; }
@@ -262,10 +262,12 @@ table.datos thead th.col-actual { background: #f6eccf; color: var(--morado-osc);
 .buscador__contador { color: var(--gris); font-size: 0.9rem; }
 
 /* ---------- Lista de hermandades ---------- */
+.hdad-dia { margin-bottom: 2.5rem; }
+.hdad-dia__titulo { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gris); margin: 0 0 0.75rem 0; padding-bottom: 0.4rem; border-bottom: 1px solid var(--linea); }
 .hdad-lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 0.7rem; }
 .hdad-item a { display: flex; flex-direction: column; gap: 0.4rem; background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio); padding: 0.8rem 1rem; text-decoration: none; color: var(--tinta); box-shadow: var(--sombra); transition: transform 0.12s ease, border-color 0.12s ease; height: 100%; }
 .hdad-item a:hover { transform: translateY(-2px); border-color: var(--morado); }
 .hdad-item__nombre { font-weight: 700; color: var(--morado-osc); }
 .hdad-item__meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.hdad-item__anios { font-size: 0.8rem; color: var(--gris); }
-.hdad-vacio { grid-column: 1 / -1; color: var(--gris); padding: 1rem 0; }
+.hdad-item__cortejo { font-size: 0.8rem; color: var(--gris); }
+.hdad-vacio { color: var(--gris); padding: 1rem 0; }
