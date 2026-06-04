@@ -234,8 +234,8 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 
 /* ---------- Variación interanual ---------- */
 td.var { font-weight: 600; white-space: nowrap; }
-td.var.pos { color: #1f7a4d; }
-td.var.neg { color: #b5462f; }
+.var.pos { color: #1f7a4d; }
+.var.neg { color: #b5462f; }
 
 /* ---------- Año en H1 de hermandad ---------- */
 .h1-anio { color: var(--oro); font-weight: 700; }
