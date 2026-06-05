@@ -2,7 +2,8 @@
 import Base from '../../../layouts/Base.astro';
 import CarreraOficialTabla from '../../../components/CarreraOficialTabla.astro';
 import CarreraOficialGraficas from '../../../components/CarreraOficialGraficas.astro';
-import { aniosConPasoReal, getPasoReal, fmt } from '../../../lib/datos.js';
+import FuentesResumen from '../../../components/FuentesResumen.astro';
+import { aniosConPasoReal, getPasoReal, fmt, getFuentesAnio } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   return aniosConPasoReal.map((a) => ({ params: { anio: a.slug } }));
@@ -11,6 +12,7 @@ export function getStaticPaths() {
 const { anio } = Astro.params;
 const anioNum = Number(anio);
 const { registros, diasPresentes } = getPasoReal(anioNum);
+const fuentesPagina = getFuentesAnio(anioNum, ['nazarenos', 'paso_real']);
 
 const masRetrasada = registros.reduce((a, b) => (b.retrasoRealCampana > a.retrasoRealCampana ? b : a));
 const masPuntual   = registros.reduce((a, b) => (b.retrasoRealCampana < a.retrasoRealCampana ? b : a));
@@ -96,6 +98,10 @@ const jsonLd = {
   </section>
 
   <CarreraOficialGraficas registros={registros} dias={diasPresentes} />
+
+  <section class="panel contenedor">
+    <FuentesResumen fuentes={fuentesPagina} />
+  </section>
 </Base>
 
 <style>

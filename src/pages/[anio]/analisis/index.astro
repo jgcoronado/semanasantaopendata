@@ -1,12 +1,14 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import GraficasAnalisis from '../../../components/GraficasAnalisis.astro';
+import FuentesResumen from '../../../components/FuentesResumen.astro';
 import {
   aniosConHorarios,
   getCruceNazarenosHorarios,
   getHorariosEnCalle,
   fmt,
   fmtDur,
+  getFuentesAnio,
 } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
@@ -17,6 +19,7 @@ const { anio } = Astro.params;
 const anioNum = Number(anio);
 const { registros, diasPresentes } = getCruceNazarenosHorarios(anioNum);
 const { porDia } = getHorariosEnCalle(anioNum);
+const fuentesPagina = getFuentesAnio(anioNum, ['nazarenos', 'horarios']);
 
 const conDatos  = registros.filter((r) => r.incidencia === null);
 const sinDatos  = registros.filter((r) => r.incidencia !== null);
@@ -107,6 +110,10 @@ const jsonLd = {
     comparativaAnio={comparativaAnio}
     anioActual={anioNum}
   />
+
+  <section class="panel contenedor">
+    <FuentesResumen fuentes={fuentesPagina} />
+  </section>
 </Base>
 
 <style>

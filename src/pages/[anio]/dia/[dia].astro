@@ -1,7 +1,8 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import TablaNazarenos from '../../../components/TablaNazarenos.astro';
-import { anios, getAnio, fmt } from '../../../lib/datos.js';
+import FuentesResumen from '../../../components/FuentesResumen.astro';
+import { anios, getAnio, fmt, getFuentesAnio } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -16,6 +17,7 @@ export function getStaticPaths() {
 const { anio, dia } = Astro.params;
 const anioNum = Number(anio);
 const { registros, diasPresentes, totalesPorDia } = getAnio(anioNum);
+const fuentesPagina = getFuentesAnio(anioNum, ['nazarenos']);
 
 const diaInfo = diasPresentes.find((d) => d.slug === dia);
 const totales = totalesPorDia.find((t) => t.slug === dia);
@@ -90,5 +92,6 @@ const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTot
         ? <a class="dia-nav__a dia-nav__der" href={`/${anio}/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>
         : <span></span>}
     </nav>
+    <FuentesResumen fuentes={fuentesPagina} />
   </section>
 </Base>

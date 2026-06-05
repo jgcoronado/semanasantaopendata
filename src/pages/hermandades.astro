@@ -1,8 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getComparativaHermandades, anios, anioPrincipal, dias } from '../lib/datos.js';
+import FuentesResumen from '../components/FuentesResumen.astro';
+import { getComparativaHermandades, anios, anioPrincipal, dias, getFuentesAnio } from '../lib/datos.js';
 
 const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+const fuentesHermandades = [...new Map(
+  anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos'])).map((f) => [f.id, f])
+).values()];
 
 const todasHermandades = getComparativaHermandades().map((h) => {
   const aniosConDatos = anios.filter((a) => h.porAnio[a.anio]);
@@ -97,4 +102,8 @@ const description =
 
     input.addEventListener('input', filtrar);
   </script>
+
+  <section class="panel contenedor">
+    <FuentesResumen fuentes={fuentesHermandades} />
+  </section>
 </Base>

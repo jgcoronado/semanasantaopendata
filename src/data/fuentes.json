@@ -1,0 +1,56 @@
+[
+  {
+    "id": "consejo-nazarenos-2026",
+    "nombre": "Consejo General de Hermandades y Cofradías de Sevilla",
+    "nombre_corto": "Consejo de Hermandades",
+    "tipo": "oficial",
+    "url": "https://www.hermandades-de-sevilla.org/consejo/el-consejo-completa-el-conteo-de-la-semana-santa-2026/",
+    "fecha_consulta": null,
+    "descripcion": "Conteo oficial de nazarenos y cortejo de la Semana Santa 2026"
+  },
+  {
+    "id": "consejo-nazarenos-2025",
+    "nombre": "Consejo General de Hermandades y Cofradías de Sevilla",
+    "nombre_corto": "Consejo de Hermandades",
+    "tipo": "oficial",
+    "url": "https://www.hermandades-de-sevilla.org/consejo/el-consejo-general-de-hh-y-cc-completa-el-conteo-de-la-semana-santa-2025",
+    "fecha_consulta": null,
+    "descripcion": "Conteo oficial de nazarenos y cortejo de la Semana Santa 2025"
+  },
+  {
+    "id": "consejo-nazarenos-2023",
+    "nombre": "Consejo General de Hermandades y Cofradías de Sevilla",
+    "nombre_corto": "Consejo de Hermandades",
+    "tipo": "oficial",
+    "url": "https://www.hermandades-de-sevilla.org/consejo/el-consejo-completa-el-conteo-de-la-semana-santa-2023/",
+    "fecha_consulta": null,
+    "descripcion": "Conteo oficial de nazarenos y cortejo de la Semana Santa 2023"
+  },
+  {
+    "id": "consejo-horarios-2026",
+    "nombre": "Consejo General de Hermandades y Cofradías de Sevilla",
+    "nombre_corto": "Consejo de Hermandades",
+    "tipo": "oficial",
+    "url": "https://www.hermandades-de-sevilla.org/",
+    "fecha_consulta": null,
+    "descripcion": "Itinerarios y horarios oficiales de la Semana Santa 2026"
+  },
+  {
+    "id": "consejo-horarios-2025",
+    "nombre": "Consejo General de Hermandades y Cofradías de Sevilla",
+    "nombre_corto": "Consejo de Hermandades",
+    "tipo": "oficial",
+    "url": "https://www.hermandades-de-sevilla.org/",
+    "fecha_consulta": null,
+    "descripcion": "Itinerarios y horarios oficiales de la Semana Santa 2025"
+  },
+  {
+    "id": "paso-real-2026",
+    "nombre": "Elaboración propia",
+    "nombre_corto": "Elaboración propia",
+    "tipo": "propia",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Tiempos reales de paso por La Campana y Catedral, registrados durante la Semana Santa 2026"
+  }
+]
