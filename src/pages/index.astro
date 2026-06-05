@@ -20,19 +20,8 @@ const jsonLd = {
 ---
 
 <Base title={title} description={description} jsonLd={jsonLd}>
-  <section class="hero">
-    <div class="contenedor">
-      <h1>La Semana Santa de Sevilla, en datos abiertos</h1>
-      <p>
-        El conteo oficial de nazarenos y participantes de cada cofradía, año a año. Consulta las
-        tablas y gráficas por día y por hermandad, descarga los datos y compara la evolución entre
-        años.
-      </p>
-    </div>
-  </section>
-
-  <section class="panel contenedor">
-    <div class="panel__cab"><h2>Elige un año</h2></div>
+  <section class="hub contenedor">
+    <h1 class="hub__titulo">Semana Santa de Sevilla — datos abiertos</h1>
     <div class="anios-grid">
       {resumen.map((a) => (
         <a class="anio-card" href={`/${a.slug}/`}>
@@ -40,19 +29,14 @@ const jsonLd = {
           <span class="anio-card__datos">
             <strong>{fmt(a.datos.noNaz)}</strong> nazarenos · {fmt(a.datos.noTotal)} en el cortejo
           </span>
-          <span class="anio-card__meta">{fmt(a.datos.hermandades)} hermandades · {fmt(a.datos.dias)} días con conteo →</span>
+          <span class="anio-card__meta">{fmt(a.datos.hermandades)} hermandades · {fmt(a.datos.dias)} días →</span>
         </a>
       ))}
-    </div>
-  </section>
-
-  <section class="panel contenedor">
-    <div class="comparativa-cta">
-      <div>
-        <h2>Comparativa entre años</h2>
-        <p>Evolución del número de nazarenos y del cortejo por hermandad y por día.</p>
-      </div>
-      <a class="btn" href="/comparativa/">Ver comparativa →</a>
+      <a class="anio-card anio-card--cta" href="/comparativa/">
+        <span class="anio-card__anio anio-card__anio--cta">↔</span>
+        <span class="anio-card__datos">Comparativa entre años</span>
+        <span class="anio-card__meta">Evolución por hermandad y día →</span>
+      </a>
     </div>
   </section>
 </Base>

@@ -63,6 +63,13 @@ a { color: var(--morado); }
 .hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.12; margin: 0 0 0.6rem; }
 .hero p { color: var(--gris); font-size: 1.05rem; max-width: 60ch; margin: 0; }
 
+/* ---------- Hub (home) ---------- */
+.hub { padding-block: clamp(1.8rem, 4vw, 2.8rem); }
+.hub__titulo { font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: 700; color: var(--gris); margin: 0 0 1.2rem; letter-spacing: 0.01em; }
+.anio-card--cta { border-color: var(--linea); background: var(--fondo-alt); }
+.anio-card--cta:hover { border-color: var(--morado); }
+.anio-card__anio--cta { font-size: 1.6rem; color: var(--morado); }
+
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1.6rem; }
 .kpi { background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1rem 1.1rem; box-shadow: var(--sombra); }
 .kpi__num { font-size: 1.8rem; font-weight: 800; color: var(--morado); line-height: 1; }
@@ -195,10 +202,6 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 .anio-card__datos strong { color: var(--morado-osc); }
 .anio-card__meta { font-size: 0.84rem; color: var(--gris); margin-top: auto; }
 
-/* ---------- Hub: CTA comparativa ---------- */
-.comparativa-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; background: var(--fondo-alt); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1.2rem 1.4rem; }
-.comparativa-cta h2 { margin: 0 0 0.2rem; }
-.comparativa-cta p { margin: 0; color: var(--gris); }
 
 /* ---------- Conmutador de métrica ---------- */
 .segmento { display: inline-flex; border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; background: var(--blanco); }
