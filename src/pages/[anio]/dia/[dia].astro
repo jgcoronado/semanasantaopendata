@@ -49,49 +49,26 @@ const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTot
 ---
 
 <Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
-  <section class="hero">
-    <div class="contenedor">
-      <nav class="migas" aria-label="Migas de pan">
-        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
-        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span>
-        <span>{diaInfo.nombre}</span>
-      </nav>
-      <h1>{diaInfo.nombre} {anio}</h1>
-      <p>
-        Nazarenos y participantes por hermandad en el {diaInfo.nombre} de la Semana Santa de
-        Sevilla {anio}. Ordena la tabla pulsando cualquier cabecera.
-      </p>
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totales.hermandades)}</div>
-          <div class="kpi__lbl">Hermandades</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totales.noNaz)}</div>
-          <div class="kpi__lbl">Nazarenos</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totales.noTotal)}</div>
-          <div class="kpi__lbl">Participantes en el cortejo</div>
-        </div>
+  <section class="anio-cab contenedor">
+    <div class="anio-cab__top">
+      <div>
+        <h1 class="anio-cab__titulo"><a href={`/${anio}/`}>{anio}</a> — {diaInfo.nombre}</h1>
       </div>
+      <div class="anio-cab__kpis">
+        <span class="kpi-mini"><strong>{fmt(totales.hermandades)}</strong> hermandades</span>
+        <span class="kpi-mini"><strong>{fmt(totales.noNaz)}</strong> nazarenos</span>
+        <span class="kpi-mini"><strong>{fmt(totales.noTotal)}</strong> en el cortejo</span>
+      </div>
+    </div>
+    <div class="anio-cab__links">
+      {anterior && <a href={`/${anio}/dia/${anterior.slug}/`}>← {anterior.nombre}</a>}
+      {siguiente && <a href={`/${anio}/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>}
+      <a href={`/${anio}/`} class="anio-cab__dl">Todos los días</a>
     </div>
   </section>
 
   <section class="panel contenedor">
-    <div class="panel__cab"><h2>Hermandades del {diaInfo.nombre} ({anio})</h2></div>
     <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} />
-
-    <nav class="dia-nav" aria-label="Navegación entre días">
-      {anterior
-        ? <a class="dia-nav__a" href={`/${anio}/dia/${anterior.slug}/`}>← {anterior.nombre}</a>
-        : <span></span>}
-      <a class="dia-nav__a dia-nav__centro" href={`/${anio}/#dias`}>Todos los días</a>
-      {siguiente
-        ? <a class="dia-nav__a dia-nav__der" href={`/${anio}/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>
-        : <span></span>}
-    </nav>
     <FuentesResumen fuentes={fuentesPagina} />
   </section>
 </Base>

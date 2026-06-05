@@ -71,33 +71,26 @@ const jsonLd = {
 };
 ---
 
-<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum} analisisActiva={true}>
-  <section class="hero">
-    <div class="contenedor">
-      <nav class="migas" aria-label="Migas de pan">
-        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
-        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span> <span>Análisis</span>
-      </nav>
-      <h1>Análisis {anio}</h1>
-      <p>
-        Cruce entre el conteo de nazarenos y los horarios oficiales: duración de la estación de
-        penitencia, composición del cortejo, nazarenos simultáneos en la calle y densidad del desfile.
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
+  <section class="anio-cab contenedor">
+    <div class="anio-cab__top">
+      <div>
+        <h1 class="anio-cab__titulo"><a href={`/${anio}/`}>{anio}</a> — Análisis</h1>
         {sinDatos.length > 0 && (
-          <> <strong>{sinDatos.length} hermandad{sinDatos.length > 1 ? 'es' : ''} sin datos</strong> ese
-          año (posible lluvia o suspensión); excluidas de las gráficas.</>
+          <p class="nota-aviso" style="margin-top:0.5rem">
+            <strong>{sinDatos.length} hermandad{sinDatos.length > 1 ? 'es' : ''} sin datos</strong> ese año (posible lluvia o suspensión).
+          </p>
         )}
-      </p>
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(conDatos.length)}</div>
-          <div class="kpi__lbl">Cofradías con datos</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmtDur(durMedia)}</div>
-          <div class="kpi__lbl">Duración media</div>
-        </div>
       </div>
+      <div class="anio-cab__kpis">
+        <span class="kpi-mini"><strong>{fmt(conDatos.length)}</strong> cofradías</span>
+        <span class="kpi-mini">media <strong>{fmtDur(durMedia)}</strong></span>
+      </div>
+    </div>
+    <div class="anio-cab__links">
+      <a href={`/${anio}/`}>Nazarenos</a>
+      <a href={`/${anio}/horarios/`}>Horarios</a>
+      <a href={`/${anio}/analisis/`} class="activo">Análisis</a>
     </div>
   </section>
 
@@ -116,6 +109,3 @@ const jsonLd = {
   </section>
 </Base>
 
-<style>
-  .hero h1, .hero p { max-width: none; }
-</style>

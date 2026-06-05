@@ -37,44 +37,26 @@ const jsonLd = {
 };
 ---
 
-<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum} horariosActiva={true}>
-  <section class="hero">
-    <div class="contenedor">
-      <nav class="migas" aria-label="Migas de pan">
-        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
-        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span> <span>Horarios</span>
-      </nav>
-      <h1>Horarios oficiales {anio}</h1>
-      <p>
-        Horas <strong>previstas</strong> (oficiales) de cada cofradía: salida del templo, paso de la
-        cruz de guía por la Carrera Oficial (La Campana, Sierpes, Plaza, Catedral), salida del último
-        paso de la Catedral y entrada en su templo. Cruzamos estos horarios con el conteo para
-        obtener duración, tiempo en Carrera Oficial y participantes por hora.
-      </p>
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(registros.length)}</div>
-          <div class="kpi__lbl">Cofradías</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmtDur(duracionMedia)}</div>
-          <div class="kpi__lbl">Duración media</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num" style="font-size:1.2rem">{masLarga.nombre}</div>
-          <div class="kpi__lbl">La más larga · {fmtDur(masLarga.duracionMin)}</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num" style="font-size:1.2rem">{masCorta.nombre}</div>
-          <div class="kpi__lbl">La más corta · {fmtDur(masCorta.duracionMin)}</div>
-        </div>
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
+  <section class="anio-cab contenedor">
+    <div class="anio-cab__top">
+      <div>
+        <h1 class="anio-cab__titulo"><a href={`/${anio}/`}>{anio}</a> — Horarios oficiales</h1>
       </div>
+      <div class="anio-cab__kpis">
+        <span class="kpi-mini"><strong>{fmt(registros.length)}</strong> cofradías</span>
+        <span class="kpi-mini">media <strong>{fmtDur(duracionMedia)}</strong></span>
+        <span class="kpi-mini">más larga: <strong>{masLarga.nombre}</strong> ({fmtDur(masLarga.duracionMin)})</span>
+      </div>
+    </div>
+    <div class="anio-cab__links">
+      <a href={`/${anio}/`}>Nazarenos</a>
+      <a href={`/${anio}/horarios/`} class="activo">Horarios</a>
+      <a href={`/${anio}/analisis/`}>Análisis</a>
     </div>
   </section>
 
   <section class="panel contenedor" id="tabla-horarios-sec">
-    <div class="panel__cab"><h2>Horarios por hermandad</h2></div>
     <HorariosTabla registros={registros} dias={diasPresentes} anio={anio} />
   </section>
 
