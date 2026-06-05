@@ -63,6 +63,21 @@ a { color: var(--morado); }
 .hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.12; margin: 0 0 0.6rem; }
 .hero p { color: var(--gris); font-size: 1.05rem; max-width: 60ch; margin: 0; }
 
+/* ---------- Cabecera de año ---------- */
+.anio-cab { padding-block: 1.4rem 0.6rem; }
+.anio-cab__top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 0.8rem 2rem; margin-bottom: 0.8rem; }
+.anio-cab__titulo { font-size: clamp(1.2rem, 3vw, 1.6rem); margin: 0 0 0.4rem; line-height: 1.2; }
+.anio-cab__kpis { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; align-items: center; }
+.kpi-mini { font-size: 0.93rem; color: var(--gris); white-space: nowrap; }
+.kpi-mini strong { color: var(--morado-osc); font-size: 1.05rem; }
+.anio-cab__links { display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; align-items: center; border-top: 1px solid var(--linea); padding-top: 0.6rem; font-size: 0.9rem; }
+.anio-cab__links a { color: var(--morado); text-decoration: none; padding: 0.2rem 0.5rem; border-radius: 6px; }
+.anio-cab__links a:hover { background: var(--fondo-alt); text-decoration: underline; }
+.anio-cab__links a.activo { font-weight: 700; background: var(--fondo-alt); }
+.anio-cab__dl { color: var(--gris) !important; }
+.anio-cab__dl:hover { color: var(--morado) !important; }
+@media (max-width: 600px) { .anio-cab__top { flex-direction: column; } }
+
 /* ---------- Hub (home) ---------- */
 .hub { padding-block: clamp(1.8rem, 4vw, 2.8rem); }
 .hub__titulo { font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: 700; color: var(--gris); margin: 0 0 1.2rem; letter-spacing: 0.01em; }

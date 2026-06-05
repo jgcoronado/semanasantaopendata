@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import TablaNazarenos from '../../components/TablaNazarenos.astro';
 import Explorador from '../../components/Explorador.astro';
 import FuentesResumen from '../../components/FuentesResumen.astro';
-import { anios, dias, getAnio, fmt, getFuentesAnio } from '../../lib/datos.js';
+import { anios, aniosConHorarios, hayPasoReal, dias, getAnio, fmt, getFuentesAnio } from '../../lib/datos.js';
 
 export function getStaticPaths() {
   return anios.map((a) => ({ params: { anio: a.slug } }));
@@ -47,72 +47,42 @@ const jsonLd = {
 ---
 
 <Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
-  <section class="hero">
-    <div class="contenedor">
-      <h1>La Semana Santa de Sevilla {anio}, en datos abiertos</h1>
-      <p>
-        Conteo oficial de nazarenos y participantes por hermandad y día. Consulta y ordena la
-        tabla, explora las gráficas y resalta cualquier hermandad.
-      </p>
-
-      {diasFaltan.length > 0 && (
-        <p class="nota-aviso">
-          ℹ️ En {anio} no se publicó el conteo oficial de <strong>{listaFaltan}</strong>
-          (no todas las hermandades hicieron estación de penitencia esos días), por lo que no aparecen.
-        </p>
-      )}
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.hermandades)}</div>
-          <div class="kpi__lbl">Hermandades</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.dias)}</div>
-          <div class="kpi__lbl">Días con conteo</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.noNaz)}</div>
-          <div class="kpi__lbl">Nazarenos (total)</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.noTotal)}</div>
-          <div class="kpi__lbl">Participantes en el cortejo</div>
-        </div>
+  <section class="anio-cab contenedor">
+    <div class="anio-cab__top">
+      <div>
+        <h1 class="anio-cab__titulo">Semana Santa de Sevilla <strong class="h1-anio">{anio}</strong></h1>
+        {diasFaltan.length > 0 && (
+          <p class="nota-aviso">
+            Sin conteo oficial de <strong>{listaFaltan}</strong> ese año.
+          </p>
+        )}
+      </div>
+      <div class="anio-cab__kpis">
+        <span class="kpi-mini"><strong>{fmt(totalGeneral.hermandades)}</strong> hermandades</span>
+        <span class="kpi-mini"><strong>{fmt(totalGeneral.noNaz)}</strong> nazarenos</span>
+        <span class="kpi-mini"><strong>{fmt(totalGeneral.noTotal)}</strong> en el cortejo</span>
       </div>
     </div>
-  </section>
 
-  <section class="panel contenedor" id="dias">
-    <div class="panel__cab"><h2>Explora por día</h2></div>
-    <div class="dias-grid">
-      {totalesPorDia.map((t) => (
-        <a class="dia-card" href={`/${anio}/dia/${t.slug}/`}>
-          <span class="dia-card__nombre">{t.nombre}</span>
-          <span class="dia-card__cifras"><strong>{fmt(t.noNaz)}</strong> nazarenos · {fmt(t.noTotal)} cortejo</span>
-          <span class="dia-card__meta">{fmt(t.hermandades)} hermandad{t.hermandades === 1 ? '' : 'es'} →</span>
-        </a>
-      ))}
+    <div class="anio-cab__links">
+      {aniosConHorarios.some((h) => h.anio === anioNum) && (
+        <>
+          <a href={`/${anio}/horarios/`}>Horarios</a>
+          <a href={`/${anio}/analisis/`}>Análisis</a>
+        </>
+      )}
+      {hayPasoReal(anioNum) && (
+        <a href={`/${anio}/carrera-oficial/`}>Carrera oficial</a>
+      )}
+      <a href={`/${anio}/datos/conteo.csv`} download class="anio-cab__dl">⬇ CSV</a>
+      <a href={`/${anio}/datos/conteo.json`} class="anio-cab__dl">JSON</a>
     </div>
   </section>
 
   <section class="panel contenedor" id="tabla">
-    <div class="panel__cab"><h2>Nazarenos por hermandad</h2></div>
     <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} />
+    <FuentesResumen fuentes={fuentesPagina} />
   </section>
 
   <Explorador anio={anioNum} />
-
-  <section class="panel contenedor" id="descargas">
-    <div class="panel__cab"><h2>Datos abiertos</h2></div>
-    <p class="descargas-intro">
-      Descarga el conjunto completo de {anio} ({fmt(totalGeneral.hermandades)} hermandades, con
-      todas las columnas) para reutilizarlo libremente citando la fuente.
-    </p>
-    <div class="descargas">
-      <a class="btn" href={`/${anio}/datos/conteo.csv`} download>⬇ Descargar CSV</a>
-      <a class="btn btn--sec" href={`/${anio}/datos/conteo.json`}>Ver JSON</a>
-    </div>
-    <FuentesResumen fuentes={fuentesPagina} />
-  </section>
 </Base>
