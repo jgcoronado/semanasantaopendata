@@ -138,11 +138,21 @@ a { color: var(--morado); }
 .panel h2 { margin: 0; font-size: 1.3rem; }
 .controles { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
 .campo { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; color: var(--gris); }
+.campo--inline { flex-direction: row; align-items: center; gap: 0.4rem; }
 .campo select {
   font: inherit; font-size: 0.95rem; color: var(--tinta);
   padding: 0.45rem 0.6rem; border: 1px solid var(--linea); border-radius: 8px; background: var(--blanco);
 }
-.contador { font-size: 0.9rem; color: var(--gris); }
+.contador { font-size: 0.9rem; color: var(--gris); margin-left: auto; }
+
+/* ---------- Controles de tabla (buscador + día) ---------- */
+.tabla-controles { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; }
+.tabla-controles input[type="search"] {
+  font: inherit; font-size: 0.97rem; padding: 0.5rem 0.9rem;
+  border: 1px solid var(--linea); border-radius: 8px; background: var(--blanco);
+  flex: 1 1 220px; min-width: 160px;
+}
+.tabla-controles input[type="search"]:focus { outline: 2px solid var(--morado); outline-offset: 1px; border-color: var(--morado); }
 
 /* ---------- Tabla ---------- */
 .tabla-wrap { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--radio); background: var(--blanco); box-shadow: var(--sombra); }
