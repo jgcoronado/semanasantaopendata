@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import TablaNazarenos from '../../../components/TablaNazarenos.astro';
+import ComposicionDia from '../../../components/ComposicionDia.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
 import { anios, getAnio, fmt, getFuentesAnio } from '../../../lib/datos.js';
 
@@ -71,4 +72,6 @@ const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTot
     <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} />
     <FuentesResumen fuentes={fuentesPagina} />
   </section>
+
+  <ComposicionDia registros={regs} diaInfo={diaInfo} />
 </Base>
