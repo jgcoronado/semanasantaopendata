@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { anios, aniosConHorarios, hayPasoReal } from '../lib/datos.js';
+import { anios } from '../lib/datos.js';
 
 const {
   title,
@@ -9,12 +9,7 @@ const {
   anioActivo = null,
   comparativaActiva = false,
   hermandadesActiva = false,
-  horariosActiva = false,
-  analisisActiva = false,
-  carreraActiva = false,
 } = Astro.props;
-
-const slugHorarios = aniosConHorarios[0]?.slug;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const anioActual = new Date().getFullYear();
@@ -59,23 +54,8 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
         <a href="/" class="marca"><span class="marca__punto" aria-hidden="true"></span> Semana Santa Open Data</a>
         <nav class="nav" aria-label="Principal">
           {anios.map((a) => {
-            const tieneHorarios = aniosConHorarios.some((h) => h.anio === a.anio);
-            const tieneCarrera = hayPasoReal(a.anio);
             const esActivo = anioActivo === a.anio;
-            if (!tieneHorarios && !tieneCarrera) {
-              return <a href={`/${a.slug}/`} class={esActivo ? 'activo' : ''} aria-current={esActivo ? 'page' : undefined}>{a.anio}</a>;
-            }
-            return (
-              <details class={`nav-dd${esActivo ? ' nav-dd--activo' : ''}`} open={esActivo || undefined}>
-                <summary class={`nav-dd__btn${esActivo ? ' activo' : ''}`}>{a.anio} <span class="nav-dd__flecha" aria-hidden="true">▾</span></summary>
-                <div class="nav-dd__panel">
-                  <a href={`/${a.slug}/`} class={esActivo && !horariosActiva && !analisisActiva && !carreraActiva ? 'activo' : ''}>Nazarenos</a>
-                  {tieneHorarios && <a href={`/${a.slug}/horarios/`} class={esActivo && horariosActiva ? 'activo' : ''}>Horarios</a>}
-                  {tieneHorarios && <a href={`/${a.slug}/analisis/`} class={esActivo && analisisActiva ? 'activo' : ''}>Análisis</a>}
-                  {tieneCarrera && <a href={`/${a.slug}/carrera-oficial/`} class={esActivo && carreraActiva ? 'activo' : ''}>Carrera oficial</a>}
-                </div>
-              </details>
-            );
+            return <a href={`/${a.slug}/`} class={esActivo ? 'activo' : ''} aria-current={esActivo ? 'page' : undefined}>{a.anio}</a>;
           })}
           <a href="/hermandades/" class={hermandadesActiva ? 'activo' : ''} aria-current={hermandadesActiva ? 'page' : undefined}>Hermandades</a>
           <a href="/comparativa/" class={comparativaActiva ? 'activo' : ''} aria-current={comparativaActiva ? 'page' : undefined}>Comparativa</a>
@@ -87,18 +67,6 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
       <slot />
     </main>
 
-    <script>
-      document.querySelectorAll('.nav-dd').forEach((dd) => {
-        dd.addEventListener('toggle', () => {
-          if (dd.open) {
-            document.querySelectorAll('.nav-dd').forEach((other) => {
-              if (other !== dd) other.removeAttribute('open');
-            });
-          }
-        });
-      });
-    </script>
-
     <footer class="pie">
       <div class="contenedor pie__inner">
         <div>
@@ -107,8 +75,8 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
           en CSV y JSON. Años disponibles: {listaAnios}.
         </div>
         <div>
-          Fuente original: <a href="https://www.hermandades-de-sevilla.org/" rel="nofollow noopener" target="_blank">Consejo General de Hermandades y Cofradías de Sevilla</a>.
-          Datos transcritos de las tablas oficiales de conteo; este sitio no es oficial.
+          Datos transcritos de fuentes públicas (Consejo de Hermandades, prensa, hermandades).
+          Cada página incluye sus fuentes. Este sitio no es oficial.
         </div>
         <div>
           Página creada por <a href="https://x.com/JaviWarSVQ" rel="noopener" target="_blank">@JaviWarSVQ</a>.

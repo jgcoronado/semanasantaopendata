@@ -2,7 +2,17 @@
 import Base from '../../layouts/Base.astro';
 import TablaNazarenos from '../../components/TablaNazarenos.astro';
 import Explorador from '../../components/Explorador.astro';
-import { anios, dias, getAnio, fmt } from '../../lib/datos.js';
+import HorariosTabla from '../../components/HorariosTabla.astro';
+import HorariosGraficas from '../../components/HorariosGraficas.astro';
+import GraficasAnalisis from '../../components/GraficasAnalisis.astro';
+import CarreraOficialTabla from '../../components/CarreraOficialTabla.astro';
+import CarreraOficialGraficas from '../../components/CarreraOficialGraficas.astro';
+import FuentesResumen from '../../components/FuentesResumen.astro';
+import {
+  anios, aniosConHorarios, hayPasoReal, dias,
+  getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
+  fmt, fmtDur, getFuentesAnio,
+} from '../../lib/datos.js';
 
 export function getStaticPaths() {
   return anios.map((a) => ({ params: { anio: a.slug } }));
@@ -12,10 +22,98 @@ const { anio } = Astro.params;
 const anioNum = Number(anio);
 const { registros, diasPresentes, totalesPorDia, totalGeneral } = getAnio(anioNum);
 
-// Días del calendario que no se contaron ese año (para avisar).
+const tieneHorarios = aniosConHorarios.some((h) => h.anio === anioNum);
+const tienePasoReal = hayPasoReal(anioNum);
+
+// Días del calendario que no se contaron ese año
 const presentes = new Set(diasPresentes.map((d) => d.slug));
 const diasFaltan = dias.filter((d) => !presentes.has(d.slug)).map((d) => d.nombre);
 const listaFaltan = diasFaltan.length <= 1 ? (diasFaltan[0] ?? '') : diasFaltan.slice(0, -1).join(', ') + ' y ' + diasFaltan.at(-1);
+
+// --- Horarios ---
+let horariosRegistros = [];
+let horariosDias = [];
+let duracionMedia = 0;
+let masLarga = null;
+if (tieneHorarios) {
+  const h = getHorariosAnio(anioNum);
+  horariosRegistros = h.registros;
+  horariosDias = h.diasPresentes;
+  masLarga = horariosRegistros.reduce((a, b) => (b.duracionMin > a.duracionMin ? b : a));
+  duracionMedia = Math.round(horariosRegistros.reduce((s, r) => s + r.duracionMin, 0) / horariosRegistros.length);
+}
+
+// --- Análisis ---
+let analisisRegistros = [];
+let analisisSinDatos = [];
+let analisisDias = [];
+let porDia = [];
+let comparativaRows = [];
+let comparativaAnio = null;
+if (tieneHorarios) {
+  const cruceData = getCruceNazarenosHorarios(anioNum);
+  analisisRegistros = cruceData.registros.filter((r) => r.incidencia === null);
+  analisisSinDatos = cruceData.registros.filter((r) => r.incidencia !== null);
+  analisisDias = cruceData.diasPresentes;
+  porDia = getHorariosEnCalle(anioNum).porDia;
+
+  const anioAnterior = aniosConHorarios.find((a) => a.anio < anioNum);
+  if (anioAnterior) {
+    comparativaAnio = anioAnterior.anio;
+    const otroRegistros = getCruceNazarenosHorarios(anioAnterior.anio).registros;
+    const otroMap = new Map(otroRegistros.map((r) => [r.id_hdad, r]));
+    comparativaRows = analisisRegistros.map((r) => {
+      const otro = otroMap.get(r.id_hdad);
+      const otroSinDatos = otro?.incidencia === 'sin_datos';
+      return {
+        nombre:          r.nombre,
+        diaNombre:       r.diaNombre,
+        diaOrden:        r.diaOrden,
+        noTotal:         r.noTotal,
+        duracionMin:     r.duracionMin,
+        otroNoTotal:     otroSinDatos || !otro ? null : otro.noTotal,
+        otroDuracionMin: otroSinDatos || !otro ? null : otro.duracionMin,
+        otroSinDatos,
+      };
+    });
+    comparativaRows.sort((a, b) => a.diaOrden - b.diaOrden || (b.noTotal ?? 0) - (a.noTotal ?? 0));
+  }
+}
+
+// --- Carrera oficial ---
+let pasoRealRegistros = [];
+let pasoRealDias = [];
+let masRetrasada = null;
+let masPuntual = null;
+let diaMaxAcumulado = { dia: '—', acumulado: 0 };
+const fmtMin = (n) => {
+  if (n == null) return '—';
+  const abs = Math.abs(n);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  const str = h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
+  return (n > 0 ? '+' : n < 0 ? '−' : '') + str;
+};
+if (tienePasoReal) {
+  const pr = getPasoReal(anioNum);
+  pasoRealRegistros = pr.registros;
+  pasoRealDias = pr.diasPresentes;
+  masRetrasada = pasoRealRegistros.reduce((a, b) => (b.retrasoRealCampana > a.retrasoRealCampana ? b : a));
+  masPuntual   = pasoRealRegistros.reduce((a, b) => (b.retrasoRealCampana < a.retrasoRealCampana ? b : a));
+  const acumuladoFinalPorDia = pasoRealDias.map((d) => {
+    const regsDelDia = pasoRealRegistros.filter((r) => r.diaSlug === d.slug);
+    const ultimo = regsDelDia[regsDelDia.length - 1];
+    return { dia: d.nombre, acumulado: ultimo?.acumuladoCampana ?? 0 };
+  });
+  diaMaxAcumulado = acumuladoFinalPorDia.reduce((a, b) => (b.acumulado > a.acumulado ? b : a), { dia: '—', acumulado: 0 });
+}
+
+// --- Fuentes ---
+const fuentesPagina = getFuentesAnio(anioNum, [
+  'nazarenos',
+  ...(tieneHorarios ? ['horarios'] : []),
+  ...(tienePasoReal ? ['paso_real'] : []),
+]);
 
 const title = `Semana Santa de Sevilla ${anio} en datos: nazarenos por hermandad | Open Data`;
 const description =
@@ -45,71 +143,106 @@ const jsonLd = {
 ---
 
 <Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
-  <section class="hero">
-    <div class="contenedor">
-      <h1>La Semana Santa de Sevilla {anio}, en datos abiertos</h1>
-      <p>
-        Conteo oficial de nazarenos y participantes por hermandad y día. Consulta y ordena la
-        tabla, explora las gráficas y resalta cualquier hermandad.
-      </p>
-
-      {diasFaltan.length > 0 && (
-        <p class="nota-aviso">
-          ℹ️ En {anio} no se publicó el conteo oficial de <strong>{listaFaltan}</strong>
-          (no todas las hermandades hicieron estación de penitencia esos días), por lo que no aparecen.
-        </p>
-      )}
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.hermandades)}</div>
-          <div class="kpi__lbl">Hermandades</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.dias)}</div>
-          <div class="kpi__lbl">Días con conteo</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.noNaz)}</div>
-          <div class="kpi__lbl">Nazarenos (total)</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totalGeneral.noTotal)}</div>
-          <div class="kpi__lbl">Participantes en el cortejo</div>
-        </div>
+  <section class="anio-cab contenedor">
+    <div class="anio-cab__top">
+      <div>
+        <h1 class="anio-cab__titulo">Semana Santa de Sevilla <strong class="h1-anio">{anio}</strong></h1>
+        {diasFaltan.length > 0 && (
+          <p class="nota-aviso">
+            Sin conteo oficial de <strong>{listaFaltan}</strong> ese año.
+          </p>
+        )}
+      </div>
+      <div class="anio-cab__kpis">
+        <span class="kpi-mini"><strong>{fmt(totalGeneral.hermandades)}</strong> hermandades</span>
+        <span class="kpi-mini"><strong>{fmt(totalGeneral.noNaz)}</strong> nazarenos</span>
+        <span class="kpi-mini"><strong>{fmt(totalGeneral.noTotal)}</strong> en el cortejo</span>
       </div>
     </div>
-  </section>
-
-  <section class="panel contenedor" id="dias">
-    <div class="panel__cab"><h2>Explora por día</h2></div>
-    <div class="dias-grid">
-      {totalesPorDia.map((t) => (
-        <a class="dia-card" href={`/${anio}/dia/${t.slug}/`}>
-          <span class="dia-card__nombre">{t.nombre}</span>
-          <span class="dia-card__cifras"><strong>{fmt(t.noNaz)}</strong> nazarenos · {fmt(t.noTotal)} cortejo</span>
-          <span class="dia-card__meta">{fmt(t.hermandades)} hermandad{t.hermandades === 1 ? '' : 'es'} →</span>
-        </a>
+    <div class="anio-cab__links">
+      {diasPresentes.map((d) => (
+        <a href={`/${anio}/dia/${d.slug}/`}>{d.nombre}</a>
       ))}
+<a href={`/${anio}/datos/conteo.csv`} download class="anio-cab__dl">⬇ CSV</a>
+      <a href={`/${anio}/datos/conteo.json`} class="anio-cab__dl">JSON</a>
     </div>
   </section>
 
+  <!-- Nazarenos -->
   <section class="panel contenedor" id="tabla">
-    <div class="panel__cab"><h2>Nazarenos por hermandad</h2></div>
     <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} />
   </section>
 
   <Explorador anio={anioNum} />
 
-  <section class="panel contenedor" id="descargas">
-    <div class="panel__cab"><h2>Datos abiertos</h2></div>
-    <p class="descargas-intro">
-      Descarga el conjunto completo de {anio} ({fmt(totalGeneral.hermandades)} hermandades, con
-      todas las columnas) para reutilizarlo libremente citando la fuente.
-    </p>
-    <div class="descargas">
-      <a class="btn" href={`/${anio}/datos/conteo.csv`} download>⬇ Descargar CSV</a>
-      <a class="btn btn--sec" href={`/${anio}/datos/conteo.json`}>Ver JSON</a>
-    </div>
+  <!-- Horarios -->
+  {tieneHorarios && (
+    <>
+      <section class="panel contenedor" id="horarios">
+        <div class="panel__cab">
+          <h2>Horarios oficiales</h2>
+          <div class="panel__cab-meta">
+            <span class="kpi-mini"><strong>{fmt(horariosRegistros.length)}</strong> cofradías</span>
+            <span class="kpi-mini">media <strong>{fmtDur(duracionMedia)}</strong></span>
+            {masLarga && <span class="kpi-mini">más larga: <strong>{masLarga.nombre}</strong> ({fmtDur(masLarga.duracionMin)})</span>}
+          </div>
+        </div>
+        <HorariosTabla registros={horariosRegistros} dias={horariosDias} anio={anio} />
+      </section>
+      <HorariosGraficas registros={horariosRegistros} dias={horariosDias} />
+    </>
+  )}
+
+  <!-- Análisis -->
+  {tieneHorarios && (
+    <>
+      <section class="panel contenedor" id="analisis">
+        <div class="panel__cab">
+          <h2>Análisis</h2>
+          {analisisSinDatos.length > 0 && (
+            <p class="nota-aviso" style="margin-top:0.5rem">
+              <strong>{analisisSinDatos.length} hermandad{analisisSinDatos.length > 1 ? 'es' : ''} sin datos</strong> ese año (posible lluvia o suspensión).
+            </p>
+          )}
+        </div>
+      </section>
+      <GraficasAnalisis
+        registros={analisisRegistros}
+        sinDatos={analisisSinDatos}
+        porDia={porDia}
+        dias={analisisDias}
+        comparativaRows={comparativaRows}
+        comparativaAnio={comparativaAnio}
+        anioActual={anioNum}
+      />
+    </>
+  )}
+
+  <!-- Carrera oficial -->
+  {tienePasoReal && (
+    <>
+      <section class="panel contenedor" id="carrera-oficial">
+        <div class="panel__cab">
+          <h2>Carrera oficial — tiempos reales</h2>
+          <div class="panel__cab-meta">
+            <span class="kpi-mini"><strong>{fmt(pasoRealRegistros.length)}</strong> hermandades</span>
+            {diaMaxAcumulado.acumulado > 0 && (
+              <span class="kpi-mini">máx. acumulado: <strong>{fmtMin(diaMaxAcumulado.acumulado)}</strong> — {diaMaxAcumulado.dia}</span>
+            )}
+            {masRetrasada && <span class="kpi-mini">mayor retraso: <strong>{masRetrasada.nombre}</strong> ({fmtMin(masRetrasada.retrasoRealCampana)})</span>}
+          </div>
+        </div>
+        <p class="nota-aviso" style="margin-bottom:1rem">
+          Tiempos <strong>reales</strong> de paso por <strong>La Campana</strong>. El acumulado mide cuántos minutos lleva de retraso
+          (o adelanto) la carrera respecto al horario oficial.
+        </p>
+        <CarreraOficialTabla registros={pasoRealRegistros} dias={pasoRealDias} anio={anio} />
+      </section>
+      <CarreraOficialGraficas registros={pasoRealRegistros} dias={pasoRealDias} />
+    </>
+  )}
+
+  <section class="panel contenedor">
+    <FuentesResumen fuentes={fuentesPagina} />
   </section>
 </Base>

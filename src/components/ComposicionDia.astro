@@ -1,0 +1,72 @@
+---
+const { registros, diaInfo } = Astro.props;
+
+const datosCliente = {
+  nombre: diaInfo.nombre,
+  orden: diaInfo.orden,
+  hermandades: registros.map((r) => ({
+    slug: r.slug,
+    nombre: r.nombre,
+    pctNaz: Math.round(r.pctNaz * 10) / 10,
+    pctTotal: Math.round(r.pctTotal * 10) / 10,
+  })),
+};
+---
+
+<section class="panel contenedor" id="graficas-dia">
+  <div class="panel__cab">
+    <h2>Composición del {diaInfo.nombre}</h2>
+  </div>
+
+  <div class="graficas-grid">
+    <figure class="grafica">
+      <figcaption>% de <strong>nazarenos</strong> sobre el total del día</figcaption>
+      <div class="grafica__lienzo"><canvas id="grafica-dia-pct-naz" aria-label="Porcentaje de nazarenos de cada hermandad sobre el día"></canvas></div>
+    </figure>
+    <figure class="grafica">
+      <figcaption>% del <strong>cortejo total</strong> sobre el total del día</figcaption>
+      <div class="grafica__lienzo"><canvas id="grafica-dia-pct-total" aria-label="Porcentaje del cortejo de cada hermandad sobre el día"></canvas></div>
+    </figure>
+  </div>
+
+  <script type="application/json" id="datos-composicion-dia" set:html={JSON.stringify(datosCliente)}></script>
+</section>
+
+<script>
+  import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip } from 'chart.js';
+  Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
+
+  const datos = JSON.parse(document.getElementById('datos-composicion-dia').textContent);
+  const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
+  const colBase = COLORES_9[(datos.orden - 1) % 9] + 'cc';
+  const labels = datos.hermandades.map((h) => h.nombre);
+
+  const opciones = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items) => datos.hermandades[items[0]?.dataIndex]?.nombre ?? '',
+          label: (c) => `${c.parsed.y} %`,
+        },
+      },
+    },
+    scales: {
+      y: { beginAtZero: true, ticks: { callback: (v) => v + ' %' } },
+      x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
+    },
+  };
+
+  new Chart(document.getElementById('grafica-dia-pct-naz'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: datos.hermandades.map((h) => h.pctNaz), backgroundColor: colBase }] },
+    options: opciones,
+  });
+  new Chart(document.getElementById('grafica-dia-pct-total'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: datos.hermandades.map((h) => h.pctTotal), backgroundColor: colBase }] },
+    options: opciones,
+  });
+</script>

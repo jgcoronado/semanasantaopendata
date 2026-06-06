@@ -63,6 +63,28 @@ a { color: var(--morado); }
 .hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.12; margin: 0 0 0.6rem; }
 .hero p { color: var(--gris); font-size: 1.05rem; max-width: 60ch; margin: 0; }
 
+/* ---------- Cabecera de año ---------- */
+.anio-cab { padding-block: 1.4rem 0.6rem; }
+.anio-cab__top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 0.8rem 2rem; margin-bottom: 0.8rem; }
+.anio-cab__titulo { font-size: clamp(1.2rem, 3vw, 1.6rem); margin: 0 0 0.4rem; line-height: 1.2; }
+.anio-cab__kpis { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; align-items: center; }
+.kpi-mini { font-size: 0.93rem; color: var(--gris); white-space: nowrap; }
+.kpi-mini strong { color: var(--morado-osc); font-size: 1.05rem; }
+.anio-cab__links { display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; align-items: center; border-top: 1px solid var(--linea); padding-top: 0.6rem; font-size: 0.9rem; }
+.anio-cab__links a { color: var(--morado); text-decoration: none; padding: 0.2rem 0.5rem; border-radius: 6px; }
+.anio-cab__links a:hover { background: var(--fondo-alt); text-decoration: underline; }
+.anio-cab__links a.activo { font-weight: 700; background: var(--fondo-alt); }
+.anio-cab__dl { color: var(--gris) !important; }
+.anio-cab__dl:hover { color: var(--morado) !important; }
+@media (max-width: 600px) { .anio-cab__top { flex-direction: column; } }
+
+/* ---------- Hub (home) ---------- */
+.hub { padding-block: clamp(1.8rem, 4vw, 2.8rem); }
+.hub__titulo { font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: 700; color: var(--gris); margin: 0 0 1.2rem; letter-spacing: 0.01em; }
+.anio-card--cta { border-color: var(--linea); background: var(--fondo-alt); }
+.anio-card--cta:hover { border-color: var(--morado); }
+.anio-card__anio--cta { font-size: 1.6rem; color: var(--morado); }
+
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1.6rem; }
 .kpi { background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1rem 1.1rem; box-shadow: var(--sombra); }
 .kpi__num { font-size: 1.8rem; font-weight: 800; color: var(--morado); line-height: 1; }
@@ -116,11 +138,21 @@ a { color: var(--morado); }
 .panel h2 { margin: 0; font-size: 1.3rem; }
 .controles { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
 .campo { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; color: var(--gris); }
+.campo--inline { flex-direction: row; align-items: center; gap: 0.4rem; }
 .campo select {
   font: inherit; font-size: 0.95rem; color: var(--tinta);
   padding: 0.45rem 0.6rem; border: 1px solid var(--linea); border-radius: 8px; background: var(--blanco);
 }
-.contador { font-size: 0.9rem; color: var(--gris); }
+.contador { font-size: 0.9rem; color: var(--gris); margin-left: auto; }
+
+/* ---------- Controles de tabla (buscador + día) ---------- */
+.tabla-controles { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; }
+.tabla-controles input[type="search"] {
+  font: inherit; font-size: 0.97rem; padding: 0.5rem 0.9rem;
+  border: 1px solid var(--linea); border-radius: 8px; background: var(--blanco);
+  flex: 1 1 220px; min-width: 160px;
+}
+.tabla-controles input[type="search"]:focus { outline: 2px solid var(--morado); outline-offset: 1px; border-color: var(--morado); }
 
 /* ---------- Tabla ---------- */
 .tabla-wrap { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--radio); background: var(--blanco); box-shadow: var(--sombra); }
@@ -185,32 +217,6 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 /* ---------- Pestañas de año (cabecera) ---------- */
 .nav a.activo { opacity: 1; font-weight: 700; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; text-decoration-color: var(--oro); }
 
-/* Desplegable de año en nav */
-.nav-dd { position: relative; }
-.nav-dd__btn {
-  list-style: none; cursor: pointer; opacity: 0.92; font-size: inherit; font-family: inherit;
-  color: var(--blanco); background: none; border: none; padding: 0;
-  display: flex; align-items: center; gap: 0.25rem;
-  text-underline-offset: 5px; text-decoration-thickness: 2px;
-}
-.nav-dd__btn::-webkit-details-marker { display: none; }
-.nav-dd__btn:hover { opacity: 1; text-decoration: underline; }
-.nav-dd__btn.activo { opacity: 1; font-weight: 700; text-decoration: underline; text-decoration-color: var(--oro); }
-.nav-dd__flecha { font-size: 0.7em; transition: transform 0.15s; display: inline-block; }
-.nav-dd[open] .nav-dd__flecha { transform: rotate(180deg); }
-.nav-dd__panel {
-  position: absolute; top: calc(100% + 0.5rem); left: 50%; transform: translateX(-50%);
-  background: var(--morado-osc); border: 1px solid rgba(255,255,255,0.15);
-  border-radius: var(--radio); padding: 0.4rem 0; min-width: 9rem;
-  display: flex; flex-direction: column; gap: 0; z-index: 100;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-}
-.nav-dd__panel a {
-  padding: 0.55rem 1.1rem; opacity: 0.92; display: block;
-  color: var(--blanco); text-decoration: none;
-}
-.nav-dd__panel a:hover { opacity: 1; background: rgba(255,255,255,0.08); text-decoration: underline; }
-.nav-dd__panel a.activo { opacity: 1; font-weight: 700; text-decoration: underline; text-decoration-color: var(--oro); }
 
 /* ---------- Hub: tarjetas de año ---------- */
 .anios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
@@ -221,10 +227,6 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 .anio-card__datos strong { color: var(--morado-osc); }
 .anio-card__meta { font-size: 0.84rem; color: var(--gris); margin-top: auto; }
 
-/* ---------- Hub: CTA comparativa ---------- */
-.comparativa-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; background: var(--fondo-alt); border: 1px solid var(--linea); border-radius: var(--radio); padding: 1.2rem 1.4rem; }
-.comparativa-cta h2 { margin: 0 0 0.2rem; }
-.comparativa-cta p { margin: 0; color: var(--gris); }
 
 /* ---------- Conmutador de métrica ---------- */
 .segmento { display: inline-flex; border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; background: var(--blanco); }

@@ -1,8 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import { anios, getComparativaDias, getComparativaHermandades, fmt, fmtPct, variacion } from '../lib/datos.js';
+import FuentesResumen from '../components/FuentesResumen.astro';
+import { anios, getComparativaDias, getComparativaHermandades, fmt, fmtPct, variacion, getFuentesAnio } from '../lib/datos.js';
 
 const aniosOrden = anios.map((a) => a.anio); // descendente, p. ej. [2026, 2025, 2023]
+const fuentesComparativa = [...new Map(
+  anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos'])).map((f) => [f.id, f])
+).values()];
 const aLatest = aniosOrden[0];
 const basesPosibles = aniosOrden.slice(1); // años contra los que comparar
 const baseInicial = basesPosibles[0];
@@ -191,4 +195,8 @@ const description =
 
     aplicar();
   </script>
+
+  <section class="panel contenedor">
+    <FuentesResumen fuentes={fuentesComparativa} />
+  </section>
 </Base>

@@ -1,0 +1,75 @@
+---
+// Muestra el bloque de trazabilidad de fuentes de una página.
+// Uso: <FuentesResumen fuentes={getFuentesAnio(anio, ['nazarenos', 'horarios'])} />
+import FuenteBadge from './FuenteBadge.astro';
+
+const { fuentes = [] } = Astro.props;
+if (!fuentes.length) return;
+
+const etiquetaTipo = {
+  oficial: 'Fuente oficial',
+  prensa: 'Prensa',
+  hermandad: 'Hermandad',
+  propia: 'Elaboración propia',
+};
+---
+
+<section class="fuentes-resumen" aria-label="Fuentes de los datos">
+  <h3 class="fuentes-resumen__titulo">Fuentes de los datos</h3>
+  <ul class="fuentes-resumen__lista">
+    {fuentes.map((f) => (
+      <li class="fuentes-resumen__item">
+        <FuenteBadge fuente={f} mostrarFecha={true} />
+        <span class="fuentes-resumen__desc">
+          {f.descripcion}
+          {f.url && (
+            <>
+              {' — '}
+              <a href={f.url} target="_blank" rel="noopener noreferrer">Ver fuente original</a>
+            </>
+          )}
+        </span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .fuentes-resumen {
+    margin-top: 2.5rem;
+    padding: 1.2rem 1.4rem;
+    background: var(--fondo-alt);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    font-size: 0.9rem;
+  }
+  .fuentes-resumen__titulo {
+    margin: 0 0 0.8rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gris);
+    font-weight: 700;
+  }
+  .fuentes-resumen__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .fuentes-resumen__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .fuentes-resumen__desc {
+    color: var(--gris);
+    font-size: 0.88rem;
+  }
+  .fuentes-resumen__desc a {
+    color: var(--morado);
+  }
+</style>

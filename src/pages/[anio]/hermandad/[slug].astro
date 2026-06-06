@@ -1,7 +1,9 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
-import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal } from '../../../lib/datos.js';
+import FuenteBadge from '../../../components/FuenteBadge.astro';
+import FuentesResumen from '../../../components/FuentesResumen.astro';
+import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -54,8 +56,13 @@ const porAnioAsc = [...anios]
 
 const filasAnios = porAnioAsc.map((x, i) => {
   const prev = porAnioAsc[i - 1];
-  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null };
+  const fuente = getFuentesAnio(x.anio, ['nazarenos'])[0] ?? null;
+  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null, fuente };
 });
+
+const fuentesPagina = [...new Map(
+  anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real'])).map((f) => [f.id, f])
+).values()];
 
 const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
 
@@ -176,7 +183,7 @@ const jsonLd = {
         ))}
       </ul>
       <nav class="dia-nav" aria-label="Más">
-        <a class="dia-nav__a dia-nav__der" href={`/${anio}/horarios/`}>Ver todos los horarios →</a>
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/#horarios`}>Ver todos los horarios →</a>
       </nav>
     </section>
   )}
@@ -225,7 +232,7 @@ const jsonLd = {
         </p>
       )}
       <nav class="dia-nav" aria-label="Más">
-        <a class="dia-nav__a dia-nav__der" href={`/${anio}/carrera-oficial/`}>Ver todos los datos de la Carrera Oficial →</a>
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/#carrera-oficial`}>Ver todos los datos de la Carrera Oficial →</a>
       </nav>
     </section>
   )}
@@ -303,6 +310,7 @@ const jsonLd = {
             <th scope="col">Var.</th>
             <th scope="col">% día (naz.)</th>
             <th scope="col">% día (cortejo)</th>
+            <th class="txt" scope="col">Fuente</th>
           </tr>
         </thead>
         <tbody>
@@ -318,6 +326,7 @@ const jsonLd = {
                 <td class={`var ${vt.cls}`}>{vt.txt}</td>
                 <td>{fmtPct(f.pctNaz)}</td>
                 <td>{fmtPct(f.pctTotal)}</td>
+                <td class="txt">{f.fuente && <FuenteBadge fuente={f.fuente} />}</td>
               </tr>
             );
           })}
@@ -365,5 +374,6 @@ const jsonLd = {
       <a class="dia-nav__a" href={`/${anio}/dia/${r.diaSlug}/`}>← Todas las hermandades del {r.diaNombre}</a>
       <a class="dia-nav__a dia-nav__der" href="/comparativa/">Comparar años →</a>
     </nav>
+    <FuentesResumen fuentes={fuentesPagina} />
   </section>
 </Base>

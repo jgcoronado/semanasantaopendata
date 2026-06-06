@@ -6,6 +6,23 @@
 import hermandadesRaw from '../data/hermandades.json';
 import diasRaw from '../data/dias.json';
 import aniosRaw from '../data/anios.json';
+import fuentesRaw from '../data/fuentes.json';
+
+/** Catálogo de fuentes indexado por id. */
+const fuentesMap = new Map(fuentesRaw.map((f) => [f.id, f]));
+
+/** Array completo de fuentes definidas. */
+export const fuentes = fuentesRaw;
+
+/** Devuelve la fuente por su id, o null si no existe. */
+export function getFuente(id) {
+  return fuentesMap.get(id) ?? null;
+}
+
+/** Devuelve las fuentes únicas de un conjunto de ids (filtrando nulos). */
+export function getFuentesPorIds(ids) {
+  return [...new Set(ids.filter(Boolean))].map((id) => getFuente(id)).filter(Boolean);
+}
 
 // Auto-descubrimiento de los datos por año.
 const ficheros = import.meta.glob('../data/nazarenos-*.json', { eager: true });
@@ -25,6 +42,14 @@ export const anios = [...aniosRaw]
   .sort((a, b) => b.anio - a.anio)
   .map((a) => ({ ...a, slug: String(a.anio) }));
 
+/** Devuelve las fuentes de los datasets activos para un año dado. */
+export function getFuentesAnio(anio, datasets = ['nazarenos', 'horarios', 'paso_real']) {
+  const cfg = aniosRaw.find((a) => a.anio === Number(anio));
+  if (!cfg) return [];
+  const ids = datasets.map((d) => cfg.fuentes?.[d]).filter(Boolean);
+  return getFuentesPorIds(ids);
+}
+
 /** Año principal (el más reciente). */
 export const anioPrincipal = anios[0].anio;
 
@@ -33,6 +58,9 @@ const METRICAS = ['nazarenos', 'penitentes', 'noNaz', 'acolitos', 'monaguillos',
 function construirAnio(anio) {
   const naz = datosPorAnio[anio];
   if (!naz) throw new Error(`[datos] No hay datos (nazarenos-${anio}.json) para el año ${anio}.`);
+
+  const anioConfig = aniosRaw.find((a) => a.anio === anio);
+  const fuenteDefaultNaz = anioConfig?.fuentes?.nazarenos ?? null;
 
   const nazPorHdad = new Map(naz.map((n) => [n.idHdad, n]));
 
@@ -80,6 +108,7 @@ function construirAnio(anio) {
       noTotal: n.noTotal,
       pctNaz: t.noNaz ? (n.noNaz / t.noNaz) * 100 : 0,
       pctTotal: t.noTotal ? (n.noTotal / t.noTotal) * 100 : 0,
+      fuente_id: n.fuente_id ?? fuenteDefaultNaz,
     };
   });
   registros.sort((a, b) => a.diaOrden - b.diaOrden || b.noTotal - a.noTotal);
@@ -169,6 +198,10 @@ const aMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 
 function construirHorarios(anio) {
   const lista = horariosPorAnio[anio];
   if (!lista) throw new Error(`[datos] No hay horarios (horarios-${anio}.json) para ${anio}.`);
+
+  const anioConfig = aniosRaw.find((a) => a.anio === anio);
+  const fuenteDefaultHorarios = anioConfig?.fuentes?.horarios ?? null;
+
   const nazPorId = new Map(getAnio(anio).registros.map((r) => [r.id_hdad, r]));
 
   const registros = lista.map((h) => {
@@ -210,6 +243,7 @@ function construirHorarios(anio) {
       noNaz: naz ? naz.noNaz : null,
       noTotal: naz ? naz.noTotal : null,
       partPorHora,
+      fuente_id: h.fuente_id ?? fuenteDefaultHorarios,
     };
   });
   registros.sort((a, b) => a.diaOrden - b.diaOrden || a.salidaMin - b.salidaMin);
@@ -393,6 +427,9 @@ function construirPasoReal(anio) {
   const lista = pasoRealPorAnio[anio];
   if (!lista) throw new Error(`[datos] No hay paso real (paso-real-${anio}.json) para ${anio}.`);
 
+  const anioConfig = aniosRaw.find((a) => a.anio === anio);
+  const fuenteDefaultPasoReal = anioConfig?.fuentes?.paso_real ?? null;
+
   const nazPorId = new Map(getAnio(anio).registros.map((r) => [r.id_hdad, r]));
 
   // Paso 1: enriquecer con metadatos de hermandad/día y calcular tiempoPasoOficial
@@ -420,6 +457,7 @@ function construirPasoReal(anio) {
       acumuladoCatedral: p.acumuladoCatedral,
       noNaz: naz?.noNaz ?? null,
       noTotal: naz?.noTotal ?? null,
+      fuente_id: p.fuente_id ?? fuenteDefaultPasoReal,
     };
   });
 

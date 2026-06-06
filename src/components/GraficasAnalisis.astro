@@ -253,17 +253,6 @@ const datosCliente = {
   </section>
 )}
 
-<!-- ======================== PLACEHOLDER VELOCIDAD ======================== -->
-<section class="panel contenedor" id="velocidad">
-  <div class="panel__cab"><h2>Velocidad real del desfile</h2></div>
-  <div class="kpi" style="max-width:480px;opacity:.55;cursor:default">
-    <div class="kpi__num" style="font-size:1.3rem">Próximamente</div>
-    <div class="kpi__lbl">
-      Esta sección calculará la velocidad en km/h cuando se añadan las distancias de recorrido
-      de cada hermandad.
-    </div>
-  </div>
-</section>
 
 <script type="application/json" id="datos-analisis" set:html={JSON.stringify(datosCliente)}></script>
 <script>
@@ -426,18 +415,23 @@ const datosCliente = {
     .filter((d) => datos.registros.some((r) => r.diaSlug === d.slug))
     .sort((a, b) => a.orden - b.orden);
 
-  const labelsBox = ['Total', ...diasConBox.map((d) => d.nombre)];
-  const coloresBox = ['#888888', ...diasConBox.map((d) => COLORES_9[(d.orden - 1) % 9])];
+  const soloUnDia = diasConBox.length === 1;
+  const labelsBox = soloUnDia
+    ? diasConBox.map((d) => d.nombre)
+    : ['Total', ...diasConBox.map((d) => d.nombre)];
+  const coloresBox = soloUnDia
+    ? diasConBox.map((d) => COLORES_9[(d.orden - 1) % 9])
+    : ['#888888', ...diasConBox.map((d) => COLORES_9[(d.orden - 1) % 9])];
 
   const dataNzBox = [
-    datos.registros.filter((r) => r.noNaz != null).map((r) => r.noNaz),
+    ...(soloUnDia ? [] : [datos.registros.filter((r) => r.noNaz != null).map((r) => r.noNaz)]),
     ...diasConBox.map((d) =>
       datos.registros.filter((r) => r.diaSlug === d.slug && r.noNaz != null).map((r) => r.noNaz)
     ),
   ];
 
   const dataDurBox = [
-    datos.registros.filter((r) => r.duracionMin != null).map((r) => r.duracionMin),
+    ...(soloUnDia ? [] : [datos.registros.filter((r) => r.duracionMin != null).map((r) => r.duracionMin)]),
     ...diasConBox.map((d) =>
       datos.registros.filter((r) => r.diaSlug === d.slug && r.duracionMin != null).map((r) => r.duracionMin)
     ),

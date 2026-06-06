@@ -34,18 +34,25 @@ const columnas = columnasBase.filter((c) => conColumnaDia || !c.soloConDia);
 const etiquetaColspan = conColumnaDia ? 2 : 1;
 ---
 
-{conFiltroDia && (
-  <div class="controles">
-    <label class="campo">
-      Filtrar por día
+<div class="tabla-controles">
+  <input
+    type="search"
+    id="tabla-buscador"
+    placeholder="Buscar hermandad…"
+    aria-label="Buscar hermandad en la tabla"
+    autocomplete="off"
+  />
+  {conFiltroDia && (
+    <label class="campo campo--inline">
+      Día
       <select id="filtro-dia" aria-controls="tabla-nazarenos">
-        <option value="todos">Todos los días</option>
+        <option value="todos">Todos</option>
         {dias.map((d) => <option value={d.slug}>{d.nombre}</option>)}
       </select>
     </label>
-    <p class="contador" id="contador" aria-live="polite">{registros.length} hermandades</p>
-  </div>
-)}
+  )}
+  <p class="contador" id="contador" aria-live="polite">{registros.length} hermandades</p>
+</div>
 
 <div class="tabla-wrap">
   <table class="datos" id="tabla-nazarenos">
@@ -111,11 +118,13 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
     const filas = Array.from(tbody.querySelectorAll('tr[data-slug]'));
     const filaVacia = tbody.querySelector('.sin-resultados');
     const select = document.getElementById('filtro-dia');
+    const buscador = document.getElementById('tabla-buscador');
     const contador = document.getElementById('contador');
     const pieEtiqueta = document.getElementById('pie-etiqueta');
     const pieNaz = document.getElementById('pie-nonaz');
     const pieTotal = document.getElementById('pie-nototal');
     const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+    const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
     let ordenKey = null;
     let ordenAsc = true;
@@ -142,8 +151,13 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
     }
 
     function filtrar() {
-      const dia = select.value;
-      for (const f of filas) f.hidden = dia !== 'todos' && f.dataset.dia !== dia;
+      const dia = select ? select.value : 'todos';
+      const q = buscador ? norm(buscador.value.trim()) : '';
+      for (const f of filas) {
+        const okDia = dia === 'todos' || f.dataset.dia === dia;
+        const okQ = !q || norm(f.dataset.nombre || '').includes(q);
+        f.hidden = !okDia || !okQ;
+      }
       actualizarPie();
     }
 
@@ -167,6 +181,7 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
     }
 
     if (select) select.addEventListener('change', filtrar);
+    if (buscador) buscador.addEventListener('input', filtrar);
     tabla.querySelectorAll('thead th.orden').forEach((th) => {
       th.querySelector('button').addEventListener('click', () => ordenar(th.dataset.key, th.dataset.tipo));
     });

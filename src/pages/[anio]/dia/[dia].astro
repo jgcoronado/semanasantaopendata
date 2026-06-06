@@ -1,7 +1,18 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import TablaNazarenos from '../../../components/TablaNazarenos.astro';
-import { anios, getAnio, fmt } from '../../../lib/datos.js';
+import ComposicionDia from '../../../components/ComposicionDia.astro';
+import HorariosTabla from '../../../components/HorariosTabla.astro';
+import HorariosGraficas from '../../../components/HorariosGraficas.astro';
+import GraficasAnalisis from '../../../components/GraficasAnalisis.astro';
+import CarreraOficialTabla from '../../../components/CarreraOficialTabla.astro';
+import CarreraOficialGraficas from '../../../components/CarreraOficialGraficas.astro';
+import FuentesResumen from '../../../components/FuentesResumen.astro';
+import {
+  anios, aniosConHorarios, hayPasoReal,
+  getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
+  fmt, getFuentesAnio,
+} from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -25,6 +36,66 @@ const idx = diasPresentes.findIndex((d) => d.slug === dia);
 const anterior = diasPresentes[idx - 1];
 const siguiente = diasPresentes[idx + 1];
 
+const tieneHorarios = aniosConHorarios.some((h) => h.anio === anioNum);
+const tienePasoReal = hayPasoReal(anioNum);
+
+// --- Horarios del día ---
+let horariosRegistros = [];
+if (tieneHorarios) {
+  horariosRegistros = getHorariosAnio(anioNum).registros.filter((r) => r.diaSlug === dia);
+}
+
+// --- Análisis del día ---
+let analisisRegistros = [];
+let analisisSinDatos = [];
+let porDia = {};
+let comparativaRows = [];
+let comparativaAnio = null;
+if (tieneHorarios) {
+  const cruceData = getCruceNazarenosHorarios(anioNum);
+  const todosDelDia = cruceData.registros.filter((r) => r.diaSlug === dia);
+  analisisRegistros = todosDelDia.filter((r) => r.incidencia === null);
+  analisisSinDatos = todosDelDia.filter((r) => r.incidencia !== null);
+  const enCalle = getHorariosEnCalle(anioNum).porDia;
+  if (enCalle[dia]) porDia = { [dia]: enCalle[dia] };
+
+  const anioAnterior = aniosConHorarios.find((a) => a.anio < anioNum);
+  if (anioAnterior) {
+    comparativaAnio = anioAnterior.anio;
+    const otroRegistros = getCruceNazarenosHorarios(anioAnterior.anio).registros;
+    const otroMap = new Map(otroRegistros.map((r) => [r.id_hdad, r]));
+    comparativaRows = analisisRegistros.map((r) => {
+      const otro = otroMap.get(r.id_hdad);
+      const otroSinDatos = otro?.incidencia === 'sin_datos';
+      return {
+        nombre:          r.nombre,
+        diaNombre:       r.diaNombre,
+        diaOrden:        r.diaOrden,
+        noTotal:         r.noTotal,
+        duracionMin:     r.duracionMin,
+        otroNoTotal:     otroSinDatos || !otro ? null : otro.noTotal,
+        otroDuracionMin: otroSinDatos || !otro ? null : otro.duracionMin,
+        otroSinDatos,
+      };
+    });
+  }
+}
+
+// --- Carrera oficial del día ---
+let pasoRealRegistros = [];
+if (tienePasoReal) {
+  pasoRealRegistros = getPasoReal(anioNum).registros.filter((r) => r.diaSlug === dia);
+}
+
+// --- Fuentes ---
+const fuentesPagina = getFuentesAnio(anioNum, [
+  'nazarenos',
+  ...(tieneHorarios ? ['horarios'] : []),
+  ...(tienePasoReal ? ['paso_real'] : []),
+]);
+
+const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTotal: totales.noTotal };
+
 const title = `Nazarenos del ${diaInfo.nombre} ${anio} · Semana Santa de Sevilla | Open Data`;
 const description =
   `Conteo del ${diaInfo.nombre} de la Semana Santa de Sevilla ${anio}: ${fmt(totales.noNaz)} nazarenos y ` +
@@ -42,53 +113,68 @@ const jsonLd = {
   spatialCoverage: { '@type': 'Place', name: 'Sevilla, España' },
   isAccessibleForFree: true,
 };
-
-const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTotal: totales.noTotal };
 ---
 
 <Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
-  <section class="hero">
-    <div class="contenedor">
-      <nav class="migas" aria-label="Migas de pan">
-        <a href="/">Inicio</a> <span aria-hidden="true">›</span>
-        <a href={`/${anio}/`}>{anio}</a> <span aria-hidden="true">›</span>
-        <span>{diaInfo.nombre}</span>
-      </nav>
-      <h1>{diaInfo.nombre} {anio}</h1>
-      <p>
-        Nazarenos y participantes por hermandad en el {diaInfo.nombre} de la Semana Santa de
-        Sevilla {anio}. Ordena la tabla pulsando cualquier cabecera.
-      </p>
-
-      <div class="kpis">
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totales.hermandades)}</div>
-          <div class="kpi__lbl">Hermandades</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totales.noNaz)}</div>
-          <div class="kpi__lbl">Nazarenos</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi__num">{fmt(totales.noTotal)}</div>
-          <div class="kpi__lbl">Participantes en el cortejo</div>
-        </div>
+  <section class="anio-cab contenedor">
+    <div class="anio-cab__top">
+      <div>
+        <h1 class="anio-cab__titulo"><a href={`/${anio}/`}>{anio}</a> — {diaInfo.nombre}</h1>
       </div>
+      <div class="anio-cab__kpis">
+        <span class="kpi-mini"><strong>{fmt(totales.hermandades)}</strong> hermandades</span>
+        <span class="kpi-mini"><strong>{fmt(totales.noNaz)}</strong> nazarenos</span>
+        <span class="kpi-mini"><strong>{fmt(totales.noTotal)}</strong> en el cortejo</span>
+      </div>
+    </div>
+    <div class="anio-cab__links">
+      {anterior && <a href={`/${anio}/dia/${anterior.slug}/`}>← {anterior.nombre}</a>}
+      {siguiente && <a href={`/${anio}/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>}
+      <a href={`/${anio}/`} class="anio-cab__dl">Todos los días</a>
     </div>
   </section>
 
+  <!-- Tabla nazarenos del día -->
   <section class="panel contenedor">
-    <div class="panel__cab"><h2>Hermandades del {diaInfo.nombre} ({anio})</h2></div>
     <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} />
-
-    <nav class="dia-nav" aria-label="Navegación entre días">
-      {anterior
-        ? <a class="dia-nav__a" href={`/${anio}/dia/${anterior.slug}/`}>← {anterior.nombre}</a>
-        : <span></span>}
-      <a class="dia-nav__a dia-nav__centro" href={`/${anio}/#dias`}>Todos los días</a>
-      {siguiente
-        ? <a class="dia-nav__a dia-nav__der" href={`/${anio}/dia/${siguiente.slug}/`}>{siguiente.nombre} →</a>
-        : <span></span>}
-    </nav>
+    <FuentesResumen fuentes={fuentesPagina} />
   </section>
+
+  <!-- Composición del día -->
+  <ComposicionDia registros={regs} diaInfo={diaInfo} />
+
+  <!-- Horarios del día -->
+  {tieneHorarios && horariosRegistros.length > 0 && (
+    <>
+      <section class="panel contenedor" id="horarios">
+        <div class="panel__cab"><h2>Horarios oficiales</h2></div>
+        <HorariosTabla registros={horariosRegistros} dias={[diaInfo]} anio={anio} />
+      </section>
+      <HorariosGraficas registros={horariosRegistros} dias={[diaInfo]} />
+    </>
+  )}
+
+  <!-- Análisis del día -->
+  {tieneHorarios && analisisRegistros.length > 0 && (
+    <GraficasAnalisis
+      registros={analisisRegistros}
+      sinDatos={analisisSinDatos}
+      porDia={porDia}
+      dias={[diaInfo]}
+      comparativaRows={comparativaRows}
+      comparativaAnio={comparativaAnio}
+      anioActual={anioNum}
+    />
+  )}
+
+  <!-- Carrera oficial del día -->
+  {tienePasoReal && pasoRealRegistros.length > 0 && (
+    <>
+      <section class="panel contenedor" id="carrera-oficial">
+        <div class="panel__cab"><h2>Carrera oficial — tiempos reales</h2></div>
+        <CarreraOficialTabla registros={pasoRealRegistros} dias={[diaInfo]} anio={anio} />
+      </section>
+      <CarreraOficialGraficas registros={pasoRealRegistros} dias={[diaInfo]} />
+    </>
+  )}
 </Base>
