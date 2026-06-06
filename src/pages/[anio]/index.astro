@@ -160,7 +160,10 @@ const jsonLd = {
       </div>
     </div>
     <div class="anio-cab__links">
-      <a href={`/${anio}/datos/conteo.csv`} download class="anio-cab__dl">⬇ CSV</a>
+      {diasPresentes.map((d) => (
+        <a href={`/${anio}/dia/${d.slug}/`}>{d.nombre}</a>
+      ))}
+<a href={`/${anio}/datos/conteo.csv`} download class="anio-cab__dl">⬇ CSV</a>
       <a href={`/${anio}/datos/conteo.json`} class="anio-cab__dl">JSON</a>
     </div>
   </section>
