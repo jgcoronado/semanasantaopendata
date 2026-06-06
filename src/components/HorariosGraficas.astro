@@ -84,14 +84,7 @@ const datosCliente = {
     })}
   </ul>
 
-  <figure class="grafica grafica--ancha" style="margin-top:1rem;margin-bottom:1.2rem">
-    <figcaption>Duración (horas) frente a participantes del cortejo</figcaption>
-    <div class="grafica__lienzo" style="height:420px">
-      <canvas id="dispersion-dur" aria-label="Duración frente a participantes"></canvas>
-    </div>
-  </figure>
-
-  <figure class="grafica grafica--ancha">
+  <figure class="grafica grafica--ancha" style="margin-top:1rem">
     <figcaption>Duración total por hermandad</figcaption>
     <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
       <canvas id="dur-hdad" aria-label="Duración total por hermandad"></canvas>
@@ -206,46 +199,6 @@ const datosCliente = {
   }
   selDia.addEventListener('change', pintarDia);
   pintarDia();
-
-  // ── Dispersión: un dataset por día ──
-  const scatterDatasets = datos.dias
-    .filter(d => datos.registros.some(r => r.diaSlug===d.slug && r.noTotal!=null))
-    .map(d => {
-      const e = estiloDia(d.orden);
-      return {
-        label: d.nombre,
-        data: datos.registros
-          .filter(r => r.diaSlug===d.slug && r.noTotal!=null)
-          .map(r => ({ x:r.noTotal, y:+(r.duracionMin/60).toFixed(1), nombre:r.nombre })),
-        backgroundColor: e.color + 'bb',
-        borderColor: e.color,
-        pointStyle: e.simbolo,
-        pointRadius: 7,
-        pointHoverRadius: 9,
-      };
-    });
-
-  new Chart(document.getElementById('dispersion-dur'), {
-    type: 'scatter',
-    data: { datasets: scatterDatasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position:'bottom', labels: { usePointStyle:true, pointStyleWidth:14, padding:14 } },
-        tooltip: {
-          usePointStyle: true,
-          callbacks: {
-            title: (items) => items[0]?.raw?.nombre ?? '',
-            label: (c) => `${c.raw.x.toLocaleString('es-ES')} part. · ${c.raw.y} h`,
-          },
-        },
-      },
-      scales: {
-        x: { title: { display:true, text:'Participantes (cortejo)' }, beginAtZero:true },
-        y: { title: { display:true, text:'Duración (horas)' }, beginAtZero:true },
-      },
-    },
-  });
 
   // ── Barras de duración por hermandad ──
   const ordenDur = [...datos.registros].sort((a,b) => b.duracionMin - a.duracionMin);
