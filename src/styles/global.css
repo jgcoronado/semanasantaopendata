@@ -54,7 +54,7 @@ a { color: var(--morado); }
 .cabecera a { color: var(--blanco); text-decoration: none; }
 .marca { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.2px; }
 .marca__punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--oro); box-shadow: 0 0 0 4px rgba(200, 162, 74, 0.25); }
-.nav { display: flex; gap: 0.2rem; font-size: 0.93rem; }
+.nav { display: flex; flex-wrap: wrap; gap: 0.2rem; font-size: 0.93rem; }
 .nav a {
   opacity: 0.92;
   padding: 0.35rem 0.55rem; /* touch target ≥ 24px (WCAG 2.5.8) */
@@ -84,6 +84,17 @@ a { color: var(--morado); }
 .anio-cab__dl { color: var(--gris) !important; }
 .anio-cab__dl:hover { color: var(--morado) !important; }
 @media (max-width: 600px) { .anio-cab__top { flex-direction: column; } }
+
+/* ---------- Móvil: touch targets e interactividad táctil ---------- */
+@media (max-width: 599px) {
+  /* iOS recomienda 44px de touch target para elementos interactivos */
+  .nav a { min-height: 36px; padding: 0.5rem 0.55rem; }
+  .btn { min-height: 44px; padding: 0.7rem 1.1rem; display: inline-flex; align-items: center; justify-content: center; }
+  .campo select,
+  .tabla-controles input[type="search"],
+  .buscador input { min-height: 44px; font-size: 1rem; /* evita zoom automático en iOS (< 16px dispara zoom) */ }
+  .anio-cab__links a { min-height: 36px; padding: 0.45rem 0.6rem; }
+}
 
 /* ---------- Hub (home) ---------- */
 .hub { padding-block: clamp(1.8rem, 4vw, 2.8rem); }
