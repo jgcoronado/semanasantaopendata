@@ -233,6 +233,60 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
   .grafica__lienzo--pie { height: 200px !important; }
 }
 
+/* ---------- Vista tarjeta móvil (TablaNazarenos) ---------- */
+.tabla-movil {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.tabla-movil__card {
+  background-color: var(--color-dia, var(--blanco));
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  padding: 0.9rem 1rem;
+  box-shadow: var(--sombra);
+}
+.tabla-movil__cab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.8rem;
+  margin-bottom: 0.6rem;
+}
+.tabla-movil__nombre {
+  font-weight: 700;
+  color: var(--morado-osc);
+  text-decoration: none;
+  font-size: 1rem;
+  flex: 1 1 auto;
+}
+.tabla-movil__nombre:hover { text-decoration: underline; }
+.tabla-movil__cifras {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.3rem 0.8rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.tabla-movil__cifras > div { display: flex; flex-direction: column; gap: 0.05rem; }
+.tabla-movil__cifras dt { font-size: 0.75rem; color: var(--gris); text-transform: uppercase; letter-spacing: 0.03em; }
+.tabla-movil__cifras dd { margin: 0; color: var(--tinta); }
+.tabla-movil__cifras dd.fuerte { font-weight: 700; color: var(--morado-osc); font-size: 1rem; }
+.sin-resultados--movil { color: var(--gris); padding: 1rem 0; text-align: center; font-size: 0.93rem; }
+
+/* Por encima de 600px: ocultar tarjetas, mostrar tabla */
+@media (min-width: 600px) {
+  .tabla-movil { display: none !important; }
+}
+/* Por debajo de 600px: ocultar tabla, mostrar tarjetas */
+@media (max-width: 599px) {
+  .tabla-wrap { display: none; }
+  .tabla-movil { display: flex; }
+}
+
 /* ---------- Pie ---------- */
 .pie { margin-top: 3rem; border-top: 1px solid var(--linea); background: var(--blanco); }
 .pie__inner { padding-block: 1.6rem; color: var(--gris); font-size: 0.88rem; display: grid; gap: 0.4rem; }

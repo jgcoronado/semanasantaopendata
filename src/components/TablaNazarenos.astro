@@ -54,6 +54,44 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
   <p class="contador" id="contador" aria-live="polite">{registros.length} hermandades</p>
 </div>
 
+<ul class="tabla-movil" aria-label="Hermandades — vista móvil">
+  {registros.map((r) => (
+    <li
+      class="tabla-movil__card"
+      data-dia={r.diaSlug}
+      data-nombre={r.nombre}
+      data-slug={r.slug}
+      style={`--color-dia:${diaBg(r.diaOrden)}`}
+    >
+      <div class="tabla-movil__cab">
+        <a href={`/${anio}/hermandad/${r.slug}/`} class="tabla-movil__nombre">{r.nombre}</a>
+        {conColumnaDia && (
+          <a class="pildora-dia" href={`/${anio}/dia/${r.diaSlug}/`}>{r.diaNombre}</a>
+        )}
+      </div>
+      <dl class="tabla-movil__cifras">
+        <div>
+          <dt>Nazarenos</dt>
+          <dd class="fuerte">{fmt(r.noNaz)}</dd>
+        </div>
+        <div>
+          <dt>% del día</dt>
+          <dd>{fmtPct(r.pctNaz)}</dd>
+        </div>
+        <div>
+          <dt>Total cortejo</dt>
+          <dd class="fuerte">{fmt(r.noTotal)}</dd>
+        </div>
+        <div>
+          <dt>% del día</dt>
+          <dd>{fmtPct(r.pctTotal)}</dd>
+        </div>
+      </dl>
+    </li>
+  ))}
+  <li class="sin-resultados sin-resultados--movil" hidden>No hay hermandades para ese día.</li>
+</ul>
+
 <div class="tabla-wrap">
   <table class="datos" id="tabla-nazarenos">
     <caption>
@@ -117,6 +155,8 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
     const tbody = tabla.querySelector('tbody');
     const filas = Array.from(tbody.querySelectorAll('tr[data-slug]'));
     const filaVacia = tbody.querySelector('.sin-resultados');
+    const tarjetas = Array.from(document.querySelectorAll('.tabla-movil__card[data-slug]'));
+    const tarjetaVacia = document.querySelector('.sin-resultados--movil');
     const select = document.getElementById('filtro-dia');
     const buscador = document.getElementById('tabla-buscador');
     const contador = document.getElementById('contador');
@@ -158,6 +198,12 @@ const etiquetaColspan = conColumnaDia ? 2 : 1;
         const okQ = !q || norm(f.dataset.nombre || '').includes(q);
         f.hidden = !okDia || !okQ;
       }
+      for (const t of tarjetas) {
+        const okDia = dia === 'todos' || t.dataset.dia === dia;
+        const okQ = !q || norm(t.dataset.nombre || '').includes(q);
+        t.hidden = !okDia || !okQ;
+      }
+      if (tarjetaVacia) tarjetaVacia.hidden = tarjetas.filter((t) => !t.hidden).length !== 0;
       actualizarPie();
     }
 
