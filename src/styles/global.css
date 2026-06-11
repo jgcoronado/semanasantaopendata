@@ -227,6 +227,11 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
   .graficas-grid { grid-template-columns: 1fr; }
   .grafica__lienzo { height: 300px; }
 }
+@media (max-width: 560px) {
+  /* Contrarrestar alturas fijas en style="" de los componentes de gráficas */
+  .grafica__lienzo { height: clamp(200px, 52vw, 280px) !important; }
+  .grafica__lienzo--pie { height: 200px !important; }
+}
 
 /* ---------- Pie ---------- */
 .pie { margin-top: 3rem; border-top: 1px solid var(--linea); background: var(--blanco); }
