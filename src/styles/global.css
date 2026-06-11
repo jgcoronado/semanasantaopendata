@@ -54,8 +54,15 @@ a { color: var(--morado); }
 .cabecera a { color: var(--blanco); text-decoration: none; }
 .marca { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.2px; }
 .marca__punto { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--oro); box-shadow: 0 0 0 4px rgba(200, 162, 74, 0.25); }
-.nav { display: flex; gap: 1.1rem; font-size: 0.93rem; }
-.nav a { opacity: 0.92; }
+.nav { display: flex; gap: 0.2rem; font-size: 0.93rem; }
+.nav a {
+  opacity: 0.92;
+  padding: 0.35rem 0.55rem; /* touch target ≥ 24px (WCAG 2.5.8) */
+  border-radius: 6px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
 .nav a:hover { opacity: 1; text-decoration: underline; }
 
 /* ---------- Hero ---------- */
@@ -71,7 +78,7 @@ a { color: var(--morado); }
 .kpi-mini { font-size: 0.93rem; color: var(--gris); white-space: nowrap; }
 .kpi-mini strong { color: var(--morado-osc); font-size: 1.05rem; }
 .anio-cab__links { display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; align-items: center; border-top: 1px solid var(--linea); padding-top: 0.6rem; font-size: 0.9rem; }
-.anio-cab__links a { color: var(--morado); text-decoration: none; padding: 0.2rem 0.5rem; border-radius: 6px; }
+.anio-cab__links a { color: var(--morado); text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 6px; min-height: 24px; display: inline-flex; align-items: center; }
 .anio-cab__links a:hover { background: var(--fondo-alt); text-decoration: underline; }
 .anio-cab__links a.activo { font-weight: 700; background: var(--fondo-alt); }
 .anio-cab__dl { color: var(--gris) !important; }
@@ -170,7 +177,10 @@ table.datos thead th {
 table.datos thead th.txt { text-align: left; }
 table.datos th.orden button {
   font: inherit; font-size: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit;
-  background: none; border: 0; cursor: pointer; padding: 0; display: inline-flex; gap: 0.3rem; align-items: center;
+  background: none; border: 0; cursor: pointer;
+  padding: 0.3rem 0.25rem; /* min 24px touch area (WCAG 2.5.8) */
+  min-height: 24px; min-width: 24px;
+  display: inline-flex; gap: 0.3rem; align-items: center;
 }
 table.datos th.orden button:hover { color: var(--morado); }
 table.datos th[aria-sort="ascending"] .flecha::after { content: "▲"; }
@@ -229,6 +239,8 @@ table.datos tbody tr.fila-resaltada td.txt { font-weight: 700; color: var(--mora
 
 
 /* ---------- Conmutador de métrica ---------- */
+.segmento-group { border: none; padding: 0; margin: 0; }
+.segmento-group legend { font-size: 0.85rem; color: var(--gris); padding: 0; margin-bottom: 0.25rem; }
 .segmento { display: inline-flex; border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; background: var(--blanco); }
 .segmento label { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.85rem; font-size: 0.95rem; color: var(--tinta); cursor: pointer; }
 .segmento label:has(input:checked) { background: var(--morado); color: var(--blanco); }
@@ -273,3 +285,83 @@ table.datos thead th.col-actual { background: #f6eccf; color: var(--morado-osc);
 .hdad-item__meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .hdad-item__cortejo { font-size: 0.8rem; color: var(--gris); }
 .hdad-vacio { color: var(--gris); padding: 1rem 0; }
+
+/* ---------- Focus visible global (WCAG 2.4.7 / 2.4.11) ---------- */
+:focus-visible {
+  outline: 2px solid var(--morado);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+/* Sobre fondo oscuro (cabecera morada) el outline debe ser dorado para contraste 3:1 */
+.cabecera :focus-visible {
+  outline-color: var(--oro);
+}
+/* Las tarjetas ya tienen borde propio: reforzamos con box-shadow para no mover layout */
+.anio-card:focus-visible,
+.dia-card:focus-visible,
+.hdad-item a:focus-visible {
+  outline: 2px solid var(--morado);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(91, 42, 134, 0.18);
+}
+/* Botones de descarga */
+.btn:focus-visible {
+  outline: 2px solid var(--morado);
+  outline-offset: 3px;
+}
+/* Migas de pan y enlaces de pie */
+.migas a:focus-visible,
+.pie__inner a:focus-visible,
+.anio-cab__links a:focus-visible,
+.dia-nav__a:focus-visible {
+  outline: 2px solid var(--morado);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* <main> recibe foco programático del skip link — no mostrar outline */
+#main-content:focus {
+  outline: none;
+}
+
+/* ---------- Skip link ---------- */
+.saltar-contenido {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--morado);
+  color: var(--blanco);
+  padding: 0.5rem 1.1rem;
+  border-radius: 0 0 var(--radio) var(--radio);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  z-index: 9999;
+}
+.saltar-contenido:focus {
+  top: 0;
+  outline: 2px solid var(--oro);
+  outline-offset: 2px;
+}
+
+/* ---------- Focus visible: botones de ordenar tabla ---------- */
+table.datos th.orden button:focus-visible {
+  outline: 2px solid var(--morado);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Focus visible: segmento de radio ---------- */
+.segmento label:has(input:focus-visible) {
+  outline: 2px solid var(--morado);
+  outline-offset: 1px;
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -49,14 +49,16 @@ const datosCliente = {
     <figure class="grafica grafica--ancha">
       <figcaption>Cronograma: tiempo de cada cofradía en la calle (salida → entrada)</figcaption>
       <div class="grafica__lienzo" style="height:460px">
-        <canvas id="gantt" aria-label="Cronograma por día"></canvas>
+        <canvas id="gantt" aria-hidden="true"></canvas>
       </div>
+      <p class="grafica__nota visualmente-oculto">Diagrama de Gantt horizontal con el horario de salida y entrada de cada cofradía. Los horarios exactos están en la tabla de horarios oficiales de esta página.</p>
     </figure>
     <figure class="grafica grafica--ancha">
       <figcaption>Cofradías a la vez en la Carrera Oficial (pasa el ratón para ver cuáles)</figcaption>
       <div class="grafica__lienzo">
-        <canvas id="ocupacion" aria-label="Ocupación de la Carrera Oficial"></canvas>
+        <canvas id="ocupacion" aria-hidden="true"></canvas>
       </div>
+      <p class="grafica__nota visualmente-oculto">Gráfica de línea que muestra cuántas cofradías están simultáneamente en la Carrera Oficial a cada hora del día.</p>
     </figure>
   </div>
 </section>
@@ -87,8 +89,9 @@ const datosCliente = {
   <figure class="grafica grafica--ancha" style="margin-top:1rem">
     <figcaption>Duración total por hermandad</figcaption>
     <div class="grafica__lienzo" style={`height:${altoBarras}px`}>
-      <canvas id="dur-hdad" aria-label="Duración total por hermandad"></canvas>
+      <canvas id="dur-hdad" aria-hidden="true"></canvas>
     </div>
+    <p class="grafica__nota visualmente-oculto">Barras horizontales con la duración de la estación de penitencia de cada hermandad, ordenadas de mayor a menor. Los tiempos exactos están en la tabla de horarios.</p>
   </figure>
 </section>
 
@@ -103,6 +106,9 @@ const datosCliente = {
     ScatterController, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
   const datos = JSON.parse(document.getElementById('datos-horarios').textContent);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Chart.defaults.animation = false;
+  }
 
   const reloj = (m) => `${String(Math.floor((((m%1440)+1440)%1440)/60)).padStart(2,'0')}:${String(((m%60)+60)%60).padStart(2,'0')}`;
   const dur   = (m) => { const h = Math.floor(m/60); return h > 0 ? `${h} h ${String(m%60).padStart(2,'0')} min` : `${m} min`; };

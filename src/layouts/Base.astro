@@ -49,6 +49,7 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
     <slot name="head" />
   </head>
   <body>
+    <a href="#main-content" class="saltar-contenido">Saltar al contenido</a>
     <header class="cabecera">
       <div class="contenedor cabecera__inner">
         <a href="/" class="marca"><span class="marca__punto" aria-hidden="true"></span> Semana Santa Open Data</a>
@@ -63,7 +64,7 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
       </div>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
 
@@ -79,7 +80,7 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
           Cada página incluye sus fuentes. Este sitio no es oficial.
         </div>
         <div>
-          Página creada por <a href="https://x.com/JaviWarSVQ" rel="noopener" target="_blank">@JaviWarSVQ</a>.
+          Página creada por <a href="https://x.com/JaviWarSVQ" rel="noopener" target="_blank">@JaviWarSVQ<span class="visualmente-oculto"> (abre en nueva pestaña)</span></a>.
           · © {anioActual} · Proyecto de datos abiertos sin ánimo de lucro.
         </div>
       </div>

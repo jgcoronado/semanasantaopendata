@@ -85,8 +85,9 @@ const datosCliente = {
   <figure class="grafica grafica--ancha">
     <figcaption>Duración (horas) frente a total de participantes del cortejo</figcaption>
     <div class="grafica__lienzo" style="height:420px">
-      <canvas id="an-dispersion" aria-label="Dispersión duración vs tamaño"></canvas>
+      <canvas id="an-dispersion" aria-hidden="true"></canvas>
     </div>
+    <p class="grafica__nota visualmente-oculto">Gráfica de dispersión: cada punto representa una cofradía, con el total de participantes en el eje horizontal y la duración de la procesión en el eje vertical. El color y la forma del punto indican el día procesional.</p>
   </figure>
 </section>
 
@@ -115,8 +116,9 @@ const datosCliente = {
   <figure class="grafica grafica--ancha">
     <figcaption>Total de participantes por hermandad (desglose por tipo)</figcaption>
     <div class="grafica__lienzo" style={`height:${altoRanking}px`}>
-      <canvas id="an-composicion" aria-label="Composición del cortejo por hermandad"></canvas>
+      <canvas id="an-composicion" aria-hidden="true"></canvas>
     </div>
+    <p class="grafica__nota visualmente-oculto">Barras horizontales apiladas con el número total de participantes de cada hermandad, desglosado por tipo: nazarenos, penitentes, acólitos, monaguillos y acompañamiento. Ordenadas de mayor a menor.</p>
   </figure>
 </section>
 
@@ -138,8 +140,9 @@ const datosCliente = {
   <figure class="grafica grafica--ancha">
     <figcaption>Nazarenos en la calle a cada hora del día</figcaption>
     <div class="grafica__lienzo" style="height:320px">
-      <canvas id="an-encalle" aria-label="Nazarenos en la calle por hora"></canvas>
+      <canvas id="an-encalle" aria-hidden="true"></canvas>
     </div>
+    <p class="grafica__nota visualmente-oculto">Gráfica de área con la estimación de nazarenos simultáneamente en la calle a lo largo del día, en intervalos de una hora. Usa el selector de día para cambiar la jornada mostrada.</p>
   </figure>
 </section>
 
@@ -156,14 +159,16 @@ const datosCliente = {
     <figure class="grafica">
       <figcaption>Nazarenos por cortejo</figcaption>
       <div class="grafica__lienzo" style="height:360px">
-        <canvas id="an-box-naz" aria-label="Box plot: nazarenos por cortejo"></canvas>
+        <canvas id="an-box-naz" aria-hidden="true"></canvas>
       </div>
+      <p class="grafica__nota visualmente-oculto">Diagrama de cajas con la distribución del número de nazarenos por cortejo, agrupados por día procesional. Muestra mediana, rango intercuartílico y valores atípicos.</p>
     </figure>
     <figure class="grafica">
       <figcaption>Duración de la estación de penitencia</figcaption>
       <div class="grafica__lienzo" style="height:360px">
-        <canvas id="an-box-dur" aria-label="Box plot: duración de la estación de penitencia"></canvas>
+        <canvas id="an-box-dur" aria-hidden="true"></canvas>
       </div>
+      <p class="grafica__nota visualmente-oculto">Diagrama de cajas con la distribución de la duración de la estación de penitencia, agrupados por día procesional. Muestra mediana, rango intercuartílico y valores atípicos.</p>
     </figure>
   </div>
 </section>
@@ -180,15 +185,16 @@ const datosCliente = {
     </p>
     <div style="overflow-x:auto">
       <table class="tabla-comparativa">
+        <caption>Comparativa de participantes y duración entre {anioActual} y {comparativaAnio} por hermandad.</caption>
         <thead>
           <tr>
-            <th>Hermandad</th>
-            <th>Día</th>
-            <th>Participantes {anioActual}</th>
-            <th>Participantes {comparativaAnio}</th>
-            <th>Variación</th>
-            <th>Duración {anioActual}</th>
-            <th>Duración {comparativaAnio}</th>
+            <th scope="col">Hermandad</th>
+            <th scope="col">Día</th>
+            <th scope="col">Participantes {anioActual}</th>
+            <th scope="col">Participantes {comparativaAnio}</th>
+            <th scope="col">Variación</th>
+            <th scope="col">Duración {anioActual}</th>
+            <th scope="col">Duración {comparativaAnio}</th>
           </tr>
         </thead>
         <tbody>
@@ -270,6 +276,9 @@ const datosCliente = {
   );
 
   const datos = JSON.parse(document.getElementById('datos-analisis').textContent);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Chart.defaults.animation = false;
+  }
   const dur = (m) => { const h = Math.floor(m / 60); return h > 0 ? `${h} h ${String(m % 60).padStart(2,'0')} min` : `${m} min`; };
 
   // Paleta oficial (orden 1-9)
@@ -495,6 +504,7 @@ const datosCliente = {
 
 <style>
   .tabla-comparativa { width:100%; border-collapse:collapse; font-size:.9rem; }
+  .tabla-comparativa caption { text-align:left; padding:.5rem .7rem .3rem; color:var(--gris); font-size:.83rem; caption-side:top; }
   .tabla-comparativa th,
   .tabla-comparativa td { padding:.45rem .7rem; border-bottom:1px solid var(--borde, #e0e0e0); text-align:left; }
   .tabla-comparativa th { background:var(--fondo-alt, #f6f3fa); font-weight:600; }

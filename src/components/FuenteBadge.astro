@@ -37,6 +37,7 @@ const etiqueta = etiquetaTipo[fuente.tipo] ?? fuente.tipo;
     {mostrarFecha && fuente.fecha_consulta && (
       <span class="fuente-badge__fecha">({fuente.fecha_consulta})</span>
     )}
+    <span class="visualmente-oculto"> (abre en nueva pestaña)</span>
   </a>
 ) : (
   <span
@@ -63,7 +64,7 @@ const etiqueta = etiquetaTipo[fuente.tipo] ?? fuente.tipo;
     border-radius: 999px;
     border: 1px solid color-mix(in srgb, var(--fuente-color) 35%, transparent);
     background: color-mix(in srgb, var(--fuente-color) 8%, transparent);
-    color: color-mix(in srgb, var(--fuente-color) 85%, #000);
+    color: color-mix(in srgb, var(--fuente-color) 65%, #000);
     text-decoration: none;
     white-space: nowrap;
     line-height: 1.4;
