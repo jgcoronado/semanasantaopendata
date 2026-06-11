@@ -21,11 +21,13 @@ const datosCliente = {
   <div class="graficas-grid">
     <figure class="grafica">
       <figcaption>% de <strong>nazarenos</strong> sobre el total del día</figcaption>
-      <div class="grafica__lienzo"><canvas id="grafica-dia-pct-naz" aria-label="Porcentaje de nazarenos de cada hermandad sobre el día"></canvas></div>
+      <div class="grafica__lienzo"><canvas id="grafica-dia-pct-naz" aria-hidden="true"></canvas></div>
+      <p class="grafica__nota visualmente-oculto">Barras con el porcentaje de nazarenos que aporta cada hermandad sobre el total del día. Los datos exactos están en la tabla de esta página.</p>
     </figure>
     <figure class="grafica">
       <figcaption>% del <strong>cortejo total</strong> sobre el total del día</figcaption>
-      <div class="grafica__lienzo"><canvas id="grafica-dia-pct-total" aria-label="Porcentaje del cortejo de cada hermandad sobre el día"></canvas></div>
+      <div class="grafica__lienzo"><canvas id="grafica-dia-pct-total" aria-hidden="true"></canvas></div>
+      <p class="grafica__nota visualmente-oculto">Barras con el porcentaje del cortejo total que aporta cada hermandad sobre el total del día. Los datos exactos están en la tabla de esta página.</p>
     </figure>
   </div>
 
@@ -37,6 +39,9 @@ const datosCliente = {
   Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
   const datos = JSON.parse(document.getElementById('datos-composicion-dia').textContent);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Chart.defaults.animation = false;
+  }
   const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
   const colBase = COLORES_9[(datos.orden - 1) % 9] + 'cc';
   const labels = datos.hermandades.map((h) => h.nombre);

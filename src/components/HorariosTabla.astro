@@ -59,7 +59,7 @@ const columnas = [
           {conColumnaDia && <td class="txt"><span class="pildora-dia">{r.diaNombre}</span></td>}
           <td class="txt"><a href={`/${anio}/hermandad/${r.slug}/`}>{r.nombre}</a></td>
           <td>{r.horas.salida}</td>
-          <td>{r.horas.entrada}{r.entradaMin >= 1440 && <span class="dia-sig" title="día siguiente"> +1</span>}</td>
+          <td>{r.horas.entrada}{r.entradaMin >= 1440 && <span class="dia-sig"> +1<span class="visualmente-oculto"> (día siguiente)</span></span>}</td>
           <td class="fuerte">{fmtDur(r.duracionMin)}</td>
           <td>{fmtDur(r.carreraOficialMin)}</td>
           <td>{r.partPorHora != null ? fmt(r.partPorHora) : '—'}</td>

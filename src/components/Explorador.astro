@@ -38,7 +38,8 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
   <div class="graficas-grid">
     <figure class="grafica grafica--ancha">
       <figcaption>Nazarenos y cortejo total por día</figcaption>
-      <div class="grafica__lienzo"><canvas id="grafica-dias" aria-label="Nazarenos y cortejo total por día"></canvas></div>
+      <div class="grafica__lienzo"><canvas id="grafica-dias" aria-hidden="true"></canvas></div>
+      <p class="grafica__nota visualmente-oculto">Gráfica de barras con los totales de nazarenos y del cortejo por cada día procesional. Los datos completos están disponibles en la tabla de esta página.</p>
     </figure>
   </div>
 
@@ -50,6 +51,7 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
   Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
   const datos = JSON.parse(document.getElementById('datos-graficas').textContent);
+  const noAnim = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
   const TINTA = '#1c1a22';
@@ -83,6 +85,7 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
       ],
     },
     options: {
+      animation: noAnim ? false : undefined,
       responsive: true,
       maintainAspectRatio: false,
       plugins: {

@@ -13,5 +13,22 @@
     "additionalDirectories": [
       "c:\\Users\\usuario\\Documents\\semanasantaopendata\\src\\pages\\[anio]"
     ]
+  },
+  "enabledPlugins": {
+    "ui-design@claude-code-workflows": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-code-toolkit": {
+      "source": {
+        "source": "github",
+        "repo": "rohitg00/awesome-claude-code-toolkit"
+      }
+    },
+    "claude-code-workflows": {
+      "source": {
+        "source": "github",
+        "repo": "wshobson/agents"
+      }
+    }
   }
 }

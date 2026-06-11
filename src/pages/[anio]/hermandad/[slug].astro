@@ -259,7 +259,7 @@ const jsonLd = {
               <tr class={h.anio === anioNum ? 'fila-resaltada' : ''}>
                 <td class="txt fuerte">{h.anio}</td>
                 <td>{h.salida}</td>
-                <td>{h.entrada}{h.entradaMin >= 1440 && <span class="dia-sig"> +1</span>}</td>
+                <td>{h.entrada}{h.entradaMin >= 1440 && <span class="dia-sig"> +1<span class="visualmente-oculto"> (día siguiente)</span></span>}</td>
                 <td>{fmtDur(h.duracionMin)}</td>
                 <td>{fmtDur(h.carreraOficialMin)}</td>
                 <td>{h.partPorHora != null ? fmt(h.partPorHora) : '—'}</td>

@@ -29,21 +29,22 @@ const datosCliente = {
 const hayVariosAnios = datos.length >= 2;
 ---
 
-<div class="controles" role="group" aria-label="Métrica de las tartas">
-  <span class="campo" style="gap:.4rem">
-    Métrica de las tartas
+<div class="controles">
+  <fieldset class="campo segmento-group">
+    <legend>Métrica de las tartas</legend>
     <span class="segmento">
       <label><input type="radio" name="metrica-hdad" value="naz" checked /> Nazarenos</label>
       <label><input type="radio" name="metrica-hdad" value="total" /> Cortejo total</label>
     </span>
-  </span>
+  </fieldset>
 </div>
 
 <div class="pies-grid">
   {datos.map((x) => (
     <figure class="grafica">
       <figcaption><strong>{x.anio}</strong> · <span class="pie-metrica">% de nazarenos</span> sobre el día</figcaption>
-      <div class="grafica__lienzo grafica__lienzo--pie"><canvas class="pie-anio" data-anio={x.anio} aria-label={`Porcentaje sobre el día en ${x.anio}`}></canvas></div>
+      <div class="grafica__lienzo grafica__lienzo--pie"><canvas class="pie-anio" data-anio={x.anio} aria-hidden="true"></canvas></div>
+      <p class="grafica__nota visualmente-oculto">Tarta que muestra el porcentaje de esta hermandad sobre el total del día en {x.anio}. El valor exacto se muestra en las gráficas de esta sección.</p>
     </figure>
   ))}
 </div>
@@ -51,14 +52,16 @@ const hayVariosAnios = datos.length >= 2;
 {hayVariosAnios && (
   <figure class="grafica grafica--ancha" style="margin-top:1.2rem">
     <figcaption>Nazarenos y cortejo por año</figcaption>
-    <div class="grafica__lienzo"><canvas id="hist-hdad" aria-label="Nazarenos y cortejo por año"></canvas></div>
+    <div class="grafica__lienzo"><canvas id="hist-hdad" aria-hidden="true"></canvas></div>
+    <p class="grafica__nota visualmente-oculto">Barras agrupadas comparando el número de nazarenos y el total del cortejo de esta hermandad año a año. Los valores numéricos están en la tabla de datos por año.</p>
   </figure>
 )}
 
 {hayVariosAnios && (
   <figure class="grafica grafica--ancha" style="margin-top:1.2rem">
     <figcaption>Composición del cortejo por año</figcaption>
-    <div class="grafica__lienzo" style="height:220px"><canvas id="comp-hdad" aria-label="Composición del cortejo por año"></canvas></div>
+    <div class="grafica__lienzo" style="height:220px"><canvas id="comp-hdad" aria-hidden="true"></canvas></div>
+    <p class="grafica__nota visualmente-oculto">Barras apiladas con el desglose del cortejo (nazarenos, penitentes, acólitos, monaguillos y acompañamiento) por año. Los valores están en la tabla de desglose por año.</p>
   </figure>
 )}
 
@@ -68,6 +71,9 @@ const hayVariosAnios = datos.length >= 2;
   Chart.register(PieController, ArcElement, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
   const datos = JSON.parse(document.getElementById('datos-graficas-hdad').textContent);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Chart.defaults.animation = false;
+  }
   const MORADO = '#5b2a86';
   const ORO = '#c8a24a';
   const MORADO_CLARO = '#ddd2ec';

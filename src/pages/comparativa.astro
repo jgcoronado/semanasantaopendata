@@ -45,13 +45,13 @@ const description =
       </p>
 
       <div class="controles">
-        <span class="campo" style="gap:.4rem">
-          Métrica
+        <fieldset class="campo segmento-group">
+          <legend>Métrica</legend>
           <span class="segmento">
             <label><input type="radio" name="metrica" value="noNaz" checked /> Nazarenos</label>
             <label><input type="radio" name="metrica" value="noTotal" /> Cortejo total</label>
           </span>
-        </span>
+        </fieldset>
         <label class="campo">
           Comparar {aLatest} con
           <select id="selector-base">
@@ -139,6 +139,9 @@ const description =
     Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
     const datos = JSON.parse(document.getElementById('datos-comparativa').textContent);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      Chart.defaults.animation = false;
+    }
     const PALETA = ['#5b2a86', '#c8a24a', '#3d8a6b', '#b5462f', '#2f6fb5'];
     const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
     const pf = (v) => `${(v > 0 ? '+' : '')}${v.toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
