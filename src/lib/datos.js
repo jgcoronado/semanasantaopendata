@@ -163,7 +163,7 @@ export function getComparativaHermandades() {
       }
       return { id_hdad: h.id_hdad, nombre: h.nombre, slug: h.slug, diaSlug: h.dia, diaNombre: d.nombre, diaOrden: d.orden, porAnio };
     })
-    .sort((a, b) => a.diaOrden - b.diaOrden || a.nombre.localeCompare(b.nombre, 'es'));
+    .sort((a, b) => a.diaOrden - b.diaOrden || a.id_hdad - b.id_hdad);
 }
 
 /** Comparativa por día: para cada día, los totales por año (o null si no se contó ese año). */
