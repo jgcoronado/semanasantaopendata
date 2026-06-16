@@ -1,11 +1,10 @@
 ---
 // Sección "De lo anunciado a lo real": comparecencia y merma por hermandad.
 // Dataset complementario (boletines/anuarios), solo para las hermandades con dato.
-import FuenteBadge from './FuenteBadge.astro';
-import FuentesResumen from './FuentesResumen.astro';
-import { fmt, fmtPct, getFuente } from '../lib/datos.js';
+// Las fuentes NO se muestran aquí: se consolidan al final de la página.
+import { fmt, fmtPct } from '../lib/datos.js';
 
-const { registros, fuentes = [], anio } = Astro.props;
+const { registros, anio } = Astro.props;
 
 const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 const colorDia = (orden) => COLORES_9[(orden - 1) % 9];
@@ -52,6 +51,12 @@ const datosCliente = {
     la cofradía o, donde no consta, las papeletas de sitio expedidas). Donde el boletín lo detalla, se
     muestra también la <strong>merma a lo largo del recorrido</strong>. Datos de cada hermandad, extraídos
     de sus boletines y anuarios — disponibles solo para algunas cofradías de {anio}.
+  </p>
+
+  <p class="comp-descargas">
+    Descarga estos datos:
+    <a href={`/${anio}/datos/comparecencia.csv`} download class="comp-dl">⬇ CSV</a>
+    <a href={`/${anio}/datos/comparecencia.json`} class="comp-dl">JSON</a>
   </p>
 
   <div class="tabla-wrap">
@@ -104,7 +109,6 @@ const datosCliente = {
   <!-- Detalle por hermandad: contexto extra que no cabe en la tabla -->
   <div class="comp-detalle">
     {registros.map((r) => {
-      const fuente = r.fuente_id ? getFuente(r.fuente_id) : null;
       return (
         <article class="comp-card" style={`--dia-color:${colorDia(r.diaOrden)}`}>
           <header class="comp-card__cab">
@@ -145,12 +149,6 @@ const datosCliente = {
             )
           }
           {r.nota && <p class="comp-card__nota">{r.nota}</p>}
-          {fuente && (
-            <p class="comp-card__fuente">
-              <FuenteBadge fuente={fuente} />
-              {r.paginas && <span class="comp-card__pag">pp. {r.paginas}</span>}
-            </p>
-          )}
         </article>
       );
     })}
@@ -183,8 +181,6 @@ const datosCliente = {
       </p>
     </figure>
   )}
-
-  <FuentesResumen fuentes={fuentes} />
 </section>
 
 <script type="application/json" id="datos-comparecencia" set:html={JSON.stringify(datosCliente)}></script>
@@ -295,6 +291,23 @@ const datosCliente = {
     color: var(--gris);
     opacity: 0.8;
   }
+  .comp-descargas {
+    margin: 0 0 1.2rem;
+    font-size: 0.9rem;
+    color: var(--gris);
+  }
+  .comp-dl {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--morado);
+    text-decoration: none;
+  }
+  .comp-dl:hover { background: var(--fondo-alt); text-decoration: none; }
   .comp-detalle {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -343,12 +356,4 @@ const datosCliente = {
     color: var(--gris);
     line-height: 1.4;
   }
-  .comp-card__fuente {
-    margin: 0.7rem 0 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  .comp-card__pag { font-size: 0.74rem; color: var(--gris); }
 </style>

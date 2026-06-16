@@ -1,7 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
-import FuenteBadge from '../../../components/FuenteBadge.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
 import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds, getComparecenciaHermandad, getFuente } from '../../../lib/datos.js';
 
@@ -56,12 +55,22 @@ const porAnioAsc = [...anios]
 
 const filasAnios = porAnioAsc.map((x, i) => {
   const prev = porAnioAsc[i - 1];
-  const fuente = getFuentesAnio(x.anio, ['nazarenos'])[0] ?? null;
-  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null, fuente };
+  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null };
 });
 
+// Fuentes de comparecencia de esta hermandad en cualquier año con datos.
+const fuentesComparecencia = anios
+  .map((a) => getComparecenciaHermandad(a.anio, r.id_hdad)?.fuente_id)
+  .filter(Boolean)
+  .map((id) => getFuente(id))
+  .filter(Boolean);
+
+// Todas las fuentes de la página, consolidadas en un único bloque al final.
 const fuentesPagina = [...new Map(
-  anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real'])).map((f) => [f.id, f])
+  [
+    ...anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real'])),
+    ...fuentesComparecencia,
+  ].map((f) => [f.id, f])
 ).values()];
 
 const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
@@ -84,8 +93,8 @@ const itinerario = horario
 const pasoReal = hayPasoReal(anioNum) ? getPasoReal(anioNum).registros.find((x) => x.idHdad === r.id_hdad) : null;
 
 // Comparecencia (de lo anunciado a lo real) de esta hermandad en el año mostrado.
+// La fuente no se muestra en la tarjeta: se consolida al final de la página.
 const comparecencia = getComparecenciaHermandad(anioNum, r.id_hdad);
-const comparecenciaFuente = comparecencia?.fuente_id ? getFuente(comparecencia.fuente_id) : null;
 const etiquetaBaseComp = comparecencia?.baseNazTipo === 'nomina' ? 'la nómina de la cofradía' : 'las papeletas de sitio';
 
 // Formatea un retraso en minutos con signo: +12 min / −5 min / En hora.
@@ -284,12 +293,6 @@ const jsonLd = {
         </p>
       )}
       {comparecencia.nota && <p class="descargas-intro" style="margin-top:0.5rem">{comparecencia.nota}</p>}
-      {comparecenciaFuente && (
-        <p class="descargas-intro" style="margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
-          <FuenteBadge fuente={comparecenciaFuente} />
-          {comparecencia.paginas && <span style="font-size:0.8rem;color:var(--gris)">pp. {comparecencia.paginas}</span>}
-        </p>
-      )}
       <nav class="dia-nav" aria-label="Más">
         <a class="dia-nav__a dia-nav__der" href={`/${anio}/#comparecencia`}>Ver la comparecencia de todas las hermandades →</a>
       </nav>
@@ -369,7 +372,6 @@ const jsonLd = {
             <th scope="col">Var.</th>
             <th scope="col">% día (naz.)</th>
             <th scope="col">% día (cortejo)</th>
-            <th class="txt" scope="col">Fuente</th>
           </tr>
         </thead>
         <tbody>
@@ -385,7 +387,6 @@ const jsonLd = {
                 <td class={`var ${vt.cls}`}>{vt.txt}</td>
                 <td>{fmtPct(f.pctNaz)}</td>
                 <td>{fmtPct(f.pctTotal)}</td>
-                <td class="txt">{f.fuente && <FuenteBadge fuente={f.fuente} />}</td>
               </tr>
             );
           })}

@@ -12,7 +12,7 @@ import ComparecenciaSeccion from '../../components/ComparecenciaSeccion.astro';
 import {
   anios, aniosConHorarios, hayPasoReal, dias,
   getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
-  fmt, fmtDur, getFuentesAnio,
+  fmt, getFuentesAnio,
   hayComparecencia, getComparecencia, getFuentesPorIds,
 } from '../../lib/datos.js';
 
@@ -35,14 +35,10 @@ const listaFaltan = diasFaltan.length <= 1 ? (diasFaltan[0] ?? '') : diasFaltan.
 // --- Horarios ---
 let horariosRegistros = [];
 let horariosDias = [];
-let duracionMedia = 0;
-let masLarga = null;
 if (tieneHorarios) {
   const h = getHorariosAnio(anioNum);
   horariosRegistros = h.registros;
   horariosDias = h.diasPresentes;
-  masLarga = horariosRegistros.reduce((a, b) => (b.duracionMin > a.duracionMin ? b : a));
-  duracionMedia = Math.round(horariosRegistros.reduce((s, r) => s + r.duracionMin, 0) / horariosRegistros.length);
 }
 
 // --- Análisis ---
@@ -119,12 +115,17 @@ if (tieneComparecencia) {
   comparecenciaFuentes = getFuentesPorIds(comparecenciaRegistros.map((r) => r.fuente_id));
 }
 
-// --- Fuentes ---
-const fuentesPagina = getFuentesAnio(anioNum, [
-  'nazarenos',
-  ...(tieneHorarios ? ['horarios'] : []),
-  ...(tienePasoReal ? ['paso_real'] : []),
-]);
+// --- Fuentes --- (todas las de la página, consolidadas en un único bloque al final)
+const fuentesPagina = [...new Map(
+  [
+    ...getFuentesAnio(anioNum, [
+      'nazarenos',
+      ...(tieneHorarios ? ['horarios'] : []),
+      ...(tienePasoReal ? ['paso_real'] : []),
+    ]),
+    ...comparecenciaFuentes,
+  ].map((f) => [f.id, f])
+).values()];
 
 const title = `Semana Santa de Sevilla ${anio} en datos: nazarenos por hermandad | Open Data`;
 const description =
@@ -181,7 +182,7 @@ const jsonLd = {
 
   <!-- Nazarenos -->
   <section class="panel contenedor" id="tabla">
-    <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} />
+    <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} conColumnaDia={false} />
   </section>
 
   <Explorador anio={anioNum} />
@@ -192,13 +193,8 @@ const jsonLd = {
       <section class="panel contenedor" id="horarios">
         <div class="panel__cab">
           <h2>Horarios oficiales</h2>
-          <div class="panel__cab-meta">
-            <span class="kpi-mini"><strong>{fmt(horariosRegistros.length)}</strong> cofradías</span>
-            <span class="kpi-mini">media <strong>{fmtDur(duracionMedia)}</strong></span>
-            {masLarga && <span class="kpi-mini">más larga: <strong>{masLarga.nombre}</strong> ({fmtDur(masLarga.duracionMin)})</span>}
-          </div>
         </div>
-        <HorariosTabla registros={horariosRegistros} dias={horariosDias} anio={anio} />
+        <HorariosTabla registros={horariosRegistros} dias={horariosDias} anio={anio} conColumnaDia={false} />
       </section>
       <HorariosGraficas registros={horariosRegistros} dias={horariosDias} />
     </>
@@ -255,7 +251,7 @@ const jsonLd = {
 
   <!-- Comparecencia -->
   {tieneComparecencia && (
-    <ComparecenciaSeccion registros={comparecenciaRegistros} fuentes={comparecenciaFuentes} anio={anio} />
+    <ComparecenciaSeccion registros={comparecenciaRegistros} anio={anio} />
   )}
 
   <section class="panel contenedor">
