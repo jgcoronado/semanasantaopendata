@@ -502,6 +502,163 @@ export function getPasoReal(anio) {
 
 // ---------- Exportación de datos para el análisis cruzado ----------
 
+// ---------- Comparecencia y merma (de lo anunciado a lo real) ----------
+// Dataset complementario, por hermandad, extraído de boletines/anuarios de las propias
+// hermandades. Mide cuántos cofrades salen realmente frente a los anunciados (papeletas /
+// nómina) y, donde el boletín lo detalla, la merma a lo largo del recorrido.
+// Auto-descubre `comparecencia-AAAA.json`. Cada registro lleva su propio `fuente_id`
+// (cada hermandad publica su propia fuente).
+
+const ficherosComparecencia = import.meta.glob('../data/comparecencia-*.json', { eager: true });
+const comparecenciaPorAnio = {};
+for (const [ruta, mod] of Object.entries(ficherosComparecencia)) {
+  const m = ruta.match(/comparecencia-(\d{4})\.json$/);
+  if (m) comparecenciaPorAnio[Number(m[1])] = mod.default;
+}
+
+/** ¿Hay datos de comparecencia para este año? */
+export const hayComparecencia = (anio) => !!comparecenciaPorAnio[Number(anio)];
+
+/** Años con datos de comparecencia (del más reciente al más antiguo). */
+export const aniosConComparecencia = anios.filter((a) => comparecenciaPorAnio[a.anio]);
+
+/** % seguro: a/b en porcentaje, o null si no procede. */
+function pct(a, b) {
+  return a != null && b ? (a / b) * 100 : null;
+}
+
+function construirComparecencia(anio) {
+  const lista = comparecenciaPorAnio[anio];
+  if (!lista) throw new Error(`[datos] No hay comparecencia (comparecencia-${anio}.json) para ${anio}.`);
+
+  const nazPorId = new Map(getAnio(anio).registros.map((r) => [r.id_hdad, r]));
+
+  const registros = lista.map((c) => {
+    const hdad = hdadPorId.get(c.idHdad);
+    if (!hdad) throw new Error(`[datos] comparecencia ${anio}: idHdad ${c.idHdad} no existe.`);
+    const dia = diaPorSlug.get(hdad.dia);
+    const consejo = nazPorId.get(c.idHdad) || null; // conteo oficial del Consejo (puede faltar)
+
+    const naz = c.nazarenos ?? {};
+    const cor = c.cortejo ?? null;
+
+    // Denominador "lo anunciado": nómina (sin simbólicas) si existe; si no, papeletas.
+    const baseNaz = naz.nomina ?? c.papeletas ?? null;
+    const baseNazTipo = naz.nomina != null ? 'nomina' : (c.papeletas != null ? 'papeletas' : null);
+
+    // Métricas de nazarenos
+    const ausenciasNaz = baseNaz != null && naz.salida != null ? baseNaz - naz.salida : null;
+    const comparecenciaNaz = pct(naz.salida, baseNaz);
+    // Merma durante el recorrido (de la salida a la entrada al templo)
+    const mermaRecorridoNaz = naz.entrada != null && naz.salida
+      ? ((naz.entrada - naz.salida) / naz.salida) * 100 : null;
+
+    // Métricas de cortejo completo (solo donde el boletín lo da)
+    const baseCortejo = cor?.nomina ?? null;
+    const ausenciasCortejo = baseCortejo != null && cor?.salida != null ? baseCortejo - cor.salida : null;
+    const comparecenciaCortejo = pct(cor?.salida, baseCortejo);
+
+    // Quienes completaron la estación (relevante con lluvia: Santa Genoveva)
+    const completaron = c.noRetomaron != null && naz.salida != null ? naz.salida - c.noRetomaron : null;
+    const pctCompletaron = pct(completaron, naz.salida);
+
+    return {
+      anio,
+      id_hdad: hdad.id_hdad,
+      nombre: hdad.nombre,
+      slug: hdad.slug,
+      diaSlug: hdad.dia,
+      diaNombre: dia.nombre,
+      diaOrden: dia.orden,
+      paginas: c.paginas ?? null,
+      papeletas: c.papeletas ?? null,
+      simbolicas: c.simbolicas ?? null,
+
+      nazarenos: {
+        nomina: naz.nomina ?? null,
+        salida: naz.salida ?? null,
+        carreraOficial: naz.carreraOficial ?? null,
+        entrada: naz.entrada ?? null,
+      },
+      cortejo: cor ? { nomina: cor.nomina ?? null, salida: cor.salida ?? null, entrada: cor.entrada ?? null } : null,
+
+      // Denominador usado para el % y su naturaleza
+      baseNaz,
+      baseNazTipo, // 'nomina' | 'papeletas'
+
+      // Métricas derivadas
+      comparecenciaNaz,
+      ausenciasNaz,
+      mermaRecorridoNaz,
+      baseCortejo,
+      comparecenciaCortejo,
+      ausenciasCortejo,
+      noRetomaron: c.noRetomaron ?? null,
+      completaron,
+      pctCompletaron,
+
+      // Curva de recorrido y desglose Cristo/Virgen (solo donde existan)
+      recorrido: c.recorrido ?? null,
+      cristoVirgen: c.cristoVirgen ?? null,
+
+      // Contraste con el conteo oficial del Consejo en Carrera Oficial
+      consejoNoNaz: consejo ? consejo.noNaz : null,
+      consejoNoTotal: consejo ? consejo.noTotal : null,
+      sinConteoConsejo: !consejo,
+
+      nota: c.nota ?? null,
+      fuente_id: c.fuente_id ?? null,
+    };
+  });
+
+  registros.sort((a, b) => a.diaOrden - b.diaOrden || (b.baseNaz ?? 0) - (a.baseNaz ?? 0));
+
+  const diasPresentes = [...new Map(registros.map((r) => [r.diaSlug, { slug: r.diaSlug, nombre: r.diaNombre, orden: r.diaOrden }])).values()]
+    .sort((a, b) => a.orden - b.orden);
+
+  return { anio, registros, diasPresentes };
+}
+
+const cacheComparecencia = new Map();
+/** Comparecencia y merma de un año: registros enriquecidos por hermandad. */
+export function getComparecencia(anio) {
+  const a = Number(anio);
+  if (!cacheComparecencia.has(a)) cacheComparecencia.set(a, construirComparecencia(a));
+  return cacheComparecencia.get(a);
+}
+
+/** Comparecencia de una hermandad concreta en un año, o null si no hay dato. */
+export function getComparecenciaHermandad(anio, idHdad) {
+  if (!hayComparecencia(anio)) return null;
+  return getComparecencia(anio).registros.find((r) => r.id_hdad === idHdad) ?? null;
+}
+
+/** Dataset plano para exportar la comparecencia (CSV/JSON). */
+export function getComparecenciaExport(anio) {
+  return getComparecencia(anio).registros.map((r) => ({
+    anio: r.anio,
+    id_hermandad: r.id_hdad,
+    hermandad: r.nombre,
+    dia: r.diaNombre,
+    dia_slug: r.diaSlug,
+    papeletas: r.papeletas,
+    simbolicas: r.simbolicas,
+    base_anunciado: r.baseNaz,
+    base_tipo: r.baseNazTipo,
+    nazarenos_salida: r.nazarenos.salida,
+    nazarenos_entrada: r.nazarenos.entrada,
+    comparecencia_naz_pct: r.comparecenciaNaz != null ? Math.round(r.comparecenciaNaz * 10) / 10 : null,
+    ausencias_naz: r.ausenciasNaz,
+    merma_recorrido_naz_pct: r.mermaRecorridoNaz != null ? Math.round(r.mermaRecorridoNaz * 10) / 10 : null,
+    cortejo_nomina: r.baseCortejo,
+    cortejo_salida: r.cortejo ? r.cortejo.salida : null,
+    comparecencia_cortejo_pct: r.comparecenciaCortejo != null ? Math.round(r.comparecenciaCortejo * 10) / 10 : null,
+    no_retomaron: r.noRetomaron,
+    conteo_consejo_nazarenos: r.consejoNoNaz,
+    fuente_id: r.fuente_id,
+  }));
+}
+
 /** Dataset plano para exportar el análisis cruzado (CSV/JSON). */
 export function getCruceExport(anio) {
   const cruzado = getCruceNazarenosHorarios(anio);

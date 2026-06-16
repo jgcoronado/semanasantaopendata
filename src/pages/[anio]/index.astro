@@ -8,10 +8,12 @@ import GraficasAnalisis from '../../components/GraficasAnalisis.astro';
 import CarreraOficialTabla from '../../components/CarreraOficialTabla.astro';
 import CarreraOficialGraficas from '../../components/CarreraOficialGraficas.astro';
 import FuentesResumen from '../../components/FuentesResumen.astro';
+import ComparecenciaSeccion from '../../components/ComparecenciaSeccion.astro';
 import {
   anios, aniosConHorarios, hayPasoReal, dias,
   getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
   fmt, fmtDur, getFuentesAnio,
+  hayComparecencia, getComparecencia, getFuentesPorIds,
 } from '../../lib/datos.js';
 
 export function getStaticPaths() {
@@ -106,6 +108,15 @@ if (tienePasoReal) {
     return { dia: d.nombre, acumulado: ultimo?.acumuladoCampana ?? 0 };
   });
   diaMaxAcumulado = acumuladoFinalPorDia.reduce((a, b) => (b.acumulado > a.acumulado ? b : a), { dia: '—', acumulado: 0 });
+}
+
+// --- Comparecencia (de lo anunciado a lo real) ---
+const tieneComparecencia = hayComparecencia(anioNum);
+let comparecenciaRegistros = [];
+let comparecenciaFuentes = [];
+if (tieneComparecencia) {
+  comparecenciaRegistros = getComparecencia(anioNum).registros;
+  comparecenciaFuentes = getFuentesPorIds(comparecenciaRegistros.map((r) => r.fuente_id));
 }
 
 // --- Fuentes ---
@@ -240,6 +251,11 @@ const jsonLd = {
       </section>
       <CarreraOficialGraficas registros={pasoRealRegistros} dias={pasoRealDias} />
     </>
+  )}
+
+  <!-- Comparecencia -->
+  {tieneComparecencia && (
+    <ComparecenciaSeccion registros={comparecenciaRegistros} fuentes={comparecenciaFuentes} anio={anio} />
   )}
 
   <section class="panel contenedor">

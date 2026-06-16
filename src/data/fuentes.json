@@ -1,5 +1,41 @@
 [
   {
+    "id": "boletin-paz-2025",
+    "nombre": "Hermandad de la Paz — Boletín informativo (enero 2026)",
+    "nombre_corto": "Boletín de la Paz",
+    "tipo": "hermandad",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Informe del Domingo de Ramos 2025 del Diputado Mayor de Gobierno (D. Daniel Laffitte Puch), con el conteo de nazarenos a la salida, Carrera Oficial y entrada. Páginas 62-67."
+  },
+  {
+    "id": "boletin-calvario-2025",
+    "nombre": "Hermandad del Calvario — Boletín 'Calvario' (noviembre 2025)",
+    "nombre_corto": "Boletín del Calvario",
+    "tipo": "hermandad",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Informe de la Estación de Penitencia 2025 del Celador General (D. David Villegas Navarro-Casas): nómina, ausencias y participación real. Páginas 42-47."
+  },
+  {
+    "id": "anuario-resurreccion-2025",
+    "nombre": "Hermandad de la Resurrección — Anuario 2025",
+    "nombre_corto": "Anuario de la Resurrección",
+    "tipo": "hermandad",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Infografía de cifras de la Estación de Penitencia 2025 del Diputado Mayor de Gobierno (D. Mario Daza Olaya): papeletas, presentados y ausencias por puesto. Páginas 82-83."
+  },
+  {
+    "id": "boletin-santa-genoveva-2025",
+    "nombre": "Hermandad de Santa Genoveva — Boletín 'Por un Mundo Mejor' (septiembre 2025)",
+    "nombre_corto": "Boletín de Santa Genoveva",
+    "tipo": "hermandad",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Crónica del Lunes Santo 2025 del Diputado Mayor de Gobierno (D. José María Carmona Márquez): papeletas, cuerpo de nazarenos y refugio por lluvia en la Universidad. Páginas 30-33."
+  },
+  {
     "id": "consejo-nazarenos-2026",
     "nombre": "Consejo General de Hermandades y Cofradías de Sevilla",
     "nombre_corto": "Consejo de Hermandades",

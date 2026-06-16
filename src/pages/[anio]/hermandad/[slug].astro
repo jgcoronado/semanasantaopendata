@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
 import FuenteBadge from '../../../components/FuenteBadge.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
-import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds } from '../../../lib/datos.js';
+import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds, getComparecenciaHermandad, getFuente } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -82,6 +82,11 @@ const itinerario = horario
 
 // Paso real por La Campana (si existe para el año mostrado).
 const pasoReal = hayPasoReal(anioNum) ? getPasoReal(anioNum).registros.find((x) => x.idHdad === r.id_hdad) : null;
+
+// Comparecencia (de lo anunciado a lo real) de esta hermandad en el año mostrado.
+const comparecencia = getComparecenciaHermandad(anioNum, r.id_hdad);
+const comparecenciaFuente = comparecencia?.fuente_id ? getFuente(comparecencia.fuente_id) : null;
+const etiquetaBaseComp = comparecencia?.baseNazTipo === 'nomina' ? 'la nómina de la cofradía' : 'las papeletas de sitio';
 
 // Formatea un retraso en minutos con signo: +12 min / −5 min / En hora.
 const fmtRetraso = (min) => {
@@ -233,6 +238,60 @@ const jsonLd = {
       )}
       <nav class="dia-nav" aria-label="Más">
         <a class="dia-nav__a dia-nav__der" href={`/${anio}/#carrera-oficial`}>Ver todos los datos de la Carrera Oficial →</a>
+      </nav>
+    </section>
+  )}
+
+  {comparecencia && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>De lo anunciado a lo real {anio}</h2></div>
+      <p class="descargas-intro">
+        Cuántos cofrades salieron realmente frente a los anunciados, según {etiquetaBaseComp}.
+      </p>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{comparecencia.baseNaz != null ? fmt(comparecencia.baseNaz) : '—'}</div>
+          <div class="kpi__lbl">Nazarenos anunciados</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{comparecencia.nazarenos.salida != null ? fmt(comparecencia.nazarenos.salida) : '—'}</div>
+          <div class="kpi__lbl">Salieron de verdad</div>
+        </div>
+        {comparecencia.comparecenciaNaz != null && (
+          <div class="kpi">
+            <div class="kpi__num">{fmtPct(comparecencia.comparecenciaNaz)}</div>
+            <div class="kpi__lbl">Comparecencia</div>
+          </div>
+        )}
+        {comparecencia.ausenciasNaz != null && (
+          <div class="kpi">
+            <div class="kpi__num var neg">{fmt(comparecencia.ausenciasNaz)}</div>
+            <div class="kpi__lbl">No comparecieron</div>
+          </div>
+        )}
+      </div>
+      {(comparecencia.mermaRecorridoNaz != null || comparecencia.pctCompletaron != null || (comparecencia.cortejo && comparecencia.cortejo.salida != null)) && (
+        <p class="descargas-intro" style="margin-top:1rem">
+          {comparecencia.cortejo && comparecencia.cortejo.salida != null && (
+            <>Cortejo completo: <strong>{fmt(comparecencia.cortejo.salida)}</strong> de {fmt(comparecencia.baseCortejo)} de nómina ({fmtPct(comparecencia.comparecenciaCortejo)}). </>
+          )}
+          {comparecencia.mermaRecorridoNaz != null && (
+            <>Entre la salida y la entrada al templo <strong class="var neg">se retiró un {fmtPct(Math.abs(comparecencia.mermaRecorridoNaz))}</strong> de los nazarenos. </>
+          )}
+          {comparecencia.pctCompletaron != null && (
+            <>Tras la lluvia, <strong>{fmtPct(comparecencia.pctCompletaron)}</strong> completó la estación. </>
+          )}
+        </p>
+      )}
+      {comparecencia.nota && <p class="descargas-intro" style="margin-top:0.5rem">{comparecencia.nota}</p>}
+      {comparecenciaFuente && (
+        <p class="descargas-intro" style="margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
+          <FuenteBadge fuente={comparecenciaFuente} />
+          {comparecencia.paginas && <span style="font-size:0.8rem;color:var(--gris)">pp. {comparecencia.paginas}</span>}
+        </p>
+      )}
+      <nav class="dia-nav" aria-label="Más">
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/#comparecencia`}>Ver la comparecencia de todas las hermandades →</a>
       </nav>
     </section>
   )}
