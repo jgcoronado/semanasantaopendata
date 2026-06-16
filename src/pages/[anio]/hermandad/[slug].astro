@@ -109,7 +109,7 @@ const clsRetraso = (min) => (min > 0 ? 'neg' : min < 0 ? 'pos' : '');
 const horariosEvolucion = aniosConHorarios
   .map((a) => {
     const h = getHorariosAnio(a.anio).registros.find((x) => x.id_hdad === r.id_hdad);
-    return h ? { anio: a.anio, duracionMin: h.duracionMin, carreraOficialMin: h.carreraOficialMin, cruzCarreraMin: h.cruzCarreraMin, partPorHora: h.partPorHora, salida: h.horas.salida, entrada: h.horas.entrada, entradaMin: h.entradaMin } : null;
+    return h ? { anio: a.anio, duracionMin: h.duracionMin, carreraOficialMin: h.carreraOficialMin, cruzCarreraMin: h.cruzCarreraMin, salida: h.horas.salida, entrada: h.horas.entrada, entradaMin: h.entradaMin } : null;
   })
   .filter(Boolean)
   .sort((a, b) => a.anio - b.anio);
@@ -185,8 +185,7 @@ const jsonLd = {
       <div class="panel__cab"><h2>Horario oficial {anio}</h2></div>
       <p class="descargas-intro">
         Duración <strong>{fmtDur(horario.duracionMin)}</strong> · en Carrera Oficial
-        <strong>{fmtDur(horario.carreraOficialMin)}</strong>
-        {horario.partPorHora != null && <> · <strong>{fmt(horario.partPorHora)}</strong> miembros/hora</>}.
+        <strong>{fmtDur(horario.carreraOficialMin)}</strong>.
       </p>
       <ul class="itinerario">
         {itinerario.map((it) => (
@@ -305,7 +304,7 @@ const jsonLd = {
       <p class="descargas-intro">Comparativa de duración y ritmo en los años con horario oficial disponible.</p>
       <div class="tabla-wrap">
         <table class="datos">
-          <caption>Duración, tiempo en Carrera Oficial y miembros por hora de {r.nombre} por año.</caption>
+          <caption>Duración y tiempo en Carrera Oficial de {r.nombre} por año.</caption>
           <thead>
             <tr>
               <th scope="col">Año</th>
@@ -313,7 +312,6 @@ const jsonLd = {
               <th scope="col">Entrada</th>
               <th scope="col">Duración</th>
               <th scope="col">En Carrera Oficial</th>
-              <th scope="col">Miembros/hora</th>
             </tr>
           </thead>
           <tbody>
@@ -324,7 +322,6 @@ const jsonLd = {
                 <td>{h.entrada}{h.entradaMin >= 1440 && <span class="dia-sig"> +1<span class="visualmente-oculto"> (día siguiente)</span></span>}</td>
                 <td>{fmtDur(h.duracionMin)}</td>
                 <td>{fmtDur(h.carreraOficialMin)}</td>
-                <td>{h.partPorHora != null ? fmt(h.partPorHora) : '—'}</td>
               </tr>
             ))}
           </tbody>

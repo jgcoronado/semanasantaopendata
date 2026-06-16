@@ -1,5 +1,5 @@
 ---
-import { fmt, fmtDur } from '../lib/datos.js';
+import { fmtDur } from '../lib/datos.js';
 
 const { registros, dias = [], anio, conColumnaDia = true, conFiltroDia = true } = Astro.props;
 
@@ -24,7 +24,6 @@ const columnas = [
   { key: 'entradaMin', etiqueta: 'Entrada', tipo: 'num' },
   { key: 'duracionMin', etiqueta: 'Duración', tipo: 'num', fuerte: true },
   { key: 'carreraOficialMin', etiqueta: 'En Carrera Oficial', tipo: 'num' },
-  { key: 'partPorHora', etiqueta: 'Particip./hora', tipo: 'num' },
 ].filter((c) => conColumnaDia || !c.soloConDia);
 ---
 
@@ -46,7 +45,7 @@ const columnas = [
     <caption>
       <strong>Horario oficial</strong> de 2026 (horas previstas). «En Carrera Oficial» = desde que
       la cruz de guía entra en La Campana hasta que el último paso sale de la Catedral.
-      «Particip./hora» cruza el cortejo total con la duración. Pulsa una cabecera para ordenar.
+      Pulsa una cabecera para ordenar.
     </caption>
     <thead>
       <tr>
@@ -68,7 +67,6 @@ const columnas = [
           data-entradamin={r.entradaMin}
           data-duracionmin={r.duracionMin}
           data-carreraoficialmin={r.carreraOficialMin}
-          data-partporhora={r.partPorHora ?? ''}
           style={`background-color:${diaBg(r.diaOrden)}`}
         >
           {conColumnaDia && <td class="txt"><span class="pildora-dia">{r.diaNombre}</span></td>}
@@ -77,7 +75,6 @@ const columnas = [
           <td>{r.horas.entrada}{r.entradaMin >= 1440 && <span class="dia-sig"> +1<span class="visualmente-oculto"> (día siguiente)</span></span>}</td>
           <td class="fuerte">{fmtDur(r.duracionMin)}</td>
           <td>{fmtDur(r.carreraOficialMin)}</td>
-          <td>{r.partPorHora != null ? fmt(r.partPorHora) : '—'}</td>
         </tr>
       ))}
       <tr class="sin-resultados" hidden><td colspan={columnas.length}>No hay hermandades para ese día.</td></tr>

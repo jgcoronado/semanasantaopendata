@@ -223,7 +223,6 @@ function construirHorarios(anio) {
     const carreraOficialMin = min.ultimoPasoFuera - min.campana; // la cofradía ocupa la Carrera Oficial
     const cruzCarreraMin = min.catedral - min.campana; // la cruz de guía recorre la Carrera Oficial
     const naz = nazPorId.get(h.idHdad) || null;
-    const partPorHora = naz && duracionMin ? Math.round((naz.noTotal / (duracionMin / 60))) : null;
 
     return {
       anio,
@@ -242,7 +241,6 @@ function construirHorarios(anio) {
       cruzCarreraMin,
       noNaz: naz ? naz.noNaz : null,
       noTotal: naz ? naz.noTotal : null,
-      partPorHora,
       fuente_id: h.fuente_id ?? fuenteDefaultHorarios,
     };
   });
