@@ -3,7 +3,7 @@
 // Uso: <FuentesResumen fuentes={getFuentesAnio(anio, ['nazarenos', 'horarios'])} />
 import FuenteBadge from './FuenteBadge.astro';
 
-const { fuentes = [] } = Astro.props;
+const { fuentes = [], descargas = [] } = Astro.props;
 if (!fuentes.length) return;
 
 const etiquetaTipo = {
@@ -15,7 +15,17 @@ const etiquetaTipo = {
 ---
 
 <section class="fuentes-resumen" aria-label="Fuentes de los datos">
-  <h3 class="fuentes-resumen__titulo">Fuentes de los datos</h3>
+  <div class="fuentes-resumen__cab">
+    <h3 class="fuentes-resumen__titulo">Fuentes de los datos</h3>
+    {descargas.length > 0 && (
+      <p class="fuentes-resumen__descargas">
+        Descargar datos:
+        {descargas.map((d) => (
+          <a href={d.href} class="anio-cab__dl" download={d.download}>{d.label}</a>
+        ))}
+      </p>
+    )}
+  </div>
   <ul class="fuentes-resumen__lista">
     {fuentes.map((f) => (
       <li class="fuentes-resumen__item">
@@ -43,6 +53,13 @@ const etiquetaTipo = {
     border-radius: var(--radio);
     font-size: 0.9rem;
   }
+  .fuentes-resumen__cab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
   .fuentes-resumen__titulo {
     margin: 0 0 0.8rem;
     font-size: 0.85rem;
@@ -50,6 +67,11 @@ const etiquetaTipo = {
     letter-spacing: 0.5px;
     color: var(--gris);
     font-weight: 700;
+  }
+  .fuentes-resumen__descargas {
+    margin: 0 0 0.8rem;
+    font-size: 0.85rem;
+    color: var(--gris);
   }
   .fuentes-resumen__lista {
     list-style: none;

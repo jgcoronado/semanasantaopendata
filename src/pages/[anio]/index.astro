@@ -175,8 +175,6 @@ const jsonLd = {
       {diasPresentes.map((d) => (
         <a href={`/${anio}/dia/${d.slug}/`}>{d.nombre}</a>
       ))}
-<a href={`/${anio}/datos/conteo.csv`} download class="anio-cab__dl">⬇ CSV</a>
-      <a href={`/${anio}/datos/conteo.json`} class="anio-cab__dl">JSON</a>
     </div>
   </section>
 
@@ -255,6 +253,12 @@ const jsonLd = {
   )}
 
   <section class="panel contenedor">
-    <FuentesResumen fuentes={fuentesPagina} />
+    <FuentesResumen
+      fuentes={fuentesPagina}
+      descargas={[
+        { href: `/${anio}/datos/conteo.csv`, label: '⬇ CSV', download: true },
+        { href: `/${anio}/datos/conteo.json`, label: 'JSON' },
+      ]}
+    />
   </section>
 </Base>

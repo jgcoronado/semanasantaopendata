@@ -3,16 +3,6 @@ const { registros, dias } = Astro.props;
 
 const diasOrd = [...dias].sort((a, b) => a.orden - b.orden);
 
-const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
-const SIMBOLOS_3 = ['circle','triangle','rect'];
-
-const estilosDias = diasOrd.map((d) => ({
-  nombre: d.nombre,
-  orden: d.orden,
-  color: COLORES_9[(d.orden - 1) % 9],
-  simbolo: SIMBOLOS_3[(d.orden - 1) % 3],
-}));
-
 const altoBarras = Math.max(220, registros.length * 13);
 
 const datosCliente = {
@@ -110,22 +100,6 @@ const datosCliente = {
 <!-- ======================== GLOBAL ======================== -->
 <section class="panel contenedor" id="global-carrera">
   <div class="panel__cab"><h2>Comparativa global</h2></div>
-
-  <ul class="leyenda-dias" aria-label="Días procesionales">
-    {estilosDias.map((e) => {
-      const forma = e.simbolo === 'circle' ? 'circle' : e.simbolo === 'triangle' ? 'triangle' : 'rect';
-      return (
-        <li class="leyenda-dias__item">
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="flex-shrink:0">
-            {forma === 'circle'   && <circle cx="9" cy="9" r="8" fill={e.color} />}
-            {forma === 'triangle' && <polygon points="9,1 17,17 1,17" fill={e.color} />}
-            {forma === 'rect'     && <rect x="1" y="1" width="16" height="16" rx="2" fill={e.color} />}
-          </svg>
-          <span>{e.nombre}</span>
-        </li>
-      );
-    })}
-  </ul>
 
   <figure class="grafica grafica--ancha" style="margin-top:1rem;margin-bottom:1.5rem">
     <figcaption>Nazarenos de la hermandad frente a su retraso real en Campana</figcaption>
