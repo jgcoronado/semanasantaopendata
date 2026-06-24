@@ -9,8 +9,9 @@ import CarreraOficialTabla from '../../components/CarreraOficialTabla.astro';
 import CarreraOficialGraficas from '../../components/CarreraOficialGraficas.astro';
 import FuentesResumen from '../../components/FuentesResumen.astro';
 import ComparecenciaSeccion from '../../components/ComparecenciaSeccion.astro';
+import RecorridosGraficas from '../../components/RecorridosGraficas.astro';
 import {
-  anios, aniosConHorarios, hayPasoReal, dias,
+  anios, aniosConHorarios, hayPasoReal, hayRecorridos, dias,
   getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
   fmt, getFuentesAnio,
   hayComparecencia, getComparecencia, getFuentesPorIds,
@@ -26,6 +27,7 @@ const { registros, diasPresentes, totalesPorDia, totalGeneral } = getAnio(anioNu
 
 const tieneHorarios = aniosConHorarios.some((h) => h.anio === anioNum);
 const tienePasoReal = hayPasoReal(anioNum);
+const tieneRecorridos = hayRecorridos(anioNum);
 
 // Días del calendario que no se contaron ese año
 const presentes = new Set(diasPresentes.map((d) => d.slug));
@@ -180,7 +182,7 @@ const jsonLd = {
 
   <!-- Nazarenos -->
   <section class="panel contenedor" id="tabla">
-    <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} conColumnaDia={false} />
+    <TablaNazarenos registros={registros} dias={diasPresentes} totalGeneral={totalGeneral} anio={anio} conColumnaDia={false} conRecorridos={tieneRecorridos} />
   </section>
 
   <Explorador anio={anioNum} />
@@ -250,6 +252,11 @@ const jsonLd = {
   <!-- Comparecencia -->
   {tieneComparecencia && (
     <ComparecenciaSeccion registros={comparecenciaRegistros} anio={anio} />
+  )}
+
+  <!-- Recorridos -->
+  {tieneRecorridos && (
+    <RecorridosGraficas registros={registros} dias={diasPresentes} />
   )}
 
   <section class="panel contenedor">

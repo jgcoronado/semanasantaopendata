@@ -2,7 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
-import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds, getComparecenciaHermandad, getFuente } from '../../../lib/datos.js';
+import { anios, getAnio, fmt, fmtPct, fmtDur, fmtKm, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds, getComparecenciaHermandad, getFuente, hayRecorridos } from '../../../lib/datos.js';
 
 export function getStaticPaths() {
   const paths = [];
@@ -49,6 +49,7 @@ const porAnioAsc = [...anios]
       diaNoNaz: tot.noNaz, diaNoTotal: tot.noTotal,
       hdadesEnDia: hermsDiaAnio.length,
       rankNaz: rankNazAnio, rankTotal: rankTotalAnio,
+      metros: reg.metros ?? null,
     };
   })
   .filter(Boolean);
@@ -57,6 +58,8 @@ const filasAnios = porAnioAsc.map((x, i) => {
   const prev = porAnioAsc[i - 1];
   return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null };
 });
+
+const tieneMetrosAlgunAnio = porAnioAsc.some((x) => x.metros != null);
 
 // Fuentes de comparecencia de esta hermandad en cualquier año con datos.
 const fuentesComparecencia = anios
@@ -176,6 +179,12 @@ const jsonLd = {
           <div class="kpi__num">{fmtPct(r.pctTotal)}</div>
           <div class="kpi__lbl">del cortejo del día</div>
         </div>
+        {r.metros != null && (
+          <div class="kpi">
+            <div class="kpi__num">{fmtKm(r.metros)}</div>
+            <div class="kpi__lbl">Recorrido {anio}</div>
+          </div>
+        )}
       </div>
     </div>
   </section>
@@ -369,6 +378,7 @@ const jsonLd = {
             <th scope="col">Var.</th>
             <th scope="col">% día (naz.)</th>
             <th scope="col">% día (cortejo)</th>
+            {tieneMetrosAlgunAnio && <th scope="col">Recorrido</th>}
           </tr>
         </thead>
         <tbody>
@@ -384,6 +394,7 @@ const jsonLd = {
                 <td class={`var ${vt.cls}`}>{vt.txt}</td>
                 <td>{fmtPct(f.pctNaz)}</td>
                 <td>{fmtPct(f.pctTotal)}</td>
+                {tieneMetrosAlgunAnio && <td>{f.metros != null ? fmtKm(f.metros) : '—'}</td>}
               </tr>
             );
           })}

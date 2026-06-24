@@ -9,7 +9,7 @@ import CarreraOficialTabla from '../../../components/CarreraOficialTabla.astro';
 import CarreraOficialGraficas from '../../../components/CarreraOficialGraficas.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
 import {
-  anios, aniosConHorarios, hayPasoReal,
+  anios, aniosConHorarios, hayPasoReal, hayRecorridos,
   getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
   fmt, getFuentesAnio,
 } from '../../../lib/datos.js';
@@ -38,6 +38,7 @@ const siguiente = diasPresentes[idx + 1];
 
 const tieneHorarios = aniosConHorarios.some((h) => h.anio === anioNum);
 const tienePasoReal = hayPasoReal(anioNum);
+const tieneRecorridos = hayRecorridos(anioNum);
 
 // --- Horarios del día ---
 let horariosRegistros = [];
@@ -136,7 +137,7 @@ const jsonLd = {
 
   <!-- Tabla nazarenos del día -->
   <section class="panel contenedor">
-    <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} />
+    <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} conRecorridos={tieneRecorridos} />
   </section>
 
   <!-- Composición del día -->

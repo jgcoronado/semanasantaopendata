@@ -63,6 +63,7 @@ function construirAnio(anio) {
   const fuenteDefaultNaz = anioConfig?.fuentes?.nazarenos ?? null;
 
   const nazPorHdad = new Map(naz.map((n) => [n.idHdad, n]));
+  const recorridos = getRecorridosAnio(anio);
 
   // Validación: cada registro apunta a una hermandad del catálogo.
   for (const n of naz) {
@@ -109,6 +110,7 @@ function construirAnio(anio) {
       pctNaz: t.noNaz ? (n.noNaz / t.noNaz) * 100 : 0,
       pctTotal: t.noTotal ? (n.noTotal / t.noTotal) * 100 : 0,
       fuente_id: n.fuente_id ?? fuenteDefaultNaz,
+      metros: recorridos.get(h.id_hdad)?.metros ?? null,
     };
   });
   registros.sort((a, b) => a.diaOrden - b.diaOrden || b.noTotal - a.noTotal);
@@ -270,6 +272,11 @@ export function fmt(n) {
 /** Formatea un porcentaje con un decimal (12,3 %). */
 export function fmtPct(n) {
   return `${Number(n).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+}
+
+/** Formatea metros como kilómetros con un decimal: "6,5 km". */
+export function fmtKm(n) {
+  return (n / 1000).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' km';
 }
 
 /** Formatea una duración en minutos como "11 h 45 min". */
@@ -499,6 +506,32 @@ export function getPasoReal(anio) {
 }
 
 // ---------- Exportación de datos para el análisis cruzado ----------
+
+// ---------- Distancias de recorrido ----------
+
+const ficherosRecorridos = import.meta.glob('../data/recorridos-*.json', { eager: true });
+const recorridosPorAnio = {};
+for (const [ruta, mod] of Object.entries(ficherosRecorridos)) {
+  const m = ruta.match(/recorridos-(\d{4})\.json$/);
+  if (m) recorridosPorAnio[Number(m[1])] = mod.default;
+}
+
+/** ¿Hay datos de recorrido (metros) para este año? */
+export const hayRecorridos = (anio) => !!recorridosPorAnio[Number(anio)];
+
+/** Años con datos de recorrido (del más reciente al más antiguo). */
+export const aniosConRecorridos = anios.filter((a) => recorridosPorAnio[a.anio]);
+
+/** Mapa id_hdad → {metros, fuente, notas} para un año, o Map vacío si no hay datos. */
+export function getRecorridosAnio(anio) {
+  const lista = recorridosPorAnio[Number(anio)] ?? [];
+  return new Map(lista.map((r) => [r.id_hdad, { metros: r.metros, fuente: r.fuente, notas: r.notas }]));
+}
+
+/** Metros de recorrido de una hermandad en un año, o null si no hay dato. */
+export function getMetrosHermandad(anio, idHdad) {
+  return getRecorridosAnio(anio).get(idHdad)?.metros ?? null;
+}
 
 // ---------- Comparecencia y merma (de lo anunciado a lo real) ----------
 // Dataset complementario, por hermandad, extraído de boletines/anuarios de las propias
