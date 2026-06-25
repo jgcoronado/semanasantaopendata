@@ -1,1 +1,1170 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id_hdad":4,"nombre":"La Hiniesta","dia":"domingo-de-ramos"},"geometry":{"type":"LineString","coordinates":[[-5.985544,37.398925],[-5.9852326,37.3997909],[-5.9854188,37.400205],[-5.985834,37.4004978],[-5.9875123,37.4016887],[-5.9871982,37.4011392],[-5.9885491,37.4008388],[-5.989152,37.4024802],[-5.9928464,37.4002735],[-5.99132,37.395688],[-5.9927193,37.3974669],[-5.994758,37.393914],[-5.994027,37.396751],[-5.994374,37.39685],[-5.994618,37.396413],[-5.994787,37.396096],[-5.994908,37.395763],[-5.995151,37.394856],[-5.995272,37.39437],[-5.995298,37.393904],[-5.995446,37.393623],[-5.995615,37.39345],[-5.995633,37.393113],[-5.995631,37.392901],[-5.995376,37.392725],[-5.994924,37.392751],[-5.994797,37.391803],[-5.9945202,37.3909414],[-5.994258,37.389845],[-5.994175,37.389143],[-5.994154,37.38867],[-5.994169,37.388187],[-5.994296,37.388071],[-5.9943041,37.3879286],[-5.9942267,37.38731],[-5.9941493,37.386713],[-5.9940679,37.3860718],[-5.9940344,37.3857616],[-5.993999,37.385447],[-5.9934331,37.3854932],[-5.9929686,37.3855304],[-5.992619,37.385552],[-5.9926646,37.3858225],[-5.99271,37.386038],[-5.992325,37.386077],[-5.992365,37.386288],[-5.9924527,37.3863161],[-5.9925164,37.3863997],[-5.992537,37.386555],[-5.992515,37.38666],[-5.992549,37.386763],[-5.992807,37.386777],[-5.993037,37.386751],[-5.993054,37.386917],[-5.9930245,37.3870101],[-5.9929267,37.3871073],[-5.992697,37.387288],[-5.992489,37.387452],[-5.992594,37.387654],[-5.992704,37.387858],[-5.99277,37.38804],[-5.992784,37.388285],[-5.992744,37.388583],[-5.992621,37.388828],[-5.992568,37.389176],[-5.992542,37.389426],[-5.992353,37.389737],[-5.991765,37.389785],[-5.991357,37.389798],[-5.991092,37.38979],[-5.990856,37.389772],[-5.990668,37.389983],[-5.9903819,37.3904418],[-5.99075,37.3908772],[-5.9903251,37.390862],[-5.990158,37.3910193],[-5.9901652,37.391109],[-5.9899556,37.3912991],[-5.9899202,37.3915564],[-5.9895944,37.3919974],[-5.9898384,37.3923782],[-5.9897195,37.3928768],[-5.9896104,37.3932572],[-5.9895497,37.3934523],[-5.9894588,37.3936786],[-5.988238,37.3948513],[-5.9881136,37.3941815],[-5.9878402,37.3961666],[-5.9875144,37.3965187],[-5.9863034,37.3978618],[-5.9861797,37.3978908],[-5.9851824,37.3980305],[-5.9853949,37.3984044],[-5.9864591,37.398424],[-5.985544,37.398925]]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle San Julián","osm":"Calle San Julián"},"geometry":{"type":"Point","coordinates":[-5.985544,37.398925]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Madre Dolores Márquez","osm":"Calle Madre Dolores Márquez"},"geometry":{"type":"Point","coordinates":[-5.9852326,37.3997909]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Puerta de Córdoba","osm":"Calle Puerta de Córdoba"},"geometry":{"type":"Point","coordinates":[-5.9854188,37.400205]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Morera","osm":"Calle Morera"},"geometry":{"type":"Point","coordinates":[-5.985834,37.4004978]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Macarena","osm":"Calle Macarena"},"geometry":{"type":"Point","coordinates":[-5.9875123,37.4016887]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Aniceto Sáenz","osm":"Calle Aniceto Sáenz"},"geometry":{"type":"Point","coordinates":[-5.9871982,37.4011392]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Plaza del Pumarejo","osm":"Plaza del Pumarejo"},"geometry":{"type":"Point","coordinates":[-5.9885491,37.4008388]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle San Luis","osm":"Calle San Luis"},"geometry":{"type":"Point","coordinates":[-5.989152,37.4024802]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Relator","osm":"Calle Relator"},"geometry":{"type":"Point","coordinates":[-5.9928464,37.4002735]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Feria","osm":"Calle Feria"},"geometry":{"type":"Point","coordinates":[-5.99132,37.395688]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Correduría","osm":"Calle Correduría"},"geometry":{"type":"Point","coordinates":[-5.9927193,37.3974669]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Amor de Dios","osm":"Calle Amor de Dios"},"geometry":{"type":"Point","coordinates":[-5.994758,37.393914]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Alameda de Hércules","osm":"Alameda de Hércules"},"geometry":{"type":"Point","coordinates":[-5.994027,37.396751]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Trajano","osm":"Calle Trajano"},"geometry":{"type":"Point","coordinates":[-5.995298,37.393904]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Plaza del Duque de la Victoria (lado derecho)","osm":"Plaza del Duque de la Victoria (lado derecho)"},"geometry":{"type":"Point","coordinates":[-5.995633,37.393113]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"La Campana","osm":"Calle Campana"},"geometry":{"type":"Point","coordinates":[-5.995376,37.392725]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Sierpes","osm":"Calle Sierpes"},"geometry":{"type":"Point","coordinates":[-5.9947885,37.3908748]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Plaza de San Francisco","osm":"Plaza de San Francisco"},"geometry":{"type":"Point","coordinates":[-5.994154,37.38867]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Avenida de la Constitución","osm":"Avenida de la Constitución"},"geometry":{"type":"Point","coordinates":[-5.994185,37.386838]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Cardenal Carlos Amigo","osm":"Calle Cardenal Carlos Amigo"},"geometry":{"type":"Point","coordinates":[-5.992537,37.386555]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Alemanes","osm":"Calle Alemanes"},"geometry":{"type":"Point","coordinates":[-5.992807,37.386777]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Álvarez Quintero","osm":"Calle Álvarez Quintero"},"geometry":{"type":"Point","coordinates":[-5.993054,37.386917]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Argote de Molina","osm":"Calle Argote de Molina"},"geometry":{"type":"Point","coordinates":[-5.992697,37.387288]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Placentines","osm":"Calle Placentines"},"geometry":{"type":"Point","coordinates":[-5.992594,37.387654]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Francos","osm":"Calle Francos"},"geometry":{"type":"Point","coordinates":[-5.992784,37.388285]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Cuesta del Rosario","osm":"Calle Cuesta del Rosario"},"geometry":{"type":"Point","coordinates":[-5.991765,37.389785]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Jesús de las Tres Caídas","osm":"Calle Jesús de las Tres Caídas"},"geometry":{"type":"Point","coordinates":[-5.990668,37.389983]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Odreros","osm":"Calle Odreros"},"geometry":{"type":"Point","coordinates":[-5.9903819,37.3904418]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Boteros","osm":"Calle Boteros"},"geometry":{"type":"Point","coordinates":[-5.99075,37.3908772]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Sales y Ferré","osm":"Calle Sales y Ferré"},"geometry":{"type":"Point","coordinates":[-5.9901652,37.391109]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Plaza del Cristo de Burgos","osm":"Plaza del Cristo de Burgos"},"geometry":{"type":"Point","coordinates":[-5.9895944,37.3919974]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Doña María Coronel","osm":"Calle Doña María Coronel"},"geometry":{"type":"Point","coordinates":[-5.988238,37.3948513]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Bustos Tavera","osm":"Calle Bustos Tavera"},"geometry":{"type":"Point","coordinates":[-5.9881136,37.3941815]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Plaza de San Marcos","osm":"Plaza de San Marcos"},"geometry":{"type":"Point","coordinates":[-5.9878402,37.3961666]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Vergara","osm":"Calle Vergara"},"geometry":{"type":"Point","coordinates":[-5.9875144,37.3965187]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Hiniesta","osm":"Calle Hiniesta"},"geometry":{"type":"Point","coordinates":[-5.9863034,37.3978618]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Lira","osm":"Calle Lira"},"geometry":{"type":"Point","coordinates":[-5.9861797,37.3978908]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Juzgado","osm":"Calle Juzgado"},"geometry":{"type":"Point","coordinates":[-5.9851824,37.3980305]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Moravia","osm":"Calle Moravia"},"geometry":{"type":"Point","coordinates":[-5.9853949,37.3984044]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle Duque Cornejo","osm":"Calle Duque Cornejo"},"geometry":{"type":"Point","coordinates":[-5.9864591,37.398424]}},{"type":"Feature","properties":{"id_hdad":4,"hermandad":"La Hiniesta","calle":"Calle San Julián","osm":"Calle San Julián"},"geometry":{"type":"Point","coordinates":[-5.985544,37.398925]}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "nombre": "La Hiniesta",
+        "dia": "domingo-de-ramos"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.985552,
+            37.3988127
+          ],
+          [
+            -5.985483,
+            37.3992008
+          ],
+          [
+            -5.9854053,
+            37.3995247
+          ],
+          [
+            -5.9853305,
+            37.39968
+          ],
+          [
+            -5.9850575,
+            37.4000132
+          ],
+          [
+            -5.9854188,
+            37.400205
+          ],
+          [
+            -5.9857702,
+            37.4003694
+          ],
+          [
+            -5.985834,
+            37.4004978
+          ],
+          [
+            -5.9859463,
+            37.4009108
+          ],
+          [
+            -5.9860368,
+            37.4012298
+          ],
+          [
+            -5.9872116,
+            37.4011276
+          ],
+          [
+            -5.9878557,
+            37.4010611
+          ],
+          [
+            -5.9883384,
+            37.4010427
+          ],
+          [
+            -5.9887279,
+            37.4010172
+          ],
+          [
+            -5.9886751,
+            37.4007527
+          ],
+          [
+            -5.9886424,
+            37.4005938
+          ],
+          [
+            -5.9888262,
+            37.4005504
+          ],
+          [
+            -5.9890499,
+            37.400523
+          ],
+          [
+            -5.9896975,
+            37.4004941
+          ],
+          [
+            -5.9899448,
+            37.4004767
+          ],
+          [
+            -5.9902068,
+            37.4004421
+          ],
+          [
+            -5.9905433,
+            37.4003366
+          ],
+          [
+            -5.9909489,
+            37.4003265
+          ],
+          [
+            -5.9914891,
+            37.4003091
+          ],
+          [
+            -5.9917634,
+            37.4003032
+          ],
+          [
+            -5.9916945,
+            37.39911
+          ],
+          [
+            -5.9916151,
+            37.3985179
+          ],
+          [
+            -5.9915582,
+            37.3980748
+          ],
+          [
+            -5.9922109,
+            37.3978191
+          ],
+          [
+            -5.9926931,
+            37.3974507
+          ],
+          [
+            -5.9929584,
+            37.3972495
+          ],
+          [
+            -5.9932198,
+            37.3971192
+          ],
+          [
+            -5.9932707,
+            37.3970283
+          ],
+          [
+            -5.9935558,
+            37.3968585
+          ],
+          [
+            -5.993829,
+            37.3967337
+          ],
+          [
+            -5.994027,
+            37.396751
+          ],
+          [
+            -5.994374,
+            37.39685
+          ],
+          [
+            -5.994618,
+            37.396413
+          ],
+          [
+            -5.994787,
+            37.396096
+          ],
+          [
+            -5.994908,
+            37.395763
+          ],
+          [
+            -5.995151,
+            37.394856
+          ],
+          [
+            -5.995272,
+            37.39437
+          ],
+          [
+            -5.995298,
+            37.393904
+          ],
+          [
+            -5.995446,
+            37.393623
+          ],
+          [
+            -5.995615,
+            37.39345
+          ],
+          [
+            -5.995633,
+            37.393113
+          ],
+          [
+            -5.995631,
+            37.392901
+          ],
+          [
+            -5.9956336,
+            37.3927225
+          ],
+          [
+            -5.995376,
+            37.392725
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.9945202,
+            37.3909414
+          ],
+          [
+            -5.994258,
+            37.389845
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994154,
+            37.38867
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.992365,
+            37.386288
+          ],
+          [
+            -5.9924527,
+            37.3863161
+          ],
+          [
+            -5.9925164,
+            37.3863997
+          ],
+          [
+            -5.992537,
+            37.386555
+          ],
+          [
+            -5.992515,
+            37.38666
+          ],
+          [
+            -5.992549,
+            37.386763
+          ],
+          [
+            -5.992807,
+            37.386777
+          ],
+          [
+            -5.993037,
+            37.386751
+          ],
+          [
+            -5.993054,
+            37.386917
+          ],
+          [
+            -5.9930245,
+            37.3870101
+          ],
+          [
+            -5.9929267,
+            37.3871073
+          ],
+          [
+            -5.992697,
+            37.387288
+          ],
+          [
+            -5.992489,
+            37.387452
+          ],
+          [
+            -5.992594,
+            37.387654
+          ],
+          [
+            -5.992704,
+            37.387858
+          ],
+          [
+            -5.99277,
+            37.38804
+          ],
+          [
+            -5.992784,
+            37.388285
+          ],
+          [
+            -5.992744,
+            37.388583
+          ],
+          [
+            -5.992621,
+            37.388828
+          ],
+          [
+            -5.992568,
+            37.389176
+          ],
+          [
+            -5.992542,
+            37.389426
+          ],
+          [
+            -5.992353,
+            37.389737
+          ],
+          [
+            -5.991765,
+            37.389785
+          ],
+          [
+            -5.991357,
+            37.389798
+          ],
+          [
+            -5.991092,
+            37.38979
+          ],
+          [
+            -5.990856,
+            37.389772
+          ],
+          [
+            -5.990668,
+            37.389983
+          ],
+          [
+            -5.9903819,
+            37.3904418
+          ],
+          [
+            -5.9902792,
+            37.3906782
+          ],
+          [
+            -5.9904302,
+            37.3907399
+          ],
+          [
+            -5.9903251,
+            37.390862
+          ],
+          [
+            -5.990158,
+            37.3910193
+          ],
+          [
+            -5.9900257,
+            37.3911379
+          ],
+          [
+            -5.9899556,
+            37.3912991
+          ],
+          [
+            -5.9899202,
+            37.3915564
+          ],
+          [
+            -5.9898869,
+            37.3920012
+          ],
+          [
+            -5.9898384,
+            37.3923782
+          ],
+          [
+            -5.9897195,
+            37.3928768
+          ],
+          [
+            -5.9896104,
+            37.3932572
+          ],
+          [
+            -5.9895497,
+            37.3934523
+          ],
+          [
+            -5.9894588,
+            37.3936786
+          ],
+          [
+            -5.9891505,
+            37.3943286
+          ],
+          [
+            -5.9890297,
+            37.3945377
+          ],
+          [
+            -5.9886372,
+            37.3947981
+          ],
+          [
+            -5.988238,
+            37.3948513
+          ],
+          [
+            -5.9879858,
+            37.3948218
+          ],
+          [
+            -5.987947,
+            37.3949451
+          ],
+          [
+            -5.9879513,
+            37.3950582
+          ],
+          [
+            -5.9879772,
+            37.3955213
+          ],
+          [
+            -5.9878402,
+            37.3961666
+          ],
+          [
+            -5.9877955,
+            37.3964689
+          ],
+          [
+            -5.9875151,
+            37.3964792
+          ],
+          [
+            -5.9872347,
+            37.3965546
+          ],
+          [
+            -5.9871571,
+            37.3968219
+          ],
+          [
+            -5.9871139,
+            37.3969281
+          ],
+          [
+            -5.9871129,
+            37.3971219
+          ],
+          [
+            -5.9869041,
+            37.3971428
+          ],
+          [
+            -5.9865922,
+            37.3971638
+          ],
+          [
+            -5.9865254,
+            37.3975126
+          ],
+          [
+            -5.9865359,
+            37.3976595
+          ],
+          [
+            -5.9860364,
+            37.3975923
+          ],
+          [
+            -5.9859254,
+            37.397775
+          ],
+          [
+            -5.9858065,
+            37.3979493
+          ],
+          [
+            -5.9860047,
+            37.3979808
+          ],
+          [
+            -5.9860127,
+            37.3980605
+          ],
+          [
+            -5.9860037,
+            37.3981923
+          ],
+          [
+            -5.9856654,
+            37.3981902
+          ],
+          [
+            -5.9854725,
+            37.3981818
+          ],
+          [
+            -5.9852452,
+            37.3981314
+          ],
+          [
+            -5.9853034,
+            37.3982763
+          ],
+          [
+            -5.9853589,
+            37.3984064
+          ],
+          [
+            -5.9853272,
+            37.3985765
+          ],
+          [
+            -5.98538,
+            37.3986374
+          ],
+          [
+            -5.9855571,
+            37.3986836
+          ],
+          [
+            -5.9855544,
+            37.3987864
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle San Julián",
+        "osm": "Calle San Julián"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9855025,
+          37.3991454
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Madre Dolores Márquez",
+        "osm": "Calle Madre Dolores Márquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9852326,
+          37.3997909
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Puerta de Córdoba",
+        "osm": "Calle Puerta de Córdoba"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9854188,
+          37.400205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Morera",
+        "osm": "Calle Morera"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.985834,
+          37.4004978
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Macarena",
+        "osm": "Calle Macarena"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9859464,
+          37.4009155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Aniceto Sáenz",
+        "osm": "Calle Aniceto Sáenz"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9871982,
+          37.4011392
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Plaza del Pumarejo",
+        "osm": "Plaza del Pumarejo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9887148,
+          37.4009136
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Relator",
+        "osm": "Calle Relator"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9909346,
+          37.4003346
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Correduría",
+        "osm": "Calle Correduría"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9926931,
+          37.3974612
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Alameda de Hércules",
+        "osm": "Alameda de Hércules"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994027,
+          37.396751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Trajano",
+        "osm": "Calle Trajano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995298,
+          37.393904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Plaza del Duque de la Victoria (lado derecho)",
+        "osm": "Plaza del Duque de la Victoria (lado derecho)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995633,
+          37.393113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "La Campana",
+        "osm": "Calle Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9944588,
+          37.3906876
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Cardenal Carlos Amigo",
+        "osm": "Calle Cardenal Carlos Amigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992537,
+          37.386555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Alemanes",
+        "osm": "Calle Alemanes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992807,
+          37.386777
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Álvarez Quintero",
+        "osm": "Calle Álvarez Quintero"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.993054,
+          37.386917
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Argote de Molina",
+        "osm": "Calle Argote de Molina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992697,
+          37.387288
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Placentines",
+        "osm": "Calle Placentines"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992594,
+          37.387654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Francos",
+        "osm": "Calle Francos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992784,
+          37.388285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Cuesta del Rosario",
+        "osm": "Calle Cuesta del Rosario"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.991765,
+          37.389785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Jesús de las Tres Caídas",
+        "osm": "Calle Jesús de las Tres Caídas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.990668,
+          37.389983
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Odreros",
+        "osm": "Calle Odreros"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9903819,
+          37.3904418
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Sales y Ferré",
+        "osm": "Calle Sales y Ferré"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9901983,
+          37.3909915
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Plaza del Cristo de Burgos",
+        "osm": "Plaza del Cristo de Burgos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9898956,
+          37.391991
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Doña María Coronel",
+        "osm": "Calle Doña María Coronel"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.988238,
+          37.3948513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Bustos Tavera",
+        "osm": "Calle Bustos Tavera"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.987934,
+          37.3951164
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Plaza de San Marcos",
+        "osm": "Plaza de San Marcos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9878402,
+          37.3961666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Vergara",
+        "osm": "Calle Vergara"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9875144,
+          37.3965187
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Hiniesta",
+        "osm": "Calle Hiniesta"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9865268,
+          37.3975046
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Lira",
+        "osm": "Calle Lira"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9859986,
+          37.3981548
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Juzgado",
+        "osm": "Calle Juzgado"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9853853,
+          37.3981642
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle Moravia",
+        "osm": "Calle Moravia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9853949,
+          37.3984044
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 4,
+        "hermandad": "La Hiniesta",
+        "calle": "Calle San Julián",
+        "osm": "Calle San Julián"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9855025,
+          37.3991454
+        ]
+      }
+    }
+  ]
+}

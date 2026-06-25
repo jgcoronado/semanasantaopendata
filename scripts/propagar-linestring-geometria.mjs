@@ -28,7 +28,7 @@ const GEO_DIR = join(__dir, 'geojson-2025');
 const DRY_RUN = process.argv.includes('--dry-run');
 const VERBOSE  = process.argv.includes('--verbose');
 
-const EDITED_IDS = new Set([1, 3, 5, 7, 8, 22, 30, 40]);
+const EDITED_IDS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 22, 30, 40]);
 
 const GRAN_PODER = {
   nombres: ['Plaza de Jesús del Gran Poder', 'Calle Jesús del Gran Poder'],

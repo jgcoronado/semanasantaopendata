@@ -25,7 +25,7 @@ const GEO_DIR = join(__dir, 'geojson-2025');
 const OUT     = join(__dir, 'segmentos-canonicos-2025.json');
 const VERBOSE = process.argv.includes('--verbose');
 
-const EDITED_IDS = new Set([1, 2, 3, 5, 7, 8, 22, 30, 40]);
+const EDITED_IDS = new Set([1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 25, 30, 40, 47, 51, 52]);
 
 // ── Utilidades ────────────────────────────────────────────────────────────────
 
@@ -165,6 +165,7 @@ const ORDEN_CALIDAD = { buena: 0, regular: 1, mala: 2 };
 const pares = Object.entries(parMap).map(([par, segs]) => {
   segs.sort((a, b) =>
     (ORDEN_CALIDAD[a.calidad] - ORDEN_CALIDAD[b.calidad]) ||
+    (b.n_coords - a.n_coords) ||   // más puntos = mejor (regla del usuario)
     (Math.max(a.dist_inicio_m, a.dist_fin_m) - Math.max(b.dist_inicio_m, b.dist_fin_m))
   );
   const mejor = segs[0];

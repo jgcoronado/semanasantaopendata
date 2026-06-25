@@ -1,1 +1,1242 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id_hdad":19,"nombre":"El Cerro","dia":"martes-santo"},"geometry":{"type":"LineString","coordinates":[[-5.9576125,37.3721245],[-5.959843,37.3763047],[-5.9637423,37.3729388],[-5.9654765,37.3737708],[-5.9813265,37.3791377],[-5.9842341,37.3799597],[-5.9884405,37.3812823],[-5.9909424,37.38181],[-5.9932803,37.3823377],[-5.9936639,37.3834745],[-5.9943022,37.385129],[-5.9954066,37.3856467],[-5.9953972,37.3856197],[-5.9954957,37.3857758],[-5.9961928,37.3861699],[-5.9961737,37.3862092],[-5.9961081,37.3862154],[-5.9942014,37.3866357],[-5.9945664,37.3872952],[-5.9949315,37.3886551],[-5.9951669,37.3902317],[-5.9953197,37.3907871],[-5.9954035,37.3911654],[-5.9954456,37.3918072],[-5.995454,37.392155],[-5.99564,37.393105],[-5.995631,37.392901],[-5.995376,37.392725],[-5.994924,37.392751],[-5.994797,37.391803],[-5.9945202,37.3909414],[-5.994258,37.389845],[-5.994175,37.389143],[-5.994154,37.38867],[-5.994185,37.386838],[-5.993515,37.384889],[-5.9932597,37.3823431],[-5.9935377,37.381465],[-5.9926354,37.3803808],[-5.9813265,37.3791377],[-5.9654765,37.3737708],[-5.9637423,37.3729388],[-5.9576125,37.3721245],[-5.9968379,37.390749]]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Afán de Ribera","osm":"Calle Afán de Ribera"},"geometry":{"type":"Point","coordinates":[-5.9576125,37.3721245]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Aragón","osm":"Calle Aragón"},"geometry":{"type":"Point","coordinates":[-5.959843,37.3763047]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de Hytasa","osm":"Avenida de Hytasa"},"geometry":{"type":"Point","coordinates":[-5.9637423,37.3729388]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Ramón y Cajal","osm":"Avenida Ramón y Cajal"},"geometry":{"type":"Point","coordinates":[-5.9654765,37.3737708]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Enramadilla","osm":"Calle Enramadilla"},"geometry":{"type":"Point","coordinates":[-5.9813265,37.3791377]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de Carlos V","osm":"Avenida de Carlos V"},"geometry":{"type":"Point","coordinates":[-5.9842341,37.3799597]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza de Don Juan de Austria","osm":"Plaza Don Juan de Austria"},"geometry":{"type":"Point","coordinates":[-5.9884405,37.3812823]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle San Fernando","osm":"Calle San Fernando"},"geometry":{"type":"Point","coordinates":[-5.9909424,37.38181]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza Puerta de Jerez","osm":"Plaza Puerta de Jerez"},"geometry":{"type":"Point","coordinates":[-5.9932803,37.3823377]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de la Constitución","osm":"Avenida de la Constitución"},"geometry":{"type":"Point","coordinates":[-5.9936639,37.3834745]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Almirantazgo","osm":"Calle Almirantazgo"},"geometry":{"type":"Point","coordinates":[-5.9943022,37.385129]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Arfe","osm":"Calle Arfe"},"geometry":{"type":"Point","coordinates":[-5.9954066,37.3856467]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Puerta del Arenal","osm":"Calle Puerta del Arenal"},"geometry":{"type":"Point","coordinates":[-5.9961081,37.3862154]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle García de Vinuesa","osm":"Calle García de Vinuesa"},"geometry":{"type":"Point","coordinates":[-5.9942014,37.3866357]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Fernández y González","osm":"Calle Fernández y González"},"geometry":{"type":"Point","coordinates":[-5.9945664,37.3872952]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza Nueva","osm":"Plaza Nueva"},"geometry":{"type":"Point","coordinates":[-5.9949315,37.3886551]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Tetuán","osm":"Calle Tetuán"},"geometry":{"type":"Point","coordinates":[-5.9951669,37.3902317]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Velázquez","osm":"Calle Velázquez"},"geometry":{"type":"Point","coordinates":[-5.9954035,37.3911654]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle O'Donnell","osm":"Calle O'Donnell"},"geometry":{"type":"Point","coordinates":[-5.995454,37.392155]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza del Duque de la Victoria (lado derecho)","osm":"Plaza del Duque de la Victoria (lado derecho"},"geometry":{"type":"Point","coordinates":[-5.99564,37.393105]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"La Campana","osm":"Calle Campana"},"geometry":{"type":"Point","coordinates":[-5.995376,37.392725]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Sierpes","osm":"Calle Sierpes"},"geometry":{"type":"Point","coordinates":[-5.9947885,37.3908748]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza de San Francisco","osm":"Plaza de San Francisco"},"geometry":{"type":"Point","coordinates":[-5.994154,37.38867]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de la Constitución","osm":"Avenida de la Constitución"},"geometry":{"type":"Point","coordinates":[-5.994185,37.386838]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de la Constitución","osm":"Avenida de la Constitución"},"geometry":{"type":"Point","coordinates":[-5.993515,37.384889]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza Puerta de Jerez","osm":"Plaza Puerta de Jerez"},"geometry":{"type":"Point","coordinates":[-5.9932597,37.3823431]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de Roma","osm":"Avenida de Roma"},"geometry":{"type":"Point","coordinates":[-5.9935377,37.381465]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Palos de la Frontera","osm":"Calle Palos de la Frontera"},"geometry":{"type":"Point","coordinates":[-5.9926354,37.3803808]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Enramadilla","osm":"Calle Enramadilla"},"geometry":{"type":"Point","coordinates":[-5.9813265,37.3791377]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Ramón y Cajal","osm":"Avenida Ramón y Cajal"},"geometry":{"type":"Point","coordinates":[-5.9654765,37.3737708]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Avenida de Hytasa","osm":"Avenida de Hytasa"},"geometry":{"type":"Point","coordinates":[-5.9637423,37.3729388]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Calle Afán de Ribera","osm":"Calle Afán de Ribera"},"geometry":{"type":"Point","coordinates":[-5.9576125,37.3721245]}},{"type":"Feature","properties":{"id_hdad":19,"hermandad":"El Cerro","calle":"Plaza de la Magdalena","osm":"Plaza de la Magdalena"},"geometry":{"type":"Point","coordinates":[-5.9968379,37.390749]}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "nombre": "El Cerro",
+        "dia": "martes-santo"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.9575944,
+            37.3719099
+          ],
+          [
+            -5.9574587,
+            37.372024
+          ],
+          [
+            -5.9576125,
+            37.3721245
+          ],
+          [
+            -5.9595944,
+            37.3733902
+          ],
+          [
+            -5.9615367,
+            37.3746358
+          ],
+          [
+            -5.9624264,
+            37.3736953
+          ],
+          [
+            -5.962915,
+            37.3731998
+          ],
+          [
+            -5.9634059,
+            37.3727209
+          ],
+          [
+            -5.9637423,
+            37.3729388
+          ],
+          [
+            -5.9641028,
+            37.3731717
+          ],
+          [
+            -5.9646,
+            37.3733
+          ],
+          [
+            -5.964881,
+            37.3736569
+          ],
+          [
+            -5.9664693,
+            37.3746585
+          ],
+          [
+            -5.9715555,
+            37.3761691
+          ],
+          [
+            -5.973946,
+            37.3768476
+          ],
+          [
+            -5.9751673,
+            37.3772123
+          ],
+          [
+            -5.9762881,
+            37.3775866
+          ],
+          [
+            -5.9785116,
+            37.3785252
+          ],
+          [
+            -5.9794129,
+            37.3788031
+          ],
+          [
+            -5.9801633,
+            37.3788792
+          ],
+          [
+            -5.9813265,
+            37.3791377
+          ],
+          [
+            -5.9826058,
+            37.3795293
+          ],
+          [
+            -5.9842341,
+            37.3799597
+          ],
+          [
+            -5.986409,
+            37.3805365
+          ],
+          [
+            -5.9875664,
+            37.3808503
+          ],
+          [
+            -5.9880872,
+            37.3811107
+          ],
+          [
+            -5.9882708,
+            37.3812471
+          ],
+          [
+            -5.9884185,
+            37.3813295
+          ],
+          [
+            -5.9886899,
+            37.3813771
+          ],
+          [
+            -5.9889892,
+            37.3813771
+          ],
+          [
+            -5.9896477,
+            37.3814278
+          ],
+          [
+            -5.9909424,
+            37.38181
+          ],
+          [
+            -5.9932072,
+            37.3824151
+          ],
+          [
+            -5.9933037,
+            37.382496
+          ],
+          [
+            -5.9934484,
+            37.3826643
+          ],
+          [
+            -5.9935396,
+            37.3828816
+          ],
+          [
+            -5.9936406,
+            37.3833868
+          ],
+          [
+            -5.9937289,
+            37.3839117
+          ],
+          [
+            -5.993769,
+            37.3840156
+          ],
+          [
+            -5.9938957,
+            37.3847972
+          ],
+          [
+            -5.993944,
+            37.3851083
+          ],
+          [
+            -5.9939712,
+            37.3851881
+          ],
+          [
+            -5.9943224,
+            37.3851178
+          ],
+          [
+            -5.9946066,
+            37.3850582
+          ],
+          [
+            -5.9946418,
+            37.3851627
+          ],
+          [
+            -5.994698,
+            37.3852047
+          ],
+          [
+            -5.99492,
+            37.3852401
+          ],
+          [
+            -5.9951395,
+            37.3852021
+          ],
+          [
+            -5.9953191,
+            37.3851418
+          ],
+          [
+            -5.9953351,
+            37.3853987
+          ],
+          [
+            -5.9953972,
+            37.3856197
+          ],
+          [
+            -5.9954957,
+            37.3857758
+          ],
+          [
+            -5.9961928,
+            37.3861699
+          ],
+          [
+            -5.9961737,
+            37.3862092
+          ],
+          [
+            -5.9961081,
+            37.3862154
+          ],
+          [
+            -5.9947581,
+            37.3865305
+          ],
+          [
+            -5.9946862,
+            37.3869142
+          ],
+          [
+            -5.9945664,
+            37.3872952
+          ],
+          [
+            -5.9944827,
+            37.3877672
+          ],
+          [
+            -5.9945018,
+            37.3880853
+          ],
+          [
+            -5.9946575,
+            37.3882312
+          ],
+          [
+            -5.9949009,
+            37.3884088
+          ],
+          [
+            -5.9949524,
+            37.3889167
+          ],
+          [
+            -5.9950228,
+            37.3895868
+          ],
+          [
+            -5.995125,
+            37.3900509
+          ],
+          [
+            -5.9953197,
+            37.3907871
+          ],
+          [
+            -5.995383,
+            37.391055
+          ],
+          [
+            -5.9954178,
+            37.3914794
+          ],
+          [
+            -5.9954615,
+            37.3920765
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.9954141,
+            37.3927175
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.994542,
+            37.390976
+          ],
+          [
+            -5.994258,
+            37.389845
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.9922162,
+            37.3855949
+          ],
+          [
+            -5.9921519,
+            37.3853995
+          ],
+          [
+            -5.9921909,
+            37.3852365
+          ],
+          [
+            -5.9924343,
+            37.3851794
+          ],
+          [
+            -5.9926618,
+            37.3851731
+          ],
+          [
+            -5.9938751,
+            37.3850589
+          ],
+          [
+            -5.9936675,
+            37.3837017
+          ],
+          [
+            -5.9936516,
+            37.3829234
+          ],
+          [
+            -5.993892,
+            37.3822181
+          ],
+          [
+            -5.9936286,
+            37.3821737
+          ],
+          [
+            -5.9934171,
+            37.3820246
+          ],
+          [
+            -5.9933892,
+            37.3818629
+          ],
+          [
+            -5.9934816,
+            37.3816116
+          ],
+          [
+            -5.9936976,
+            37.3810445
+          ],
+          [
+            -5.9933337,
+            37.3809736
+          ],
+          [
+            -5.9928665,
+            37.3808467
+          ],
+          [
+            -5.9926932,
+            37.3807396
+          ],
+          [
+            -5.992622,
+            37.3802978
+          ],
+          [
+            -5.9925745,
+            37.3801823
+          ],
+          [
+            -5.9923722,
+            37.3800336
+          ],
+          [
+            -5.9920413,
+            37.3799664
+          ],
+          [
+            -5.9910107,
+            37.3797045
+          ],
+          [
+            -5.9900828,
+            37.3794552
+          ],
+          [
+            -5.9896438,
+            37.379303
+          ],
+          [
+            -5.9895121,
+            37.3791222
+          ],
+          [
+            -5.9892687,
+            37.3790588
+          ],
+          [
+            -5.9889294,
+            37.3791412
+          ],
+          [
+            -5.987207,
+            37.3786784
+          ],
+          [
+            -5.9848132,
+            37.378063
+          ],
+          [
+            -5.9815293,
+            37.3773112
+          ],
+          [
+            -5.9807826,
+            37.3790138
+          ],
+          [
+            -5.9801633,
+            37.3788792
+          ],
+          [
+            -5.9794049,
+            37.3787999
+          ],
+          [
+            -5.9785236,
+            37.3785348
+          ],
+          [
+            -5.9762841,
+            37.3775866
+          ],
+          [
+            -5.9751712,
+            37.3772123
+          ],
+          [
+            -5.97395,
+            37.3768412
+          ],
+          [
+            -5.9715595,
+            37.3761723
+          ],
+          [
+            -5.9664893,
+            37.374668
+          ],
+          [
+            -5.964897,
+            37.3736664
+          ],
+          [
+            -5.9646,
+            37.3733
+          ],
+          [
+            -5.9641098,
+            37.3731745
+          ],
+          [
+            -5.9637423,
+            37.3729388
+          ],
+          [
+            -5.9629,
+            37.3723913
+          ],
+          [
+            -5.9610263,
+            37.3742985
+          ],
+          [
+            -5.9574986,
+            37.3720353
+          ],
+          [
+            -5.9575864,
+            37.3718972
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Nuestra Señora de los Dolores",
+        "osm": "Calle Nuestra Señora de los Dolores"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9575864,
+          37.3718972
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Afán de Ribera",
+        "osm": "Calle Afán de Ribera"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9586571,
+          37.3727856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Aragón",
+        "osm": "Calle Aragón"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9622475,
+          37.3738912
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de Hytasa",
+        "osm": "Avenida de Hytasa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9637423,
+          37.3729388
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Glorieta Bizco Amate",
+        "osm": "Glorieta Bizco Amate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9646,
+          37.3733
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Ramón y Cajal",
+        "osm": "Avenida Ramón y Cajal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9654438,
+          37.3739899
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Enramadilla",
+        "osm": "Calle Enramadilla"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9813265,
+          37.3791377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Glorieta Doña María de las Mercedes de Borbón y Orleans",
+        "osm": "Glorieta Doña María de las Mercedes de Borbón y Orleans"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9826,
+          37.3794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de Carlos V",
+        "osm": "Avenida de Carlos V"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9842341,
+          37.3799597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Plaza de Don Juan de Austria",
+        "osm": "Plaza Don Juan de Austria"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9884405,
+          37.3812823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle San Fernando",
+        "osm": "Calle San Fernando"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9909424,
+          37.38181
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Plaza Puerta de Jerez",
+        "osm": "Plaza Puerta de Jerez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9932803,
+          37.3823377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9936639,
+          37.3834745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Almirantazgo",
+        "osm": "Calle Almirantazgo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994698,
+          37.3852047
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Arfe",
+        "osm": "Calle Arfe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954066,
+          37.3856467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Puerta del Arenal",
+        "osm": "Calle Puerta del Arenal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9961081,
+          37.3862154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle García de Vinuesa",
+        "osm": "Calle García de Vinuesa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9950774,
+          37.3864448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Fernández y González",
+        "osm": "Calle Fernández y González"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9945664,
+          37.3872952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Plaza Nueva",
+        "osm": "Plaza Nueva"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9949315,
+          37.3886551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Tetuán",
+        "osm": "Calle Tetuán"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9951669,
+          37.3902317
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Velázquez",
+        "osm": "Calle Velázquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954035,
+          37.3911654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle O'Donnell",
+        "osm": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "La Campana",
+        "osm": "Calle Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9944906,
+          37.3907418
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.993999,
+          37.385447
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Plaza del Triunfo",
+        "osm": "Plaza del Triunfo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992351,
+          37.385188
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Fray Ceferino González",
+        "osm": "Calle Fray Ceferino González"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992325,
+          37.386077
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Plaza Puerta de Jerez",
+        "osm": "Plaza Puerta de Jerez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9932597,
+          37.3823431
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de Roma",
+        "osm": "Avenida de Roma"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9935377,
+          37.381465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Palos de la Frontera",
+        "osm": "Calle Palos de la Frontera"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9910107,
+          37.3797045
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Glorieta de San Diego",
+        "osm": "Glorieta de San Diego"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.989367,
+          37.3790525
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de Portugal",
+        "osm": "Avenida de Portugal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9873586,
+          37.3787276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Dr. Pedro de Castro",
+        "osm": "Calle Dr. Pedro de Castro"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9832447,
+          37.3777001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Doctor Antonio Cortés Lladó",
+        "osm": "Calle Doctor Antonio Cortés Lladó"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9811999,
+          37.3781786
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Enramadilla",
+        "osm": "Calle Enramadilla"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9813265,
+          37.3791377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Ramón y Cajal",
+        "osm": "Avenida Ramón y Cajal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9654398,
+          37.3739868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Glorieta Bizco Amate",
+        "osm": "Glorieta Bizco Amate"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9646,
+          37.3733
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Avenida de Hytasa",
+        "osm": "Avenida de Hytasa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9637423,
+          37.3729388
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Aníbal González",
+        "osm": "Calle Aníbal González"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9618347,
+          37.3734801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Afán de Ribera",
+        "osm": "Calle Afán de Ribera"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9586843,
+          37.3727835
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 19,
+        "hermandad": "El Cerro",
+        "calle": "Calle Nuestra Señora de los Dolores",
+        "osm": "Calle Nuestra Señora de los Dolores"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9575888,
+          37.3719001
+        ]
+      }
+    }
+  ]
+}

@@ -1,1 +1,918 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id_hdad":25,"nombre":"Los Estudiantes","dia":"martes-santo"},"geometry":{"type":"LineString","coordinates":[[-5.9909424,37.38181],[-5.9932803,37.3823377],[-5.9928723,37.383241],[-5.992534,37.383679],[-5.992479,37.3842205],[-5.992351,37.385188],[-5.994256,37.385126],[-5.9946016,37.3850918],[-5.9947139,37.3852071],[-5.9948075,37.3852443],[-5.9949572,37.3852368],[-5.995197,37.385176],[-5.9953598,37.3851215],[-5.9953224,37.3852665],[-5.9954066,37.3856467],[-5.9953972,37.3856197],[-5.9954957,37.3857758],[-5.9961928,37.3861699],[-5.9961737,37.3862092],[-5.9961081,37.3862154],[-5.9961784,37.3863579],[-5.9963303,37.3864856],[-5.9961075,37.3871925],[-5.9964868,37.3879924],[-5.9962998,37.3880194],[-5.9949315,37.3886551],[-5.9965413,37.389543],[-5.9968379,37.390749],[-5.995454,37.392155],[-5.99564,37.393105],[-5.995631,37.392901],[-5.995376,37.392725],[-5.994924,37.392751],[-5.994797,37.391803],[-5.9945202,37.3909414],[-5.994258,37.389845],[-5.994175,37.389143],[-5.994154,37.38867],[-5.994185,37.386838],[-5.992479,37.3842205],[-5.992534,37.383679],[-5.9928723,37.383241],[-5.9932597,37.3823431],[-5.9909424,37.38181],[-5.9987771,37.3898861],[-5.9977813,37.3878196],[-5.9976929,37.3878993],[-5.996081,37.390949],[-5.993126,37.38514]]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle San Fernando","osm":"Calle San Fernando"},"geometry":{"type":"Point","coordinates":[-5.9909424,37.38181]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza Puerta de Jerez","osm":"Plaza Puerta de Jerez"},"geometry":{"type":"Point","coordinates":[-5.9932803,37.3823377]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle San Gregorio","osm":"Plaza de San Gregorio"},"geometry":{"type":"Point","coordinates":[-5.9928723,37.383241]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza de La Contratación","osm":"Plaza de la Contratación"},"geometry":{"type":"Point","coordinates":[-5.992534,37.383679]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Miguel Mañara","osm":"Calle Miguel Mañara"},"geometry":{"type":"Point","coordinates":[-5.992479,37.3842205]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza del Triunfo","osm":"Plaza del Triunfo"},"geometry":{"type":"Point","coordinates":[-5.992351,37.385188]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Almirantazgo","osm":"Calle Almirantazgo"},"geometry":{"type":"Point","coordinates":[-5.994256,37.385126]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Arco del Postigo","osm":"Calle Arco del Postigo"},"geometry":{"type":"Point","coordinates":[-5.9949572,37.3852368]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Dos de Mayo","osm":"Calle Dos de Mayo"},"geometry":{"type":"Point","coordinates":[-5.995197,37.385176]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Arfe","osm":"Calle Arfe"},"geometry":{"type":"Point","coordinates":[-5.9954066,37.3856467]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Puerta del Arenal","osm":"Calle Puerta del Arenal"},"geometry":{"type":"Point","coordinates":[-5.9961081,37.3862154]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Castelar","osm":"Calle Castelar"},"geometry":{"type":"Point","coordinates":[-5.9963303,37.3864856]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Gamazo","osm":"Calle Gamazo"},"geometry":{"type":"Point","coordinates":[-5.9961075,37.3871925]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Zaragoza","osm":"Calle Zaragoza"},"geometry":{"type":"Point","coordinates":[-5.9964868,37.3879924]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Badajoz","osm":"Calle Badajoz"},"geometry":{"type":"Point","coordinates":[-5.9962998,37.3880194]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza Nueva","osm":"Plaza Nueva"},"geometry":{"type":"Point","coordinates":[-5.9949315,37.3886551]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Méndez Núñez","osm":"Calle Méndez Núñez"},"geometry":{"type":"Point","coordinates":[-5.9965413,37.389543]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza de la Magdalena","osm":"Plaza de la Magdalena"},"geometry":{"type":"Point","coordinates":[-5.9968379,37.390749]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle O'Donnell","osm":"Calle O'Donnell"},"geometry":{"type":"Point","coordinates":[-5.995454,37.392155]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza del Duque de la Victoria (lado derecho)","osm":"Plaza del Duque de la Victoria (lado derecho"},"geometry":{"type":"Point","coordinates":[-5.99564,37.393105]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"La Campana","osm":"Calle Campana"},"geometry":{"type":"Point","coordinates":[-5.995376,37.392725]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Sierpes","osm":"Calle Sierpes"},"geometry":{"type":"Point","coordinates":[-5.9947885,37.3908748]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza de San Francisco","osm":"Plaza de San Francisco"},"geometry":{"type":"Point","coordinates":[-5.994154,37.38867]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Avenida de la Constitución","osm":"Avenida de la Constitución"},"geometry":{"type":"Point","coordinates":[-5.994185,37.386838]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Miguel Mañara","osm":"Calle Miguel Mañara"},"geometry":{"type":"Point","coordinates":[-5.992479,37.3842205]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza de La Contratación","osm":"Plaza de la Contratación"},"geometry":{"type":"Point","coordinates":[-5.992534,37.383679]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle San Gregorio","osm":"Plaza de San Gregorio"},"geometry":{"type":"Point","coordinates":[-5.9928723,37.383241]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza Puerta de Jerez","osm":"Plaza Puerta de Jerez"},"geometry":{"type":"Point","coordinates":[-5.9932597,37.3823431]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle San Fernando","osm":"Calle San Fernando"},"geometry":{"type":"Point","coordinates":[-5.9909424,37.38181]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle San Pablo","osm":"Calle San Pablo"},"geometry":{"type":"Point","coordinates":[-5.9987771,37.3898861]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Plaza de Molviedro","osm":"Plaza de Molviedro"},"geometry":{"type":"Point","coordinates":[-5.9977813,37.3878196]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Doña Guiomar","osm":"Calle Doña Guiomar"},"geometry":{"type":"Point","coordinates":[-5.9976929,37.3878993]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Rioja","osm":"Calle Rioja"},"geometry":{"type":"Point","coordinates":[-5.996081,37.390949]}},{"type":"Feature","properties":{"id_hdad":25,"hermandad":"Los Estudiantes","calle":"Calle Fray Ceferino González","osm":"Calle Fray Ceferino González"},"geometry":{"type":"Point","coordinates":[-5.993126,37.38514]}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "nombre": "Los Estudiantes",
+        "dia": "martes-santo"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.9905784,
+            37.3813448
+          ],
+          [
+            -5.9904243,
+            37.3816761
+          ],
+          [
+            -5.9916357,
+            37.3819448
+          ],
+          [
+            -5.9932053,
+            37.3823679
+          ],
+          [
+            -5.9931388,
+            37.3827047
+          ],
+          [
+            -5.9928967,
+            37.3832417
+          ],
+          [
+            -5.9927286,
+            37.3835571
+          ],
+          [
+            -5.992534,
+            37.383679
+          ],
+          [
+            -5.9924974,
+            37.3837658
+          ],
+          [
+            -5.9925814,
+            37.3839356
+          ],
+          [
+            -5.992655,
+            37.3840995
+          ],
+          [
+            -5.9922732,
+            37.3843556
+          ],
+          [
+            -5.9923962,
+            37.3845651
+          ],
+          [
+            -5.9924561,
+            37.3847991
+          ],
+          [
+            -5.9927464,
+            37.3851607
+          ],
+          [
+            -5.9934965,
+            37.3851182
+          ],
+          [
+            -5.9938363,
+            37.3851126
+          ],
+          [
+            -5.9939974,
+            37.3851572
+          ],
+          [
+            -5.994256,
+            37.385126
+          ],
+          [
+            -5.9946016,
+            37.3850918
+          ],
+          [
+            -5.9947139,
+            37.3852071
+          ],
+          [
+            -5.9948075,
+            37.3852443
+          ],
+          [
+            -5.9949572,
+            37.3852368
+          ],
+          [
+            -5.995197,
+            37.385176
+          ],
+          [
+            -5.9953598,
+            37.3851215
+          ],
+          [
+            -5.9953224,
+            37.3852665
+          ],
+          [
+            -5.9954066,
+            37.3856467
+          ],
+          [
+            -5.9953972,
+            37.3856197
+          ],
+          [
+            -5.9954957,
+            37.3857758
+          ],
+          [
+            -5.9961928,
+            37.3861699
+          ],
+          [
+            -5.9961737,
+            37.3862092
+          ],
+          [
+            -5.9961081,
+            37.3862154
+          ],
+          [
+            -5.9961784,
+            37.3863579
+          ],
+          [
+            -5.9963303,
+            37.3864856
+          ],
+          [
+            -5.9965691,
+            37.3866951
+          ],
+          [
+            -5.9962713,
+            37.3869706
+          ],
+          [
+            -5.9961075,
+            37.3871925
+          ],
+          [
+            -5.9960511,
+            37.3873393
+          ],
+          [
+            -5.9959706,
+            37.3874395
+          ],
+          [
+            -5.9956512,
+            37.3876857
+          ],
+          [
+            -5.9959186,
+            37.387854
+          ],
+          [
+            -5.9962269,
+            37.3878818
+          ],
+          [
+            -5.9962899,
+            37.3879542
+          ],
+          [
+            -5.9962998,
+            37.3880194
+          ],
+          [
+            -5.9963394,
+            37.3887441
+          ],
+          [
+            -5.9963966,
+            37.3889653
+          ],
+          [
+            -5.996446,
+            37.3894375
+          ],
+          [
+            -5.9964798,
+            37.3895978
+          ],
+          [
+            -5.9965319,
+            37.3897425
+          ],
+          [
+            -5.9967244,
+            37.3902447
+          ],
+          [
+            -5.9969218,
+            37.3907194
+          ],
+          [
+            -5.9967137,
+            37.3907855
+          ],
+          [
+            -5.9968515,
+            37.3910377
+          ],
+          [
+            -5.99694,
+            37.3911555
+          ],
+          [
+            -5.9970362,
+            37.3912444
+          ],
+          [
+            -5.9967058,
+            37.391445
+          ],
+          [
+            -5.996378,
+            37.3916227
+          ],
+          [
+            -5.9958574,
+            37.3918854
+          ],
+          [
+            -5.9955063,
+            37.3920638
+          ],
+          [
+            -5.995454,
+            37.392155
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.995376,
+            37.392725
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.994542,
+            37.390976
+          ],
+          [
+            -5.994258,
+            37.389845
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.9922097,
+            37.3856128
+          ],
+          [
+            -5.9921552,
+            37.3853873
+          ],
+          [
+            -5.9920569,
+            37.3853223
+          ],
+          [
+            -5.9919205,
+            37.3852486
+          ],
+          [
+            -5.9918789,
+            37.3851052
+          ],
+          [
+            -5.9920842,
+            37.3849667
+          ],
+          [
+            -5.9924191,
+            37.384767
+          ],
+          [
+            -5.9923472,
+            37.3845631
+          ],
+          [
+            -5.9922509,
+            37.3843461
+          ],
+          [
+            -5.992525,
+            37.3841706
+          ],
+          [
+            -5.992629,
+            37.3840962
+          ],
+          [
+            -5.9924703,
+            37.3837521
+          ],
+          [
+            -5.9925172,
+            37.3836487
+          ],
+          [
+            -5.9927097,
+            37.3835474
+          ],
+          [
+            -5.9927687,
+            37.3834448
+          ],
+          [
+            -5.9929542,
+            37.3830633
+          ],
+          [
+            -5.9931132,
+            37.382721
+          ],
+          [
+            -5.9931586,
+            37.3823787
+          ],
+          [
+            -5.9929076,
+            37.3823011
+          ],
+          [
+            -5.9918995,
+            37.3820298
+          ],
+          [
+            -5.9919489,
+            37.3819037
+          ],
+          [
+            -5.991785,
+            37.381847
+          ],
+          [
+            -5.991824,
+            37.3816548
+          ],
+          [
+            -5.9915465,
+            37.3815801
+          ],
+          [
+            -5.9915352,
+            37.3816195
+          ],
+          [
+            -5.9905623,
+            37.3813756
+          ],
+          [
+            -5.9905714,
+            37.3813337
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle San Fernando",
+        "osm": "Calle San Fernando"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9911285,
+          37.3818613
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza Puerta de Jerez",
+        "osm": "Plaza Puerta de Jerez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9932803,
+          37.3823377
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle San Gregorio",
+        "osm": "Plaza de San Gregorio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9928723,
+          37.383241
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza de La Contratación",
+        "osm": "Plaza de la Contratación"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992534,
+          37.383679
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Miguel Mañara",
+        "osm": "Calle Miguel Mañara"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992479,
+          37.3842205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza del Triunfo",
+        "osm": "Plaza del Triunfo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992351,
+          37.385188
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Almirantazgo",
+        "osm": "Calle Almirantazgo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994256,
+          37.385126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Arco del Postigo",
+        "osm": "Calle Arco del Postigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9949572,
+          37.3852368
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Dos de Mayo",
+        "osm": "Calle Dos de Mayo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995197,
+          37.385176
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Arfe",
+        "osm": "Calle Arfe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954066,
+          37.3856467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Puerta del Arenal",
+        "osm": "Calle Puerta del Arenal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9961081,
+          37.3862154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Castelar",
+        "osm": "Calle Castelar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9963303,
+          37.3864856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Gamazo",
+        "osm": "Calle Gamazo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9961075,
+          37.3871925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Zaragoza",
+        "osm": "Calle Zaragoza"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9960868,
+          37.387879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Badajoz",
+        "osm": "Calle Badajoz"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9962998,
+          37.3880194
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza Nueva",
+        "osm": "Plaza Nueva"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9949315,
+          37.3886551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Méndez Núñez",
+        "osm": "Calle Méndez Núñez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9965787,
+          37.3899016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza de la Magdalena",
+        "osm": "Plaza de la Magdalena"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9968379,
+          37.390749
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle O'Donnell",
+        "osm": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "La Campana",
+        "osm": "Calle Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9947885,
+          37.3908748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Miguel Mañara",
+        "osm": "Calle Miguel Mañara"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992479,
+          37.3842205
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza de La Contratación",
+        "osm": "Plaza de la Contratación"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992534,
+          37.383679
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle San Gregorio",
+        "osm": "Plaza de San Gregorio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9928723,
+          37.383241
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Plaza Puerta de Jerez",
+        "osm": "Plaza Puerta de Jerez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9932597,
+          37.3823431
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle San Fernando",
+        "osm": "Calle San Fernando"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9919567,
+          37.382034
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 25,
+        "hermandad": "Los Estudiantes",
+        "calle": "Calle Fray Ceferino González",
+        "osm": "Calle Fray Ceferino González"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.993126,
+          37.38514
+        ]
+      }
+    }
+  ]
+}
