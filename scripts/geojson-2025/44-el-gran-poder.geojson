@@ -220,10 +220,6 @@
             37.3965357
           ],
           [
-            -5.9966561,
-            37.3970955
-          ],
-          [
             -5.9982008,
             37.3902826
           ],
@@ -691,22 +687,6 @@
         "coordinates": [
           -5.9969224,
           37.3965357
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 44,
-        "hermandad": "El Gran Poder",
-        "calle": "Plaza de San Lorenzo",
-        "osm": "Plaza de San Lorenzo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9966561,
-          37.3970955
         ]
       }
     },

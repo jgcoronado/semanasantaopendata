@@ -244,26 +244,6 @@
             37.388611
           ],
           [
-            -5.993264,
-            37.388615
-          ],
-          [
-            -5.993288,
-            37.389051
-          ],
-          [
-            -5.99338,
-            37.389346
-          ],
-          [
-            -5.993302,
-            37.389446
-          ],
-          [
-            -5.993273,
-            37.38953
-          ],
-          [
             -5.992781,
             37.389701
           ],
@@ -352,14 +332,6 @@
             37.39655
           ],
           [
-            -5.99132,
-            37.395688
-          ],
-          [
-            -5.9928464,
-            37.4002735
-          ],
-          [
             -5.9901856,
             37.4007084
           ],
@@ -370,10 +342,6 @@
           [
             -5.9909509,
             37.4027819
-          ],
-          [
-            -5.9904787,
-            37.4031758
           ]
         ]
       }
@@ -655,22 +623,6 @@
       "properties": {
         "id_hdad": 45,
         "hermandad": "La Macarena",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993273,
-          37.38953
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 45,
-        "hermandad": "La Macarena",
         "calle": "Calle Villegas",
         "osm": "Calle Villegas"
       },
@@ -847,38 +799,6 @@
       "properties": {
         "id_hdad": 45,
         "hermandad": "La Macarena",
-        "calle": "Calle Feria",
-        "osm": "Calle Feria"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.99132,
-          37.395688
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 45,
-        "hermandad": "La Macarena",
-        "calle": "Calle Relator",
-        "osm": "Calle Relator"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9928464,
-          37.4002735
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 45,
-        "hermandad": "La Macarena",
         "calle": "Calle Parras",
         "osm": "Calle Parras"
       },
@@ -919,22 +839,6 @@
         "coordinates": [
           -5.9909509,
           37.4027819
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 45,
-        "hermandad": "La Macarena",
-        "calle": "Calle Resolana",
-        "osm": "Calle Resolana"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9904787,
-          37.4031758
         ]
       }
     }

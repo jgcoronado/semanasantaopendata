@@ -192,22 +192,6 @@
             37.3834745
           ],
           [
-            -5.9915151,
-            37.3852751
-          ],
-          [
-            -5.9911357,
-            37.385469
-          ],
-          [
-            -5.9907288,
-            37.3857993
-          ],
-          [
-            -5.9901078,
-            37.3863394
-          ],
-          [
             -5.9968379,
             37.390749
           ],
@@ -603,70 +587,6 @@
         "coordinates": [
           -5.9936639,
           37.3834745
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Calle Joaquín Romero Murube",
-        "osm": "Calle Joaquín Romero Murube"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9915151,
-          37.3852751
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Plaza de La Alianza",
-        "osm": "Plaza de la Alianza"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9911357,
-          37.385469
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Calle Rodrigo Caro",
-        "osm": "Calle Rodrigo Caro"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9907288,
-          37.3857993
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Calle Mateos Gago",
-        "osm": "Calle Mateos Gago"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9901078,
-          37.3863394
         ]
       }
     },

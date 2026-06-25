@@ -364,76 +364,12 @@
             37.3919974
           ],
           [
-            -5.9898384,
-            37.3923782
-          ],
-          [
-            -5.9897195,
-            37.3928768
-          ],
-          [
-            -5.9896104,
-            37.3932572
-          ],
-          [
-            -5.9895497,
-            37.3934523
-          ],
-          [
-            -5.9894588,
-            37.3936786
-          ],
-          [
-            -5.9891505,
-            37.3943286
-          ],
-          [
-            -5.9890297,
-            37.3945377
-          ],
-          [
-            -5.9886372,
-            37.3947981
-          ],
-          [
-            -5.988238,
-            37.3948513
-          ],
-          [
-            -5.9879858,
-            37.3948218
-          ],
-          [
-            -5.987947,
-            37.3949451
-          ],
-          [
-            -5.9881136,
-            37.3941815
-          ],
-          [
-            -5.9879772,
-            37.3955213
-          ],
-          [
-            -5.9878402,
-            37.3961666
-          ],
-          [
-            -5.9877955,
-            37.3964689
-          ],
-          [
             -5.9875144,
             37.3965187
           ],
           [
             -5.98762,
             37.39632
-          ],
-          [
-            -5.987468,
-            37.3961784
           ]
         ]
       }
@@ -907,54 +843,6 @@
       "properties": {
         "id_hdad": 57,
         "hermandad": "Los Servitas",
-        "calle": "Calle Doña María Coronel",
-        "osm": "Calle Doña María Coronel"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.988238,
-          37.3948513
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 57,
-        "hermandad": "Los Servitas",
-        "calle": "Calle Bustos Tavera",
-        "osm": "Calle Bustos Tavera"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9881136,
-          37.3941815
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 57,
-        "hermandad": "Los Servitas",
-        "calle": "Plaza de San Marcos",
-        "osm": "Plaza de San Marcos"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9878402,
-          37.3961666
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 57,
-        "hermandad": "Los Servitas",
         "calle": "Calle Vergara",
         "osm": "Calle Vergara"
       },
@@ -979,22 +867,6 @@
         "coordinates": [
           -5.98762,
           37.39632
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 57,
-        "hermandad": "Los Servitas",
-        "calle": "Calle Siete Dolores de Nuestra Señora",
-        "osm": "Calle Siete Dolores de Nuestra Señora"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.987468,
-          37.3961784
         ]
       }
     }

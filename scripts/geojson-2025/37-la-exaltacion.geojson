@@ -280,26 +280,6 @@
             37.388611
           ],
           [
-            -5.993264,
-            37.388615
-          ],
-          [
-            -5.993288,
-            37.389051
-          ],
-          [
-            -5.99338,
-            37.389346
-          ],
-          [
-            -5.993302,
-            37.389446
-          ],
-          [
-            -5.993273,
-            37.38953
-          ],
-          [
             -5.992781,
             37.389701
           ],
@@ -390,10 +370,6 @@
           [
             -5.9886539,
             37.3921907
-          ],
-          [
-            -5.9880782,
-            37.3932862
           ]
         ]
       }
@@ -739,22 +715,6 @@
       "properties": {
         "id_hdad": 37,
         "hermandad": "La Exaltación",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993273,
-          37.38953
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 37,
-        "hermandad": "La Exaltación",
         "calle": "Calle Villegas",
         "osm": "Calle Villegas"
       },
@@ -923,22 +883,6 @@
         "coordinates": [
           -5.9886539,
           37.3921907
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 37,
-        "hermandad": "La Exaltación",
-        "calle": "Calle Santa Catalina",
-        "osm": "Calle Santa Catalina"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9880782,
-          37.3932862
         ]
       }
     }

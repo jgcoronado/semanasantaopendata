@@ -448,22 +448,6 @@
             37.389615
           ],
           [
-            -5.984607,
-            37.389236
-          ],
-          [
-            -5.984131,
-            37.389049
-          ],
-          [
-            -5.983147,
-            37.388662
-          ],
-          [
-            -5.98221,
-            37.388102
-          ],
-          [
             -5.969078445669468,
             37.38602572127858
           ],
@@ -987,38 +971,6 @@
         "coordinates": [
           -5.985444,
           37.389615
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Calle Puerta de Carmona",
-        "osm": "Calle Puerta de Carmona"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.984607,
-          37.389236
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Calle Luis Montoto",
-        "osm": "Calle Luis Montoto"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.98221,
-          37.388102
         ]
       }
     },

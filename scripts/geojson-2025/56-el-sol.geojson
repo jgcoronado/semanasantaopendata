@@ -204,22 +204,6 @@
             37.38181
           ],
           [
-            -5.9884405,
-            37.3812823
-          ],
-          [
-            -5.9842341,
-            37.3799597
-          ],
-          [
-            -5.9813265,
-            37.3791377
-          ],
-          [
-            -5.9741237,
-            37.3754745
-          ],
-          [
             -5.9968379,
             37.390749
           ]
@@ -735,70 +719,6 @@
         "coordinates": [
           -5.9909424,
           37.38181
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 56,
-        "hermandad": "El Sol",
-        "calle": "Plaza de Don Juan de Austria",
-        "osm": "Plaza Don Juan de Austria"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9884405,
-          37.3812823
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 56,
-        "hermandad": "El Sol",
-        "calle": "Avenida de Carlos V",
-        "osm": "Avenida de Carlos V"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9842341,
-          37.3799597
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 56,
-        "hermandad": "El Sol",
-        "calle": "Calle Enramadilla",
-        "osm": "Calle Enramadilla"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9813265,
-          37.3791377
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 56,
-        "hermandad": "El Sol",
-        "calle": "Calle Virgen del Sol",
-        "osm": "Calle Virgen del Sol"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9741237,
-          37.3754745
         ]
       }
     },

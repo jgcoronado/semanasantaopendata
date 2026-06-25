@@ -396,38 +396,6 @@
             37.3920877
           ],
           [
-            -5.9880143,
-            37.3916455
-          ],
-          [
-            -5.9879415,
-            37.3921737
-          ],
-          [
-            -5.9879415,
-            37.3923472
-          ],
-          [
-            -5.9879706,
-            37.3925439
-          ],
-          [
-            -5.988267,
-            37.392909
-          ],
-          [
-            -5.9874545,
-            37.393084
-          ],
-          [
-            -5.9855565,
-            37.3931279
-          ],
-          [
-            -5.9841545,
-            37.3942804
-          ],
-          [
             -5.9847039,
             37.3945287
           ],
@@ -442,10 +410,6 @@
           [
             -5.9820199,
             37.3969081
-          ],
-          [
-            -5.9837122,
-            37.3938292
           ]
         ]
       }
@@ -983,70 +947,6 @@
       "properties": {
         "id_hdad": 58,
         "hermandad": "La Trinidad",
-        "calle": "Calle Juan de Mesa",
-        "osm": "Calle Juan de Mesa"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.988267,
-          37.392909
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Plaza de Ponce de León",
-        "osm": "Plaza Ponce de León"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9874545,
-          37.393084
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Calle Jáuregui",
-        "osm": "Calle Jáuregui"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9855565,
-          37.3931279
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Calle Valle",
-        "osm": "Calle Valle"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9841545,
-          37.3942804
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
         "calle": "Calle Verónica",
         "osm": "Calle Verónica"
       },
@@ -1103,22 +1003,6 @@
         "coordinates": [
           -5.9820199,
           37.3969081
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Calle María Auxiliadora",
-        "osm": "Calle María Auxiliadora"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9837122,
-          37.3938292
         ]
       }
     }

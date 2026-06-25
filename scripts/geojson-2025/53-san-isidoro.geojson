@@ -262,34 +262,6 @@
           [
             -5.992784,
             37.388285
-          ],
-          [
-            -5.992744,
-            37.388583
-          ],
-          [
-            -5.992621,
-            37.388828
-          ],
-          [
-            -5.992568,
-            37.389176
-          ],
-          [
-            -5.992542,
-            37.389426
-          ],
-          [
-            -5.992353,
-            37.389737
-          ],
-          [
-            -5.991765,
-            37.389785
-          ],
-          [
-            -5.9909741,
-            37.3895117
           ]
         ]
       }
@@ -595,38 +567,6 @@
         "coordinates": [
           -5.992784,
           37.388285
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 53,
-        "hermandad": "San Isidoro",
-        "calle": "Cuesta del Rosario",
-        "osm": "Calle Cuesta del Rosario"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.991765,
-          37.389785
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 53,
-        "hermandad": "San Isidoro",
-        "calle": "Calle Luchana",
-        "osm": "Calle Luchana"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9909741,
-          37.3895117
         ]
       }
     }

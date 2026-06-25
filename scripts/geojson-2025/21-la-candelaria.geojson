@@ -230,10 +230,6 @@
           [
             -5.9889261,
             37.3880054
-          ],
-          [
-            -5.9892314,
-            37.3885302
           ]
         ]
       }
@@ -699,22 +695,6 @@
         "coordinates": [
           -5.9889261,
           37.3880054
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 21,
-        "hermandad": "La Candelaria",
-        "calle": "Plaza Nuestro Padre Jesús de la Salud",
-        "osm": "Plaza Nuestro Padre Jesús de la Salud"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9892314,
-          37.3885302
         ]
       }
     }

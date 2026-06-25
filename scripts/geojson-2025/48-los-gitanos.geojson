@@ -394,14 +394,6 @@
           [
             -5.984483,
             37.3938976
-          ],
-          [
-            -5.9844227,
-            37.3939024
-          ],
-          [
-            -5.9841545,
-            37.3942804
           ]
         ]
       }
@@ -979,22 +971,6 @@
         "coordinates": [
           -5.984483,
           37.3938976
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 48,
-        "hermandad": "Los Gitanos",
-        "calle": "Calle Valle",
-        "osm": "Calle Valle"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9841545,
-          37.3942804
         ]
       }
     }

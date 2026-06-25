@@ -354,14 +354,6 @@
           [
             -5.9881136,
             37.3941815
-          ],
-          [
-            -5.9880871,
-            37.393607
-          ],
-          [
-            -5.9856437,
-            37.3951595
           ]
         ]
       }
@@ -955,38 +947,6 @@
         "coordinates": [
           -5.9881136,
           37.3941815
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 38,
-        "hermandad": "Las Cigarreras",
-        "calle": "Plaza de Los Terceros",
-        "osm": "Plaza de los Terceros"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9880871,
-          37.393607
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 38,
-        "hermandad": "Las Cigarreras",
-        "calle": "Calle Sol",
-        "osm": "Calle Sol"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9856437,
-          37.3951595
         ]
       }
     }

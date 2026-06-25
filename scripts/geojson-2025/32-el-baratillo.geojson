@@ -571,22 +571,6 @@
       "properties": {
         "id_hdad": 32,
         "hermandad": "El Baratillo",
-        "calle": "Calle Adriano",
-        "osm": "Calle Adriano"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.997544,
-          37.386488
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 32,
-        "hermandad": "El Baratillo",
         "calle": "Plaza de Molviedro",
         "osm": "Plaza de Molviedro"
       },

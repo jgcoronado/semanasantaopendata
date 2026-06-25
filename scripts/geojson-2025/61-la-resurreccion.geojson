@@ -434,10 +434,6 @@
           [
             -5.9878402,
             37.3961666
-          ],
-          [
-            -5.989152,
-            37.4024802
           ]
         ]
       }
@@ -967,22 +963,6 @@
         "coordinates": [
           -5.9878402,
           37.3961666
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 61,
-        "hermandad": "La Resurrección",
-        "calle": "Calle San Luis",
-        "osm": "Calle San Luis"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.989152,
-          37.4024802
         ]
       }
     }

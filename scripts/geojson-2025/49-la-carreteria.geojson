@@ -172,10 +172,6 @@
             37.3849621
           ],
           [
-            -5.996941,
-            37.3856006
-          ],
-          [
             -5.9968379,
             37.390749
           ],
@@ -555,22 +551,6 @@
         "coordinates": [
           -5.9969331,
           37.3849621
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 49,
-        "hermandad": "La Carretería",
-        "calle": "Calle Real de la Carretería",
-        "osm": "Calle Real de la Carretería"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.996941,
-          37.3856006
         ]
       }
     },

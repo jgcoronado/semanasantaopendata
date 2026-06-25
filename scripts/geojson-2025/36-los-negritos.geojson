@@ -276,38 +276,6 @@
             37.388285
           ],
           [
-            -5.992744,
-            37.388583
-          ],
-          [
-            -5.992621,
-            37.388828
-          ],
-          [
-            -5.992568,
-            37.389176
-          ],
-          [
-            -5.992542,
-            37.389426
-          ],
-          [
-            -5.992353,
-            37.389737
-          ],
-          [
-            -5.991765,
-            37.389785
-          ],
-          [
-            -5.9915301,
-            37.3898039
-          ],
-          [
-            -5.9913096,
-            37.3898065
-          ],
-          [
             -5.991289194661936,
             37.389882871212365
           ],
@@ -336,76 +304,12 @@
             37.390336
           ],
           [
-            -5.989974,
-            37.390022
-          ],
-          [
-            -5.989687,
-            37.389964
-          ],
-          [
-            -5.989119,
-            37.389864
-          ],
-          [
-            -5.988967,
-            37.389833
-          ],
-          [
-            -5.988735,
-            37.389857
-          ],
-          [
-            -5.988358,
-            37.389922
-          ],
-          [
-            -5.987752,
-            37.389879
-          ],
-          [
-            -5.987031,
-            37.389815
-          ],
-          [
-            -5.98665,
-            37.389741
-          ],
-          [
-            -5.98593,
-            37.389743
-          ],
-          [
-            -5.985625,
-            37.389691
-          ],
-          [
-            -5.985444,
-            37.389615
-          ],
-          [
-            -5.984607,
-            37.389236
-          ],
-          [
-            -5.984774,
-            37.389354
-          ],
-          [
-            -5.984857,
-            37.389636
-          ],
-          [
             -5.985496,
             37.390257
           ],
           [
             -5.9847954,
             37.3905838
-          ],
-          [
-            -5.9840695,
-            37.3917064
           ],
           [
             -5.9968379,
@@ -819,22 +723,6 @@
       "properties": {
         "id_hdad": 36,
         "hermandad": "Los Negritos",
-        "calle": "Cuesta del Rosario",
-        "osm": "Calle Cuesta del Rosario"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.991765,
-          37.389785
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
         "calle": "Plaza de la Pescadería",
         "osm": "Plaza de la Pescadería"
       },
@@ -883,86 +771,6 @@
       "properties": {
         "id_hdad": 36,
         "hermandad": "Los Negritos",
-        "calle": "Calle Alfalfa",
-        "osm": "Calle Alfalfa"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.989974,
-          37.390022
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle Águilas",
-        "osm": "Calle Águilas"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.987752,
-          37.389879
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Plaza de Pilatos",
-        "osm": "Plaza de Pilatos"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.987031,
-          37.389815
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle San Esteban",
-        "osm": "Calle San Esteban"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.985444,
-          37.389615
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle Puerta de Carmona",
-        "osm": "Calle Puerta de Carmona"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.984607,
-          37.389236
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
         "calle": "Calle Muro de los Navarros",
         "osm": "Calle Muro de los Navarros"
       },
@@ -987,22 +795,6 @@
         "coordinates": [
           -5.9847954,
           37.3905838
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle Recaredo",
-        "osm": "Calle Recaredo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9840695,
-          37.3917064
         ]
       }
     },

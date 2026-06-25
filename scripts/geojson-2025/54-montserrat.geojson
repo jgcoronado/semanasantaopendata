@@ -198,34 +198,6 @@
           [
             -5.9980142,
             37.3885566
-          ],
-          [
-            -5.9986533,
-            37.3888826
-          ],
-          [
-            -5.9989897,
-            37.3890495
-          ],
-          [
-            -5.9994237,
-            37.3893473
-          ],
-          [
-            -5.9990725,
-            37.3897046
-          ],
-          [
-            -5.9985321,
-            37.3900494
-          ],
-          [
-            -5.9987771,
-            37.3898861
-          ],
-          [
-            -5.9988822,
-            37.39042
           ]
         ]
       }
@@ -531,38 +503,6 @@
         "coordinates": [
           -5.9980142,
           37.3885566
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 54,
-        "hermandad": "Montserrat",
-        "calle": "Calle San Pablo",
-        "osm": "Calle San Pablo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9987771,
-          37.3898861
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 54,
-        "hermandad": "Montserrat",
-        "calle": "Calle Cristo del Calvario",
-        "osm": "Calle Cristo del Calvario"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9988822,
-          37.39042
         ]
       }
     }

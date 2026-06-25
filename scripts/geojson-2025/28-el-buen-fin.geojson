@@ -224,10 +224,6 @@
             37.3926614
           ],
           [
-            -5.998851,
-            37.3976815
-          ],
-          [
             -5.9982008,
             37.3902826
           ],
@@ -671,22 +667,6 @@
         "coordinates": [
           -5.9993065,
           37.3926614
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 28,
-        "hermandad": "El Buen Fin",
-        "calle": "Calle San Vicente",
-        "osm": "Calle San Vicente"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.998851,
-          37.3976815
         ]
       }
     },
