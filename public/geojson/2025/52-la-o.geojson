@@ -1,0 +1,798 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "nombre": "La O",
+        "dia": "madruga"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -6.0052411,
+            37.3869833
+          ],
+          [
+            -6.0042894,
+            37.3860453
+          ],
+          [
+            -6.0042561,
+            37.3859112
+          ],
+          [
+            -6.004405,
+            37.3856224
+          ],
+          [
+            -6.0039197,
+            37.3853775
+          ],
+          [
+            -6.0034273,
+            37.385113
+          ],
+          [
+            -6.003157,
+            37.385451
+          ],
+          [
+            -6.002392,
+            37.386329
+          ],
+          [
+            -6.0014333,
+            37.3873918
+          ],
+          [
+            -6.0009286,
+            37.3879185
+          ],
+          [
+            -6.00009,
+            37.388725
+          ],
+          [
+            -5.999537,
+            37.389252
+          ],
+          [
+            -5.9990535,
+            37.3897174
+          ],
+          [
+            -5.998242,
+            37.390243
+          ],
+          [
+            -5.9977932,
+            37.390508
+          ],
+          [
+            -5.996838,
+            37.390749
+          ],
+          [
+            -5.995983,
+            37.390975
+          ],
+          [
+            -5.9955203,
+            37.3910527
+          ],
+          [
+            -5.995396,
+            37.391045
+          ],
+          [
+            -5.9954615,
+            37.3920765
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.9954141,
+            37.3927175
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.994542,
+            37.390976
+          ],
+          [
+            -5.994258,
+            37.389845
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.992216,
+            37.385687
+          ],
+          [
+            -5.992025,
+            37.385325
+          ],
+          [
+            -5.991808,
+            37.385106
+          ],
+          [
+            -5.992202,
+            37.384901
+          ],
+          [
+            -5.992432,
+            37.3847769
+          ],
+          [
+            -5.9924457,
+            37.3845855
+          ],
+          [
+            -5.9932153,
+            37.384228
+          ],
+          [
+            -5.9936813,
+            37.3840399
+          ],
+          [
+            -5.9938258,
+            37.3839496
+          ],
+          [
+            -5.9939841,
+            37.3837856
+          ],
+          [
+            -5.9940909,
+            37.3836987
+          ],
+          [
+            -5.9954773,
+            37.3833048
+          ],
+          [
+            -5.9959041,
+            37.3841719
+          ],
+          [
+            -5.9962703,
+            37.3847503
+          ],
+          [
+            -5.9965253,
+            37.3846094
+          ],
+          [
+            -5.9973528,
+            37.3853117
+          ],
+          [
+            -5.9971498,
+            37.3854758
+          ],
+          [
+            -5.9968711,
+            37.3856398
+          ],
+          [
+            -5.9964238,
+            37.3858284
+          ],
+          [
+            -5.9966991,
+            37.3861647
+          ],
+          [
+            -5.996852,
+            37.38626
+          ],
+          [
+            -5.997625,
+            37.386513
+          ],
+          [
+            -5.99817,
+            37.386661
+          ],
+          [
+            -5.998377,
+            37.386823
+          ],
+          [
+            -5.999277,
+            37.387555
+          ],
+          [
+            -6.000245,
+            37.388267
+          ],
+          [
+            -6.000417,
+            37.388383
+          ],
+          [
+            -6.000937,
+            37.3879136
+          ],
+          [
+            -6.0014417,
+            37.3873852
+          ],
+          [
+            -6.002392,
+            37.386329
+          ],
+          [
+            -6.003157,
+            37.385454
+          ],
+          [
+            -6.0034276,
+            37.3851202
+          ],
+          [
+            -6.0039197,
+            37.3853775
+          ],
+          [
+            -6.0044275,
+            37.3856224
+          ],
+          [
+            -6.0042602,
+            37.3859161
+          ],
+          [
+            -6.0042894,
+            37.3860453
+          ],
+          [
+            -6.0052282,
+            37.3869801
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Castilla",
+        "osm": "Calle Castilla"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.004388,
+          37.3860858
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Callao",
+        "osm": "Calle Callao"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0043339,
+          37.3858415
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle San Jorge",
+        "osm": "Calle San Jorge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0039197,
+          37.3853775
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Plaza del Altozano",
+        "osm": "Plaza del Altozano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.003184,
+          37.385432
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Puente de Isabel II",
+        "osm": "Puente de Isabel II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.002392,
+          37.386329
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Reyes Católicos",
+        "osm": "Calle Reyes Católicos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.000823,
+          37.387956
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Puerta de Triana",
+        "osm": "Calle Puerta de Triana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.999537,
+          37.389252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle San Pablo",
+        "osm": "Calle San Pablo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.99825,
+          37.390229
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Plaza de la Magdalena",
+        "osm": "Plaza de la Magdalena"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.996838,
+          37.390749
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Rioja",
+        "osm": "Calle Rioja"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.996081,
+          37.390949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Velázquez",
+        "osm": "Calle Velázquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995422,
+          37.391434
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle O'Donnell",
+        "osm": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9942,
+          37.387118
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.388623
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994528,
+          37.390859
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "La Campana",
+        "osm": "Calle Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Plaza del Triunfo",
+        "osm": "Plaza del Triunfo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992351,
+          37.385188
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Fray Ceferino González",
+        "osm": "Calle Fray Ceferino González"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.993126,
+          37.38514
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Almirantazgo",
+        "osm": "Calle Almirantazgo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994256,
+          37.385126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Arco del Postigo",
+        "osm": "Calle Arco del Postigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995011,
+          37.385226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Dos de Mayo",
+        "osm": "Calle Dos de Mayo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995197,
+          37.385176
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Adriano",
+        "osm": "Calle Adriano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.997544,
+          37.386488
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Pastor y Landero",
+        "osm": "Calle Pastor y Landero"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.000245,
+          37.388267
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Reyes Católicos",
+        "osm": "Calle Reyes Católicos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.000836,
+          37.387948
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Puente de Isabel II",
+        "osm": "Puente de Isabel II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.002392,
+          37.386329
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Plaza del Altozano",
+        "osm": "Plaza del Altozano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.003179,
+          37.385431
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle San Jorge",
+        "osm": "Calle San Jorge"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0039197,
+          37.3853775
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Callao",
+        "osm": "Calle Callao"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0043339,
+          37.3858415
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 52,
+        "hermandad": "La O",
+        "calle": "Calle Castilla",
+        "osm": "Calle Castilla"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0043535,
+          37.3860996
+        ]
+      }
+    }
+  ]
+}

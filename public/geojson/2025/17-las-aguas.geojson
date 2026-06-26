@@ -1,0 +1,698 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "nombre": "Las Aguas",
+        "dia": "lunes-santo"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.9963075,
+            37.3845784
+          ],
+          [
+            -5.9962007,
+            37.3847101
+          ],
+          [
+            -5.996229,
+            37.3847829
+          ],
+          [
+            -5.9961004,
+            37.3848712
+          ],
+          [
+            -5.9953598,
+            37.3851215
+          ],
+          [
+            -5.9953224,
+            37.3852665
+          ],
+          [
+            -5.9953568,
+            37.3855591
+          ],
+          [
+            -5.9954484,
+            37.3856891
+          ],
+          [
+            -5.9954957,
+            37.3857758
+          ],
+          [
+            -5.9961928,
+            37.3861699
+          ],
+          [
+            -5.9961951,
+            37.3861991
+          ],
+          [
+            -5.9961241,
+            37.3862199
+          ],
+          [
+            -5.996073,
+            37.3862372
+          ],
+          [
+            -5.9960686,
+            37.386284
+          ],
+          [
+            -5.9961784,
+            37.3863579
+          ],
+          [
+            -5.9972329,
+            37.3872018
+          ],
+          [
+            -5.9978829,
+            37.3877064
+          ],
+          [
+            -5.9977813,
+            37.3878196
+          ],
+          [
+            -5.9976929,
+            37.3878993
+          ],
+          [
+            -5.9974462,
+            37.3881554
+          ],
+          [
+            -5.997383,
+            37.3883309
+          ],
+          [
+            -5.9977618,
+            37.38845
+          ],
+          [
+            -5.9980142,
+            37.3885566
+          ],
+          [
+            -5.9986533,
+            37.3888826
+          ],
+          [
+            -5.9989897,
+            37.3890495
+          ],
+          [
+            -5.9994237,
+            37.3893473
+          ],
+          [
+            -5.9990725,
+            37.3897046
+          ],
+          [
+            -5.9985321,
+            37.3900494
+          ],
+          [
+            -5.9984053,
+            37.3901193
+          ],
+          [
+            -5.9978096,
+            37.3905118
+          ],
+          [
+            -5.996838,
+            37.390749
+          ],
+          [
+            -5.996081,
+            37.390949
+          ],
+          [
+            -5.9953857,
+            37.3910684
+          ],
+          [
+            -5.9954119,
+            37.3915315
+          ],
+          [
+            -5.9954456,
+            37.3918072
+          ],
+          [
+            -5.9954729,
+            37.3920186
+          ],
+          [
+            -5.995454,
+            37.392155
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.995414,
+            37.392722
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994861,
+            37.3922847
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.9946698,
+            37.3913397
+          ],
+          [
+            -5.9945265,
+            37.3909721
+          ],
+          [
+            -5.9942789,
+            37.389891
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.992216,
+            37.385687
+          ],
+          [
+            -5.9921513,
+            37.3854559
+          ],
+          [
+            -5.9920553,
+            37.3853242
+          ],
+          [
+            -5.9919179,
+            37.3852341
+          ],
+          [
+            -5.9918376,
+            37.3851389
+          ],
+          [
+            -5.9918245,
+            37.3850939
+          ],
+          [
+            -5.992202,
+            37.384901
+          ],
+          [
+            -5.9924386,
+            37.3847672
+          ],
+          [
+            -5.9924231,
+            37.3845838
+          ],
+          [
+            -5.9927502,
+            37.38444
+          ],
+          [
+            -5.9935512,
+            37.3841047
+          ],
+          [
+            -5.9937594,
+            37.3840126
+          ],
+          [
+            -5.9939317,
+            37.3838479
+          ],
+          [
+            -5.994032,
+            37.3837076
+          ],
+          [
+            -5.9942937,
+            37.3836487
+          ],
+          [
+            -5.9943531,
+            37.3840425
+          ],
+          [
+            -5.9944107,
+            37.3843189
+          ],
+          [
+            -5.9944979,
+            37.3846048
+          ],
+          [
+            -5.9945898,
+            37.3849947
+          ],
+          [
+            -5.9946138,
+            37.3850779
+          ],
+          [
+            -5.994644,
+            37.385178
+          ],
+          [
+            -5.99475,
+            37.38523
+          ],
+          [
+            -5.994849,
+            37.385252
+          ],
+          [
+            -5.994996,
+            37.385234
+          ],
+          [
+            -5.9955901,
+            37.3850376
+          ],
+          [
+            -5.9960982,
+            37.384873
+          ],
+          [
+            -5.99623,
+            37.3847807
+          ],
+          [
+            -5.9962061,
+            37.3847079
+          ],
+          [
+            -5.9963112,
+            37.3845759
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Dos de Mayo",
+        "osm": "Calle Dos de Mayo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9952128,
+          37.3851693
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Arfe",
+        "osm": "Calle Arfe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954066,
+          37.3856467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Puerta del Arenal",
+        "osm": "Calle Puerta del Arenal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9961393,
+          37.3862162
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Castelar",
+        "osm": "Calle Castelar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9972329,
+          37.3872018
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Plaza de Molviedro",
+        "osm": "Plaza de Molviedro"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9977813,
+          37.3878196
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Doña Guiomar",
+        "osm": "Calle Doña Guiomar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9976929,
+          37.3878993
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Zaragoza",
+        "osm": "Calle Zaragoza"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9980142,
+          37.3885566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle San Pablo",
+        "osm": "Calle San Pablo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9987771,
+          37.3898861
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Plaza de la Magdalena",
+        "osm": "Plaza de la Magdalena"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.996838,
+          37.390749
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Rioja",
+        "osm": "Calle Rioja"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.996081,
+          37.390949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Velázquez",
+        "osm": "Calle Velázquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954323,
+          37.3915334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle O'Donnell",
+        "osm": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "La Campana",
+        "osm": "Calle Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9944915,
+          37.3907676
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Almirantazgo",
+        "osm": "Calle Almirantazgo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994698,
+          37.3852033
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Arco del Postigo",
+        "osm": "Calle Arco del Postigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9949623,
+          37.3852335
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Calle Dos de Mayo",
+        "osm": "Calle Dos de Mayo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9951972,
+          37.385176
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 17,
+        "hermandad": "Las Aguas",
+        "calle": "Plaza del Triunfo",
+        "osm": "Plaza del Triunfo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992351,
+          37.385188
+        ]
+      }
+    }
+  ]
+}
