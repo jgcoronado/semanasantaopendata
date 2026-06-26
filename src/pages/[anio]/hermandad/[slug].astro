@@ -203,6 +203,11 @@ const jsonLd = {
         )}
       </div>
     </div>
+    {r.metros != null && !velocidad && (
+      <nav class="dia-nav contenedor" style="padding-top:0.75rem" aria-label="Descarga de recorrido">
+        <a class="dia-nav__a" href={`/${anio}/datos/recorrido/${slug}.geojson`} download>⬇ GeoJSON recorrido {anio}</a>
+      </nav>
+    )}
   </section>
 
   {velocidad && (
@@ -233,6 +238,7 @@ const jsonLd = {
         </tbody>
       </table>
       <nav class="dia-nav" aria-label="Más">
+        <a class="dia-nav__a" href={`/${anio}/datos/recorrido/${slug}.geojson`} download>⬇ GeoJSON recorrido {anio}</a>
         <a class="dia-nav__a dia-nav__der" href={`/${anio}/#velocidades`}>Ver todas las velocidades →</a>
       </nav>
     </section>

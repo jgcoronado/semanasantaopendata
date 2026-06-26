@@ -259,12 +259,12 @@ const jsonLd = {
 
   <!-- Recorridos -->
   {tieneRecorridos && (
-    <RecorridosGraficas registros={registros} dias={diasPresentes} />
+    <RecorridosGraficas registros={registros} dias={diasPresentes} anio={anio} />
   )}
 
   <!-- Velocidades -->
   {tieneVelocidades && (
-    <VelocidadesGraficas registros={velocidadesRegistros} dias={diasPresentes} />
+    <VelocidadesGraficas registros={velocidadesRegistros} dias={diasPresentes} anio={anio} />
   )}
 
   <section class="panel contenedor">

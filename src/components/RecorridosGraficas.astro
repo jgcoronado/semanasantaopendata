@@ -1,5 +1,5 @@
 ---
-const { registros, dias } = Astro.props;
+const { registros, dias, anio } = Astro.props;
 
 const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 
@@ -71,6 +71,11 @@ function fmtKm(n) {
     </div>
     <p class="grafica__nota visualmente-oculto">Gráfica de dispersión: cada punto representa una cofradía, con los kilómetros del recorrido en el eje horizontal y el número de nazarenos en el eje vertical. El color y la forma del punto indican el día procesional.</p>
   </figure>
+  {anio && (
+    <nav class="dia-nav" aria-label="Descargas de recorridos">
+      <a class="dia-nav__a" href={`/${anio}/datos/recorridos.geojson`} download>⬇ GeoJSON recorridos {anio}</a>
+    </nav>
+  )}
 </section>
 
 <script type="application/json" id="datos-recorridos" set:html={JSON.stringify(datosCliente)}></script>

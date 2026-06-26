@@ -2,7 +2,7 @@
 // Velocidad media de cada cofradía en m/h (completa, ida, Carrera Oficial, vuelta).
 // `registros`: array de velocidades (getVelocidadesAnio), posiblemente ya filtrado por día.
 // `dias`: catálogo de días presentes (slug, nombre, orden) para color/forma.
-const { registros, dias } = Astro.props;
+const { registros, dias, anio } = Astro.props;
 
 const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 const diasOrd = [...dias].sort((a, b) => a.orden - b.orden);
@@ -82,6 +82,11 @@ const fmtVel = (n) => n.toLocaleString('es-ES') + ' m/h';
     </div>
     <p class="grafica__nota visualmente-oculto">Gráfica de dispersión: cada punto representa una cofradía, con la velocidad de ida en el eje horizontal y la de vuelta en el vertical, ambas en metros por hora. El color y la forma del punto indican el día procesional.</p>
   </figure>
+  {anio && (
+    <nav class="dia-nav" aria-label="Descargas de recorridos">
+      <a class="dia-nav__a" href={`/${anio}/datos/recorridos.geojson`} download>⬇ GeoJSON recorridos {anio}</a>
+    </nav>
+  )}
 </section>
 
 <script type="application/json" id="datos-velocidades" set:html={JSON.stringify(datosCliente)}></script>
