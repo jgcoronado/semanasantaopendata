@@ -5,13 +5,6 @@ const diasOrd = [...dias].sort((a, b) => a.orden - b.orden);
 
 // Paleta oficial (un color único por día litúrgico, orden 1-9)
 const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
-// Solo formas con relleno: círculo, triángulo, cuadrado (ciclo de 3)
-const SIMBOLOS_3 = ['circle','triangle','rect'];
-
-const estiloDia = (orden) => ({
-  color:   COLORES_9[(orden - 1) % 9],
-  simbolo: SIMBOLOS_3[(orden - 1) % 3],
-});
 
 // Colores para composición del cortejo (stacked bars, tipos de participante)
 const COL_COMP = {
@@ -32,6 +25,13 @@ function diaBg(orden) {
 }
 
 const altoRanking = Math.max(420, registros.length * 24);
+
+// Hermandades sin datos, agrupadas por día procesional
+const sinDatosPorDia = sinDatos
+  ? diasOrd
+      .map((d) => ({ dia: d, hermandades: sinDatos.filter((r) => r.diaSlug === d.slug) }))
+      .filter((g) => g.hermandades.length > 0)
+  : [];
 
 const datosCliente = {
   dias: diasOrd.map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden })),
@@ -63,25 +63,6 @@ const datosCliente = {
     la duración de la estación de penitencia. El color y la forma indican el día procesional.
   </p>
 
-  <ul class="leyenda-dias" aria-label="Días procesionales">
-    {diasOrd.map((d) => {
-      const e = estiloDia(d.orden);
-      const forma = e.simbolo === 'circle' ? 'circle'
-                  : e.simbolo === 'triangle' ? 'triangle'
-                  : 'rect';
-      return (
-        <li class="leyenda-dias__item">
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="flex-shrink:0">
-            {forma === 'circle'   && <circle cx="9" cy="9" r="8" fill={e.color} />}
-            {forma === 'triangle' && <polygon points="9,1 17,17 1,17" fill={e.color} />}
-            {forma === 'rect'     && <rect x="1" y="1" width="16" height="16" rx="2" fill={e.color} />}
-          </svg>
-          <span>{d.nombre}</span>
-        </li>
-      );
-    })}
-  </ul>
-
   <figure class="grafica grafica--ancha">
     <figcaption>Duración (horas) frente a total de participantes del cortejo</figcaption>
     <div class="grafica__lienzo" style="height:420px">
@@ -98,20 +79,6 @@ const datosCliente = {
     Cofradías ordenadas de mayor a menor total de participantes. Cada segmento muestra el
     desglose por tipo: nazarenos, penitentes, acólitos, monaguillos y acompañamiento del cortejo.
   </p>
-
-  <ul class="leyenda-dias" aria-label="Tipos de participantes">
-    {Object.entries(COL_COMP).map(([clave, color]) => {
-      const etiquetas = { nazarenos:'Nazarenos', penitentes:'Penitentes', acolitos:'Acólitos', monaguillos:'Monaguillos', acompCortejo:'Acompañamiento' };
-      return (
-        <li class="leyenda-dias__item">
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="flex-shrink:0">
-            <rect x="1" y="1" width="16" height="16" rx="2" fill={color} />
-          </svg>
-          <span>{etiquetas[clave]}</span>
-        </li>
-      );
-    })}
-  </ul>
 
   <figure class="grafica grafica--ancha">
     <figcaption>Total de participantes por hermandad (desglose por tipo)</figcaption>
@@ -249,13 +216,18 @@ const datosCliente = {
       Las siguientes hermandades figuran en el calendario oficial pero no tienen datos de conteo
       ese año, posiblemente por lluvia o suspensión.
     </p>
-    <ul style="columns:2;gap:2rem;list-style:none;padding:0;margin:0">
-      {sinDatos.map((r) => (
-        <li style="margin-bottom:.4rem">
-          <strong>{r.nombre}</strong> <span style="color:var(--gris-medio,#777)">· {r.diaNombre}</span>
-        </li>
+    <div style="columns:2;gap:2rem">
+      {sinDatosPorDia.map((g) => (
+        <div style="margin-bottom:1rem">
+          <h3 style={`margin:0 0 .3rem;font-size:.9rem;color:${COLORES_9[(g.dia.orden - 1) % 9]}`}>{g.dia.nombre}</h3>
+          <ul style="list-style:none;padding:0;margin:0">
+            {g.hermandades.map((r) => (
+              <li style="margin-bottom:.3rem"><strong>{r.nombre}</strong></li>
+            ))}
+          </ul>
+        </div>
       ))}
-    </ul>
+    </div>
   </section>
 )}
 

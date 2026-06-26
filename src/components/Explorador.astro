@@ -2,37 +2,16 @@
 import { getAnio } from '../lib/datos.js';
 
 const { anio } = Astro.props;
-const { registros, totalesPorDia, diasPresentes } = getAnio(anio);
+const { totalesPorDia } = getAnio(anio);
 
 const datosGraficas = {
   dias: totalesPorDia.map((t) => ({ slug: t.slug, nombre: t.nombre, orden: t.orden, noNaz: t.noNaz, noTotal: t.noTotal })),
-  hermandades: registros.map((r) => ({
-    slug: r.slug,
-    nombre: r.nombre,
-    diaSlug: r.diaSlug,
-  })),
 };
-
-const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
 ---
 
 <section class="panel contenedor" id="graficas">
   <div class="panel__cab">
     <h2>Participantes por día</h2>
-  </div>
-
-  <div class="controles">
-    <label class="campo">
-      Resaltar hermandad
-      <select id="selector-hermandad">
-        <option value="">— Ninguna —</option>
-        {diasPresentes.map((d) => (
-          <optgroup label={d.nombre}>
-            {hermandadesDe(d.slug).map((h) => <option value={h.slug}>{h.nombre}</option>)}
-          </optgroup>
-        ))}
-      </select>
-    </label>
   </div>
 
   <div class="graficas-grid">
@@ -58,9 +37,6 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
   const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
 
   const colDia = (orden) => COLORES_9[(orden - 1) % 9];
-  const selHdad = document.getElementById('selector-hermandad');
-
-  let hdadActual = null;
 
   const coloresDiasNaz     = datos.dias.map((d) => colDia(d.orden));
   const coloresDiasCortejo = datos.dias.map((d) => colDia(d.orden) + '80');
@@ -99,14 +75,5 @@ const hermandadesDe = (slug) => registros.filter((r) => r.diaSlug === slug);
       },
       scales: { y: { beginAtZero: true, ticks: { callback: (v) => nf.format(v) } } },
     },
-  });
-
-  function emitir() {
-    document.dispatchEvent(new CustomEvent('hdad-sel', { detail: { slug: hdadActual } }));
-  }
-
-  selHdad.addEventListener('change', () => {
-    hdadActual = selHdad.value || null;
-    emitir();
   });
 </script>

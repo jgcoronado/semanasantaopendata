@@ -9,7 +9,7 @@ import CarreraOficialTabla from '../../../components/CarreraOficialTabla.astro';
 import CarreraOficialGraficas from '../../../components/CarreraOficialGraficas.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
 import {
-  anios, aniosConHorarios, hayPasoReal,
+  anios, aniosConHorarios, hayPasoReal, hayRecorridos,
   getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
   fmt, getFuentesAnio,
 } from '../../../lib/datos.js';
@@ -38,6 +38,7 @@ const siguiente = diasPresentes[idx + 1];
 
 const tieneHorarios = aniosConHorarios.some((h) => h.anio === anioNum);
 const tienePasoReal = hayPasoReal(anioNum);
+const tieneRecorridos = hayRecorridos(anioNum);
 
 // --- Horarios del día ---
 let horariosRegistros = [];
@@ -92,6 +93,7 @@ const fuentesPagina = getFuentesAnio(anioNum, [
   'nazarenos',
   ...(tieneHorarios ? ['horarios'] : []),
   ...(tienePasoReal ? ['paso_real'] : []),
+  ...(tieneRecorridos ? ['recorridos'] : []),
 ]);
 
 const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTotal: totales.noTotal };
@@ -136,8 +138,7 @@ const jsonLd = {
 
   <!-- Tabla nazarenos del día -->
   <section class="panel contenedor">
-    <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} />
-    <FuentesResumen fuentes={fuentesPagina} />
+    <TablaNazarenos registros={regs} totalGeneral={totalDia} anio={anio} conColumnaDia={false} conFiltroDia={false} conRecorridos={tieneRecorridos} />
   </section>
 
   <!-- Composición del día -->
@@ -148,7 +149,7 @@ const jsonLd = {
     <>
       <section class="panel contenedor" id="horarios">
         <div class="panel__cab"><h2>Horarios oficiales</h2></div>
-        <HorariosTabla registros={horariosRegistros} dias={[diaInfo]} anio={anio} />
+        <HorariosTabla registros={horariosRegistros} dias={[diaInfo]} anio={anio} conColumnaDia={false} conFiltroDia={false} />
       </section>
       <HorariosGraficas registros={horariosRegistros} dias={[diaInfo]} />
     </>
@@ -177,4 +178,18 @@ const jsonLd = {
       <CarreraOficialGraficas registros={pasoRealRegistros} dias={[diaInfo]} />
     </>
   )}
+
+  <section class="panel contenedor">
+    <FuentesResumen
+      fuentes={fuentesPagina}
+      descargas={[
+        { href: `/${anio}/datos/conteo.csv`, label: '⬇ CSV', download: true },
+        { href: `/${anio}/datos/conteo.json`, label: 'JSON' },
+        ...(tieneRecorridos ? [
+          { href: `/${anio}/datos/dia/${dia}.zip`, label: '⬇ GeoJSON del día (ZIP)', download: true },
+          { href: `/${anio}/datos/recorridos.zip`, label: '⬇ GeoJSON semana (ZIP)', download: true },
+        ] : []),
+      ]}
+    />
+  </section>
 </Base>

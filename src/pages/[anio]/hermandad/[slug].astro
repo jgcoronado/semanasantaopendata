@@ -1,9 +1,11 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import GraficasHermandad from '../../../components/GraficasHermandad.astro';
-import FuenteBadge from '../../../components/FuenteBadge.astro';
 import FuentesResumen from '../../../components/FuentesResumen.astro';
-import { anios, getAnio, fmt, fmtPct, fmtDur, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds } from '../../../lib/datos.js';
+import RecorridoMapa from '../../../components/RecorridoMapa.astro';
+import { anios, getAnio, fmt, fmtPct, fmtDur, fmtKm, variacion, hayHorarios, getHorariosAnio, aniosConHorarios, hayPasoReal, getPasoReal, getFuentesAnio, getFuentesPorIds, getComparecenciaHermandad, getFuente, hayRecorridos, getVelocidadHermandad } from '../../../lib/datos.js';
+
+const COLORES_DIA = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 
 export function getStaticPaths() {
   const paths = [];
@@ -50,18 +52,43 @@ const porAnioAsc = [...anios]
       diaNoNaz: tot.noNaz, diaNoTotal: tot.noTotal,
       hdadesEnDia: hermsDiaAnio.length,
       rankNaz: rankNazAnio, rankTotal: rankTotalAnio,
+      metros: reg.metros ?? null,
     };
   })
   .filter(Boolean);
 
 const filasAnios = porAnioAsc.map((x, i) => {
   const prev = porAnioAsc[i - 1];
-  const fuente = getFuentesAnio(x.anio, ['nazarenos'])[0] ?? null;
-  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null, fuente };
+  return { ...x, varNaz: prev ? variacion(x.noNaz, prev.noNaz) : null, varTotal: prev ? variacion(x.noTotal, prev.noTotal) : null };
 });
 
+const tieneMetrosAlgunAnio = porAnioAsc.some((x) => x.metros != null);
+
+// Velocidades de esta hermandad en el año actual (m/h).
+const velocidad = getVelocidadHermandad(anioNum, r.id_hdad);
+const fmtVel = (n) => (n == null ? '—' : n.toLocaleString('es-ES') + ' m/h');
+const colorDia = COLORES_DIA[(r.diaOrden ?? 1) - 1] ?? '#6929c4';
+
+const tramosVel = velocidad ? [
+  { lbl: 'Completa', desc: 'salida → templo', v: velocidad.velocidad_mh.completa, m: velocidad.distancias_m.total, min: velocidad.duracion_min.total },
+  { lbl: 'Ida', desc: 'salida → La Campana', v: velocidad.velocidad_mh.ida, m: velocidad.distancias_m.ida, min: velocidad.duracion_min.ida },
+  { lbl: 'Carrera Oficial', desc: 'La Campana → Catedral', v: velocidad.velocidad_mh.carrera_oficial, m: velocidad.distancias_m.carrera_oficial, min: velocidad.duracion_min.carrera_oficial },
+  { lbl: 'Vuelta', desc: 'Catedral → templo', v: velocidad.velocidad_mh.vuelta, m: velocidad.distancias_m.vuelta, min: velocidad.duracion_min.vuelta },
+] : [];
+
+// Fuentes de comparecencia de esta hermandad en cualquier año con datos.
+const fuentesComparecencia = anios
+  .map((a) => getComparecenciaHermandad(a.anio, r.id_hdad)?.fuente_id)
+  .filter(Boolean)
+  .map((id) => getFuente(id))
+  .filter(Boolean);
+
+// Todas las fuentes de la página, consolidadas en un único bloque al final.
 const fuentesPagina = [...new Map(
-  anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real'])).map((f) => [f.id, f])
+  [
+    ...anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real', 'recorridos'])),
+    ...fuentesComparecencia,
+  ].map((f) => [f.id, f])
 ).values()];
 
 const celdaVar = (v) => (v == null ? { txt: '—', cls: '' } : { txt: (v > 0 ? '+' : '') + fmtPct(v), cls: v > 0 ? 'pos' : v < 0 ? 'neg' : '' });
@@ -83,6 +110,11 @@ const itinerario = horario
 // Paso real por La Campana (si existe para el año mostrado).
 const pasoReal = hayPasoReal(anioNum) ? getPasoReal(anioNum).registros.find((x) => x.idHdad === r.id_hdad) : null;
 
+// Comparecencia (de lo anunciado a lo real) de esta hermandad en el año mostrado.
+// La fuente no se muestra en la tarjeta: se consolida al final de la página.
+const comparecencia = getComparecenciaHermandad(anioNum, r.id_hdad);
+const etiquetaBaseComp = comparecencia?.baseNazTipo === 'nomina' ? 'la nómina de la cofradía' : 'las papeletas de sitio';
+
 // Formatea un retraso en minutos con signo: +12 min / −5 min / En hora.
 const fmtRetraso = (min) => {
   if (min === 0) return 'En hora';
@@ -95,7 +127,7 @@ const clsRetraso = (min) => (min > 0 ? 'neg' : min < 0 ? 'pos' : '');
 const horariosEvolucion = aniosConHorarios
   .map((a) => {
     const h = getHorariosAnio(a.anio).registros.find((x) => x.id_hdad === r.id_hdad);
-    return h ? { anio: a.anio, duracionMin: h.duracionMin, carreraOficialMin: h.carreraOficialMin, cruzCarreraMin: h.cruzCarreraMin, partPorHora: h.partPorHora, salida: h.horas.salida, entrada: h.horas.entrada, entradaMin: h.entradaMin } : null;
+    return h ? { anio: a.anio, duracionMin: h.duracionMin, carreraOficialMin: h.carreraOficialMin, cruzCarreraMin: h.cruzCarreraMin, salida: h.horas.salida, entrada: h.horas.entrada, entradaMin: h.entradaMin } : null;
   })
   .filter(Boolean)
   .sort((a, b) => a.anio - b.anio);
@@ -162,17 +194,87 @@ const jsonLd = {
           <div class="kpi__num">{fmtPct(r.pctTotal)}</div>
           <div class="kpi__lbl">del cortejo del día</div>
         </div>
+        {r.metros != null && (
+          <div class="kpi">
+            <div class="kpi__num">{fmtKm(r.metros)}</div>
+            <div class="kpi__lbl">Recorrido {anio}</div>
+          </div>
+        )}
+        {velocidad && (
+          <div class="kpi">
+            <div class="kpi__num">{fmtVel(velocidad.velocidad_mh.completa)}</div>
+            <div class="kpi__lbl">Velocidad media {anio}</div>
+          </div>
+        )}
       </div>
     </div>
+    {r.metros != null && !velocidad && (
+      <nav class="dia-nav contenedor" style="padding-top:0.75rem" aria-label="Descarga de recorrido">
+        <a class="dia-nav__a" href={`/${anio}/datos/recorrido/${slug}.geojson`} download>⬇ GeoJSON recorrido {anio}</a>
+      </nav>
+    )}
   </section>
+
+  {velocidad && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>Velocidad {anio}</h2></div>
+      <p class="descargas-intro">
+        Velocidad media de la <strong>cruz de guía</strong> sobre el trazado real, en metros por hora.
+        La de Carrera Oficial viene marcada por el paso regulado; la de vuelta descuenta el tiempo de paso del cortejo.
+      </p>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Tramo</th>
+            <th scope="col">Recorrido</th>
+            <th scope="col">Tiempo</th>
+            <th scope="col">Velocidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tramosVel.map((t) => (
+            <tr>
+              <th scope="row">{t.lbl} <span class="it-punto">{t.desc}</span></th>
+              <td>{fmtKm(t.m)}</td>
+              <td>{fmtDur(t.min)}</td>
+              <td>{fmtVel(t.v)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <nav class="dia-nav" aria-label="Más">
+        <a class="dia-nav__a" href={`/${anio}/datos/recorrido/${slug}.geojson`} download>⬇ GeoJSON recorrido {anio}</a>
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/#velocidades`}>Ver todas las velocidades →</a>
+      </nav>
+    </section>
+  )}
+
+  {anioNum === 2025 && r.metros != null && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>Recorrido {anio}</h2></div>
+      <p class="descargas-intro">
+        Trazado real de la estación de penitencia de <strong>{r.nombre}</strong> en {anio}.
+        {r.metros != null && <> Distancia total: <strong>{fmtKm(r.metros)}</strong>.</>}
+        {horario && <> Haz clic en los marcadores para ver los hitos de la Carrera Oficial con sus horas oficiales.</>}
+      </p>
+      <RecorridoMapa
+        idHdad={r.id_hdad}
+        slug={slug}
+        colorDia={colorDia}
+        nombre={r.nombre}
+        horario={horario}
+        pasoReal={pasoReal}
+        metros={r.metros}
+      />
+    </section>
+  )}
 
   {horario && (
     <section class="panel contenedor">
       <div class="panel__cab"><h2>Horario oficial {anio}</h2></div>
       <p class="descargas-intro">
         Duración <strong>{fmtDur(horario.duracionMin)}</strong> · en Carrera Oficial
-        <strong>{fmtDur(horario.carreraOficialMin)}</strong>
-        {horario.partPorHora != null && <> · <strong>{fmt(horario.partPorHora)}</strong> miembros/hora</>}.
+        <strong>{fmtDur(horario.carreraOficialMin)}</strong>.
       </p>
       <ul class="itinerario">
         {itinerario.map((it) => (
@@ -237,13 +339,61 @@ const jsonLd = {
     </section>
   )}
 
+  {comparecencia && (
+    <section class="panel contenedor">
+      <div class="panel__cab"><h2>De lo anunciado a lo real {anio}</h2></div>
+      <p class="descargas-intro">
+        Cuántos cofrades salieron realmente frente a los anunciados, según {etiquetaBaseComp}.
+      </p>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi__num">{comparecencia.baseNaz != null ? fmt(comparecencia.baseNaz) : '—'}</div>
+          <div class="kpi__lbl">Nazarenos anunciados</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi__num">{comparecencia.nazarenos.salida != null ? fmt(comparecencia.nazarenos.salida) : '—'}</div>
+          <div class="kpi__lbl">Salieron de verdad</div>
+        </div>
+        {comparecencia.comparecenciaNaz != null && (
+          <div class="kpi">
+            <div class="kpi__num">{fmtPct(comparecencia.comparecenciaNaz)}</div>
+            <div class="kpi__lbl">Comparecencia</div>
+          </div>
+        )}
+        {comparecencia.ausenciasNaz != null && (
+          <div class="kpi">
+            <div class="kpi__num var neg">{fmt(comparecencia.ausenciasNaz)}</div>
+            <div class="kpi__lbl">No comparecieron</div>
+          </div>
+        )}
+      </div>
+      {(comparecencia.mermaRecorridoNaz != null || comparecencia.pctCompletaron != null || (comparecencia.cortejo && comparecencia.cortejo.salida != null)) && (
+        <p class="descargas-intro" style="margin-top:1rem">
+          {comparecencia.cortejo && comparecencia.cortejo.salida != null && (
+            <>Cortejo completo: <strong>{fmt(comparecencia.cortejo.salida)}</strong> de {fmt(comparecencia.baseCortejo)} de nómina ({fmtPct(comparecencia.comparecenciaCortejo)}). </>
+          )}
+          {comparecencia.mermaRecorridoNaz != null && (
+            <>Entre la salida y la entrada al templo <strong class="var neg">se retiró un {fmtPct(Math.abs(comparecencia.mermaRecorridoNaz))}</strong> de los nazarenos. </>
+          )}
+          {comparecencia.pctCompletaron != null && (
+            <>Tras la lluvia, <strong>{fmtPct(comparecencia.pctCompletaron)}</strong> completó la estación. </>
+          )}
+        </p>
+      )}
+      {comparecencia.nota && <p class="descargas-intro" style="margin-top:0.5rem">{comparecencia.nota}</p>}
+      <nav class="dia-nav" aria-label="Más">
+        <a class="dia-nav__a dia-nav__der" href={`/${anio}/#comparecencia`}>Ver la comparecencia de todas las hermandades →</a>
+      </nav>
+    </section>
+  )}
+
   {horariosEvolucion.length >= 2 && (
     <section class="panel contenedor">
       <div class="panel__cab"><h2>Evolución del horario</h2></div>
       <p class="descargas-intro">Comparativa de duración y ritmo en los años con horario oficial disponible.</p>
       <div class="tabla-wrap">
         <table class="datos">
-          <caption>Duración, tiempo en Carrera Oficial y miembros por hora de {r.nombre} por año.</caption>
+          <caption>Duración y tiempo en Carrera Oficial de {r.nombre} por año.</caption>
           <thead>
             <tr>
               <th scope="col">Año</th>
@@ -251,7 +401,6 @@ const jsonLd = {
               <th scope="col">Entrada</th>
               <th scope="col">Duración</th>
               <th scope="col">En Carrera Oficial</th>
-              <th scope="col">Miembros/hora</th>
             </tr>
           </thead>
           <tbody>
@@ -262,7 +411,6 @@ const jsonLd = {
                 <td>{h.entrada}{h.entradaMin >= 1440 && <span class="dia-sig"> +1<span class="visualmente-oculto"> (día siguiente)</span></span>}</td>
                 <td>{fmtDur(h.duracionMin)}</td>
                 <td>{fmtDur(h.carreraOficialMin)}</td>
-                <td>{h.partPorHora != null ? fmt(h.partPorHora) : '—'}</td>
               </tr>
             ))}
           </tbody>
@@ -310,7 +458,7 @@ const jsonLd = {
             <th scope="col">Var.</th>
             <th scope="col">% día (naz.)</th>
             <th scope="col">% día (cortejo)</th>
-            <th class="txt" scope="col">Fuente</th>
+            {tieneMetrosAlgunAnio && <th scope="col">Recorrido</th>}
           </tr>
         </thead>
         <tbody>
@@ -326,7 +474,7 @@ const jsonLd = {
                 <td class={`var ${vt.cls}`}>{vt.txt}</td>
                 <td>{fmtPct(f.pctNaz)}</td>
                 <td>{fmtPct(f.pctTotal)}</td>
-                <td class="txt">{f.fuente && <FuenteBadge fuente={f.fuente} />}</td>
+                {tieneMetrosAlgunAnio && <td>{f.metros != null ? fmtKm(f.metros) : '—'}</td>}
               </tr>
             );
           })}
@@ -374,6 +522,11 @@ const jsonLd = {
       <a class="dia-nav__a" href={`/${anio}/dia/${r.diaSlug}/`}>← Todas las hermandades del {r.diaNombre}</a>
       <a class="dia-nav__a dia-nav__der" href="/comparativa/">Comparar años →</a>
     </nav>
-    <FuentesResumen fuentes={fuentesPagina} />
+    <FuentesResumen
+      fuentes={fuentesPagina}
+      descargas={r.metros != null ? [
+        { href: `/${anio}/datos/recorrido/${slug}.geojson`, label: '⬇ GeoJSON recorrido', download: true },
+      ] : []}
+    />
   </section>
 </Base>

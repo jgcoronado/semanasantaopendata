@@ -1,0 +1,183 @@
+---
+interface Props {
+  idHdad: number;
+  slug: string;
+  colorDia: string;
+  nombre: string;
+  horario?: {
+    horas: { salida?: string; campana?: string; sierpes?: string; plaza?: string; catedral?: string; };
+  } | null;
+  pasoReal?: { cruzGuiaCampana?: string; acumuladoCampana?: number; } | null;
+  metros?: number | null;
+}
+
+const { idHdad, slug, colorDia, nombre, horario, pasoReal, metros } = Astro.props;
+
+const geojsonUrl = `/geojson/2025/${String(idHdad).padStart(2, '0')}-${slug}.geojson`;
+
+type PuntoMapa = {
+  patron: string;
+  label: string;
+  hora: string;
+  horaReal?: string | null;
+  retraso?: number | null;
+};
+
+const itinerarioMapa: PuntoMapa[] = [];
+if (horario) {
+  if (horario.horas.campana) itinerarioMapa.push({
+    patron: 'Campana',
+    label: 'La Campana',
+    hora: horario.horas.campana,
+    horaReal: pasoReal?.cruzGuiaCampana ?? null,
+    retraso: pasoReal?.acumuladoCampana ?? null,
+  });
+  if (horario.horas.sierpes) itinerarioMapa.push({
+    patron: 'Sierpes',
+    label: 'Calle Sierpes',
+    hora: horario.horas.sierpes,
+  });
+  if (horario.horas.plaza) itinerarioMapa.push({
+    patron: 'San Francisco',
+    label: 'Plaza S. Francisco',
+    hora: horario.horas.plaza,
+  });
+}
+
+const metrosTexto = metros != null
+  ? (metros >= 1000 ? (metros / 1000).toFixed(2).replace('.', ',') + ' km' : metros + ' m')
+  : null;
+---
+
+<div class="mapa-cont">
+  {metrosTexto && <span class="mapa-dist">{metrosTexto}</span>}
+  <div
+    id="recorrido-mapa"
+    class="mapa-leaflet"
+    data-geojson-url={geojsonUrl}
+    data-color={colorDia}
+    data-itinerario={JSON.stringify(itinerarioMapa)}
+    aria-label={`Mapa del recorrido de ${nombre} 2025`}
+    role="img"
+  ></div>
+  <p class="mapa-nota">Mapa no interactivo con scroll — usa los botones + / − para hacer zoom.</p>
+</div>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  const el = document.getElementById('recorrido-mapa') as HTMLElement | null;
+  if (el) {
+    const geojsonUrl = el.dataset.geojsonUrl!;
+    const colorDia = el.dataset.color!;
+    const itinerarioMapa: Array<{
+      patron: string; label: string; hora: string;
+      horaReal?: string | null; retraso?: number | null;
+    }> = JSON.parse(el.dataset.itinerario!);
+
+    const map = L.map(el, { zoomControl: true, scrollWheelZoom: false });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
+    }).addTo(map);
+
+    fetch(geojsonUrl)
+      .then((r) => r.json())
+      .then((data) => {
+        const features: any[] = data.features ?? [];
+        const lineFeature = features.find((f) => f.geometry?.type === 'LineString');
+        const pointFeatures = features.filter((f) => f.geometry?.type === 'Point');
+
+        if (!lineFeature) return;
+
+        const line = L.geoJSON(lineFeature, {
+          style: { color: colorDia, weight: 4, opacity: 0.85 },
+        }).addTo(map);
+
+        map.fitBounds(line.getBounds(), { padding: [24, 24] });
+
+        // Marcador de inicio: primer punto de la ruta (templo de salida)
+        const start = lineFeature.geometry.coordinates[0];
+        L.circleMarker([start[1], start[0]], {
+          radius: 7, fillColor: colorDia, color: '#fff',
+          weight: 2, opacity: 1, fillOpacity: 1,
+        }).bindPopup('<strong>Templo de salida</strong>').addTo(map);
+
+        // Marcadores de hitos de Carrera Oficial con horas oficiales (y reales si hay paso-real)
+        for (const item of itinerarioMapa) {
+          const pf = pointFeatures.find(
+            (f) => typeof f.properties?.calle === 'string' && f.properties.calle.includes(item.patron)
+          );
+          if (!pf) continue;
+
+          const [lng, lat] = pf.geometry.coordinates;
+          let html = `<strong>${item.label}</strong><br>Oficial: ${item.hora}`;
+
+          if (item.horaReal) html += `<br>Real: ${item.horaReal}`;
+
+          if (item.retraso != null) {
+            const r = item.retraso;
+            if (r === 0) html += `<br><span style="color:#198038">En hora</span>`;
+            else {
+              const sign = r > 0 ? '+' : '−';
+              const color = r > 0 ? '#fa4d56' : '#198038';
+              html += `<br><span style="color:${color}">${sign}${Math.abs(r)} min</span>`;
+            }
+          }
+
+          L.circleMarker([lat, lng], {
+            radius: 6, fillColor: '#fff', color: colorDia,
+            weight: 2, opacity: 1, fillOpacity: 0.9,
+          }).bindPopup(html).addTo(map);
+        }
+      })
+      .catch(() => {
+        el.textContent = 'No se pudo cargar el mapa del recorrido.';
+      });
+  }
+</script>
+
+<style>
+  .mapa-cont {
+    position: relative;
+    margin: 1rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--borde, #e0e0e0);
+  }
+
+  .mapa-leaflet {
+    height: 380px;
+    width: 100%;
+  }
+
+  .mapa-dist {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .mapa-nota {
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    color: var(--gris, #666);
+    background: var(--fondo-alt, #f5f5f5);
+    border-top: 1px solid var(--borde, #e0e0e0);
+  }
+
+  @media (max-width: 600px) {
+    .mapa-leaflet {
+      height: 280px;
+    }
+  }
+</style>

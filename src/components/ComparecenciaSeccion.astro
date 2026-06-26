@@ -1,0 +1,291 @@
+---
+// Sección "De lo anunciado a lo real": comparecencia y merma por hermandad.
+// Dataset complementario (boletines/anuarios), solo para las hermandades con dato.
+// Las fuentes NO se muestran aquí: se consolidan al final de la página.
+import { fmt, fmtPct } from '../lib/datos.js';
+
+const { registros, anio } = Astro.props;
+
+const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
+const colorDia = (orden) => COLORES_9[(orden - 1) % 9];
+
+// Comparecencia media (solo hermandades con el dato)
+const conComparecencia = registros.filter((r) => r.comparecenciaNaz != null);
+const comparecenciaMedia = conComparecencia.length
+  ? conComparecencia.reduce((s, r) => s + r.comparecenciaNaz, 0) / conComparecencia.length
+  : null;
+
+// Etiqueta del denominador usado
+const etiquetaBase = (tipo) => (tipo === 'nomina' ? 'Nómina' : tipo === 'papeletas' ? 'Papeletas' : '—');
+
+// Datos para el cliente (gráficas)
+const datosCliente = {
+  registros: registros.map((r) => ({
+    nombre: r.nombre,
+    diaOrden: r.diaOrden,
+    color: colorDia(r.diaOrden),
+    comparecenciaNaz: r.comparecenciaNaz,
+    baseNaz: r.baseNaz,
+    salida: r.nazarenos.salida,
+  })),
+};
+---
+
+<section class="panel contenedor" id="comparecencia">
+  <div class="panel__cab">
+    <h2>De lo anunciado a lo real</h2>
+    <div class="panel__cab-meta">
+      <span class="kpi-mini"><strong>{fmt(registros.length)}</strong> hermandades con dato</span>
+      {comparecenciaMedia != null && (
+        <span class="kpi-mini">comparecencia media <strong>{fmtPct(comparecenciaMedia)}</strong></span>
+      )}
+    </div>
+  </div>
+  <p class="panel__desc">
+    Cuántos cofrades salen realmente en la procesión frente a los <strong>anunciados</strong> (la nómina de
+    la cofradía o, donde no consta, las papeletas de sitio expedidas). Donde el boletín lo detalla, se
+    muestra también la <strong>merma a lo largo del recorrido</strong>. Datos de cada hermandad, extraídos
+    de sus boletines y anuarios — disponibles solo para algunas cofradías de {anio}.
+  </p>
+
+  <p class="comp-descargas">
+    Descarga estos datos:
+    <a href={`/${anio}/datos/comparecencia.csv`} download class="comp-dl">⬇ CSV</a>
+    <a href={`/${anio}/datos/comparecencia.json`} class="comp-dl">JSON</a>
+  </p>
+
+  <div class="tabla-wrap">
+    <table class="datos">
+      <caption>
+        Comparecencia de nazarenos por hermandad en {anio}: anunciados frente a los que realmente salieron,
+        y merma durante el recorrido cuando el dato está disponible.
+      </caption>
+      <thead>
+        <tr>
+          <th class="txt" scope="col">Hermandad</th>
+          <th class="txt" scope="col">Día</th>
+          <th scope="col">Anunciados</th>
+          <th scope="col">Salieron</th>
+          <th scope="col">Comparecencia</th>
+          <th scope="col">No comparecieron</th>
+          <th scope="col">Merma recorrido</th>
+        </tr>
+      </thead>
+      <tbody>
+        {registros.map((r) => {
+          const bg = `${colorDia(r.diaOrden)}1a`;
+          return (
+            <tr style={`background:${bg}`}>
+              <td class="txt fuerte"><a href={`/${anio}/hermandad/${r.slug}/`}>{r.nombre}</a></td>
+              <td class="txt">{r.diaNombre}</td>
+              <td>
+                {r.baseNaz != null ? fmt(r.baseNaz) : '—'}
+                <span class="base-tag">{etiquetaBase(r.baseNazTipo)}</span>
+              </td>
+              <td class="fuerte">{r.nazarenos.salida != null ? fmt(r.nazarenos.salida) : '—'}</td>
+              <td class="fuerte">{r.comparecenciaNaz != null ? fmtPct(r.comparecenciaNaz) : '—'}</td>
+              <td class={r.ausenciasNaz ? 'var neg' : ''}>{r.ausenciasNaz != null ? fmt(r.ausenciasNaz) : '—'}</td>
+              <td class={r.mermaRecorridoNaz != null ? 'var neg' : ''}>
+                {r.mermaRecorridoNaz != null ? fmtPct(r.mermaRecorridoNaz) : '—'}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="grafica__nota" style="margin-top:0.6rem">
+    <strong>Anunciados</strong>: nómina de la cofradía (excluye papeletas simbólicas) o, marcado como
+    «Papeletas», el total de papeletas de sitio expedidas. <strong>Merma recorrido</strong>: variación de
+    nazarenos entre la salida y la entrada al templo (negativa = se retiraron por el camino).
+  </p>
+
+  <!-- Detalle por hermandad: contexto extra que no cabe en la tabla -->
+  <div class="comp-detalle">
+    {registros.map((r) => {
+      return (
+        <article class="comp-card" style={`--dia-color:${colorDia(r.diaOrden)}`}>
+          <header class="comp-card__cab">
+            <h3 class="comp-card__titulo">
+              <a href={`/${anio}/hermandad/${r.slug}/`}>{r.nombre}</a>
+            </h3>
+            <span class="comp-card__dia">{r.diaNombre}</span>
+          </header>
+          <ul class="comp-card__kpis">
+            {r.comparecenciaNaz != null && (
+              <li><strong>{fmtPct(r.comparecenciaNaz)}</strong><span>comparecencia (nazarenos)</span></li>
+            )}
+            {r.cortejo && r.comparecenciaCortejo != null && (
+              <li><strong>{fmtPct(r.comparecenciaCortejo)}</strong><span>comparecencia (cortejo completo)</span></li>
+            )}
+            {r.simbolicas != null && (
+              <li><strong>{fmt(r.simbolicas)}</strong><span>papeletas simbólicas</span></li>
+            )}
+            {r.pctCompletaron != null && (
+              <li><strong>{fmtPct(r.pctCompletaron)}</strong><span>completó la estación</span></li>
+            )}
+          </ul>
+          {r.cortejo && r.cortejo.salida != null && (
+            <p class="comp-card__linea">
+              Cortejo completo: <strong>{fmt(r.cortejo.salida)}</strong> de {fmt(r.baseCortejo)} de nómina.
+            </p>
+          )}
+          {r.sinConteoConsejo
+            ? (
+              <p class="comp-card__linea comp-card__aviso">
+                Sin conteo oficial del Consejo en Carrera Oficial este año.
+              </p>
+            )
+            : r.consejoNoNaz != null && (
+              <p class="comp-card__linea">
+                Conteo del Consejo en Carrera Oficial: <strong>{fmt(r.consejoNoNaz)}</strong> nazarenos.
+              </p>
+            )
+          }
+          {r.nota && <p class="comp-card__nota">{r.nota}</p>}
+        </article>
+      );
+    })}
+  </div>
+
+  <!-- Gráfica: comparecencia comparada -->
+  <figure class="grafica grafica--ancha" style="margin-top:1.5rem">
+    <figcaption>Comparecencia de nazarenos por hermandad (% de los anunciados que salieron)</figcaption>
+    <div class="grafica__lienzo" style={`height:${Math.max(180, registros.length * 46)}px`}>
+      <canvas id="comp-barras" aria-hidden="true"></canvas>
+    </div>
+    <p class="grafica__nota visualmente-oculto">
+      Barras horizontales con el porcentaje de nazarenos anunciados que realmente salieron en cada hermandad.
+      Los valores están en la tabla anterior.
+    </p>
+  </figure>
+</section>
+
+<script type="application/json" id="datos-comparecencia" set:html={JSON.stringify(datosCliente)}></script>
+<script>
+  import {
+    Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend,
+  } from 'chart.js';
+  Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+  const datos = JSON.parse(document.getElementById('datos-comparecencia').textContent);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Chart.defaults.animation = false;
+  }
+  const fmtN = (n) => (n == null ? '—' : Number(n).toLocaleString('es-ES'));
+  const fmtP = (n) => (n == null ? '—' : `${Number(n).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`);
+
+  // ── Barras: comparecencia por hermandad ──
+  const conPct = datos.registros.filter((r) => r.comparecenciaNaz != null);
+  if (conPct.length) {
+    new Chart(document.getElementById('comp-barras'), {
+      type: 'bar',
+      data: {
+        labels: conPct.map((r) => r.nombre),
+        datasets: [{
+          data: conPct.map((r) => Math.round(r.comparecenciaNaz * 10) / 10),
+          backgroundColor: conPct.map((r) => r.color + 'cc'),
+          borderColor: conPct.map((r) => r.color),
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: {
+            title: (items) => items[0]?.label ?? '',
+            label: (c) => {
+              const r = conPct[c.dataIndex];
+              return `${fmtP(r.comparecenciaNaz)} · ${fmtN(r.salida)} de ${fmtN(r.baseNaz)}`;
+            },
+          }},
+        },
+        scales: {
+          x: { beginAtZero: true, suggestedMax: 100, title: { display: true, text: '% que salió' },
+               ticks: { callback: (v) => v + ' %' } },
+          y: { ticks: { autoSkip: false, font: { size: 11 } } },
+        },
+      },
+    });
+  }
+</script>
+
+<style>
+  .base-tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    font-size: 0.64rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 700;
+    color: var(--gris);
+    opacity: 0.8;
+  }
+  .comp-descargas {
+    margin: 0 0 1.2rem;
+    font-size: 0.9rem;
+    color: var(--gris);
+  }
+  .comp-dl {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--morado);
+    text-decoration: none;
+  }
+  .comp-dl:hover { background: var(--fondo-alt); text-decoration: none; }
+  .comp-detalle {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .comp-card {
+    border: 1px solid var(--linea);
+    border-left: 4px solid var(--dia-color, var(--linea));
+    border-radius: var(--radio);
+    padding: 0.9rem 1rem 1rem;
+    background: var(--fondo-alt);
+  }
+  .comp-card__cab {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+  .comp-card__titulo { margin: 0; font-size: 1rem; }
+  .comp-card__titulo a { color: var(--tinta); text-decoration: none; }
+  .comp-card__titulo a:hover { text-decoration: underline; }
+  .comp-card__dia {
+    font-size: 0.72rem;
+    color: var(--dia-color);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .comp-card__kpis {
+    list-style: none;
+    margin: 0 0 0.6rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+  }
+  .comp-card__kpis li { display: flex; flex-direction: column; line-height: 1.15; }
+  .comp-card__kpis strong { font-size: 1.15rem; color: var(--dia-color); }
+  .comp-card__kpis span { font-size: 0.74rem; color: var(--gris); }
+  .comp-card__linea { margin: 0.3rem 0; font-size: 0.85rem; }
+  .comp-card__aviso { color: var(--gris); font-style: italic; }
+  .comp-card__nota {
+    margin: 0.6rem 0 0;
+    font-size: 0.8rem;
+    color: var(--gris);
+    line-height: 1.4;
+  }
+</style>

@@ -1,0 +1,714 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "nombre": "La Carretería",
+        "dia": "viernes-santo"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.9969212,
+            37.385614
+          ],
+          [
+            -5.9963944,
+            37.3858329
+          ],
+          [
+            -5.9965601,
+            37.3859909
+          ],
+          [
+            -5.9967043,
+            37.3861578
+          ],
+          [
+            -5.995601,
+            37.385837
+          ],
+          [
+            -5.9954957,
+            37.3857758
+          ],
+          [
+            -5.9961928,
+            37.3861699
+          ],
+          [
+            -5.9961951,
+            37.3861991
+          ],
+          [
+            -5.9961241,
+            37.3862199
+          ],
+          [
+            -5.996073,
+            37.3862372
+          ],
+          [
+            -5.9960686,
+            37.386284
+          ],
+          [
+            -5.9961784,
+            37.3863579
+          ],
+          [
+            -5.9972329,
+            37.3872018
+          ],
+          [
+            -5.9965991,
+            37.3867167
+          ],
+          [
+            -5.9963141,
+            37.3869492
+          ],
+          [
+            -5.9961075,
+            37.3871925
+          ],
+          [
+            -5.996004,
+            37.3874004
+          ],
+          [
+            -5.9956627,
+            37.3876764
+          ],
+          [
+            -5.9954882,
+            37.3877395
+          ],
+          [
+            -5.995501,
+            37.3879628
+          ],
+          [
+            -5.9955241,
+            37.3881881
+          ],
+          [
+            -5.994877,
+            37.3882429
+          ],
+          [
+            -5.9949524,
+            37.3889167
+          ],
+          [
+            -5.9950228,
+            37.3895868
+          ],
+          [
+            -5.995125,
+            37.3900509
+          ],
+          [
+            -5.9953197,
+            37.3907871
+          ],
+          [
+            -5.995383,
+            37.391055
+          ],
+          [
+            -5.9954178,
+            37.3914794
+          ],
+          [
+            -5.9954615,
+            37.3920765
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.995414,
+            37.392722
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994861,
+            37.3922847
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.9946698,
+            37.3913397
+          ],
+          [
+            -5.9945265,
+            37.3909721
+          ],
+          [
+            -5.9942789,
+            37.389891
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.9922162,
+            37.3855949
+          ],
+          [
+            -5.9921519,
+            37.3853995
+          ],
+          [
+            -5.9920345,
+            37.385324
+          ],
+          [
+            -5.9919283,
+            37.3852485
+          ],
+          [
+            -5.9918473,
+            37.3851486
+          ],
+          [
+            -5.9918473,
+            37.3850842
+          ],
+          [
+            -5.9921519,
+            37.3849399
+          ],
+          [
+            -5.9923391,
+            37.3848355
+          ],
+          [
+            -5.9924311,
+            37.38476
+          ],
+          [
+            -5.992429,
+            37.384591
+          ],
+          [
+            -5.9930211,
+            37.38433
+          ],
+          [
+            -5.9935917,
+            37.384098
+          ],
+          [
+            -5.9938376,
+            37.3839648
+          ],
+          [
+            -5.9940081,
+            37.3837428
+          ],
+          [
+            -5.9947508,
+            37.3835139
+          ],
+          [
+            -5.9959376,
+            37.3842039
+          ],
+          [
+            -5.9964049,
+            37.3846978
+          ],
+          [
+            -5.9960999,
+            37.3848878
+          ],
+          [
+            -5.9964995,
+            37.3846237
+          ],
+          [
+            -5.9969331,
+            37.3849621
+          ],
+          [
+            -5.997349,
+            37.3853119
+          ],
+          [
+            -5.9969212,
+            37.385614
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Real de la Carretería",
+        "osm": "Calle Real de la Carretería"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9969212,
+          37.385614
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Toneleros",
+        "osm": "Calle Toneleros"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9965601,
+          37.3859909
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Antonia Díaz",
+        "osm": "Calle Antonia Díaz"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9966638,
+          37.3861836
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Arfe",
+        "osm": "Calle Arfe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995601,
+          37.385837
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Puerta del Arenal",
+        "osm": "Calle Puerta del Arenal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9961081,
+          37.3862154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Castelar",
+        "osm": "Calle Castelar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9963303,
+          37.3864856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Gamazo",
+        "osm": "Calle Gamazo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9961075,
+          37.3871925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Joaquín Guichot",
+        "osm": "Calle Joaquín Guichot"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9955391,
+          37.3877253
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Barcelona",
+        "osm": "Calle Barcelona"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995501,
+          37.3879628
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Plaza Nueva",
+        "osm": "Plaza Nueva"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9949315,
+          37.3886551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Tetuán",
+        "osm": "Calle Tetuán"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9951669,
+          37.3902317
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Velázquez",
+        "osm": "Calle Velázquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954035,
+          37.3911654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle O'Donnell",
+        "osm": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "La Campana",
+        "osm": "La Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9947885,
+          37.3908748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Plaza del Triunfo",
+        "osm": "Plaza del Triunfo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9920842,
+          37.3849667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Santo Tomás",
+        "osm": "Calle Santo Tomás"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9930211,
+          37.38433
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Adolfo Rodríguez Jurado",
+        "osm": "Calle Adolfo Rodríguez Jurado"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9939801,
+          37.3837872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Santander",
+        "osm": "Calle Santander"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9947508,
+          37.3835139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Temprado",
+        "osm": "Calle Temprado"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9959376,
+          37.3842039
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Dos de Mayo",
+        "osm": "Calle Dos de Mayo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9964049,
+          37.3846978
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Rodo",
+        "osm": "Calle Rodo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9969331,
+          37.3849621
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 49,
+        "hermandad": "La Carretería",
+        "calle": "Calle Real de la Carretería",
+        "osm": "Calle Real de la Carretería"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9969212,
+          37.385614
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "idHdad": 5,
+    "fuente_id": "boletin-paz-2025",
+    "paginas": "62-67",
+    "papeletas": 2642,
+    "simbolicas": null,
+    "baseNomina": "papeletas",
+    "nazarenos": { "nomina": 2642, "salida": 2301, "carreraOficial": 2086, "entrada": 1901 },
+    "cortejo": null,
+    "noRetomaron": null,
+    "recorrido": [
+      { "punto": "papeletas", "etiqueta": "Papeletas", "n": 2642 },
+      { "punto": "salida",    "etiqueta": "Salida",    "n": 2301 },
+      { "punto": "campana",   "etiqueta": "Campana",   "n": 2086 },
+      { "punto": "plaza",     "etiqueta": "Plaza S. Francisco", "n": 2089 },
+      { "punto": "catedral",  "etiqueta": "Catedral",  "n": 2082 },
+      { "punto": "entrada",   "etiqueta": "Entrada",   "n": 1901 }
+    ],
+    "cristoVirgen": {
+      "cristo": [
+        { "punto": "papeletas", "etiqueta": "Papeletas", "n": 1276 },
+        { "punto": "salida",    "etiqueta": "Salida",    "n": 1097 },
+        { "punto": "campana",   "etiqueta": "Campana",   "n": 995 },
+        { "punto": "plaza",     "etiqueta": "Plaza S. Francisco", "n": 998 },
+        { "punto": "catedral",  "etiqueta": "Catedral",  "n": 991 },
+        { "punto": "entrada",   "etiqueta": "Entrada",   "n": 947 }
+      ],
+      "virgen": [
+        { "punto": "papeletas", "etiqueta": "Papeletas", "n": 1366 },
+        { "punto": "salida",    "etiqueta": "Salida",    "n": 1204 },
+        { "punto": "campana",   "etiqueta": "Campana",   "n": 1091 },
+        { "punto": "plaza",     "etiqueta": "Plaza S. Francisco", "n": 1091 },
+        { "punto": "catedral",  "etiqueta": "Catedral",  "n": 1091 },
+        { "punto": "entrada",   "etiqueta": "Entrada",   "n": 954 }
+      ]
+    },
+    "nota": "El boletín toma las papeletas (2.642) como 100 % de la lista de la cofradía. Las cifras son de nazarenos; el Cuerpo de Diputados contó ~2.089 en Plaza de San Francisco."
+  },
+  {
+    "idHdad": 46,
+    "fuente_id": "boletin-calvario-2025",
+    "paginas": "42-47",
+    "papeletas": 1057,
+    "simbolicas": 44,
+    "baseNomina": "nomina",
+    "nazarenos": { "nomina": 838, "salida": 750, "carreraOficial": null, "entrada": null },
+    "cortejo": { "nomina": 1013, "salida": 925, "entrada": null },
+    "noRetomaron": null,
+    "recorrido": null,
+    "cristoVirgen": null,
+    "nota": "Cortejo más numeroso de su historia: nómina de 1.013 hermanos (838 nazarenos). 88 ausencias en la salida (77 de cirio, 7 insignias, 4 cruces de penitencia)."
+  },
+  {
+    "idHdad": 61,
+    "fuente_id": "anuario-resurreccion-2025",
+    "paginas": "82-83",
+    "papeletas": 729,
+    "simbolicas": 22,
+    "baseNomina": "nomina",
+    "nazarenos": { "nomina": 481, "salida": 444, "carreraOficial": null, "entrada": null },
+    "cortejo": null,
+    "noRetomaron": null,
+    "recorrido": null,
+    "cristoVirgen": null,
+    "nota": "Récord histórico de papeletas (729) y de nazarenos (481). 37 hermanos no se presentaron el Domingo de Resurrección."
+  },
+  {
+    "idHdad": 12,
+    "fuente_id": "boletin-santa-genoveva-2025",
+    "paginas": "30-33",
+    "papeletas": 2474,
+    "simbolicas": null,
+    "baseNomina": "papeletas",
+    "nazarenos": { "nomina": null, "salida": 2187, "carreraOficial": null, "entrada": null },
+    "cortejo": null,
+    "noRetomaron": 280,
+    "recorrido": null,
+    "cristoVirgen": null,
+    "nota": "Se refugió en la Universidad de Sevilla por lluvia; el Consejo no la contó en Carrera Oficial en 2025. De los ~2.100 nazarenos, unos 280 no retomaron la estación tras el frente."
+  }
+]

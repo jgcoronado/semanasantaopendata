@@ -1,0 +1,1046 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "nombre": "La Resurrección",
+        "dia": "domingo-resurreccion"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.9880274,
+            37.3989545
+          ],
+          [
+            -5.9881865,
+            37.3989276
+          ],
+          [
+            -5.9882598,
+            37.3991932
+          ],
+          [
+            -5.9883377,
+            37.3994866
+          ],
+          [
+            -5.9889131,
+            37.399406
+          ],
+          [
+            -5.98948,
+            37.3993506
+          ],
+          [
+            -5.9894664,
+            37.3988815
+          ],
+          [
+            -5.9894287,
+            37.3986384
+          ],
+          [
+            -5.9894155,
+            37.3979654
+          ],
+          [
+            -5.9893988,
+            37.3975274
+          ],
+          [
+            -5.9893862,
+            37.3972881
+          ],
+          [
+            -5.9893576,
+            37.3972341
+          ],
+          [
+            -5.9893452,
+            37.3971234
+          ],
+          [
+            -5.9893273,
+            37.3967313
+          ],
+          [
+            -5.9897458,
+            37.3966885
+          ],
+          [
+            -5.990082,
+            37.3966814
+          ],
+          [
+            -5.9902215,
+            37.396751
+          ],
+          [
+            -5.9906655,
+            37.3967354
+          ],
+          [
+            -5.9907415,
+            37.3967413
+          ],
+          [
+            -5.9907898,
+            37.3967669
+          ],
+          [
+            -5.9910866,
+            37.3967697
+          ],
+          [
+            -5.99118,
+            37.396772
+          ],
+          [
+            -5.991192,
+            37.396979
+          ],
+          [
+            -5.9913,
+            37.397247
+          ],
+          [
+            -5.992017,
+            37.397086
+          ],
+          [
+            -5.992536,
+            37.396987
+          ],
+          [
+            -5.9928988,
+            37.3970424
+          ],
+          [
+            -5.993217,
+            37.3971071
+          ],
+          [
+            -5.9932758,
+            37.3970281
+          ],
+          [
+            -5.9938053,
+            37.396743
+          ],
+          [
+            -5.994027,
+            37.396751
+          ],
+          [
+            -5.994374,
+            37.39685
+          ],
+          [
+            -5.994618,
+            37.396413
+          ],
+          [
+            -5.994787,
+            37.396096
+          ],
+          [
+            -5.994908,
+            37.395763
+          ],
+          [
+            -5.995151,
+            37.394856
+          ],
+          [
+            -5.995272,
+            37.39437
+          ],
+          [
+            -5.995298,
+            37.393904
+          ],
+          [
+            -5.995446,
+            37.393623
+          ],
+          [
+            -5.995615,
+            37.39345
+          ],
+          [
+            -5.995644,
+            37.393115
+          ],
+          [
+            -5.995643,
+            37.39272
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.994542,
+            37.390976
+          ],
+          [
+            -5.994258,
+            37.389845
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.992343,
+            37.386298
+          ],
+          [
+            -5.992461,
+            37.386331
+          ],
+          [
+            -5.992523,
+            37.386502
+          ],
+          [
+            -5.992515,
+            37.38666
+          ],
+          [
+            -5.992549,
+            37.386763
+          ],
+          [
+            -5.992807,
+            37.386777
+          ],
+          [
+            -5.993037,
+            37.386751
+          ],
+          [
+            -5.993054,
+            37.386917
+          ],
+          [
+            -5.9930245,
+            37.3870101
+          ],
+          [
+            -5.9929267,
+            37.3871073
+          ],
+          [
+            -5.992697,
+            37.387288
+          ],
+          [
+            -5.992489,
+            37.387452
+          ],
+          [
+            -5.992594,
+            37.387654
+          ],
+          [
+            -5.992704,
+            37.387858
+          ],
+          [
+            -5.99277,
+            37.38804
+          ],
+          [
+            -5.992784,
+            37.388285
+          ],
+          [
+            -5.992744,
+            37.388583
+          ],
+          [
+            -5.992621,
+            37.388828
+          ],
+          [
+            -5.992568,
+            37.389176
+          ],
+          [
+            -5.992542,
+            37.389426
+          ],
+          [
+            -5.992353,
+            37.389737
+          ],
+          [
+            -5.991765,
+            37.389785
+          ],
+          [
+            -5.991357,
+            37.389798
+          ],
+          [
+            -5.991092,
+            37.38979
+          ],
+          [
+            -5.990856,
+            37.389772
+          ],
+          [
+            -5.990668,
+            37.389983
+          ],
+          [
+            -5.9904769,
+            37.3901956
+          ],
+          [
+            -5.9905054,
+            37.3902408
+          ],
+          [
+            -5.9905036,
+            37.3903002
+          ],
+          [
+            -5.9903819,
+            37.3904418
+          ],
+          [
+            -5.9902529,
+            37.3906875
+          ],
+          [
+            -5.9904218,
+            37.3907384
+          ],
+          [
+            -5.9903251,
+            37.390862
+          ],
+          [
+            -5.990158,
+            37.3910193
+          ],
+          [
+            -5.9900213,
+            37.3911556
+          ],
+          [
+            -5.9899714,
+            37.3912278
+          ],
+          [
+            -5.9899556,
+            37.3912991
+          ],
+          [
+            -5.989917,
+            37.3914874
+          ],
+          [
+            -5.9898384,
+            37.3923782
+          ],
+          [
+            -5.9897195,
+            37.3928768
+          ],
+          [
+            -5.9896104,
+            37.3932572
+          ],
+          [
+            -5.9895497,
+            37.3934523
+          ],
+          [
+            -5.9894588,
+            37.3936786
+          ],
+          [
+            -5.9891505,
+            37.3943286
+          ],
+          [
+            -5.9890297,
+            37.3945377
+          ],
+          [
+            -5.9886372,
+            37.3947981
+          ],
+          [
+            -5.9884953,
+            37.3948769
+          ],
+          [
+            -5.988238,
+            37.3948513
+          ],
+          [
+            -5.9879858,
+            37.3948218
+          ],
+          [
+            -5.987947,
+            37.3949451
+          ],
+          [
+            -5.9879334,
+            37.3950847
+          ],
+          [
+            -5.9879772,
+            37.3955213
+          ],
+          [
+            -5.9878323,
+            37.3962043
+          ],
+          [
+            -5.9878074,
+            37.3964827
+          ],
+          [
+            -5.9877868,
+            37.396904
+          ],
+          [
+            -5.9878716,
+            37.3976445
+          ],
+          [
+            -5.9879903,
+            37.3982898
+          ],
+          [
+            -5.9881841,
+            37.398929
+          ],
+          [
+            -5.9880318,
+            37.3989573
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza del Señor de la Resurrección",
+        "osm": "Plaza del Señor de la Resurrección"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9880706,
+          37.3989916
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle San Luis",
+        "osm": "Calle San Luis"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9882754,
+          37.3992642
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Arrayán",
+        "osm": "Calle Arrayán"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9889054,
+          37.3994206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Virgen del Carmen Dolorosa",
+        "osm": "Calle Virgen del Carmen Dolorosa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9894571,
+          37.3992853
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza del Cronista",
+        "osm": "Plaza del Cronista"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.98959,
+          37.39882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle San Blas",
+        "osm": "Calle San Blas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9894155,
+          37.3979654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Infantes",
+        "osm": "Calle Infantes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.989342,
+          37.3970722
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Almirante Espinosa",
+        "osm": "Calle Almirante Espinosa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9902323,
+          37.3967203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza de Monte Sión",
+        "osm": "Plaza de Monte Sión"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.99108,
+          37.39682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Conde de Torrejón",
+        "osm": "Calle Conde de Torrejón"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992704,
+          37.397012
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Alameda de Hércules",
+        "osm": "Alameda de Hércules"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994027,
+          37.396751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Trajano",
+        "osm": "Calle Trajano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995298,
+          37.393904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza del Duque de la Victoria (lado derecho)",
+        "osm": "Plaza del Duque de la Victoria (lado derecho)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995633,
+          37.393113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "La Campana",
+        "osm": "La Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9947885,
+          37.3908748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Cardenal Carlos Amigo",
+        "osm": "Calle Cardenal Carlos Amigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992537,
+          37.386555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Alemanes",
+        "osm": "Calle Alemanes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992807,
+          37.386777
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Álvarez Quintero",
+        "osm": "Calle Álvarez Quintero"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.993054,
+          37.386917
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Argote de Molina",
+        "osm": "Calle Argote de Molina"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992697,
+          37.387288
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Placentines",
+        "osm": "Calle Placentines"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992594,
+          37.387654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Francos",
+        "osm": "Calle Francos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992784,
+          37.388285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Cuesta del Rosario",
+        "osm": "Cuesta del Rosario"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.991765,
+          37.389785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Jesús de las Tres Caídas",
+        "osm": "Calle Jesús de las Tres Caídas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.990668,
+          37.389983
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Odreros",
+        "osm": "Calle Odreros"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9903819,
+          37.3904418
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Boteros",
+        "osm": "Calle Boteros"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9903559,
+          37.3907115
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Sales y Ferré",
+        "osm": "Calle Sales y Ferré"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9901884,
+          37.3910016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza del Cristo de Burgos",
+        "osm": "Plaza del Cristo de Burgos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9898729,
+          37.3920074
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Doña María Coronel",
+        "osm": "Calle Doña María Coronel"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.988238,
+          37.3948513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle Bustos Tavera",
+        "osm": "Calle Bustos Tavera"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9881136,
+          37.3941815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza de San Marcos",
+        "osm": "Plaza de San Marcos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9878402,
+          37.3961666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Calle San Luis",
+        "osm": "Calle San Luis"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9881255,
+          37.3985555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 61,
+        "hermandad": "La Resurrección",
+        "calle": "Plaza del Señor de la Resurrección",
+        "osm": "Plaza del Señor de la Resurrección"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9880981,
+          37.3989698
+        ]
+      }
+    }
+  ]
+}
