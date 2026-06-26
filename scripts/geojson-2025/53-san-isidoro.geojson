@@ -48,12 +48,16 @@
             37.391235
           ],
           [
-            -5.9934667,
-            37.3916005
+            -5.9935038,
+            37.3915601
           ],
           [
-            -5.9937493,
-            37.3932616
+            -5.9936079,
+            37.3923895
+          ],
+          [
+            -5.9936905,
+            37.3932322
           ],
           [
             -5.9936844,
@@ -72,60 +76,32 @@
             37.3936065
           ],
           [
-            -5.994449,
-            37.393596
+            -5.994575,
+            37.393545
           ],
           [
             -5.9948244,
             37.3933914
           ],
           [
-            -5.996046,
+            -5.995644,
             37.393115
           ],
           [
-            -5.9960975,
-            37.392915
-          ],
-          [
-            -5.9961387,
-            37.3927242
-          ],
-          [
-            -5.9958656,
-            37.392719
-          ],
-          [
-            -5.9955948,
-            37.3927173
-          ],
-          [
-            -5.9954756,
-            37.3927173
-          ],
-          [
-            -5.995376,
-            37.392725
+            -5.995643,
+            37.39272
           ],
           [
             -5.994924,
             37.392751
           ],
           [
-            -5.994861,
-            37.3922847
-          ],
-          [
             -5.994797,
             37.391803
           ],
           [
-            -5.9946698,
-            37.3913397
-          ],
-          [
-            -5.9947885,
-            37.3908748
+            -5.994542,
+            37.390976
           ],
           [
             -5.994258,
@@ -136,8 +112,8 @@
             37.389143
           ],
           [
-            -5.994154,
-            37.38867
+            -5.994151,
+            37.388605
           ],
           [
             -5.994169,
@@ -156,8 +132,8 @@
             37.38731
           ],
           [
-            -5.994185,
-            37.386838
+            -5.9941493,
+            37.386713
           ],
           [
             -5.9940679,
@@ -196,52 +172,32 @@
             37.386077
           ],
           [
-            -5.992365,
-            37.386288
+            -5.992343,
+            37.386298
           ],
           [
-            -5.9924408,
-            37.3863144
+            -5.992461,
+            37.386331
           ],
           [
-            -5.9924973,
-            37.3863647
-          ],
-          [
-            -5.992537,
-            37.386555
+            -5.992523,
+            37.386502
           ],
           [
             -5.992515,
             37.38666
           ],
           [
-            -5.992549,
-            37.386763
+            -5.992492,
+            37.3867571
           ],
           [
-            -5.992807,
-            37.386777
+            -5.9924607,
+            37.3869592
           ],
           [
-            -5.993037,
-            37.386751
-          ],
-          [
-            -5.993054,
-            37.386917
-          ],
-          [
-            -5.9930245,
-            37.3870101
-          ],
-          [
-            -5.9929267,
-            37.3871073
-          ],
-          [
-            -5.992697,
-            37.387288
+            -5.99245,
+            37.3872656
           ],
           [
             -5.992489,
@@ -260,8 +216,36 @@
             37.38804
           ],
           [
-            -5.992784,
-            37.388285
+            -5.992765,
+            37.388268
+          ],
+          [
+            -5.992744,
+            37.388583
+          ],
+          [
+            -5.992621,
+            37.388828
+          ],
+          [
+            -5.992568,
+            37.389176
+          ],
+          [
+            -5.992542,
+            37.389426
+          ],
+          [
+            -5.992353,
+            37.389737
+          ],
+          [
+            -5.991765,
+            37.389785
+          ],
+          [
+            -5.9909741,
+            37.3895117
           ]
         ]
       }
@@ -288,7 +272,7 @@
         "id_hdad": 53,
         "hermandad": "San Isidoro",
         "calle": "Cuesta del Rosario",
-        "osm": "Calle Cuesta del Rosario"
+        "osm": "Cuesta del Rosario"
       },
       "geometry": {
         "type": "Point",
@@ -399,13 +383,13 @@
       "properties": {
         "id_hdad": 53,
         "hermandad": "San Isidoro",
-        "calle": "Plaza del Duque de la Victoria",
-        "osm": "Plaza del Duque de la Victoria"
+        "calle": "Plaza del Duque de la Victoria (lado derecho)",
+        "osm": "Plaza del Duque de la Victoria (lado derecho)"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -5.996046,
+          -5.995644,
           37.393115
         ]
       }
@@ -416,7 +400,7 @@
         "id_hdad": 53,
         "hermandad": "San Isidoro",
         "calle": "La Campana",
-        "osm": "Calle Campana"
+        "osm": "La Campana"
       },
       "geometry": {
         "type": "Point",
@@ -495,54 +479,6 @@
       "properties": {
         "id_hdad": 53,
         "hermandad": "San Isidoro",
-        "calle": "Calle Alemanes",
-        "osm": "Calle Alemanes"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.992807,
-          37.386777
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 53,
-        "hermandad": "San Isidoro",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993054,
-          37.386917
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 53,
-        "hermandad": "San Isidoro",
-        "calle": "Calle Argote de Molina",
-        "osm": "Calle Argote de Molina"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.992697,
-          37.387288
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 53,
-        "hermandad": "San Isidoro",
         "calle": "Calle Placentines",
         "osm": "Calle Placentines"
       },
@@ -567,6 +503,38 @@
         "coordinates": [
           -5.992784,
           37.388285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 53,
+        "hermandad": "San Isidoro",
+        "calle": "Cuesta del Rosario",
+        "osm": "Cuesta del Rosario"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992,
+          37.3898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 53,
+        "hermandad": "San Isidoro",
+        "calle": "Calle Luchana",
+        "osm": "Calle Luchana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9909741,
+          37.3895117
         ]
       }
     }

@@ -1,1 +1,542 @@
-{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id_hdad":59,"nombre":"Santo Entierro","dia":"sabado-santo"},"geometry":{"type":"LineString","coordinates":[[-5.9965356,37.3927513],[-5.995376,37.392725],[-5.994924,37.392751],[-5.994861,37.3922847],[-5.994797,37.391803],[-5.9946698,37.3913397],[-5.9947885,37.3908748],[-5.994258,37.389845],[-5.994175,37.389143],[-5.994154,37.38867],[-5.994169,37.388187],[-5.994296,37.388071],[-5.9943041,37.3879286],[-5.9942267,37.38731],[-5.994185,37.386838],[-5.9940679,37.3860718],[-5.9940344,37.3857616],[-5.993999,37.385447],[-5.9934331,37.3854932],[-5.9929686,37.3855304],[-5.992619,37.385552],[-5.9926646,37.3858225],[-5.99271,37.386038],[-5.992325,37.386077],[-5.992365,37.386288],[-5.9924408,37.3863144],[-5.9924973,37.3863647],[-5.992537,37.386555],[-5.992515,37.38666],[-5.992549,37.386763],[-5.992807,37.386777],[-5.9936149,37.38779],[-5.994167,37.388609],[-5.9951669,37.3902317],[-5.9954035,37.3911654],[-5.9954456,37.3918072],[-5.995454,37.392155],[-5.995386,37.3924668],[-5.9953759,37.3927251],[-5.9965356,37.3927513]]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Alfonso XII","osm":"Calle Alfonso XII"},"geometry":{"type":"Point","coordinates":[-5.9965356,37.3927513]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"La Campana","osm":"Calle Campana"},"geometry":{"type":"Point","coordinates":[-5.995376,37.392725]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Sierpes","osm":"Calle Sierpes"},"geometry":{"type":"Point","coordinates":[-5.9947885,37.3908748]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Plaza de San Francisco","osm":"Plaza de San Francisco"},"geometry":{"type":"Point","coordinates":[-5.994154,37.38867]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Avenida de la Constitución","osm":"Avenida de la Constitución"},"geometry":{"type":"Point","coordinates":[-5.994185,37.386838]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Cardenal Carlos Amigo","osm":"Calle Cardenal Carlos Amigo"},"geometry":{"type":"Point","coordinates":[-5.992537,37.386555]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Alemanes","osm":"Calle Alemanes"},"geometry":{"type":"Point","coordinates":[-5.992807,37.386777]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Hernando Colón","osm":"Calle Hernando Colón"},"geometry":{"type":"Point","coordinates":[-5.9936149,37.38779]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Plaza Nueva","osm":"Plaza Nueva"},"geometry":{"type":"Point","coordinates":[-5.9949315,37.3886551]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Tetuán","osm":"Calle Tetuán"},"geometry":{"type":"Point","coordinates":[-5.9951669,37.3902317]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Velázquez","osm":"Calle Velázquez"},"geometry":{"type":"Point","coordinates":[-5.9954035,37.3911654]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle O'Donnell","osm":"Calle O'Donnell"},"geometry":{"type":"Point","coordinates":[-5.995454,37.392155]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"La Campana","osm":"Calle Campana"},"geometry":{"type":"Point","coordinates":[-5.9953759,37.3927251]}},{"type":"Feature","properties":{"id_hdad":59,"hermandad":"Santo Entierro","calle":"Calle Alfonso XII","osm":"Calle Alfonso XII"},"geometry":{"type":"Point","coordinates":[-5.9965356,37.3927513]}}]}
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "nombre": "Santo Entierro",
+        "dia": "sabado-santo"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.9972023,
+            37.392828
+          ],
+          [
+            -5.996411,
+            37.3927322
+          ],
+          [
+            -5.9962272,
+            37.3927019
+          ],
+          [
+            -5.9961387,
+            37.3927242
+          ],
+          [
+            -5.9958656,
+            37.392719
+          ],
+          [
+            -5.9955948,
+            37.3927173
+          ],
+          [
+            -5.9954756,
+            37.3927173
+          ],
+          [
+            -5.995376,
+            37.392725
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994861,
+            37.3922847
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.9946698,
+            37.3913397
+          ],
+          [
+            -5.9945161,
+            37.3909308
+          ],
+          [
+            -5.9943917,
+            37.3904014
+          ],
+          [
+            -5.994327,
+            37.3901151
+          ],
+          [
+            -5.9942735,
+            37.3898019
+          ],
+          [
+            -5.9941991,
+            37.3894656
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994154,
+            37.38867
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.992365,
+            37.386288
+          ],
+          [
+            -5.9924408,
+            37.3863144
+          ],
+          [
+            -5.9924973,
+            37.3863647
+          ],
+          [
+            -5.9925107,
+            37.3865266
+          ],
+          [
+            -5.992515,
+            37.38666
+          ],
+          [
+            -5.992549,
+            37.386763
+          ],
+          [
+            -5.992807,
+            37.386777
+          ],
+          [
+            -5.9933411,
+            37.3867411
+          ],
+          [
+            -5.9934253,
+            37.3873913
+          ],
+          [
+            -5.9936149,
+            37.38779
+          ],
+          [
+            -5.9937077,
+            37.3880388
+          ],
+          [
+            -5.9940031,
+            37.388037
+          ],
+          [
+            -5.9944223,
+            37.38807
+          ],
+          [
+            -5.9948869,
+            37.3883942
+          ],
+          [
+            -5.9949315,
+            37.3886551
+          ],
+          [
+            -5.9950228,
+            37.3895868
+          ],
+          [
+            -5.995125,
+            37.3900509
+          ],
+          [
+            -5.9953197,
+            37.3907871
+          ],
+          [
+            -5.995383,
+            37.391055
+          ],
+          [
+            -5.9954178,
+            37.3914794
+          ],
+          [
+            -5.9954615,
+            37.3920765
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.9954113,
+            37.3927179
+          ],
+          [
+            -5.9954756,
+            37.3927173
+          ],
+          [
+            -5.9955948,
+            37.3927173
+          ],
+          [
+            -5.9958656,
+            37.392719
+          ],
+          [
+            -5.9961387,
+            37.3927242
+          ],
+          [
+            -5.9962255,
+            37.3927074
+          ],
+          [
+            -5.996404,
+            37.3927336
+          ],
+          [
+            -5.9971971,
+            37.3928266
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Alfonso XII",
+        "osm": "Calle Alfonso XII"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9965356,
+          37.3927513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Plaza del Duque de la Victoria",
+        "osm": "Plaza del Duque de la Victoria"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9959464,
+          37.3927184
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "La Campana",
+        "osm": "La Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Sierpes",
+        "osm": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9947885,
+          37.3908748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Avenida de la Constitución",
+        "osm": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Cardenal Carlos Amigo",
+        "osm": "Calle Cardenal Carlos Amigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992537,
+          37.386555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Alemanes",
+        "osm": "Calle Alemanes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.992807,
+          37.386777
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Hernando Colón",
+        "osm": "Calle Hernando Colón"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9936149,
+          37.38779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Plaza de San Francisco",
+        "osm": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994154,
+          37.38867
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Plaza Nueva",
+        "osm": "Plaza Nueva"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9949315,
+          37.3886551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Tetuán",
+        "osm": "Calle Tetuán"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9951669,
+          37.3902317
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Velázquez",
+        "osm": "Calle Velázquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954035,
+          37.3911654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle O'Donnell",
+        "osm": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "La Campana",
+        "osm": "La Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9953759,
+          37.3927251
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Plaza del Duque de la Victoria",
+        "osm": "Plaza del Duque de la Victoria"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9959429,
+          37.3927184
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 59,
+        "hermandad": "Santo Entierro",
+        "calle": "Calle Alfonso XII",
+        "osm": "Calle Alfonso XII"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9965356,
+          37.3927513
+        ]
+      }
+    }
+  ]
+}
