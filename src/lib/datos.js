@@ -533,6 +533,30 @@ export function getMetrosHermandad(anio, idHdad) {
   return getRecorridosAnio(anio).get(idHdad)?.metros ?? null;
 }
 
+// ---------- Velocidades (m/h) ----------
+// Velocidad media de cada cofradía (completa, ida, Carrera Oficial, vuelta), medida sobre el
+// trazado GeoJSON y los horarios. Tiempos cabeza-contra-cabeza (ver scripts/generar-velocidades-AAAA.mjs).
+
+const ficherosVelocidades = import.meta.glob('../data/velocidades-*.json', { eager: true });
+const velocidadesPorAnio = {};
+for (const [ruta, mod] of Object.entries(ficherosVelocidades)) {
+  const m = ruta.match(/velocidades-(\d{4})\.json$/);
+  if (m) velocidadesPorAnio[Number(m[1])] = mod.default;
+}
+
+/** ¿Hay datos de velocidad para este año? */
+export const hayVelocidades = (anio) => !!velocidadesPorAnio[Number(anio)];
+
+/** Lista de registros de velocidad de un año (array), o [] si no hay datos. */
+export function getVelocidadesAnio(anio) {
+  return velocidadesPorAnio[Number(anio)]?.registros ?? [];
+}
+
+/** Velocidades de una hermandad en un año (objeto registro), o null si no hay dato. */
+export function getVelocidadHermandad(anio, idHdad) {
+  return getVelocidadesAnio(anio).find((r) => r.id_hdad === idHdad) ?? null;
+}
+
 // ---------- Comparecencia y merma (de lo anunciado a lo real) ----------
 // Dataset complementario, por hermandad, extraído de boletines/anuarios de las propias
 // hermandades. Mide cuántos cofrades salen realmente frente a los anunciados (papeletas /

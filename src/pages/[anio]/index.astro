@@ -10,8 +10,9 @@ import CarreraOficialGraficas from '../../components/CarreraOficialGraficas.astr
 import FuentesResumen from '../../components/FuentesResumen.astro';
 import ComparecenciaSeccion from '../../components/ComparecenciaSeccion.astro';
 import RecorridosGraficas from '../../components/RecorridosGraficas.astro';
+import VelocidadesGraficas from '../../components/VelocidadesGraficas.astro';
 import {
-  anios, aniosConHorarios, hayPasoReal, hayRecorridos, dias,
+  anios, aniosConHorarios, hayPasoReal, hayRecorridos, hayVelocidades, getVelocidadesAnio, dias,
   getAnio, getHorariosAnio, getCruceNazarenosHorarios, getHorariosEnCalle, getPasoReal,
   fmt, getFuentesAnio,
   hayComparecencia, getComparecencia, getFuentesPorIds,
@@ -28,6 +29,8 @@ const { registros, diasPresentes, totalesPorDia, totalGeneral } = getAnio(anioNu
 const tieneHorarios = aniosConHorarios.some((h) => h.anio === anioNum);
 const tienePasoReal = hayPasoReal(anioNum);
 const tieneRecorridos = hayRecorridos(anioNum);
+const tieneVelocidades = hayVelocidades(anioNum);
+const velocidadesRegistros = tieneVelocidades ? getVelocidadesAnio(anioNum) : [];
 
 // Días del calendario que no se contaron ese año
 const presentes = new Set(diasPresentes.map((d) => d.slug));
@@ -257,6 +260,11 @@ const jsonLd = {
   <!-- Recorridos -->
   {tieneRecorridos && (
     <RecorridosGraficas registros={registros} dias={diasPresentes} />
+  )}
+
+  <!-- Velocidades -->
+  {tieneVelocidades && (
+    <VelocidadesGraficas registros={velocidadesRegistros} dias={diasPresentes} />
   )}
 
   <section class="panel contenedor">

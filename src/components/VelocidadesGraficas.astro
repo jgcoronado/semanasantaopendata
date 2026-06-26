@@ -1,0 +1,181 @@
+---
+// Velocidad media de cada cofradía en m/h (completa, ida, Carrera Oficial, vuelta).
+// `registros`: array de velocidades (getVelocidadesAnio), posiblemente ya filtrado por día.
+// `dias`: catálogo de días presentes (slug, nombre, orden) para color/forma.
+const { registros, dias } = Astro.props;
+
+const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
+const diasOrd = [...dias].sort((a, b) => a.orden - b.orden);
+const ordenPorSlug = new Map(diasOrd.map((d) => [d.slug, d.orden]));
+
+const regs = registros
+  .filter((r) => r.velocidad_mh?.completa != null)
+  .map((r) => ({ ...r, diaOrden: ordenPorSlug.get(r.dia) ?? 1 }));
+
+// KPIs de resumen (sobre la velocidad completa)
+const porCompleta = [...regs].sort((a, b) => b.velocidad_mh.completa - a.velocidad_mh.completa);
+const masRapida = porCompleta[0];
+const masLenta = porCompleta[porCompleta.length - 1];
+const mediaCompleta = regs.length
+  ? Math.round(regs.reduce((s, r) => s + r.velocidad_mh.completa, 0) / regs.length)
+  : 0;
+const co = regs.map((r) => r.velocidad_mh.carrera_oficial).filter((v) => v != null).sort((a, b) => a - b);
+
+const altoRanking = Math.max(480, regs.length * 22);
+
+const datosCliente = {
+  registros: regs.map((r) => ({
+    nombre: r.nombre,
+    diaSlug: r.dia,
+    diaOrden: r.diaOrden,
+    completa: r.velocidad_mh.completa,
+    ida: r.velocidad_mh.ida,
+    carreraOficial: r.velocidad_mh.carrera_oficial,
+    vuelta: r.velocidad_mh.vuelta,
+  })),
+  dias: diasOrd.map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden })),
+};
+
+const fmtVel = (n) => n.toLocaleString('es-ES') + ' m/h';
+---
+
+<!-- ======================== RANKING DE VELOCIDAD ======================== -->
+<section class="panel contenedor" id="velocidades">
+  <div class="panel__cab">
+    <h2>Velocidades</h2>
+    <div class="panel__cab-meta">
+      <span class="kpi-mini"><strong>{regs.length}</strong> hermandades con velocidad calculada</span>
+      <span class="kpi-mini">media: <strong>{fmtVel(mediaCompleta)}</strong></span>
+      {masRapida && <span class="kpi-mini">más rápida: <strong>{masRapida.nombre}</strong> ({fmtVel(masRapida.velocidad_mh.completa)})</span>}
+      {masLenta && <span class="kpi-mini">más lenta: <strong>{masLenta.nombre}</strong> ({fmtVel(masLenta.velocidad_mh.completa)})</span>}
+    </div>
+  </div>
+  <p class="descargas-intro">
+    Velocidad media de la <strong>cruz de guía</strong> sobre el trazado real, en metros por hora.
+    La <strong>completa</strong> abarca todo el recorrido (salida → templo); la velocidad en
+    <strong>Carrera Oficial</strong> es casi idéntica en todas ({co.length ? `${fmtVel(co[0])}–${fmtVel(co.at(-1))}` : '—'})
+    por el paso regulado. Ordenadas de mayor a menor velocidad completa.
+  </p>
+
+  <figure class="grafica grafica--ancha">
+    <figcaption>Velocidad media completa por hermandad (m/h, de mayor a menor)</figcaption>
+    <div class="grafica__lienzo" style={`height:${altoRanking}px`}>
+      <canvas id="vel-ranking" aria-hidden="true"></canvas>
+    </div>
+    <p class="grafica__nota visualmente-oculto">Barras horizontales con la velocidad media completa de cada hermandad en metros por hora, ordenadas de mayor a menor. El color de cada barra indica el día procesional.</p>
+  </figure>
+</section>
+
+<!-- ======================== DISPERSIÓN: IDA VS VUELTA ======================== -->
+<section class="panel contenedor" id="vel-dispersion">
+  <div class="panel__cab"><h2>Ida frente a vuelta</h2></div>
+  <p class="descargas-intro">
+    Cada punto es una cofradía. El eje horizontal es la velocidad de <strong>ida</strong>
+    (salida → La Campana) y el vertical la de <strong>vuelta</strong> (Catedral → templo).
+    Los puntos por encima de la diagonal van más rápido al regresar; los de debajo, más lentos.
+  </p>
+
+  <figure class="grafica grafica--ancha">
+    <figcaption>Velocidad de ida frente a velocidad de vuelta por hermandad (m/h)</figcaption>
+    <div class="grafica__lienzo" style="height:460px">
+      <canvas id="vel-scatter" aria-hidden="true"></canvas>
+    </div>
+    <p class="grafica__nota visualmente-oculto">Gráfica de dispersión: cada punto representa una cofradía, con la velocidad de ida en el eje horizontal y la de vuelta en el vertical, ambas en metros por hora. El color y la forma del punto indican el día procesional.</p>
+  </figure>
+</section>
+
+<script type="application/json" id="datos-velocidades" set:html={JSON.stringify(datosCliente)}></script>
+<script>
+  import {
+    Chart, BarController, BarElement, ScatterController, PointElement,
+    CategoryScale, LinearScale, Tooltip, Legend,
+  } from 'chart.js';
+  Chart.register(BarController, BarElement, ScatterController, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+  const datos = JSON.parse(document.getElementById('datos-velocidades').textContent);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) Chart.defaults.animation = false;
+
+  const COLORES_9 = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
+  const SIMBOLOS_3 = ['circle', 'triangle', 'rect'];
+  const colorDia  = (orden) => COLORES_9[(orden - 1) % 9];
+  const simboloDia = (orden) => SIMBOLOS_3[(orden - 1) % 3];
+  const fmtVel = (n) => n.toLocaleString('es-ES') + ' m/h';
+
+  // ── §1 Ranking horizontal: velocidad completa, de mayor a menor ──
+  const sorted = [...datos.registros].sort((a, b) => b.completa - a.completa);
+
+  new Chart(document.getElementById('vel-ranking'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map((r) => r.nombre),
+      datasets: [{
+        data: sorted.map((r) => r.completa),
+        backgroundColor: sorted.map((r) => colorDia(r.diaOrden) + 'bb'),
+        borderColor:     sorted.map((r) => colorDia(r.diaOrden)),
+        borderWidth: 1,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items) => sorted[items[0].dataIndex]?.nombre ?? '',
+            label: (c) => {
+              const r = sorted[c.dataIndex];
+              return [`Completa: ${fmtVel(r.completa)}`, `Ida: ${fmtVel(r.ida)}`, `Vuelta: ${fmtVel(r.vuelta)}`];
+            },
+          },
+        },
+      },
+      scales: {
+        x: { title: { display: true, text: 'metros/hora' }, beginAtZero: true,
+             ticks: { callback: (v) => v.toLocaleString('es-ES') } },
+        y: { ticks: { font: { size: 11 } } },
+      },
+    },
+  });
+
+  // ── §2 Dispersión: ida vs vuelta ──
+  const scatterDs = datos.dias
+    .filter((d) => datos.registros.some((r) => r.diaSlug === d.slug))
+    .map((d) => ({
+      label: d.nombre,
+      data: datos.registros
+        .filter((r) => r.diaSlug === d.slug && r.ida != null && r.vuelta != null)
+        .map((r) => ({ x: r.ida, y: r.vuelta, nombre: r.nombre })),
+      backgroundColor: colorDia(d.orden) + 'bb',
+      borderColor:     colorDia(d.orden),
+      pointStyle:      simboloDia(d.orden),
+      pointRadius: 7,
+      pointHoverRadius: 9,
+    }));
+
+  new Chart(document.getElementById('vel-scatter'), {
+    type: 'scatter',
+    data: { datasets: scatterDs },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, pointStyleWidth: 14, padding: 14 } },
+        tooltip: {
+          usePointStyle: true,
+          callbacks: {
+            title: (items) => items[0]?.raw?.nombre ?? '',
+            label: (c) => `ida ${fmtVel(c.raw.x)} · vuelta ${fmtVel(c.raw.y)}`,
+          },
+        },
+      },
+      scales: {
+        x: { title: { display: true, text: 'Ida (m/h)' }, beginAtZero: true,
+             ticks: { callback: (v) => v.toLocaleString('es-ES') } },
+        y: { title: { display: true, text: 'Vuelta (m/h)' }, beginAtZero: true,
+             ticks: { callback: (v) => v.toLocaleString('es-ES') } },
+      },
+    },
+  });
+</script>
