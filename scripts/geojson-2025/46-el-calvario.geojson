@@ -617,22 +617,6 @@
           37.3885566
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 46,
-        "hermandad": "El Calvario",
-        "calle": "Calle San Pablo",
-        "osm": "Calle San Pablo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9981573,
-          37.3902876
-        ]
-      }
     }
   ]
 }

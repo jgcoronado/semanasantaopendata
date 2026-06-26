@@ -298,14 +298,6 @@
           [
             -5.9969331,
             37.3849621
-          ],
-          [
-            -5.997349,
-            37.3853119
-          ],
-          [
-            -5.9969212,
-            37.385614
           ]
         ]
       }
@@ -587,22 +579,6 @@
       "properties": {
         "id_hdad": 49,
         "hermandad": "La Carretería",
-        "calle": "Plaza del Triunfo",
-        "osm": "Plaza del Triunfo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9920842,
-          37.3849667
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 49,
-        "hermandad": "La Carretería",
         "calle": "Calle Santo Tomás",
         "osm": "Calle Santo Tomás"
       },
@@ -691,22 +667,6 @@
         "coordinates": [
           -5.9969331,
           37.3849621
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 49,
-        "hermandad": "La Carretería",
-        "calle": "Calle Real de la Carretería",
-        "osm": "Calle Real de la Carretería"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9969212,
-          37.385614
         ]
       }
     }

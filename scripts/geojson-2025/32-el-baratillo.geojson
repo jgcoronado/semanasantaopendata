@@ -591,22 +591,6 @@
       "properties": {
         "id_hdad": 32,
         "hermandad": "El Baratillo",
-        "calle": "Plaza del Triunfo",
-        "osm": "Plaza del Triunfo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9920842,
-          37.3849667
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 32,
-        "hermandad": "El Baratillo",
         "calle": "Calle Santo Tomás",
         "osm": "Calle Santo Tomás"
       },
@@ -727,22 +711,6 @@
         "coordinates": [
           -5.99562,
           37.385841
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 32,
-        "hermandad": "El Baratillo",
-        "calle": "Calle Adriano",
-        "osm": "Calle Adriano"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9976803,
-          37.3865196
         ]
       }
     }

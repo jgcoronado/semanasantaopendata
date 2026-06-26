@@ -236,38 +236,6 @@
             37.388611
           ],
           [
-            -5.993264,
-            37.388615
-          ],
-          [
-            -5.993288,
-            37.389051
-          ],
-          [
-            -5.99338,
-            37.389346
-          ],
-          [
-            -5.993302,
-            37.389446
-          ],
-          [
-            -5.993273,
-            37.38953
-          ],
-          [
-            -5.993197,
-            37.389673
-          ],
-          [
-            -5.993105,
-            37.389698
-          ],
-          [
-            -5.993128,
-            37.389988
-          ],
-          [
             -5.993132428703218,
             37.39005314738425
           ],
@@ -427,22 +395,6 @@
         "coordinates": [
           -5.99537,
           37.393742
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 33,
-        "hermandad": "Los Panaderos",
-        "calle": "Plaza del Duque de la Victoria (lado derecho)",
-        "osm": "Plaza del Duque de la Victoria (lado derecho)"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.995644,
-          37.393115
         ]
       }
     },
@@ -627,22 +579,6 @@
       "properties": {
         "id_hdad": 33,
         "hermandad": "Los Panaderos",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993273,
-          37.38953
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 33,
-        "hermandad": "Los Panaderos",
         "calle": "Plaza del Salvador",
         "osm": "Plaza del Salvador"
       },
@@ -667,22 +603,6 @@
         "coordinates": [
           -5.9934667,
           37.3916005
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 33,
-        "hermandad": "Los Panaderos",
-        "calle": "Calle Orfila",
-        "osm": "Calle Orfila"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993729,
-          37.393322
         ]
       }
     }

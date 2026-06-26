@@ -657,38 +657,6 @@
           37.3885566
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 54,
-        "hermandad": "Montserrat",
-        "calle": "Calle San Pablo",
-        "osm": "Calle San Pablo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9987771,
-          37.3898861
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 54,
-        "hermandad": "Montserrat",
-        "calle": "Calle Cristo del Calvario",
-        "osm": "Calle Cristo del Calvario"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9988822,
-          37.39042
-        ]
-      }
     }
   ]
 }

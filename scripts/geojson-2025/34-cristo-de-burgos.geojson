@@ -765,22 +765,6 @@
           37.3919974
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 34,
-        "hermandad": "Cristo de Burgos",
-        "calle": "Plaza de San Pedro",
-        "osm": "Plaza de San Pedro"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9899897,
-          37.3924669
-        ]
-      }
     }
   ]
 }

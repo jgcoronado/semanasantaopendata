@@ -336,38 +336,6 @@
             37.388285
           ],
           [
-            -5.992744,
-            37.388583
-          ],
-          [
-            -5.992621,
-            37.388828
-          ],
-          [
-            -5.992568,
-            37.389176
-          ],
-          [
-            -5.992542,
-            37.389426
-          ],
-          [
-            -5.992353,
-            37.389737
-          ],
-          [
-            -5.991765,
-            37.389785
-          ],
-          [
-            -5.9915301,
-            37.3898039
-          ],
-          [
-            -5.9913096,
-            37.3898065
-          ],
-          [
             -5.991289194661936,
             37.389882871212365
           ],
@@ -523,22 +491,6 @@
         "coordinates": [
           -5.9841488,
           37.390511
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Plaza de San Agustín",
-        "osm": "Plaza de San Agustín"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9844512,
-          37.3895572
         ]
       }
     },
@@ -931,22 +883,6 @@
       "properties": {
         "id_hdad": 36,
         "hermandad": "Los Negritos",
-        "calle": "Cuesta del Rosario",
-        "osm": "Cuesta del Rosario"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.991765,
-          37.389785
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
         "calle": "Plaza de la Pescadería",
         "osm": "Plaza de la Pescadería"
       },
@@ -995,86 +931,6 @@
       "properties": {
         "id_hdad": 36,
         "hermandad": "Los Negritos",
-        "calle": "Calle Alfalfa",
-        "osm": "Calle Alfalfa"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9906,
-          37.3902
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle Águilas",
-        "osm": "Calle Águilas"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9892425,
-          37.3898525
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Plaza de Pilatos",
-        "osm": "Plaza de Pilatos"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9869495,
-          37.3898114
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle San Esteban",
-        "osm": "Calle San Esteban"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9856873,
-          37.3896844
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle Puerta de Carmona",
-        "osm": "Calle Puerta de Carmona"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9845134,
-          37.3892039
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
         "calle": "Calle Muro de los Navarros",
         "osm": "Calle Muro de los Navarros"
       },
@@ -1099,22 +955,6 @@
         "coordinates": [
           -5.9847954,
           37.3905838
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 36,
-        "hermandad": "Los Negritos",
-        "calle": "Calle Recaredo",
-        "osm": "Calle Recaredo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9841222,
-          37.3905393
         ]
       }
     }
