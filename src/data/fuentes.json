@@ -1,5 +1,14 @@
 [
   {
+    "id": "geojson-recorridos-2025",
+    "nombre": "Recorridos GeoJSON 2025 — Semana Santa Open Data",
+    "nombre_corto": "GeoJSON recorridos 2025",
+    "tipo": "propia",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Itinerarios de las 61 hermandades trazados a mano sobre el itinerario oficial del Consejo de Hermandades. Fuente de las distancias y velocidades publicadas en este sitio. Disponibles para descarga en formato GeoJSON."
+  },
+  {
     "id": "boletin-paz-2025",
     "nombre": "Hermandad de la Paz — Boletín informativo (enero 2026)",
     "nombre_corto": "Boletín de la Paz",

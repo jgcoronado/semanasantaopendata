@@ -127,6 +127,7 @@ const fuentesPagina = [...new Map(
       'nazarenos',
       ...(tieneHorarios ? ['horarios'] : []),
       ...(tienePasoReal ? ['paso_real'] : []),
+      ...(tieneRecorridos ? ['recorridos'] : []),
     ]),
     ...comparecenciaFuentes,
   ].map((f) => [f.id, f])
@@ -273,6 +274,10 @@ const jsonLd = {
       descargas={[
         { href: `/${anio}/datos/conteo.csv`, label: '⬇ CSV', download: true },
         { href: `/${anio}/datos/conteo.json`, label: 'JSON' },
+        ...(tieneRecorridos ? [
+          { href: `/${anio}/datos/recorridos.zip`, label: '⬇ GeoJSON (ZIP)', download: true },
+          { href: `/${anio}/datos/recorridos.geojson`, label: 'GeoJSON' },
+        ] : []),
       ]}
     />
   </section>

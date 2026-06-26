@@ -11,7 +11,8 @@
     "anio": 2025,
     "fuentes": {
       "nazarenos": "consejo-nazarenos-2025",
-      "horarios": "consejo-horarios-2025"
+      "horarios": "consejo-horarios-2025",
+      "recorridos": "geojson-recorridos-2025"
     }
   },
   {

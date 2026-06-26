@@ -93,6 +93,7 @@ const fuentesPagina = getFuentesAnio(anioNum, [
   'nazarenos',
   ...(tieneHorarios ? ['horarios'] : []),
   ...(tienePasoReal ? ['paso_real'] : []),
+  ...(tieneRecorridos ? ['recorridos'] : []),
 ]);
 
 const totalDia = { hermandades: totales.hermandades, noNaz: totales.noNaz, noTotal: totales.noTotal };
@@ -184,6 +185,10 @@ const jsonLd = {
       descargas={[
         { href: `/${anio}/datos/conteo.csv`, label: '⬇ CSV', download: true },
         { href: `/${anio}/datos/conteo.json`, label: 'JSON' },
+        ...(tieneRecorridos ? [
+          { href: `/${anio}/datos/dia/${dia}.zip`, label: '⬇ GeoJSON del día (ZIP)', download: true },
+          { href: `/${anio}/datos/recorridos.zip`, label: '⬇ GeoJSON semana (ZIP)', download: true },
+        ] : []),
       ]}
     />
   </section>

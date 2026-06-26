@@ -86,7 +86,7 @@ const fuentesComparecencia = anios
 // Todas las fuentes de la página, consolidadas en un único bloque al final.
 const fuentesPagina = [...new Map(
   [
-    ...anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real'])),
+    ...anios.flatMap((a) => getFuentesAnio(a.anio, ['nazarenos', 'horarios', 'paso_real', 'recorridos'])),
     ...fuentesComparecencia,
   ].map((f) => [f.id, f])
 ).values()];
@@ -522,6 +522,11 @@ const jsonLd = {
       <a class="dia-nav__a" href={`/${anio}/dia/${r.diaSlug}/`}>← Todas las hermandades del {r.diaNombre}</a>
       <a class="dia-nav__a dia-nav__der" href="/comparativa/">Comparar años →</a>
     </nav>
-    <FuentesResumen fuentes={fuentesPagina} />
+    <FuentesResumen
+      fuentes={fuentesPagina}
+      descargas={r.metros != null ? [
+        { href: `/${anio}/datos/recorrido/${slug}.geojson`, label: '⬇ GeoJSON recorrido', download: true },
+      ] : []}
+    />
   </section>
 </Base>
