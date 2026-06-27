@@ -4,7 +4,8 @@
     "fuentes": {
       "nazarenos": "consejo-nazarenos-2026",
       "horarios": "consejo-horarios-2026",
-      "paso_real": "paso-real-2026"
+      "paso_real": "paso-real-2026",
+      "recorridos": "geojson-recorridos-2026"
     }
   },
   {

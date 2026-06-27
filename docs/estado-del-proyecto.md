@@ -1,6 +1,21 @@
 # Estado del proyecto — Semana Santa Open Data
 
-_Última actualización: 2 de junio de 2026 — horarios 2025 añadidos_
+_Última actualización: 27 de junio de 2026 — recorridos GeoJSON 2026 generados (rama `recorridos-2026`)_
+
+> **Estado de esta rama (`recorridos-2026`)**
+> Genera los **61 recorridos GeoJSON de 2026** a partir de los de 2025:
+> - **30 idénticos** (el itinerario no cambió) → se copia el trazado 2025.
+> - **31 compuestos** encadenando fragmentos canónicos (priorizando la geometría propia 2025 de
+>   cada hermandad); los tramos nuevos sin fragmento se trazan en recta y quedan marcados.
+> - Reparto de calidad: **30 ✅ + 25 🟡 (algún tramo en recta) + 6 🔴 a revisar a mano**
+>   (La Paz, San Pablo, Santa Cruz, La Sed, Montesión, Montserrat).
+>
+> Documentación añadida: `docs/fuentes/cofradias-{2025,2026}-itinerarios.md` (Nóminas oficiales),
+> `docs/diferencias-recorridos-2025-2026.md`, `docs/viabilidad-geojson-2026.md`,
+> `docs/geojson-2026-generacion.md` y `docs/metodologia-recorridos-2026.md`. Salida en
+> `scripts/geojson-2026/` (+ `public/geojson/2026/`) y `src/data/recorridos-2026.json`. El visor
+> de la ficha (`RecorridoMapa`) y el mapa global ya funcionan por año. Pendiente: repasar a mano
+> los 6 🔴 con `componer-ruta.mjs`.
 
 ## Resumen
 
@@ -14,11 +29,14 @@ Construida con **Astro 5** + **Chart.js** (HTML estático, SEO óptimo) y desple
 
 ## Datos disponibles
 
-| Año | Hermandades | Días | Nazarenos | Cortejo | Horarios |
-| --- | --: | --: | --: | --: | :--: |
-| 2026 | 61 | 9 | 70.865 | 75.999 | ✓ |
-| 2025 | 44 | 7 | 49.161 | 52.694 | ✓ |
-| 2023 | 55 | 7 | 57.539 | 61.587 | — |
+| Año | Hermandades | Días | Nazarenos | Cortejo | Horarios | Recorridos |
+| --- | --: | --: | --: | --: | :--: | :--: |
+| 2026 | 61 | 9 | 70.865 | 75.999 | ✓ | ✓ (parcial) |
+| 2025 | 44 | 7 | 49.161 | 52.694 | ✓ | ✓ |
+| 2023 | 55 | 7 | 57.539 | 61.587 | — | — |
+
+> Recorridos: **2025** completos (61 GeoJSON dibujados a mano). **2026** generados desde 2025
+> (ver rama `recorridos-2026`); 6 recorridos con cambios mayores quedan pendientes de repaso manual.
 
 > Días no contados (el modelo los contempla; una hermandad simplemente no tiene registro el año
 > que no salió, y la home del año lo avisa):

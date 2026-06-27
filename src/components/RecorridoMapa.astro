@@ -1,5 +1,6 @@
 ---
 interface Props {
+  anio: number;
   idHdad: number;
   slug: string;
   colorDia: string;
@@ -11,9 +12,9 @@ interface Props {
   metros?: number | null;
 }
 
-const { idHdad, slug, colorDia, nombre, horario, pasoReal, metros } = Astro.props;
+const { anio, idHdad, slug, colorDia, nombre, horario, pasoReal, metros } = Astro.props;
 
-const geojsonUrl = `/geojson/2025/${String(idHdad).padStart(2, '0')}-${slug}.geojson`;
+const geojsonUrl = `/geojson/${anio}/${String(idHdad).padStart(2, '0')}-${slug}.geojson`;
 
 type PuntoMapa = {
   patron: string;
