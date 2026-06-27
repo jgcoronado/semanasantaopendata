@@ -1,6 +1,11 @@
 # Estado del proyecto — Semana Santa Open Data
 
-_Última actualización: 2 de junio de 2026 — horarios 2025 añadidos_
+_Última actualización: 27 de junio de 2026 — mejoras responsive móvil (rama `movil-mejoras`)_
+
+> **Estado de esta rama (`movil-mejoras`)**
+> Mejoras **responsive para móvil**: nav con wrapping y *touch targets* de 44 px (paso 1), alturas
+> de gráficas responsivas (paso 2) y vista en tarjeta para `TablaNazarenos` en pantallas < 600 px
+> (paso 3). Rama de UI sobre una base anterior; pendiente de integrar.
 
 ## Resumen
 
