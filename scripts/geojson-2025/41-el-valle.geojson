@@ -320,38 +320,6 @@
             37.388611
           ],
           [
-            -5.993264,
-            37.388615
-          ],
-          [
-            -5.993288,
-            37.389051
-          ],
-          [
-            -5.99338,
-            37.389346
-          ],
-          [
-            -5.993302,
-            37.389446
-          ],
-          [
-            -5.993273,
-            37.38953
-          ],
-          [
-            -5.993197,
-            37.389673
-          ],
-          [
-            -5.993105,
-            37.389698
-          ],
-          [
-            -5.993128,
-            37.389988
-          ],
-          [
             -5.993132428703218,
             37.39005314738425
           ],
@@ -719,22 +687,6 @@
       "properties": {
         "id_hdad": 41,
         "hermandad": "El Valle",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993273,
-          37.38953
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 41,
-        "hermandad": "El Valle",
         "calle": "Plaza del Salvador",
         "osm": "Plaza del Salvador"
       },
@@ -759,22 +711,6 @@
         "coordinates": [
           -5.993467,
           37.391601
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 41,
-        "hermandad": "El Valle",
-        "calle": "Calle Laraña",
-        "osm": "Calle Laraña"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.992981,
-          37.392804
         ]
       }
     }

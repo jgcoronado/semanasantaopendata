@@ -583,22 +583,6 @@
       "properties": {
         "id_hdad": 58,
         "hermandad": "La Trinidad",
-        "calle": "Compás de la Basílica de María Auxiliadora",
-        "osm": "Compás de la Basílica de María Auxiliadora"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9808532,
-          37.3971561
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
         "calle": "Calle María Auxiliadora",
         "osm": "Calle María Auxiliadora"
       },
@@ -655,22 +639,6 @@
         "coordinates": [
           -5.9855565,
           37.3931279
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Plaza Padre Jerónimo de Córdoba",
-        "osm": "Plaza Padre Jerónimo de Córdoba"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9865505,
-          37.3930822
         ]
       }
     },
@@ -1143,86 +1111,6 @@
       "properties": {
         "id_hdad": 58,
         "hermandad": "La Trinidad",
-        "calle": "Calle Juan de Mesa",
-        "osm": "Calle Juan de Mesa"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.988267,
-          37.392909
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Plaza de Ponce de León",
-        "osm": "Plaza de Ponce de León"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9874685,
-          37.3930804
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Plaza Padre Jerónimo de Córdoba",
-        "osm": "Plaza Padre Jerónimo de Córdoba"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9864769,
-          37.3930552
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Calle Jáuregui",
-        "osm": "Calle Jáuregui"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9856192,
-          37.3931386
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Calle Valle",
-        "osm": "Calle Valle"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9841078,
-          37.3942461
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
         "calle": "Calle Cristo de las Cinco Llagas",
         "osm": "Calle Cristo de las Cinco Llagas"
       },
@@ -1263,38 +1151,6 @@
         "coordinates": [
           -5.9820199,
           37.3969081
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Calle María Auxiliadora",
-        "osm": "Calle María Auxiliadora"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9817035,
-          37.3969358
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 58,
-        "hermandad": "La Trinidad",
-        "calle": "Compás de la Basílica de María Auxiliadora",
-        "osm": "Compás de la Basílica de María Auxiliadora"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9808408,
-          37.3971652
         ]
       }
     }

@@ -901,38 +901,6 @@
           37.3919974
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 55,
-        "hermandad": "La Mortaja",
-        "calle": "Calle Doña María Coronel",
-        "osm": "Calle Doña María Coronel"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9891982,
-          37.3942806
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 55,
-        "hermandad": "La Mortaja",
-        "calle": "Calle Bustos Tavera",
-        "osm": "Calle Bustos Tavera"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9879513,
-          37.3950582
-        ]
-      }
     }
   ]
 }

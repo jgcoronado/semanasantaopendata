@@ -216,38 +216,6 @@
             37.388611
           ],
           [
-            -5.993264,
-            37.388615
-          ],
-          [
-            -5.993288,
-            37.389051
-          ],
-          [
-            -5.99338,
-            37.389346
-          ],
-          [
-            -5.993302,
-            37.389446
-          ],
-          [
-            -5.993273,
-            37.38953
-          ],
-          [
-            -5.993197,
-            37.389673
-          ],
-          [
-            -5.993105,
-            37.389698
-          ],
-          [
-            -5.993128,
-            37.389988
-          ],
-          [
             -5.993132428703218,
             37.39005314738425
           ],
@@ -316,18 +284,6 @@
             37.3939039
           ],
           [
-            -5.9959824,
-            37.3938867
-          ],
-          [
-            -5.9959867,
-            37.3940371
-          ],
-          [
-            -5.9959477,
-            37.3942225
-          ],
-          [
             -5.9963843,
             37.3942981
           ],
@@ -350,18 +306,6 @@
           [
             -5.9969224,
             37.3965357
-          ],
-          [
-            -5.9968645,
-            37.3969428
-          ],
-          [
-            -5.9967429,
-            37.3969344
-          ],
-          [
-            -5.9966742,
-            37.3971947
           ]
         ]
       }
@@ -443,22 +387,6 @@
         "coordinates": [
           -5.99537,
           37.393742
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 60,
-        "hermandad": "Soledad de San Lorenzo",
-        "calle": "Plaza del Duque de la Victoria (lado derecho)",
-        "osm": "Plaza del Duque de la Victoria (lado derecho)"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.995644,
-          37.393115
         ]
       }
     },
@@ -643,22 +571,6 @@
       "properties": {
         "id_hdad": 60,
         "hermandad": "Soledad de San Lorenzo",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993273,
-          37.38953
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 60,
-        "hermandad": "Soledad de San Lorenzo",
         "calle": "Plaza del Salvador",
         "osm": "Plaza del Salvador"
       },
@@ -739,22 +651,6 @@
       "properties": {
         "id_hdad": 60,
         "hermandad": "Soledad de San Lorenzo",
-        "calle": "Calle Jesús del Gran Poder",
-        "osm": "Calle Jesús del Gran Poder"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9959771,
-          37.3939894
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 60,
-        "hermandad": "Soledad de San Lorenzo",
         "calle": "Calle Las Cortes",
         "osm": "Calle Las Cortes"
       },
@@ -811,22 +707,6 @@
         "coordinates": [
           -5.9969224,
           37.3965357
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 60,
-        "hermandad": "Soledad de San Lorenzo",
-        "calle": "Plaza de San Lorenzo",
-        "osm": "Plaza de San Lorenzo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9966561,
-          37.3970955
         ]
       }
     }

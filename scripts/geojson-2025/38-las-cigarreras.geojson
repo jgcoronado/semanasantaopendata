@@ -1129,22 +1129,6 @@
           37.3941815
         ]
       }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 38,
-        "hermandad": "Las Cigarreras",
-        "calle": "Calle Sol",
-        "osm": "Calle Sol"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9876417,
-          37.3939706
-        ]
-      }
     }
   ]
 }

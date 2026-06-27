@@ -254,14 +254,6 @@
           [
             -5.992781,
             37.389701
-          ],
-          [
-            -5.993087,
-            37.389679
-          ],
-          [
-            -5.993148,
-            37.390077
           ]
         ]
       }
@@ -567,22 +559,6 @@
         "coordinates": [
           -5.992781,
           37.389701
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 42,
-        "hermandad": "Pasión",
-        "calle": "Plaza del Salvador",
-        "osm": "Plaza del Salvador"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993148,
-          37.390077
         ]
       }
     }

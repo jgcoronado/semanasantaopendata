@@ -559,22 +559,6 @@
       "properties": {
         "id_hdad": 26,
         "hermandad": "Santa Cruz",
-        "calle": "Plaza del Triunfo",
-        "osm": "Plaza del Triunfo"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9920842,
-          37.3849667
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
         "calle": "Calle Santo Tomás",
         "osm": "Calle Santo Tomás"
       },
@@ -887,70 +871,6 @@
         "coordinates": [
           -5.9936639,
           37.3834745
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Calle Joaquín Romero Murube",
-        "osm": "Calle Joaquín Romero Murube"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9915151,
-          37.3852751
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Plaza de La Alianza",
-        "osm": "Plaza de La Alianza"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9911357,
-          37.385469
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Calle Rodrigo Caro",
-        "osm": "Calle Rodrigo Caro"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9907288,
-          37.3857993
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 26,
-        "hermandad": "Santa Cruz",
-        "calle": "Calle Mateos Gago",
-        "osm": "Calle Mateos Gago"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9899923,
-          37.386479
         ]
       }
     }

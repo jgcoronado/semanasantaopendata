@@ -330,46 +330,6 @@
           [
             -5.995978500352905,
             37.3940198419956
-          ],
-          [
-            -5.9959864,
-            37.3938914
-          ],
-          [
-            -5.9959496,
-            37.3937209
-          ],
-          [
-            -5.9959193,
-            37.3936073
-          ],
-          [
-            -5.9959583,
-            37.3934438
-          ],
-          [
-            -5.996032,
-            37.3932159
-          ],
-          [
-            -5.9960947,
-            37.3929232
-          ],
-          [
-            -5.9961309,
-            37.3927267
-          ],
-          [
-            -5.9962334,
-            37.3927067
-          ],
-          [
-            -5.9969206,
-            37.3927967
-          ],
-          [
-            -5.9969273,
-            37.3925174
           ]
         ]
       }
@@ -739,54 +699,6 @@
         "coordinates": [
           -5.995978500352905,
           37.3940198419956
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 43,
-        "hermandad": "El Silencio",
-        "calle": "Plaza del Duque de la Victoria",
-        "osm": "Plaza del Duque de la Victoria"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9959942,
-          37.393291
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 43,
-        "hermandad": "El Silencio",
-        "calle": "Calle Alfonso XII",
-        "osm": "Calle Alfonso XII"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9965356,
-          37.3927513
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 43,
-        "hermandad": "El Silencio",
-        "calle": "Calle El Silencio",
-        "osm": "Calle El Silencio"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9969273,
-          37.3925174
         ]
       }
     }

@@ -48,46 +48,6 @@
             37.38225916933025
           ],
           [
-            -5.9719649,
-            37.3826126
-          ],
-          [
-            -5.9730413,
-            37.3828289
-          ],
-          [
-            -5.9730765,
-            37.3829231
-          ],
-          [
-            -5.973179,
-            37.3829766
-          ],
-          [
-            -5.973336,
-            37.3829766
-          ],
-          [
-            -5.9734289,
-            37.3829078
-          ],
-          [
-            -5.9737845,
-            37.3829613
-          ],
-          [
-            -5.9775708,
-            37.3836606
-          ],
-          [
-            -5.9800172,
-            37.3841616
-          ],
-          [
-            -5.9815446,
-            37.3843468
-          ],
-          [
             -5.9813869,
             37.3856549
           ],
@@ -582,39 +542,7 @@
           [
             -5.9689634,
             37.38463
-          ],
-          [
-            -5.9689985,
-            37.3842348
-          ],
-          [
-            -5.9690716,
-            37.3837501
-          ],
-          [
-            -5.9691414,
-            37.3832473
-          ],
-          [
-            -5.9659118,
-            37.3829942
           ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Calle Cristo de la Sed",
-        "osm": "Calle Cristo de la Sed"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9673295,
-          37.3831148
         ]
       }
     },
@@ -631,22 +559,6 @@
         "coordinates": [
           -5.970134099304253,
           37.38225916933025
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Avenida de Eduardo Dato",
-        "osm": "Avenida de Eduardo Dato"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9791026,
-          37.3839609
         ]
       }
     },
@@ -1151,54 +1063,6 @@
       "properties": {
         "id_hdad": 29,
         "hermandad": "La Sed",
-        "calle": "Calle Puerta de Carmona",
-        "osm": "Calle Puerta de Carmona"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9845814,
-          37.3892094
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Calle Luis Montoto",
-        "osm": "Calle Luis Montoto"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9814251,
-          37.3878168
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Calle José Luis de Casso",
-        "osm": "Calle José Luis de Casso"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9691483,
-          37.3869308
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
         "calle": "Calle Rico Cejudo",
         "osm": "Calle Rico Cejudo"
       },
@@ -1223,22 +1087,6 @@
         "coordinates": [
           -5.9689634,
           37.38463
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 29,
-        "hermandad": "La Sed",
-        "calle": "Calle Cristo de la Sed",
-        "osm": "Calle Cristo de la Sed"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9673035,
-          37.3831148
         ]
       }
     }

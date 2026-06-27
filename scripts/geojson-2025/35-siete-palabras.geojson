@@ -599,22 +599,6 @@
       "properties": {
         "id_hdad": 35,
         "hermandad": "Siete Palabras",
-        "calle": "Plaza de San Francisco",
-        "osm": "Plaza de San Francisco"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.994154,
-          37.38867
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 35,
-        "hermandad": "Siete Palabras",
         "calle": "Plaza Nueva",
         "osm": "Plaza Nueva"
       },
@@ -679,38 +663,6 @@
       "properties": {
         "id_hdad": 35,
         "hermandad": "Siete Palabras",
-        "calle": "La Campana",
-        "osm": "La Campana"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9953759,
-          37.3927251
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 35,
-        "hermandad": "Siete Palabras",
-        "calle": "Plaza del Duque de la Victoria",
-        "osm": "Plaza del Duque de la Victoria"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.996046,
-          37.393115
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 35,
-        "hermandad": "Siete Palabras",
         "calle": "Calle Alfonso XII",
         "osm": "Calle Alfonso XII"
       },
@@ -751,22 +703,6 @@
         "coordinates": [
           -5.9979445,
           37.3939831
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 35,
-        "hermandad": "Siete Palabras",
-        "calle": "Calle Cardenal Cisneros",
-        "osm": "Calle Cardenal Cisneros"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9989654,
-          37.3941809
         ]
       }
     }

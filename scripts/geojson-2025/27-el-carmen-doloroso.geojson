@@ -767,22 +767,6 @@
       "properties": {
         "id_hdad": 27,
         "hermandad": "El Carmen Doloroso",
-        "calle": "Calle Álvarez Quintero",
-        "osm": "Calle Álvarez Quintero"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.993273,
-          37.38953
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 27,
-        "hermandad": "El Carmen Doloroso",
         "calle": "Plaza del Salvador",
         "osm": "Plaza del Salvador"
       },
@@ -911,22 +895,6 @@
       "properties": {
         "id_hdad": 27,
         "hermandad": "El Carmen Doloroso",
-        "calle": "Calle Feria",
-        "osm": "Calle Feria"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9913,
-          37.3957
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 27,
-        "hermandad": "El Carmen Doloroso",
         "calle": "Calle Guadiana",
         "osm": "Calle Guadiana"
       },
@@ -935,38 +903,6 @@
         "coordinates": [
           -5.9918742,
           37.3985951
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 27,
-        "hermandad": "El Carmen Doloroso",
-        "calle": "Calle Peris Mencheta",
-        "osm": "Calle Peris Mencheta"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9919067,
-          37.3991399
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 27,
-        "hermandad": "El Carmen Doloroso",
-        "calle": "Calle Feria",
-        "osm": "Calle Feria"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.9915911,
-          37.3985737
         ]
       }
     }

@@ -498,22 +498,6 @@
           [
             -5.984483,
             37.3938976
-          ],
-          [
-            -5.9844227,
-            37.3939024
-          ],
-          [
-            -5.9839231,
-            37.3944023
-          ],
-          [
-            -5.9838901,
-            37.3946831
-          ],
-          [
-            -5.9838712,
-            37.3948965
           ]
         ]
       }
@@ -1107,38 +1091,6 @@
         "coordinates": [
           -5.984483,
           37.3938976
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 48,
-        "hermandad": "Los Gitanos",
-        "calle": "Calle Valle",
-        "osm": "Calle Valle"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.984126,
-          37.3935969
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id_hdad": 48,
-        "hermandad": "Los Gitanos",
-        "calle": "Plaza del Señor de la Salud",
-        "osm": "Plaza del Señor de la Salud"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -5.983956,
-          37.3948515
         ]
       }
     }
