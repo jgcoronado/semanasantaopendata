@@ -598,6 +598,8 @@ function construirComparecencia(anio) {
     const cor = c.cortejo ?? null;
 
     // Denominador "lo anunciado": nómina (sin simbólicas) si existe; si no, papeletas.
+    // La base SIEMPRE es `nomina ?? papeletas`; no hay campo que la seleccione manualmente
+    // (se eliminó el antiguo `baseNomina`, que el código no llegaba a leer).
     const baseNaz = naz.nomina ?? c.papeletas ?? null;
     const baseNazTipo = naz.nomina != null ? 'nomina' : (c.papeletas != null ? 'papeletas' : null);
 
