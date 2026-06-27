@@ -1,6 +1,10 @@
 # Estado del proyecto — Semana Santa Open Data
 
-_Última actualización: 2 de junio de 2026 — horarios 2025 añadidos_
+_Última actualización: 27 de junio de 2026 — mejoras de accesibilidad (rama `a11y-fixes`)_
+
+> **Estado de esta rama (`a11y-fixes`)**
+> Rama de **ajustes de accesibilidad y diseño** de la interfaz. Es una rama antigua (su trabajo ya
+> está integrado en la línea principal); se conserva como referencia.
 
 ## Resumen
 
