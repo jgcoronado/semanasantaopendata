@@ -1,6 +1,11 @@
 # Estado del proyecto — Semana Santa Open Data
 
-_Última actualización: 2 de junio de 2026 — horarios 2025 añadidos_
+_Última actualización: 27 de junio de 2026 — dataset de comparecencia y Consejo de Sabios (rama `comparecencia-2025`)_
+
+> **Estado de esta rama (`comparecencia-2025`)**
+> Añade el **dataset de comparecencia 2025** (anunciados vs reales por hermandad, de boletines y
+> crónicas), un **validador de GeoJSON**, el documento *Consejo de Sabios 2026* y la corrección de
+> **calles duplicadas en 34 GeoJSON de 2025**. Va por delante de `origin/comparecencia-2025`.
 
 ## Resumen
 
