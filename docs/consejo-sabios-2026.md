@@ -26,7 +26,7 @@ oficiales, paso real por La Campana y análisis cruzados.
 | `recorridos-2025.json` (metros) | 61 hermandades |
 | `recorridos-2026.json` (metros) | **No existe** |
 | Comparecencia 2025              | **4 de 44** registros completados |
-| Dominio propio                  | **No registrado** |
+| Dominio propio                  | ✅ **Registrado y activo** (`semanasantaopendata.org`, HTTP 200) |
 | Tests automáticos               | Solo `npm run build` (integridad referencial) |
 | Despliegue                      | Cloudflare Workers, auto-deploy en push a `main` |
 | Entorno de pruebas              | `pre` branch → URL estable |
@@ -389,3 +389,33 @@ Se levanta la sesión.
 
 _Documento generado el 26 de junio de 2026._
 _Participantes: Optimista, Pesimista, Realista, Idealista, Programador, Juez._
+
+---
+
+## 7. Actualización de estado — 27 de junio de 2026
+
+_Revisión del estado real de las tareas en las ramas `main`, `pre` y `comparecencia-2025`._
+
+### Ya resuelto (no figuraba como hecho en la deliberación)
+
+- ✅ **Horizonte A.1 — Dominio propio: HECHO.** `semanasantaopendata.org` está registrado y
+  activo (resuelve a Cloudflare, responde HTTP 200). `site` en `astro.config.mjs` ya apunta
+  al dominio real (commit `a3c09e0`, 4-jun-2026). _Pendiente menor:_ `wrangler.jsonc` no
+  declara la ruta de dominio personalizado (se gestiona desde el panel de Cloudflare).
+- ✅ **Validador GeoJSON: HECHO.** `scripts/validar-geojson.mjs` operativo sobre los 34
+  GeoJSON no editados (commit `1f826b7`).
+- ⚠️ **Horizonte C.6 — Mapa interactivo: PARCIAL.** Existe `RecorridoMapa.astro` (Leaflet)
+  integrado en la ficha de hermandad (`/[anio]/hermandad/[slug]`), que pinta el recorrido
+  GeoJSON de esa hermandad. **Falta** el mapa global que muestre las 61 rutas juntas
+  coloreadas por día (la visión del Idealista).
+
+### Aún pendiente (sin cambios desde la deliberación)
+
+- ❌ **A.2 — `baseNomina`:** `datos.js:601` sigue calculando `naz.nomina ?? c.papeletas` e
+  ignora el campo `baseNomina`. Hay ya 2 registros con `baseNomina:"papeletas"` (idHdad 5 y
+  12); hoy el resultado coincide por casualidad, pero la deuda sigue viva.
+- ❌ **B.3 — Comparecencia 2025:** sigue en 4 de 44 registros en las tres ramas.
+- ❌ **B.4 — `recorridos-2026.json`:** no existe.
+- ❌ **B.5 — CI GitHub Actions:** no hay `.github/workflows/`.
+- ❌ **C.7 — GeoJSON 2026:** no existe.
+- ❌ **C.8 — `LICENSE` / `CONTRIBUTING.md`:** no existen en el repositorio.
