@@ -1,6 +1,12 @@
 # Estado del proyecto — Semana Santa Open Data
 
-_Última actualización: 2 de junio de 2026 — horarios 2025 añadidos_
+_Última actualización: 27 de junio de 2026 — mapa global de recorridos (rama `mapa-global-rutas`)_
+
+> **Estado de esta rama (`mapa-global-rutas`)**
+> Añade el **mapa global de recorridos GeoJSON por año** en `/[anio]/recorridos/mapa`: superpone
+> los trazados de todas las hermandades del año sobre un único mapa Leaflet, coloreados por día
+> litúrgico. Base de partida sobre `pre`. (Los recorridos de 2026 se generan en la rama
+> `recorridos-2026`.)
 
 ## Resumen
 
