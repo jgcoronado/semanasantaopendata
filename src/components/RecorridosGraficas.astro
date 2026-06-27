@@ -40,6 +40,7 @@ function fmtKm(n) {
       <span class="kpi-mini">media: <strong>{fmtKm(mediaMetros)}</strong></span>
       {masLarga && <span class="kpi-mini">más larga: <strong>{masLarga.nombre}</strong> ({fmtKm(masLarga.metros)})</span>}
       {masCorta && <span class="kpi-mini">más corta: <strong>{masCorta.nombre}</strong> ({fmtKm(masCorta.metros)})</span>}
+      <a class="kpi-mini" href={`/${anio}/recorridos/mapa/`}>🗺 Ver todos en el mapa</a>
     </div>
   </div>
   <p class="descargas-intro">
