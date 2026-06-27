@@ -55,9 +55,9 @@
   },
   {
     "id_hdad": 10,
-    "metros": 6343,
+    "metros": 5444,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "26 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "23 tramos en recta: calles nuevas del inicio (Laffón Soto, Soleá, Sinaí, Hernando del Pulgar) y del retorno (Laguillo, Venecia, Kansas City, El Greco) pendientes de traza manual"
   },
   {
     "id_hdad": 11,
@@ -151,9 +151,9 @@
   },
   {
     "id_hdad": 26,
-    "metros": 3896,
+    "metros": 3251,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "3 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": null
   },
   {
     "id_hdad": 27,
@@ -169,9 +169,9 @@
   },
   {
     "id_hdad": 29,
-    "metros": 6407,
+    "metros": 7157,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "11 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "7 tramos en recta (calles nuevas: Benito Mas y Prat, Alejandro Collantes, Cardenal Lluch y conexiones al templo)"
   },
   {
     "id_hdad": 30,
@@ -231,7 +231,7 @@
     "id_hdad": 39,
     "metros": 4402,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "1 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": null
   },
   {
     "id_hdad": 40,
@@ -319,9 +319,9 @@
   },
   {
     "id_hdad": 54,
-    "metros": 3927,
+    "metros": 3001,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "2 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": null
   },
   {
     "id_hdad": 55,

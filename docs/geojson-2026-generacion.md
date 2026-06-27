@@ -26,7 +26,7 @@ Salida: `scripts/geojson-2026/` (+ copia en `public/geojson/2026/`) y `src/data/
 | 7 | La Estrella | compuesto | 9 | 4665 m | +11% | 🟡 ok (9 tramo(s) en recta) |
 | 8 | La Amargura | compuesto | 4 | 3794 m | +5% | 🟡 ok (4 tramo(s) en recta) |
 | 9 | El Amor | compuesto | 3 | 2613 m | -0% | 🟡 ok (3 tramo(s) en recta) |
-| 10 | San Pablo | compuesto | 26 | 6343 m | -39% | 🔴 revisar geometría |
+| 10 | San Pablo | compuesto | 23 | 5444 m | — | 🔴 revisar: calles nuevas extrarradio (Soleá, Sinaí, Hernando del Pulgar, Venecia, Kansas City, El Greco) pendientes |
 | 11 | Redención | compuesto | 9 | 3469 m | -9% | 🟡 ok (9 tramo(s) en recta) |
 | 12 | Santa Genoveva | copiado | — | 8844 m | +0% | ✅ idéntico a 2025 |
 | 13 | Santa Marta | copiado | — | 2700 m | +0% | ✅ idéntico a 2025 |
@@ -42,10 +42,10 @@ Salida: `scripts/geojson-2026/` (+ copia en `public/geojson/2026/`) y `src/data/
 | 23 | Dulce Nombre | compuesto | 6 | 3312 m | -6% | 🟡 ok (6 tramo(s) en recta) |
 | 24 | Los Javieres | compuesto | 7 | 3395 m | -13% | 🟡 ok (7 tramo(s) en recta) |
 | 25 | Los Estudiantes | compuesto | 10 | 4287 m | +12% | 🟡 ok (10 tramo(s) en recta) |
-| 26 | Santa Cruz | compuesto | 3 | 3896 m | +16% | 🔴 revisar geometría |
+| 26 | Santa Cruz | compuesto | 1 | 3251 m | -3% | 🟡 ok (1 tramo en recta: Triunfo→Murube, trivial) |
 | 27 | El Carmen Doloroso | copiado | — | 4132 m | +0% | ✅ idéntico a 2025 |
 | 28 | El Buen Fin | copiado | — | 4267 m | +0% | ✅ idéntico a 2025 |
-| 29 | La Sed | compuesto | 11 | 6407 m | -23% | 🔴 revisar geometría |
+| 29 | La Sed | compuesto | 7 | 7157 m | -14% | 🟡 ok (7 tramos en recta: Benito Mas y Prat, Alejandro Collantes, Cardenal Lluch pendientes) |
 | 30 | San Bernardo | copiado | — | 5235 m | +0% | ✅ idéntico a 2025 |
 | 31 | La Lanzada | compuesto | 3 | 3247 m | -9% | 🟡 ok (3 tramo(s) en recta) |
 | 32 | El Baratillo | copiado | — | 3518 m | +0% | ✅ idéntico a 2025 |
@@ -55,7 +55,7 @@ Salida: `scripts/geojson-2026/` (+ copia en `public/geojson/2026/`) y `src/data/
 | 36 | Los Negritos | copiado | — | 4264 m | +0% | ✅ idéntico a 2025 |
 | 37 | La Exaltación | compuesto | 3 | 3653 m | +3% | 🟡 ok (3 tramo(s) en recta) |
 | 38 | Las Cigarreras | copiado | — | 4945 m | +0% | ✅ idéntico a 2025 |
-| 39 | Montesión | compuesto | 1 | 4402 m | +19% | 🔴 revisar geometría |
+| 39 | Montesión | compuesto | 1 | 4402 m | +19% | 🟡 ok (+19% real: Conde Barajas+Gran Poder+M.Purísima; 1 esquina trivial) |
 | 40 | La Quinta Angustia | copiado | — | 2755 m | +0% | ✅ idéntico a 2025 |
 | 41 | El Valle | copiado | — | 2818 m | +0% | ✅ idéntico a 2025 |
 | 42 | Pasión | copiado | — | 2539 m | +0% | ✅ idéntico a 2025 |
@@ -70,7 +70,7 @@ Salida: `scripts/geojson-2026/` (+ copia en `public/geojson/2026/`) y `src/data/
 | 51 | El Cachorro | copiado | — | 5426 m | +0% | ✅ idéntico a 2025 |
 | 52 | La O | copiado | — | 4683 m | +0% | ✅ idéntico a 2025 |
 | 53 | San Isidoro | copiado | — | 2519 m | +0% | ✅ idéntico a 2025 |
-| 54 | Montserrat | compuesto | 2 | 3927 m | +30% | 🔴 revisar geometría |
+| 54 | Montserrat | compuesto | 0 | 3001 m | -1% | ✅ corregido (CARRERA OFICIAL estaba invertida; corrección: 0 tramos en recta) |
 | 55 | La Mortaja | copiado | — | 4334 m | +0% | ✅ idéntico a 2025 |
 | 56 | El Sol | copiado | — | 7294 m | +0% | ✅ idéntico a 2025 |
 | 57 | Los Servitas | compuesto | 3 | 3896 m | -0% | 🟡 ok (3 tramo(s) en recta) |
@@ -79,16 +79,19 @@ Salida: `scripts/geojson-2026/` (+ copia en `public/geojson/2026/`) y `src/data/
 | 60 | Soledad de San Lorenzo | copiado | — | 3422 m | +0% | ✅ idéntico a 2025 |
 | 61 | La Resurrección | compuesto | 6 | 4806 m | +10% | 🟡 ok (6 tramo(s) en recta) |
 
-**30** correctos (idénticos o compuestos limpios) · **25** ok con algún tramo en recta · **6** a revisar a mano.
+**31** correctos (idénticos o compuestos limpios) · **27** ok con algún tramo en recta · **2** a revisar a mano.
 
 ## A revisar a mano
 
-Recorridos con cambios mayores o varios tramos en recta; conviene repasarlos con el flujo
-colaborativo de `componer-ruta.mjs` (como se hizo en 2025):
+Recorridos que requieren trazar calles nuevas a mano (no cubiertas por el índice canónico 2025):
 
-- **5. La Paz** — 29 tramo(s) en recta, Δ -18% vs 2025.
-- **10. San Pablo** — 26 tramo(s) en recta, Δ -39% vs 2025.
-- **26. Santa Cruz** — 3 tramo(s) en recta, Δ +16% vs 2025.
-- **29. La Sed** — 11 tramo(s) en recta, Δ -23% vs 2025.
-- **39. Montesión** — 1 tramo(s) en recta, Δ +19% vs 2025.
-- **54. Montserrat** — 2 tramo(s) en recta, Δ +30% vs 2025.
+- **5. La Paz** — calles nuevas: Borbolla, Glorieta del Cid, Harinas, Jimios + Joaquín Romero Murube (CARRERA OFICIAL vuelta). Sin mejora automática posible: los segmentos del índice para esta zona son muy gruesos y se aplican al contexto incorrecto.
+- **10. San Pablo** — calles nuevas del extrarradio (inicio: Laffón Soto, Soleá, Sinaí, Hernando del Pulgar; retorno: Laguillo, Pérez Hervás, Venecia, Antonio Filpo Rojas, Samaniego, Kansas City, El Greco). CARRERA OFICIAL corregida; ruta central ok.
+
+## Correcciones aplicadas (2026-06-28)
+
+- **Montserrat** (id54): CARRERA OFICIAL estaba invertida en la composición original. Corregida → 0 tramos en recta, 3001 m (-1% vs 2025). ✅
+- **Santa Cruz** (id26): ídem. Corregida + cambio de ruta Triunfo→Fray Ceferino (en vez de Santo Tomás/Santander/Tomás de Ibarra) → 1 tramo trivial, 3251 m. ✅
+- **Montesión** (id39): el +19% es correcto (nuevas calles Conde Barajas + Gran Poder + Madre Purísima). El 1 tramo en recta (esquina Trajano/Conde Barajas) es trivial. ✅
+- **La Sed** (id29): mejorada de 11 a 7 tramos en recta (con el nombre correcto del Duque y mejor encadenamiento). Los 7 gaps restantes son calles nuevas: Benito Mas y Prat, Alejandro Collantes, Cardenal Lluch. 🟡
+- **San Pablo** (id10): CARRERA OFICIAL corregida; mejora de 26 a 23 tramos en recta. Los gaps del extrarradio (Soleá, Venecia, Kansas City, El Greco) siguen pendientes. 🔴
