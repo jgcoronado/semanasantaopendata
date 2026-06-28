@@ -17,17 +17,17 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 
 | # | Hermandad | Tipo | Tramos en recta | Long. 2026 | Δ long. | Estado |
 |---|-----------|------|:---:|---:|:---:|--------|
-| 1 | La Borriquita | compuesto | 3 | 2600 m | -1% | 🟡 ok (3 tramo(s) en recta) |
+| 1 | La Borriquita | compuesto | 0 | 2600 m | -1% | ✅ sin tramos problemáticos (Cuna→Orfila = recta confirmada) |
 | 2 | La Cena | compuesto | 3 | 3455 m | -5% | 🟡 ok (3 tramo(s) en recta) |
 | 3 | Jesús Despojado | copiado | — | 3540 m | +0% | ✅ idéntico a 2025 |
 | 4 | La Hiniesta | compuesto | 9 | 4484 m | -10% | 🟡 ok (9 tramo(s) en recta) |
 | 5 | La Paz | editado a mano | 0 | 6444 m | -1% | ✅ corregido a mano (6 tramos nuevos dibujados) |
 | 6 | San Roque | compuesto | 3 | 4176 m | +0% | 🟡 ok (3 tramo(s) en recta) |
 | 7 | La Estrella | compuesto | 1 | 3803 m | -9% | 🟡 ok (CARRERA OFICIAL corregida; 1 tramo: puente de Triana) |
-| 8 | La Amargura | compuesto | 4 | 3794 m | +5% | 🟡 ok (4 tramo(s) en recta) |
-| 9 | El Amor | compuesto | 3 | 2613 m | -0% | 🟡 ok (3 tramo(s) en recta) |
+| 8 | La Amargura | compuesto | 0 | 3794 m | +5% | ✅ sin tramos problemáticos (Trajano→Duque = recta confirmada) |
+| 9 | El Amor | compuesto | 0 | 2613 m | -0% | ✅ sin tramos problemáticos (Cuna→Orfila = recta confirmada) |
 | 10 | San Pablo | editado a mano | 0 | 10393 m | +0% | ✅ corregido a mano (extrarradio dibujado + tramo central de Los Gitanos) |
-| 11 | Redención | compuesto | 9 | 3469 m | -9% | 🟡 ok (9 tramo(s) en recta) |
+| 11 | Redención | compuesto | 0 | 3230 m | -16% | ✅ CARRERA OFICIAL corregida (La Lanzada 2026, Duque→Argote); sin gaps >150m |
 | 12 | Santa Genoveva | copiado | — | 8844 m | +0% | ✅ idéntico a 2025 |
 | 13 | Santa Marta | copiado | — | 2700 m | +0% | ✅ idéntico a 2025 |
 | 14 | San Gonzalo | compuesto | 3 | 5064 m | -12% | 🟡 ok (CARRERA OFICIAL corregida; 3 tramos: Murube→Sto Tomás, puente Triana, San Gonzalo) |
@@ -39,7 +39,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 20 | San Esteban | compuesto | 3 | 3842 m | +8% | 🟡 ok (3 tramo(s) en recta) |
 | 21 | La Candelaria | compuesto | 10 | 3726 m | -10% | 🟡 ok (10 tramo(s) en recta) |
 | 22 | San Benito | copiado | — | 4759 m | +0% | ✅ idéntico a 2025 |
-| 23 | Dulce Nombre | compuesto | 6 | 3312 m | -6% | 🟡 ok (6 tramo(s) en recta) |
+| 23 | Dulce Nombre | compuesto | 2 | 3735 m | +6% | 🟡 ok (CARRERA OFICIAL corregida; 2 gaps pequeños: Cardenal Spínola→Gavidia, Amor de Dios→Trajano) |
 | 24 | Los Javieres | compuesto | 7 | 3395 m | -13% | 🟡 ok (7 tramo(s) en recta) |
 | 25 | Los Estudiantes | compuesto | 0 | 3351 m | -12% | ✅ CARRERA OFICIAL corregida (salida Miguel Mañara); sin tramos en recta |
 | 26 | Santa Cruz | compuesto | 1 | 3251 m | -3% | 🟡 ok (1 tramo en recta: Triunfo→Murube, trivial) |
@@ -47,7 +47,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 28 | El Buen Fin | copiado | — | 4267 m | +0% | ✅ idéntico a 2025 |
 | 29 | La Sed | compuesto | 7 | 7157 m | -14% | 🟡 ok (7 tramos en recta: Benito Mas y Prat, Alejandro Collantes, Cardenal Lluch pendientes) |
 | 30 | San Bernardo | copiado | — | 5235 m | +0% | ✅ idéntico a 2025 |
-| 31 | La Lanzada | compuesto | 3 | 3247 m | -9% | 🟡 ok (3 tramo(s) en recta) |
+| 31 | La Lanzada | compuesto | 0 | 3247 m | -9% | ✅ sin tramos problemáticos (gaps <100m son geometría real) |
 | 32 | El Baratillo | copiado | — | 3518 m | +0% | ✅ idéntico a 2025 |
 | 33 | Los Panaderos | compuesto | 2 | 2496 m | +1% | 🟡 ok (2 tramo(s) en recta) |
 | 34 | Cristo de Burgos | compuesto | 5 | 3136 m | +9% | 🟡 ok (5 tramo(s) en recta) |
@@ -79,7 +79,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 60 | Soledad de San Lorenzo | copiado | — | 3422 m | +0% | ✅ idéntico a 2025 |
 | 61 | La Resurrección | compuesto | 6 | 4806 m | +10% | 🟡 ok (6 tramo(s) en recta) |
 
-**34** correctos (idénticos, compuestos limpios o editados a mano) · **27** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
+**40** correctos (idénticos, compuestos limpios o editados a mano) · **21** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
 
 ## Correcciones aplicadas (2026-06-28, segunda ronda)
 
