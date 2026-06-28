@@ -37,9 +37,9 @@
   },
   {
     "id_hdad": 7,
-    "metros": 4665,
+    "metros": 3803,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "9 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "CARRERA OFICIAL corregida (copiada de Quinta Angustia 2025, salida Fray Ceferino). Queda 1 tramo en recta: Adriano→Reyes Católicos (puente de Triana)."
   },
   {
     "id_hdad": 8,
@@ -79,9 +79,9 @@
   },
   {
     "id_hdad": 14,
-    "metros": 5988,
+    "metros": 5064,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "13 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Santo Tomás). Quedan tramos en recta: Joaquín Romero Murube→Santo Tomás, Adriano→Reyes Católicos (puente de Triana), San Jacinto→Plaza de San Gonzalo."
   },
   {
     "id_hdad": 15,
@@ -145,9 +145,9 @@
   },
   {
     "id_hdad": 25,
-    "metros": 4287,
+    "metros": 3351,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "10 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Miguel Mañara). Sin tramos en recta."
   },
   {
     "id_hdad": 26,
@@ -277,9 +277,9 @@
   },
   {
     "id_hdad": 47,
-    "metros": 5494,
+    "metros": 4633,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "12 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Fray Ceferino). Quedan tramos en recta: Puerta de Triana→Zaragoza, Adriano→Reyes Católicos (puente de Triana), San Jacinto→Pureza."
   },
   {
     "id_hdad": 48,

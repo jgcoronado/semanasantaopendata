@@ -23,14 +23,14 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 4 | La Hiniesta | compuesto | 9 | 4484 m | -10% | 🟡 ok (9 tramo(s) en recta) |
 | 5 | La Paz | editado a mano | 0 | 6444 m | -1% | ✅ corregido a mano (6 tramos nuevos dibujados) |
 | 6 | San Roque | compuesto | 3 | 4176 m | +0% | 🟡 ok (3 tramo(s) en recta) |
-| 7 | La Estrella | compuesto | 9 | 4665 m | +11% | 🟡 ok (9 tramo(s) en recta) |
+| 7 | La Estrella | compuesto | 1 | 3803 m | -9% | 🟡 ok (CARRERA OFICIAL corregida; 1 tramo: puente de Triana) |
 | 8 | La Amargura | compuesto | 4 | 3794 m | +5% | 🟡 ok (4 tramo(s) en recta) |
 | 9 | El Amor | compuesto | 3 | 2613 m | -0% | 🟡 ok (3 tramo(s) en recta) |
 | 10 | San Pablo | editado a mano | 0 | 10393 m | +0% | ✅ corregido a mano (extrarradio dibujado + tramo central de Los Gitanos) |
 | 11 | Redención | compuesto | 9 | 3469 m | -9% | 🟡 ok (9 tramo(s) en recta) |
 | 12 | Santa Genoveva | copiado | — | 8844 m | +0% | ✅ idéntico a 2025 |
 | 13 | Santa Marta | copiado | — | 2700 m | +0% | ✅ idéntico a 2025 |
-| 14 | San Gonzalo | compuesto | 13 | 5988 m | +4% | 🟡 ok (13 tramo(s) en recta) |
+| 14 | San Gonzalo | compuesto | 3 | 5064 m | -12% | 🟡 ok (CARRERA OFICIAL corregida; 3 tramos: Murube→Sto Tomás, puente Triana, San Gonzalo) |
 | 15 | Vera-Cruz | copiado | — | 3069 m | +0% | ✅ idéntico a 2025 |
 | 16 | Las Penas | copiado | — | 3131 m | +0% | ✅ idéntico a 2025 |
 | 17 | Las Aguas | copiado | — | 3247 m | +0% | ✅ idéntico a 2025 |
@@ -41,7 +41,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 22 | San Benito | copiado | — | 4759 m | +0% | ✅ idéntico a 2025 |
 | 23 | Dulce Nombre | compuesto | 6 | 3312 m | -6% | 🟡 ok (6 tramo(s) en recta) |
 | 24 | Los Javieres | compuesto | 7 | 3395 m | -13% | 🟡 ok (7 tramo(s) en recta) |
-| 25 | Los Estudiantes | compuesto | 10 | 4287 m | +12% | 🟡 ok (10 tramo(s) en recta) |
+| 25 | Los Estudiantes | compuesto | 0 | 3351 m | -12% | ✅ CARRERA OFICIAL corregida (salida Miguel Mañara); sin tramos en recta |
 | 26 | Santa Cruz | compuesto | 1 | 3251 m | -3% | 🟡 ok (1 tramo en recta: Triunfo→Murube, trivial) |
 | 27 | El Carmen Doloroso | copiado | — | 4132 m | +0% | ✅ idéntico a 2025 |
 | 28 | El Buen Fin | copiado | — | 4267 m | +0% | ✅ idéntico a 2025 |
@@ -63,7 +63,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 44 | El Gran Poder | copiado | — | 4162 m | +0% | ✅ idéntico a 2025 |
 | 45 | La Macarena | compuesto | 12 | 5227 m | -6% | 🟡 ok (12 tramo(s) en recta) |
 | 46 | El Calvario | copiado | — | 2726 m | +0% | ✅ idéntico a 2025 |
-| 47 | Esperanza de Triana | compuesto | 12 | 5494 m | +6% | 🟡 ok (12 tramo(s) en recta) |
+| 47 | Esperanza de Triana | compuesto | 3 | 4633 m | -10% | 🟡 ok (CARRERA OFICIAL corregida; 3 tramos: Pta Triana→Zaragoza, puente Triana, San Jacinto→Pureza) |
 | 48 | Los Gitanos | compuesto | 2 | 4527 m | +2% | 🟡 ok (2 tramo(s) en recta) |
 | 49 | La Carretería | copiado | — | 3258 m | +0% | ✅ idéntico a 2025 |
 | 50 | Soledad de San Buenaventura | copiado | — | 3017 m | +0% | ✅ idéntico a 2025 |
@@ -79,10 +79,16 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 60 | Soledad de San Lorenzo | copiado | — | 3422 m | +0% | ✅ idéntico a 2025 |
 | 61 | La Resurrección | compuesto | 6 | 4806 m | +10% | 🟡 ok (6 tramo(s) en recta) |
 
-**33** correctos (idénticos, compuestos limpios o editados a mano) · **28** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
+**34** correctos (idénticos, compuestos limpios o editados a mano) · **27** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
 
 ## Correcciones aplicadas (2026-06-28, segunda ronda)
 
+- **CARRERA OFICIAL invertida** (id7 La Estrella, id14 San Gonzalo, id25 Los Estudiantes, id47 Esperanza de Triana): el compositor trazaba la carrera al revés en la aproximación (O'Donnell→Constitución→San Francisco→Sierpes→Campana) **y además** saltaba en recta de Campana a la salida, duplicando el tramo. Corregido empalmando en O'Donnell la carrera real de un donante hasta la salida natural de Plaza del Triunfo:
+  - **La Estrella** ← Quinta Angustia 2025, salida **Fray Ceferino González**.
+  - **San Gonzalo** ← La Paz 2026, salida **Santo Tomás** (vía Joaquín Romero Murube).
+  - **Los Estudiantes** ← La Paz 2026, salida **Miguel Mañara** → ✅ sin tramos en recta.
+  - **Esperanza de Triana** ← La Paz 2026, salida **Fray Ceferino González**.
+  - Las tres salidas naturales de Plaza del Triunfo en 2025 son: **Fray Ceferino González** (Quinta Angustia, Calvario), **Santo Tomás** (Jesús Despojado, La O) y **Miguel Mañara** (La Paz, Estudiantes). Juntas ≤49 m. Las longitudes bajan porque se elimina la traza duplicada de la carrera.
 - **Boteros → Plaza del Cristo de Burgos** (id2, id34, id37, id48, id57): tramo faltante en el índice canónico. Copiado de **48-los-gitanos 2025** (9 vértices, 186 m). Juntas ≤31 m en todos los casos. Afecta a La Cena, Cristo de Burgos, La Exaltación, Los Gitanos y Los Servitas.
 - **Trajano → Plaza del Duque de la Victoria**: confirmado que NO es un error — Trajano termina directamente en la plaza; el gap de ~378 m es geometría real (no hay calle intermedia).
 - **Cuna → Orfila**: confirmado que NO es un error — tramo en línea recta (verificado en San Bernardo 2025 corregido).
