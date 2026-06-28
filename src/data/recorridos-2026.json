@@ -25,9 +25,9 @@
   },
   {
     "id_hdad": 5,
-    "metros": 5287,
+    "metros": 6479,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "29 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Base: copia del recorrido 2025. Pendiente ajuste manual de las calles nuevas: Borbolla, Glorieta del Cid, Harinas, Jimios y Joaquín Romero Murube (vuelta)."
   },
   {
     "id_hdad": 6,
