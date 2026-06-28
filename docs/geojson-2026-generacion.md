@@ -18,7 +18,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | # | Hermandad | Tipo | Tramos en recta | Long. 2026 | Δ long. | Estado |
 |---|-----------|------|:---:|---:|:---:|--------|
 | 1 | La Borriquita | compuesto | 3 | 2600 m | -1% | 🟡 ok (3 tramo(s) en recta) |
-| 2 | La Cena | compuesto | 4 | 3448 m | -5% | 🟡 ok (4 tramo(s) en recta) |
+| 2 | La Cena | compuesto | 3 | 3455 m | -5% | 🟡 ok (3 tramo(s) en recta) |
 | 3 | Jesús Despojado | copiado | — | 3540 m | +0% | ✅ idéntico a 2025 |
 | 4 | La Hiniesta | compuesto | 9 | 4484 m | -10% | 🟡 ok (9 tramo(s) en recta) |
 | 5 | La Paz | editado a mano | 0 | 6444 m | -1% | ✅ corregido a mano (6 tramos nuevos dibujados) |
@@ -50,10 +50,10 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 31 | La Lanzada | compuesto | 3 | 3247 m | -9% | 🟡 ok (3 tramo(s) en recta) |
 | 32 | El Baratillo | copiado | — | 3518 m | +0% | ✅ idéntico a 2025 |
 | 33 | Los Panaderos | compuesto | 2 | 2496 m | +1% | 🟡 ok (2 tramo(s) en recta) |
-| 34 | Cristo de Burgos | compuesto | 6 | 3122 m | +9% | 🟡 ok (6 tramo(s) en recta) |
+| 34 | Cristo de Burgos | compuesto | 5 | 3136 m | +9% | 🟡 ok (5 tramo(s) en recta) |
 | 35 | Siete Palabras | copiado | — | 3156 m | +0% | ✅ idéntico a 2025 |
 | 36 | Los Negritos | copiado | — | 4264 m | +0% | ✅ idéntico a 2025 |
-| 37 | La Exaltación | compuesto | 3 | 3653 m | +3% | 🟡 ok (3 tramo(s) en recta) |
+| 37 | La Exaltación | compuesto | 2 | 3659 m | +3% | 🟡 ok (2 tramo(s) en recta) |
 | 38 | Las Cigarreras | copiado | — | 4945 m | +0% | ✅ idéntico a 2025 |
 | 39 | Montesión | compuesto | 1 | 4402 m | +19% | 🟡 ok (+19% real: Conde Barajas+Gran Poder+M.Purísima; 1 esquina trivial) |
 | 40 | La Quinta Angustia | copiado | — | 2755 m | +0% | ✅ idéntico a 2025 |
@@ -64,7 +64,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 45 | La Macarena | compuesto | 12 | 5227 m | -6% | 🟡 ok (12 tramo(s) en recta) |
 | 46 | El Calvario | copiado | — | 2726 m | +0% | ✅ idéntico a 2025 |
 | 47 | Esperanza de Triana | compuesto | 12 | 5494 m | +6% | 🟡 ok (12 tramo(s) en recta) |
-| 48 | Los Gitanos | compuesto | 3 | 4503 m | +2% | 🟡 ok (3 tramo(s) en recta) |
+| 48 | Los Gitanos | compuesto | 2 | 4527 m | +2% | 🟡 ok (2 tramo(s) en recta) |
 | 49 | La Carretería | copiado | — | 3258 m | +0% | ✅ idéntico a 2025 |
 | 50 | Soledad de San Buenaventura | copiado | — | 3017 m | +0% | ✅ idéntico a 2025 |
 | 51 | El Cachorro | copiado | — | 5426 m | +0% | ✅ idéntico a 2025 |
@@ -73,13 +73,19 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 54 | Montserrat | compuesto | 0 | 3001 m | -1% | ✅ corregido (CARRERA OFICIAL estaba invertida; corrección: 0 tramos en recta) |
 | 55 | La Mortaja | copiado | — | 4334 m | +0% | ✅ idéntico a 2025 |
 | 56 | El Sol | copiado | — | 7294 m | +0% | ✅ idéntico a 2025 |
-| 57 | Los Servitas | compuesto | 3 | 3896 m | -0% | 🟡 ok (3 tramo(s) en recta) |
+| 57 | Los Servitas | compuesto | 2 | 3904 m | -0% | 🟡 ok (2 tramo(s) en recta) |
 | 58 | La Trinidad | compuesto | 8 | 4783 m | -9% | 🟡 ok (8 tramo(s) en recta) |
 | 59 | Santo Entierro | copiado | — | 2303 m | +0% | ✅ idéntico a 2025 |
 | 60 | Soledad de San Lorenzo | copiado | — | 3422 m | +0% | ✅ idéntico a 2025 |
 | 61 | La Resurrección | compuesto | 6 | 4806 m | +10% | 🟡 ok (6 tramo(s) en recta) |
 
 **33** correctos (idénticos, compuestos limpios o editados a mano) · **28** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
+
+## Correcciones aplicadas (2026-06-28, segunda ronda)
+
+- **Boteros → Plaza del Cristo de Burgos** (id2, id34, id37, id48, id57): tramo faltante en el índice canónico. Copiado de **48-los-gitanos 2025** (9 vértices, 186 m). Juntas ≤31 m en todos los casos. Afecta a La Cena, Cristo de Burgos, La Exaltación, Los Gitanos y Los Servitas.
+- **Trajano → Plaza del Duque de la Victoria**: confirmado que NO es un error — Trajano termina directamente en la plaza; el gap de ~378 m es geometría real (no hay calle intermedia).
+- **Cuna → Orfila**: confirmado que NO es un error — tramo en línea recta (verificado en San Bernardo 2025 corregido).
 
 ## Correcciones aplicadas (2026-06-28)
 
