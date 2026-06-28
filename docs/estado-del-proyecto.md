@@ -13,7 +13,7 @@ _Última actualización: 27 de junio de 2026 — recorridos GeoJSON 2026 generad
 > Documentación añadida: `docs/fuentes/cofradias-{2025,2026}-itinerarios.md` (Nóminas oficiales),
 > `docs/diferencias-recorridos-2025-2026.md`, `docs/viabilidad-geojson-2026.md`,
 > `docs/geojson-2026-generacion.md` y `docs/metodologia-recorridos-2026.md`. Salida en
-> `scripts/geojson-2026/` (+ `public/geojson/2026/`) y `src/data/recorridos-2026.json`. El visor
+> `public/geojson/2026/` y `src/data/recorridos-2026.json`. El visor
 > de la ficha (`RecorridoMapa`) y el mapa global ya funcionan por año. Pendiente: repasar a mano
 > los 6 🔴 con `componer-ruta.mjs`.
 

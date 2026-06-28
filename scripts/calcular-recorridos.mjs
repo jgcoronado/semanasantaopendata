@@ -2227,7 +2227,7 @@ if (geoJsonFlag) {
     .normalize('NFD').replace(/\p{Diacritic}/gu, '')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-  const outDir = join(__dir, `geojson-${anio}`);
+  const outDir = join(__dir, '..', 'public', 'geojson', String(anio));
   mkdirSync(outDir, { recursive: true });
 
   for (const hdad of hermandades) {

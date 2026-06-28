@@ -1,6 +1,6 @@
 # GeoJSONs editados manualmente
 
-Listado de archivos de `scripts/geojson-2025/` corregidos a mano por el usuario.
+Listado de archivos de `public/geojson/2025/` corregidos a mano por el usuario.
 Son la fuente de verdad para propagar tramos compartidos al resto de hermandades.
 
 | Archivo | Fecha | Qué se corrigió / qué tramos aporta |

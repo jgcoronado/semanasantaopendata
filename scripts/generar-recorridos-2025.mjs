@@ -1,4 +1,4 @@
-// Genera src/data/recorridos-2025.json a partir de los GeoJSON de scripts/geojson-2025/.
+// Genera src/data/recorridos-2025.json a partir de los GeoJSON de public/geojson/2025/.
 //
 // `metros` = longitud real de la LineString del trazado (suma geodésica de sus segmentos).
 // Sustituye al cálculo OSRM anterior (calcular-recorridos.mjs), que inflaba ~2x la distancia
@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const RAIZ = join(__dirname, '..');
-const DIR_GEO = join(__dirname, 'geojson-2025');
+const DIR_GEO = join(RAIZ, 'public', 'geojson', '2025');
 
 const R = 6371000;
 const rad = (d) => (d * Math.PI) / 180;

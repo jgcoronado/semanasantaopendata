@@ -9,7 +9,7 @@ Los recorridos 2026 se generan así (ver [metodología](metodologia-recorridos-2
   el índice canónico (`scripts/indice-tramos-canonicos.json`). Los pares de calles sin fragmento
   se trazan **en recta** y quedan marcados como pendientes de ajuste manual.
 
-Salida: `scripts/geojson-2026/` (+ copia en `public/geojson/2026/`) y `src/data/recorridos-2026.json`.
+Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 
 > La columna **Δ long.** compara la longitud 2026 con la de 2025; en recorridos que cambiaron es
 > normal que difiera. Un 🔴 indica que conviene revisar la geometría a mano (cambios mayores o
