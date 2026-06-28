@@ -9,7 +9,7 @@
     "id_hdad": 2,
     "metros": 3455,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "3 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Campana→Sierpes y Boteros→Cristo de Burgos copiados de La Cena 2025. Sin gaps >150m."
   },
   {
     "id_hdad": 3,
@@ -31,9 +31,9 @@
   },
   {
     "id_hdad": 6,
-    "metros": 4176,
+    "metros": 4162,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "3 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Encarnación, Campana→Sierpes y Boteros→Caballerizas copiados de San Roque 2025. Sin gaps >150m."
   },
   {
     "id_hdad": 7,
@@ -79,7 +79,7 @@
   },
   {
     "id_hdad": 14,
-    "metros": 5064,
+    "metros": 5186,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
     "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Santo Tomás). Adriano→Reyes Católicos (puente Triana) y San Jacinto→Plaza de San Gonzalo son geometrías rectas confirmadas. Queda Murube→Santo Tomás (220m, esquina trivial)."
   },
@@ -109,21 +109,21 @@
   },
   {
     "id_hdad": 19,
-    "metros": 10372,
+    "metros": 10964,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "39 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Tramo Bizco Amate→San Fernando y varios del centro copiados de El Cerro 2025. Quedan 3 gaps genuinamente nuevos en 2026: Campana→Francos (538m), Candilejo→Demetrio de los Ríos (706m), San Bernardo→Nª Sª de los Dolores (2617m)."
   },
   {
     "id_hdad": 20,
-    "metros": 3842,
+    "metros": 4056,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "3 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Águilas→San Ildefonso, Dormitorio→San Pedro y Alfalfa→Águilas copiados de San Esteban 2025. Queda Pilatos→Zamudio (168m, pequeño)."
   },
   {
     "id_hdad": 21,
-    "metros": 3726,
+    "metros": 4048,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "10 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Cuna→Orfila, Campana→Cuna, Sierpes, Constitución y San Fernando→Santa María la Blanca copiados de La Candelaria 2025. Gaps San Fernando→San Fernando (232m) y Sta Mª la Blanca→Sta Mª la Blanca (157m) son internos al tramo 2025 (geometría real)."
   },
   {
     "id_hdad": 22,
@@ -139,9 +139,9 @@
   },
   {
     "id_hdad": 24,
-    "metros": 3395,
+    "metros": 3526,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "7 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Trajano→Plaza del Duque copiado de Los Javieres 2025. Quedan Constitución→Triunfo (244m) y Gamazo→Plaza Nueva (230m)."
   },
   {
     "id_hdad": 25,
@@ -193,9 +193,9 @@
   },
   {
     "id_hdad": 33,
-    "metros": 2496,
+    "metros": 2507,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "2 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Cuna→Orfila copiado de Los Panaderos 2025. Queda García Tassara→Gran Poder (208m)."
   },
   {
     "id_hdad": 34,
@@ -219,7 +219,7 @@
     "id_hdad": 37,
     "metros": 3659,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "2 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Campana→Sierpes copiado de La Exaltación 2025. Sin gaps >150m."
   },
   {
     "id_hdad": 38,
@@ -265,9 +265,9 @@
   },
   {
     "id_hdad": 45,
-    "metros": 5227,
+    "metros": 5206,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "12 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Boteros→Cristo de Burgos, Campana→Sierpes, San Pedro→Santa Ángela, Feria→Parras y Escoberos→Macarena copiados de La Macarena 2025. Quedan Feria→Correduría (649m) y San Juan de la Palma→Madre Purísima (152m)."
   },
   {
     "id_hdad": 46,
@@ -277,7 +277,7 @@
   },
   {
     "id_hdad": 47,
-    "metros": 4633,
+    "metros": 5008,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
     "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Fray Ceferino). Adriano→Reyes Católicos (puente Triana) y San Jacinto→Pureza son geometrías rectas confirmadas. Queda Puerta de Triana→Zaragoza (251m, acceso al barrio)."
   },
@@ -285,7 +285,7 @@
     "id_hdad": 48,
     "metros": 4527,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "2 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Peñuelas→Doña María Coronel copiado de Los Gitanos 2025. Sin gaps >150m."
   },
   {
     "id_hdad": 49,
@@ -339,13 +339,13 @@
     "id_hdad": 57,
     "metros": 3904,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "2 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Campana→Sierpes copiado de Los Servitas 2025. Sin gaps >150m."
   },
   {
     "id_hdad": 58,
-    "metros": 4783,
+    "metros": 4805,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "8 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "Encarnación, Campana→Sierpes y Sol→Madre Isabel de la Trinidad copiados de La Trinidad 2025. Queda Puñonrostro→Cristo de las 5 Llagas (224m)."
   },
   {
     "id_hdad": 59,
@@ -361,8 +361,8 @@
   },
   {
     "id_hdad": 61,
-    "metros": 4806,
+    "metros": 5142,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "6 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "notas": "San Luis→Alameda de Hércules y Boteros→Cristo de Burgos copiados de La Resurrección 2025. Queda Trajano→Conde de Barajas (346m)."
   }
 ]
