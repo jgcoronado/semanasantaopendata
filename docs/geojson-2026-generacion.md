@@ -21,12 +21,12 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 2 | La Cena | compuesto | 4 | 3448 m | -5% | 🟡 ok (4 tramo(s) en recta) |
 | 3 | Jesús Despojado | copiado | — | 3540 m | +0% | ✅ idéntico a 2025 |
 | 4 | La Hiniesta | compuesto | 9 | 4484 m | -10% | 🟡 ok (9 tramo(s) en recta) |
-| 5 | La Paz | compuesto | 29 | 5287 m | -18% | 🔴 revisar geometría |
+| 5 | La Paz | editado a mano | 0 | 6444 m | -1% | ✅ corregido a mano (6 tramos nuevos dibujados) |
 | 6 | San Roque | compuesto | 3 | 4176 m | +0% | 🟡 ok (3 tramo(s) en recta) |
 | 7 | La Estrella | compuesto | 9 | 4665 m | +11% | 🟡 ok (9 tramo(s) en recta) |
 | 8 | La Amargura | compuesto | 4 | 3794 m | +5% | 🟡 ok (4 tramo(s) en recta) |
 | 9 | El Amor | compuesto | 3 | 2613 m | -0% | 🟡 ok (3 tramo(s) en recta) |
-| 10 | San Pablo | compuesto | 23 | 5444 m | — | 🔴 revisar: calles nuevas extrarradio (Soleá, Sinaí, Hernando del Pulgar, Venecia, Kansas City, El Greco) pendientes |
+| 10 | San Pablo | editado a mano | 0 | 10393 m | +0% | ✅ corregido a mano (extrarradio dibujado + tramo central de Los Gitanos) |
 | 11 | Redención | compuesto | 9 | 3469 m | -9% | 🟡 ok (9 tramo(s) en recta) |
 | 12 | Santa Genoveva | copiado | — | 8844 m | +0% | ✅ idéntico a 2025 |
 | 13 | Santa Marta | copiado | — | 2700 m | +0% | ✅ idéntico a 2025 |
@@ -79,14 +79,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 60 | Soledad de San Lorenzo | copiado | — | 3422 m | +0% | ✅ idéntico a 2025 |
 | 61 | La Resurrección | compuesto | 6 | 4806 m | +10% | 🟡 ok (6 tramo(s) en recta) |
 
-**31** correctos (idénticos o compuestos limpios) · **27** ok con algún tramo en recta · **2** a revisar a mano.
-
-## A revisar a mano
-
-Recorridos que requieren trazar calles nuevas a mano (no cubiertas por el índice canónico 2025):
-
-- **5. La Paz** — calles nuevas: Borbolla, Glorieta del Cid, Harinas, Jimios + Joaquín Romero Murube (CARRERA OFICIAL vuelta). Sin mejora automática posible: los segmentos del índice para esta zona son muy gruesos y se aplican al contexto incorrecto.
-- **10. San Pablo** — calles nuevas del extrarradio (inicio: Laffón Soto, Soleá, Sinaí, Hernando del Pulgar; retorno: Laguillo, Pérez Hervás, Venecia, Antonio Filpo Rojas, Samaniego, Kansas City, El Greco). CARRERA OFICIAL corregida; ruta central ok.
+**33** correctos (idénticos, compuestos limpios o editados a mano) · **28** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
 
 ## Correcciones aplicadas (2026-06-28)
 
@@ -94,4 +87,14 @@ Recorridos que requieren trazar calles nuevas a mano (no cubiertas por el índic
 - **Santa Cruz** (id26): ídem. Corregida + cambio de ruta Triunfo→Fray Ceferino (en vez de Santo Tomás/Santander/Tomás de Ibarra) → 1 tramo trivial, 3251 m. ✅
 - **Montesión** (id39): el +19% es correcto (nuevas calles Conde Barajas + Gran Poder + Madre Purísima). El 1 tramo en recta (esquina Trajano/Conde Barajas) es trivial. ✅
 - **La Sed** (id29): mejorada de 11 a 7 tramos en recta (con el nombre correcto del Duque y mejor encadenamiento). Los 7 gaps restantes son calles nuevas: Benito Mas y Prat, Alejandro Collantes, Cardenal Lluch. 🟡
-- **San Pablo** (id10): CARRERA OFICIAL corregida; mejora de 26 a 23 tramos en recta. Los gaps del extrarradio (Soleá, Venecia, Kansas City, El Greco) siguen pendientes. 🔴
+- **San Pablo** (id10): editado a mano (174 coords, 10393 m, +0% vs 2025). Recorrido casi nuevo en 2026: el extrarradio (inicio Laffón Soto→Soleá→Sinaí→Hernando del Pulgar; retorno Laguillo→Pérez Hervás→Venecia→Antonio Filpo Rojas→Samaniego→Kansas City→El Greco) se dibujó a mano; el **tramo central Francos→San Pedro** (Cuesta del Rosario→Jesús de las Tres Caídas→Odreros→Boteros→Sales y Ferré, sin Chapineros ni Álvarez Quintero) se copió del LineString de **48-los-gitanos** y se reconectó en Almirante Apodaca. ✅
+- **La Paz** (id5): reconstruida y editada a mano (147 coords, 6444 m, -1% vs 2025). La ida (salida→Roma) y la vuelta (Roma→entrada) se rehicieron reutilizando la geometría 2025 invertida (la ida 2026 coincide con la vuelta 2025 y viceversa); el resto se dibujó a mano. ✅
+
+  **Tramos nuevos de 2026 (no derivables de 2025, dibujados a mano):**
+  | Calle nueva | Tramo (entre) | Sentido |
+  |-------------|---------------|---------|
+  | Avenida de la Borbolla | Brasil ↔ Covadonga | ida y vuelta |
+  | Glorieta del Cid | Isabel la Católica ↔ Palos de la Frontera | ida y vuelta |
+  | Calle Santo Tomás | Constitución ↔ Indalecio Prieto (sustituye a Adolfo Rodríguez Jurado) | ida |
+  | Calle Harinas + Calle Jimios | Puerta del Arenal ↔ Joaquín Guichot (sustituyen a Castelar/Gamazo) | ida |
+  | Calle Joaquín Romero Murube | Plaza del Triunfo ↔ Miguel Mañara | vuelta (tras CARRERA OFICIAL) |

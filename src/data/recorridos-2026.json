@@ -25,9 +25,9 @@
   },
   {
     "id_hdad": 5,
-    "metros": 6479,
+    "metros": 6444,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Base: copia del recorrido 2025. Pendiente ajuste manual de las calles nuevas: Borbolla, Glorieta del Cid, Harinas, Jimios y Joaquín Romero Murube (vuelta)."
+    "notas": "Editado a mano. Ida y vuelta reconstruidas reutilizando la geometría 2025 invertida; tramos nuevos 2026 (Borbolla, Glorieta del Cid, Santo Tomás, Harinas, Jimios, Joaquín Romero Murube) dibujados a mano."
   },
   {
     "id_hdad": 6,
@@ -55,9 +55,9 @@
   },
   {
     "id_hdad": 10,
-    "metros": 5444,
+    "metros": 10393,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "23 tramos en recta: calles nuevas del inicio (Laffón Soto, Soleá, Sinaí, Hernando del Pulgar) y del retorno (Laguillo, Venecia, Kansas City, El Greco) pendientes de traza manual"
+    "notas": "Editado a mano. Recorrido casi nuevo en 2026: extrarradio (Laffón Soto, Soleá, Sinaí, Hernando del Pulgar; retorno Laguillo, Pérez Hervás, Venecia, Antonio Filpo Rojas, Kansas City, El Greco) dibujado a mano; tramo central Francos→San Pedro tomado de 48-los-gitanos."
   },
   {
     "id_hdad": 11,
@@ -175,7 +175,7 @@
   },
   {
     "id_hdad": 30,
-    "metros": 5235,
+    "metros": 5282,
     "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
     "notas": ""
   },
