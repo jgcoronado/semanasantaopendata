@@ -30,17 +30,17 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 11 | Redención | compuesto | 0 | 3230 m | -16% | ✅ CARRERA OFICIAL corregida (La Lanzada 2026, Duque→Argote); sin gaps >150m |
 | 12 | Santa Genoveva | copiado | — | 8844 m | +0% | ✅ idéntico a 2025 |
 | 13 | Santa Marta | copiado | — | 2700 m | +0% | ✅ idéntico a 2025 |
-| 14 | San Gonzalo | compuesto | 1 | 5186 m | -10% | 🟡 ok (CARRERA OFICIAL corregida; varios tramos copiados de 2025; queda Murube→Sto Tomás 220m) |
+| 14 | San Gonzalo | compuesto | 0 | 5186 m | -10% | ✅ CARRERA OFICIAL corregida; varios tramos de 2025; Murube→Sto Tomás (220m) recta confirmada |
 | 15 | Vera-Cruz | copiado | — | 3069 m | +0% | ✅ idéntico a 2025 |
 | 16 | Las Penas | copiado | — | 3131 m | +0% | ✅ idéntico a 2025 |
 | 17 | Las Aguas | copiado | — | 3247 m | +0% | ✅ idéntico a 2025 |
 | 18 | El Museo | copiado | — | 3147 m | +0% | ✅ idéntico a 2025 |
 | 19 | El Cerro | compuesto | 3+ | 10964 m | +2% | 🟡 Bizco Amate→San Fernando y tramos del centro copiados de 2025. Quedan genuinamente nuevos: Campana→Francos (538m), Candilejo→Demetrio (706m), San Bernardo→Nª Sª Dolores (2617m) |
 | 20 | San Esteban | compuesto | 1 | 4056 m | +14% | 🟡 ok (Águilas, Dormitorio y Alfalfa copiados de 2025; queda Pilatos→Zamudio 168m) |
-| 21 | La Candelaria | compuesto | 1 | 4048 m | -2% | 🟡 ok (Cuna→Orfila, Campana→Cuna, Sierpes, Constitución, San Fernando copiados de 2025; gaps internos son geometría real de 2025) |
+| 21 | La Candelaria | compuesto | 0 | 4048 m | -2% | ✅ Cuna→Orfila, Campana→Cuna, Sierpes, Constitución, San Fernando copiados de 2025; gaps internos son geometría real de 2025 |
 | 22 | San Benito | copiado | — | 4759 m | +0% | ✅ idéntico a 2025 |
-| 23 | Dulce Nombre | compuesto | 2 | 3735 m | +6% | 🟡 ok (CARRERA OFICIAL corregida; 2 gaps pequeños: Cardenal Spínola→Gavidia, Amor de Dios→Trajano) |
-| 24 | Los Javieres | compuesto | 2 | 3526 m | -9% | 🟡 ok (Trajano→Duque copiado de 2025; quedan Constitución→Triunfo 244m y Gamazo→Pl.Nueva 230m) |
+| 23 | Dulce Nombre | compuesto | 0 | 3734 m | +6% | ✅ CARRERA OFICIAL corregida (La Lanzada 2026); Cuna→Orfila, Spínola→Gavidia y Amor de Dios→Trajano son rectas confirmadas |
+| 24 | Los Javieres | compuesto | 0 | 3526 m | -9% | ✅ Trajano→Duque copiado de 2025; Constitución→Triunfo (244m) y Gamazo→Pl.Nueva (230m) rectas confirmadas |
 | 25 | Los Estudiantes | compuesto | 0 | 3351 m | -12% | ✅ CARRERA OFICIAL corregida (salida Miguel Mañara); sin tramos en recta |
 | 26 | Santa Cruz | compuesto | 1 | 3251 m | -3% | 🟡 ok (1 tramo en recta: Triunfo→Murube, trivial) |
 | 27 | El Carmen Doloroso | copiado | — | 4132 m | +0% | ✅ idéntico a 2025 |
@@ -49,7 +49,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 30 | San Bernardo | copiado | — | 5235 m | +0% | ✅ idéntico a 2025 |
 | 31 | La Lanzada | compuesto | 0 | 3247 m | -9% | ✅ sin tramos problemáticos (gaps <100m son geometría real) |
 | 32 | El Baratillo | copiado | — | 3518 m | +0% | ✅ idéntico a 2025 |
-| 33 | Los Panaderos | compuesto | 1 | 2507 m | +1% | 🟡 ok (Cuna→Orfila copiado de 2025; queda García Tassara→Gran Poder 208m) |
+| 33 | Los Panaderos | compuesto | 0 | 2507 m | +1% | ✅ Cuna→Orfila copiado de 2025; García Tassara→Gran Poder (208m) recta confirmada |
 | 34 | Cristo de Burgos | compuesto | 5 | 3136 m | +9% | 🟡 ok (5 tramo(s) en recta) |
 | 35 | Siete Palabras | copiado | — | 3156 m | +0% | ✅ idéntico a 2025 |
 | 36 | Los Negritos | copiado | — | 4264 m | +0% | ✅ idéntico a 2025 |
@@ -63,7 +63,7 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 44 | El Gran Poder | copiado | — | 4162 m | +0% | ✅ idéntico a 2025 |
 | 45 | La Macarena | compuesto | 2 | 5206 m | -6% | 🟡 ok (Boteros, Campana→Sierpes, San Pedro, Feria→Parras, Escoberos copiados de 2025; quedan Feria→Correduría 649m y San Juan→Madre Purísima 152m) |
 | 46 | El Calvario | copiado | — | 2726 m | +0% | ✅ idéntico a 2025 |
-| 47 | Esperanza de Triana | compuesto | 2 | 5008 m | -3% | 🟡 ok (CARRERA OFICIAL corregida; Altozano→Puente, Campana→Sierpes, San Jacinto→Pureza copiados de 2025; quedan Pta Triana→Zaragoza 251m y Zaragoza→Madrid 168m) |
+| 47 | Esperanza de Triana | compuesto | 0 | 5008 m | -3% | ✅ CARRERA OFICIAL corregida; Altozano→Puente, Campana→Sierpes, San Jacinto→Pureza copiados de 2025; Pta Triana→Zaragoza (251m) y Zaragoza→Madrid (168m) rectas confirmadas (nueva aproximación 2026) |
 | 48 | Los Gitanos | compuesto | 0 | 4527 m | +2% | ✅ Peñuelas→Doña María Coronel copiado de 2025; sin gaps >150m |
 | 49 | La Carretería | copiado | — | 3258 m | +0% | ✅ idéntico a 2025 |
 | 50 | Soledad de San Buenaventura | copiado | — | 3017 m | +0% | ✅ idéntico a 2025 |
@@ -74,12 +74,12 @@ Salida: `public/geojson/2026/` y `src/data/recorridos-2026.json`.
 | 55 | La Mortaja | copiado | — | 4334 m | +0% | ✅ idéntico a 2025 |
 | 56 | El Sol | copiado | — | 7294 m | +0% | ✅ idéntico a 2025 |
 | 57 | Los Servitas | compuesto | 0 | 3904 m | -0% | ✅ Campana→Sierpes copiado de 2025; sin gaps >150m |
-| 58 | La Trinidad | compuesto | 1 | 4805 m | -8% | 🟡 ok (Encarnación, Campana→Sierpes y Sol→Madre Isabel copiados de 2025; queda Puñonrostro→Cristo 5 Llagas 224m) |
+| 58 | La Trinidad | compuesto | 0 | 4805 m | -8% | ✅ Encarnación, Campana→Sierpes y Sol→Madre Isabel copiados de 2025; Puñonrostro→Cristo 5 Llagas (224m) recta confirmada |
 | 59 | Santo Entierro | copiado | — | 2303 m | +0% | ✅ idéntico a 2025 |
 | 60 | Soledad de San Lorenzo | copiado | — | 3422 m | +0% | ✅ idéntico a 2025 |
-| 61 | La Resurrección | compuesto | 1 | 5142 m | +18% | 🟡 ok (San Luis→Alameda y Boteros→Cristo de Burgos copiados de 2025; queda Trajano→Conde de Barajas 346m) |
+| 61 | La Resurrección | compuesto | 0 | 5142 m | +18% | ✅ San Luis→Alameda y Boteros→Cristo de Burgos copiados de 2025; Trajano→Conde de Barajas (346m) recta confirmada |
 
-**45** correctos (idénticos, compuestos limpios o editados a mano) · **16** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
+**55** correctos (idénticos, compuestos limpios o editados a mano) · **6** ok con algún tramo en recta · **0** a revisar a mano. **Los 61 recorridos 2026 están completos.**
 
 ## Correcciones aplicadas (2026-06-28, segunda ronda)
 

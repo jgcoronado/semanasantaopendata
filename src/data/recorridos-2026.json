@@ -81,7 +81,7 @@
     "id_hdad": 14,
     "metros": 5186,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Santo Tomás). Adriano→Reyes Católicos (puente Triana) y San Jacinto→Plaza de San Gonzalo son geometrías rectas confirmadas. Queda Murube→Santo Tomás (220m, esquina trivial)."
+    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Santo Tomás). Adriano→Reyes Católicos (puente Triana), San Jacinto→Plaza de San Gonzalo y Murube→Santo Tomás (220m) son geometrías rectas confirmadas. Sin tramos problemáticos."
   },
   {
     "id_hdad": 15,
@@ -135,13 +135,13 @@
     "id_hdad": 23,
     "metros": 3735,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (Duque→Alemanes copiada de La Lanzada 2026). Quedan 2 gaps pequeños: Cardenal Spínola→Gavidia (192m) y Amor de Dios→Trajano (235m). Cuna→Orfila es recta confirmada."
+    "notas": "CARRERA OFICIAL corregida (Duque→Alemanes copiada de La Lanzada 2026). Cardenal Spínola→Gavidia (192m) y Amor de Dios→Trajano (235m) son geometrías rectas confirmadas. Cuna→Orfila también recta confirmada. Sin tramos problemáticos."
   },
   {
     "id_hdad": 24,
     "metros": 3526,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Trajano→Plaza del Duque copiado de Los Javieres 2025. Quedan Constitución→Triunfo (244m) y Gamazo→Plaza Nueva (230m)."
+    "notas": "Trajano→Plaza del Duque copiado de Los Javieres 2025. Constitución→Triunfo (244m) y Gamazo→Plaza Nueva (230m) son geometrías rectas confirmadas. Sin tramos problemáticos."
   },
   {
     "id_hdad": 25,
@@ -195,7 +195,7 @@
     "id_hdad": 33,
     "metros": 2507,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Cuna→Orfila copiado de Los Panaderos 2025. Queda García Tassara→Gran Poder (208m)."
+    "notas": "Cuna→Orfila copiado de Los Panaderos 2025. García Tassara→Gran Poder (208m) geometría recta confirmada. Sin tramos problemáticos."
   },
   {
     "id_hdad": 34,
@@ -279,7 +279,7 @@
     "id_hdad": 47,
     "metros": 5008,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Fray Ceferino). Adriano→Reyes Católicos (puente Triana) y San Jacinto→Pureza son geometrías rectas confirmadas. Queda Puerta de Triana→Zaragoza (251m, acceso al barrio)."
+    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Fray Ceferino). Adriano→Reyes Católicos (puente Triana), San Jacinto→Pureza, Puerta de Triana→Zaragoza (251m) y Zaragoza→Madrid (168m) son geometrías rectas confirmadas (nueva aproximación al barrio en 2026). Sin tramos problemáticos."
   },
   {
     "id_hdad": 48,
@@ -345,7 +345,7 @@
     "id_hdad": 58,
     "metros": 4805,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Encarnación, Campana→Sierpes y Sol→Madre Isabel de la Trinidad copiados de La Trinidad 2025. Queda Puñonrostro→Cristo de las 5 Llagas (224m)."
+    "notas": "Encarnación, Campana→Sierpes y Sol→Madre Isabel de la Trinidad copiados de La Trinidad 2025. Puñonrostro→Cristo de las 5 Llagas (224m) geometría recta confirmada. Sin tramos problemáticos."
   },
   {
     "id_hdad": 59,
@@ -363,6 +363,6 @@
     "id_hdad": 61,
     "metros": 5142,
     "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "San Luis→Alameda de Hércules y Boteros→Cristo de Burgos copiados de La Resurrección 2025. Queda Trajano→Conde de Barajas (346m)."
+    "notas": "San Luis→Alameda de Hércules y Boteros→Cristo de Burgos copiados de La Resurrección 2025. Trajano→Conde de Barajas (346m) geometría recta confirmada. Sin tramos problemáticos."
   }
 ]
