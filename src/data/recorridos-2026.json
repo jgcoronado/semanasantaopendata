@@ -1,368 +1,368 @@
 [
   {
     "id_hdad": 1,
-    "metros": 2600,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Sin tramos problemáticos. Cuna→Orfila es geometría recta confirmada."
+    "metros": 2302,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 2,
-    "metros": 3455,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Campana→Sierpes y Boteros→Cristo de Burgos copiados de La Cena 2025. Sin gaps >150m."
+    "metros": 3476,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 3,
     "metros": 3540,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 4,
-    "metros": 4484,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "9 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "metros": 4402,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 5,
     "metros": 6444,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Editado a mano. Ida y vuelta reconstruidas reutilizando la geometría 2025 invertida; tramos nuevos 2026 (Borbolla, Glorieta del Cid, Santo Tomás, Harinas, Jimios, Joaquín Romero Murube) dibujados a mano."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 6,
-    "metros": 4162,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Encarnación, Campana→Sierpes y Boteros→Caballerizas copiados de San Roque 2025. Sin gaps >150m."
+    "metros": 4179,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 7,
-    "metros": 3803,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (copiada de Quinta Angustia 2025, salida Fray Ceferino). Adriano→Reyes Católicos = puente de Triana, geometría recta confirmada. Sin tramos problemáticos."
+    "metros": 4103,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 8,
-    "metros": 3794,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Sin tramos problemáticos. Trajano→Plaza del Duque es geometría recta confirmada (no hay calle intermedia)."
+    "metros": 3631,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 9,
     "metros": 2613,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Sin tramos problemáticos. Cuna→Orfila es geometría recta confirmada."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 10,
     "metros": 10393,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Editado a mano. Recorrido casi nuevo en 2026: extrarradio (Laffón Soto, Soleá, Sinaí, Hernando del Pulgar; retorno Laguillo, Pérez Hervás, Venecia, Antonio Filpo Rojas, Kansas City, El Greco) dibujado a mano; tramo central Francos→San Pedro tomado de 48-los-gitanos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 11,
     "metros": 3230,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (Duque→Argote de Molina copiada de La Lanzada 2026). Sin gaps >150m. Queda aprox. Aponte→Plaza del Duque (~120m junta) sin datos de calle intermedia."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 12,
     "metros": 8844,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 13,
     "metros": 2700,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 14,
     "metros": 5186,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Santo Tomás). Adriano→Reyes Católicos (puente Triana), San Jacinto→Plaza de San Gonzalo y Murube→Santo Tomás (220m) son geometrías rectas confirmadas. Sin tramos problemáticos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 15,
     "metros": 3069,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 16,
     "metros": 3131,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 17,
     "metros": 3247,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 18,
     "metros": 3147,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 19,
     "metros": 10964,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Tramo Bizco Amate→San Fernando y varios del centro copiados de El Cerro 2025. Quedan 3 gaps genuinamente nuevos en 2026: Campana→Francos (538m), Candilejo→Demetrio de los Ríos (706m), San Bernardo→Nª Sª de los Dolores (2617m)."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 20,
     "metros": 4056,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Águilas→San Ildefonso, Dormitorio→San Pedro y Alfalfa→Águilas copiados de San Esteban 2025. Queda Pilatos→Zamudio (168m, pequeño)."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 21,
     "metros": 4048,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Cuna→Orfila, Campana→Cuna, Sierpes, Constitución y San Fernando→Santa María la Blanca copiados de La Candelaria 2025. Gaps San Fernando→San Fernando (232m) y Sta Mª la Blanca→Sta Mª la Blanca (157m) son internos al tramo 2025 (geometría real)."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 22,
     "metros": 4759,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 23,
-    "metros": 3735,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (Duque→Alemanes copiada de La Lanzada 2026). Cardenal Spínola→Gavidia (192m) y Amor de Dios→Trajano (235m) son geometrías rectas confirmadas. Cuna→Orfila también recta confirmada. Sin tramos problemáticos."
+    "metros": 3734,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 24,
     "metros": 3526,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Trajano→Plaza del Duque copiado de Los Javieres 2025. Constitución→Triunfo (244m) y Gamazo→Plaza Nueva (230m) son geometrías rectas confirmadas. Sin tramos problemáticos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 25,
     "metros": 3351,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Miguel Mañara). Sin tramos en recta."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 26,
     "metros": 3251,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": null
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 27,
     "metros": 4132,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 28,
     "metros": 4267,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 29,
     "metros": 7157,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "7 tramos en recta (calles nuevas: Benito Mas y Prat, Alejandro Collantes, Cardenal Lluch y conexiones al templo)"
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 30,
     "metros": 5282,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 31,
     "metros": 3247,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Sin tramos problemáticos. Gaps <100m son geometría real (Alberto Lista→Amor de Dios, Alameda→Trajano, Cuna→Orfila)."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 32,
     "metros": 3518,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 33,
     "metros": 2507,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Cuna→Orfila copiado de Los Panaderos 2025. García Tassara→Gran Poder (208m) geometría recta confirmada. Sin tramos problemáticos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 34,
     "metros": 3136,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "5 tramo(s) nuevos trazados en recta (pendiente de ajuste manual)"
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 35,
     "metros": 3156,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 36,
     "metros": 4264,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 37,
     "metros": 3659,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Campana→Sierpes copiado de La Exaltación 2025. Sin gaps >150m."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 38,
     "metros": 4945,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 39,
     "metros": 4402,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": null
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 40,
     "metros": 2755,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 41,
     "metros": 2818,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 42,
     "metros": 2539,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 43,
     "metros": 2813,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 44,
     "metros": 4162,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 45,
     "metros": 5206,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Boteros→Cristo de Burgos, Campana→Sierpes, San Pedro→Santa Ángela, Feria→Parras y Escoberos→Macarena copiados de La Macarena 2025. Quedan Feria→Correduría (649m) y San Juan de la Palma→Madre Purísima (152m)."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 46,
     "metros": 2726,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 47,
     "metros": 5008,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "CARRERA OFICIAL corregida (copiada de La Paz 2026, salida Fray Ceferino). Adriano→Reyes Católicos (puente Triana), San Jacinto→Pureza, Puerta de Triana→Zaragoza (251m) y Zaragoza→Madrid (168m) son geometrías rectas confirmadas (nueva aproximación al barrio en 2026). Sin tramos problemáticos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 48,
     "metros": 4527,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Peñuelas→Doña María Coronel copiado de Los Gitanos 2025. Sin gaps >150m."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 49,
     "metros": 3258,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 50,
     "metros": 3017,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 51,
     "metros": 5426,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 52,
     "metros": 4683,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 53,
     "metros": 2519,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 54,
     "metros": 3001,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": null
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 55,
     "metros": 4334,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 56,
     "metros": 7294,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 57,
     "metros": 3904,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Campana→Sierpes copiado de Los Servitas 2025. Sin gaps >150m."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 58,
     "metros": 4805,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "Encarnación, Campana→Sierpes y Sol→Madre Isabel de la Trinidad copiados de La Trinidad 2025. Puñonrostro→Cristo de las 5 Llagas (224m) geometría recta confirmada. Sin tramos problemáticos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   },
   {
     "id_hdad": 59,
     "metros": 2303,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 60,
     "metros": 3422,
-    "fuente": "Trazado GeoJSON 2026 (idéntico a 2025; ruta dibujada a mano)",
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
     "notas": ""
   },
   {
     "id_hdad": 61,
     "metros": 5142,
-    "fuente": "Trazado GeoJSON 2026 (compuesto de fragmentos canónicos 2025)",
-    "notas": "San Luis→Alameda de Hércules y Boteros→Cristo de Burgos copiados de La Resurrección 2025. Trajano→Conde de Barajas (346m) geometría recta confirmada. Sin tramos problemáticos."
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
   }
 ]

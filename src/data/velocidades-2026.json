@@ -1,0 +1,1546 @@
+{
+  "anio": 2026,
+  "generado": "2026-07-01",
+  "unidad_velocidad": "m/h",
+  "unidad_distancia": "m",
+  "remuestreo_m": 5,
+  "punto_fin_carrera_oficial": [
+    -5.9925187,
+    37.3860585
+  ],
+  "descripcion": {
+    "completa": "salida → templo (todo el recorrido, cabeza de la cofradía)",
+    "ida": "salida → La Campana (hasta entrar en Carrera Oficial)",
+    "carrera_oficial": "La Campana → Catedral (la cruz de guía en Carrera Oficial)",
+    "vuelta": "Catedral → templo (regreso de la cabeza, descontando el tiempo de paso)"
+  },
+  "criterio_tiempos": "Velocidades cabeza-contra-cabeza. Como `entrada` es la recogida completa (cola), la entrada de la cabeza se estima como entrada − (ultimoPasoFuera − catedral).",
+  "fuente": "GeoJSON de recorridos 2026 + horarios-2026.json",
+  "registros": [
+    {
+      "id_hdad": 1,
+      "nombre": "La Borriquita",
+      "slug": "la-borriquita",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 2629,
+        "ida": 980,
+        "carrera_oficial": 1055,
+        "vuelta": 594
+      },
+      "duracion_min": {
+        "total": 216,
+        "ida": 80,
+        "carrera_oficial": 66,
+        "vuelta": 70
+      },
+      "velocidad_mh": {
+        "completa": 730,
+        "ida": 735,
+        "carrera_oficial": 959,
+        "vuelta": 509
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 2,
+      "nombre": "La Cena",
+      "slug": "la-cena",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 3644,
+        "ida": 1220,
+        "carrera_oficial": 1060,
+        "vuelta": 1364
+      },
+      "duracion_min": {
+        "total": 425,
+        "ida": 115,
+        "carrera_oficial": 66,
+        "vuelta": 244
+      },
+      "velocidad_mh": {
+        "completa": 514,
+        "ida": 637,
+        "carrera_oficial": 964,
+        "vuelta": 335
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 3,
+      "nombre": "Jesús Despojado",
+      "slug": "jesus-despojado",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 3540,
+        "ida": 870,
+        "carrera_oficial": 1055,
+        "vuelta": 1615
+      },
+      "duracion_min": {
+        "total": 456,
+        "ida": 131,
+        "carrera_oficial": 66,
+        "vuelta": 259
+      },
+      "velocidad_mh": {
+        "completa": 466,
+        "ida": 398,
+        "carrera_oficial": 959,
+        "vuelta": 374
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 4,
+      "nombre": "La Hiniesta",
+      "slug": "la-hiniesta",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 5002,
+        "ida": 1935,
+        "carrera_oficial": 1060,
+        "vuelta": 2007
+      },
+      "duracion_min": {
+        "total": 535,
+        "ida": 196,
+        "carrera_oficial": 66,
+        "vuelta": 273
+      },
+      "velocidad_mh": {
+        "completa": 561,
+        "ida": 592,
+        "carrera_oficial": 964,
+        "vuelta": 441
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 5,
+      "nombre": "La Paz",
+      "slug": "la-paz",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 6479,
+        "ida": 3130,
+        "carrera_oficial": 1055,
+        "vuelta": 2294
+      },
+      "duracion_min": {
+        "total": 624,
+        "ida": 287,
+        "carrera_oficial": 66,
+        "vuelta": 271
+      },
+      "velocidad_mh": {
+        "completa": 623,
+        "ida": 654,
+        "carrera_oficial": 959,
+        "vuelta": 508
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 6,
+      "nombre": "San Roque",
+      "slug": "san-roque",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 4176,
+        "ida": 1570,
+        "carrera_oficial": 1055,
+        "vuelta": 1551
+      },
+      "duracion_min": {
+        "total": 471,
+        "ida": 169,
+        "carrera_oficial": 66,
+        "vuelta": 236
+      },
+      "velocidad_mh": {
+        "completa": 532,
+        "ida": 557,
+        "carrera_oficial": 959,
+        "vuelta": 394
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 7,
+      "nombre": "La Estrella",
+      "slug": "la-estrella",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 4194,
+        "ida": 1395,
+        "carrera_oficial": 1060,
+        "vuelta": 1739
+      },
+      "duracion_min": {
+        "total": 511,
+        "ida": 174,
+        "carrera_oficial": 66,
+        "vuelta": 271
+      },
+      "velocidad_mh": {
+        "completa": 492,
+        "ida": 481,
+        "carrera_oficial": 964,
+        "vuelta": 385
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 8,
+      "nombre": "La Amargura",
+      "slug": "la-amargura",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 3626,
+        "ida": 1040,
+        "carrera_oficial": 1060,
+        "vuelta": 1526
+      },
+      "duracion_min": {
+        "total": 349,
+        "ida": 94,
+        "carrera_oficial": 66,
+        "vuelta": 189
+      },
+      "velocidad_mh": {
+        "completa": 623,
+        "ida": 664,
+        "carrera_oficial": 964,
+        "vuelta": 485
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 9,
+      "nombre": "El Amor",
+      "slug": "el-amor",
+      "dia": "domingo-de-ramos",
+      "distancias_m": {
+        "total": 2622,
+        "ida": 975,
+        "carrera_oficial": 1060,
+        "vuelta": 587
+      },
+      "duracion_min": {
+        "total": 207,
+        "ida": 61,
+        "carrera_oficial": 66,
+        "vuelta": 80
+      },
+      "velocidad_mh": {
+        "completa": 760,
+        "ida": 959,
+        "carrera_oficial": 964,
+        "vuelta": 440
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 10,
+      "nombre": "San Pablo",
+      "slug": "san-pablo",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 10379,
+        "ida": 4505,
+        "carrera_oficial": 1060,
+        "vuelta": 4814
+      },
+      "duracion_min": {
+        "total": 807,
+        "ida": 310,
+        "carrera_oficial": 66,
+        "vuelta": 431
+      },
+      "velocidad_mh": {
+        "completa": 772,
+        "ida": 872,
+        "carrera_oficial": 964,
+        "vuelta": 670
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 11,
+      "nombre": "Redención",
+      "slug": "redencion",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 3831,
+        "ida": 1155,
+        "carrera_oficial": 1060,
+        "vuelta": 1616
+      },
+      "duracion_min": {
+        "total": 444,
+        "ida": 134,
+        "carrera_oficial": 66,
+        "vuelta": 244
+      },
+      "velocidad_mh": {
+        "completa": 518,
+        "ida": 517,
+        "carrera_oficial": 964,
+        "vuelta": 397
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 12,
+      "nombre": "Santa Genoveva",
+      "slug": "santa-genoveva",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 8844,
+        "ida": 4320,
+        "carrera_oficial": 1060,
+        "vuelta": 3464
+      },
+      "duracion_min": {
+        "total": 745,
+        "ida": 321,
+        "carrera_oficial": 66,
+        "vuelta": 358
+      },
+      "velocidad_mh": {
+        "completa": 712,
+        "ida": 807,
+        "carrera_oficial": 964,
+        "vuelta": 581
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 13,
+      "nombre": "Santa Marta",
+      "slug": "santa-marta",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 2700,
+        "ida": 535,
+        "carrera_oficial": 1060,
+        "vuelta": 1105
+      },
+      "duracion_min": {
+        "total": 199,
+        "ida": 37,
+        "carrera_oficial": 66,
+        "vuelta": 96
+      },
+      "velocidad_mh": {
+        "completa": 814,
+        "ida": 868,
+        "carrera_oficial": 964,
+        "vuelta": 691
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 14,
+      "nombre": "San Gonzalo",
+      "slug": "san-gonzalo",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 5773,
+        "ida": 2295,
+        "carrera_oficial": 1060,
+        "vuelta": 2418
+      },
+      "duracion_min": {
+        "total": 625,
+        "ida": 259,
+        "carrera_oficial": 66,
+        "vuelta": 300
+      },
+      "velocidad_mh": {
+        "completa": 554,
+        "ida": 532,
+        "carrera_oficial": 964,
+        "vuelta": 484
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 15,
+      "nombre": "Vera-Cruz",
+      "slug": "vera-cruz",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 3069,
+        "ida": 495,
+        "carrera_oficial": 1055,
+        "vuelta": 1519
+      },
+      "duracion_min": {
+        "total": 275,
+        "ida": 60,
+        "carrera_oficial": 66,
+        "vuelta": 149
+      },
+      "velocidad_mh": {
+        "completa": 670,
+        "ida": 495,
+        "carrera_oficial": 959,
+        "vuelta": 612
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 16,
+      "nombre": "Las Penas",
+      "slug": "las-penas",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 3131,
+        "ida": 540,
+        "carrera_oficial": 1055,
+        "vuelta": 1536
+      },
+      "duracion_min": {
+        "total": 304,
+        "ida": 66,
+        "carrera_oficial": 66,
+        "vuelta": 172
+      },
+      "velocidad_mh": {
+        "completa": 618,
+        "ida": 491,
+        "carrera_oficial": 959,
+        "vuelta": 536
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 17,
+      "nombre": "Las Aguas",
+      "slug": "las-aguas",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 3247,
+        "ida": 1410,
+        "carrera_oficial": 1060,
+        "vuelta": 777
+      },
+      "duracion_min": {
+        "total": 375,
+        "ida": 203,
+        "carrera_oficial": 66,
+        "vuelta": 106
+      },
+      "velocidad_mh": {
+        "completa": 519,
+        "ida": 417,
+        "carrera_oficial": 964,
+        "vuelta": 440
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 18,
+      "nombre": "El Museo",
+      "slug": "el-museo",
+      "dia": "lunes-santo",
+      "distancias_m": {
+        "total": 3147,
+        "ida": 555,
+        "carrera_oficial": 1055,
+        "vuelta": 1537
+      },
+      "duracion_min": {
+        "total": 335,
+        "ida": 89,
+        "carrera_oficial": 66,
+        "vuelta": 180
+      },
+      "velocidad_mh": {
+        "completa": 564,
+        "ida": 374,
+        "carrera_oficial": 959,
+        "vuelta": 512
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 19,
+      "nombre": "El Cerro",
+      "slug": "el-cerro",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 10737,
+        "ida": 5080,
+        "carrera_oficial": 1055,
+        "vuelta": 4602
+      },
+      "duracion_min": {
+        "total": 817,
+        "ida": 300,
+        "carrera_oficial": 62,
+        "vuelta": 455
+      },
+      "velocidad_mh": {
+        "completa": 788,
+        "ida": 1016,
+        "carrera_oficial": 1021,
+        "vuelta": 607
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 20,
+      "nombre": "San Esteban",
+      "slug": "san-esteban",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 3567,
+        "ida": 1385,
+        "carrera_oficial": 1055,
+        "vuelta": 1127
+      },
+      "duracion_min": {
+        "total": 450,
+        "ida": 185,
+        "carrera_oficial": 62,
+        "vuelta": 203
+      },
+      "velocidad_mh": {
+        "completa": 476,
+        "ida": 449,
+        "carrera_oficial": 1021,
+        "vuelta": 333
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 21,
+      "nombre": "La Candelaria",
+      "slug": "la-candelaria",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 4151,
+        "ida": 1315,
+        "carrera_oficial": 1060,
+        "vuelta": 1776
+      },
+      "duracion_min": {
+        "total": 499,
+        "ida": 182,
+        "carrera_oficial": 62,
+        "vuelta": 255
+      },
+      "velocidad_mh": {
+        "completa": 499,
+        "ida": 434,
+        "carrera_oficial": 1026,
+        "vuelta": 418
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 22,
+      "nombre": "San Benito",
+      "slug": "san-benito",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 4759,
+        "ida": 1960,
+        "carrera_oficial": 1055,
+        "vuelta": 1744
+      },
+      "duracion_min": {
+        "total": 508,
+        "ida": 205,
+        "carrera_oficial": 62,
+        "vuelta": 241
+      },
+      "velocidad_mh": {
+        "completa": 562,
+        "ida": 574,
+        "carrera_oficial": 1021,
+        "vuelta": 434
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 23,
+      "nombre": "Dulce Nombre",
+      "slug": "dulce-nombre",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 3514,
+        "ida": 625,
+        "carrera_oficial": 1060,
+        "vuelta": 1829
+      },
+      "duracion_min": {
+        "total": 400,
+        "ida": 107,
+        "carrera_oficial": 62,
+        "vuelta": 231
+      },
+      "velocidad_mh": {
+        "completa": 527,
+        "ida": 350,
+        "carrera_oficial": 1026,
+        "vuelta": 475
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 24,
+      "nombre": "Los Javieres",
+      "slug": "los-javieres",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 3912,
+        "ida": 1070,
+        "carrera_oficial": 1060,
+        "vuelta": 1782
+      },
+      "duracion_min": {
+        "total": 297,
+        "ida": 54,
+        "carrera_oficial": 62,
+        "vuelta": 181
+      },
+      "velocidad_mh": {
+        "completa": 790,
+        "ida": 1189,
+        "carrera_oficial": 1026,
+        "vuelta": 591
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 25,
+      "nombre": "Los Estudiantes",
+      "slug": "los-estudiantes",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 3822,
+        "ida": 1965,
+        "carrera_oficial": 1060,
+        "vuelta": 797
+      },
+      "duracion_min": {
+        "total": 351,
+        "ida": 199,
+        "carrera_oficial": 62,
+        "vuelta": 90
+      },
+      "velocidad_mh": {
+        "completa": 653,
+        "ida": 592,
+        "carrera_oficial": 1026,
+        "vuelta": 531
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 26,
+      "nombre": "Santa Cruz",
+      "slug": "santa-cruz",
+      "dia": "martes-santo",
+      "distancias_m": {
+        "total": 3373,
+        "ida": 1850,
+        "carrera_oficial": 1060,
+        "vuelta": 463
+      },
+      "duracion_min": {
+        "total": 282,
+        "ida": 170,
+        "carrera_oficial": 62,
+        "vuelta": 50
+      },
+      "velocidad_mh": {
+        "completa": 718,
+        "ida": 653,
+        "carrera_oficial": 1026,
+        "vuelta": 556
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 27,
+      "nombre": "El Carmen Doloroso",
+      "slug": "el-carmen-doloroso",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 4132,
+        "ida": 1050,
+        "carrera_oficial": 1055,
+        "vuelta": 2027
+      },
+      "duracion_min": {
+        "total": 507,
+        "ida": 118,
+        "carrera_oficial": 66,
+        "vuelta": 323
+      },
+      "velocidad_mh": {
+        "completa": 489,
+        "ida": 534,
+        "carrera_oficial": 959,
+        "vuelta": 377
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 28,
+      "nombre": "El Buen Fin",
+      "slug": "el-buen-fin",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 4267,
+        "ida": 950,
+        "carrera_oficial": 1060,
+        "vuelta": 2257
+      },
+      "duracion_min": {
+        "total": 456,
+        "ida": 132,
+        "carrera_oficial": 66,
+        "vuelta": 258
+      },
+      "velocidad_mh": {
+        "completa": 561,
+        "ida": 432,
+        "carrera_oficial": 964,
+        "vuelta": 525
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 29,
+      "nombre": "La Sed",
+      "slug": "la-sed",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 8331,
+        "ida": 3815,
+        "carrera_oficial": 1055,
+        "vuelta": 3461
+      },
+      "duracion_min": {
+        "total": 802,
+        "ida": 347,
+        "carrera_oficial": 66,
+        "vuelta": 389
+      },
+      "velocidad_mh": {
+        "completa": 623,
+        "ida": 660,
+        "carrera_oficial": 959,
+        "vuelta": 534
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 30,
+      "nombre": "San Bernardo",
+      "slug": "san-bernardo",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 5282,
+        "ida": 2430,
+        "carrera_oficial": 1060,
+        "vuelta": 1792
+      },
+      "duracion_min": {
+        "total": 524,
+        "ida": 261,
+        "carrera_oficial": 66,
+        "vuelta": 197
+      },
+      "velocidad_mh": {
+        "completa": 605,
+        "ida": 559,
+        "carrera_oficial": 964,
+        "vuelta": 546
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 31,
+      "nombre": "La Lanzada",
+      "slug": "la-lanzada",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 3571,
+        "ida": 1170,
+        "carrera_oficial": 1060,
+        "vuelta": 1341
+      },
+      "duracion_min": {
+        "total": 377,
+        "ida": 113,
+        "carrera_oficial": 66,
+        "vuelta": 198
+      },
+      "velocidad_mh": {
+        "completa": 568,
+        "ida": 621,
+        "carrera_oficial": 964,
+        "vuelta": 406
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 32,
+      "nombre": "El Baratillo",
+      "slug": "el-baratillo",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 3518,
+        "ida": 1525,
+        "carrera_oficial": 1055,
+        "vuelta": 938
+      },
+      "duracion_min": {
+        "total": 412,
+        "ida": 184,
+        "carrera_oficial": 66,
+        "vuelta": 162
+      },
+      "velocidad_mh": {
+        "completa": 512,
+        "ida": 497,
+        "carrera_oficial": 959,
+        "vuelta": 347
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 33,
+      "nombre": "Los Panaderos",
+      "slug": "los-panaderos",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 2483,
+        "ida": 440,
+        "carrera_oficial": 1060,
+        "vuelta": 983
+      },
+      "duracion_min": {
+        "total": 328,
+        "ida": 98,
+        "carrera_oficial": 66,
+        "vuelta": 164
+      },
+      "velocidad_mh": {
+        "completa": 454,
+        "ida": 269,
+        "carrera_oficial": 964,
+        "vuelta": 360
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 34,
+      "nombre": "Cristo de Burgos",
+      "slug": "cristo-de-burgos",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 2861,
+        "ida": 735,
+        "carrera_oficial": 1060,
+        "vuelta": 1066
+      },
+      "duracion_min": {
+        "total": 366,
+        "ida": 156,
+        "carrera_oficial": 66,
+        "vuelta": 144
+      },
+      "velocidad_mh": {
+        "completa": 469,
+        "ida": 283,
+        "carrera_oficial": 964,
+        "vuelta": 444
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 35,
+      "nombre": "Siete Palabras",
+      "slug": "siete-palabras",
+      "dia": "miercoles-santo",
+      "distancias_m": {
+        "total": 3156,
+        "ida": 695,
+        "carrera_oficial": 1060,
+        "vuelta": 1401
+      },
+      "duracion_min": {
+        "total": 301,
+        "ida": 96,
+        "carrera_oficial": 66,
+        "vuelta": 139
+      },
+      "velocidad_mh": {
+        "completa": 629,
+        "ida": 434,
+        "carrera_oficial": 964,
+        "vuelta": 605
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 36,
+      "nombre": "Los Negritos",
+      "slug": "los-negritos",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 4264,
+        "ida": 1570,
+        "carrera_oficial": 1055,
+        "vuelta": 1639
+      },
+      "duracion_min": {
+        "total": 443,
+        "ida": 160,
+        "carrera_oficial": 66,
+        "vuelta": 217
+      },
+      "velocidad_mh": {
+        "completa": 578,
+        "ida": 589,
+        "carrera_oficial": 959,
+        "vuelta": 453
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 37,
+      "nombre": "La Exaltación",
+      "slug": "la-exaltacion",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 3541,
+        "ida": 1185,
+        "carrera_oficial": 1060,
+        "vuelta": 1296
+      },
+      "duracion_min": {
+        "total": 446,
+        "ida": 178,
+        "carrera_oficial": 66,
+        "vuelta": 202
+      },
+      "velocidad_mh": {
+        "completa": 476,
+        "ida": 399,
+        "carrera_oficial": 964,
+        "vuelta": 385
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 38,
+      "nombre": "Las Cigarreras",
+      "slug": "las-cigarreras",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 4945,
+        "ida": 1025,
+        "carrera_oficial": 1055,
+        "vuelta": 2865
+      },
+      "duracion_min": {
+        "total": 411,
+        "ida": 113,
+        "carrera_oficial": 66,
+        "vuelta": 232
+      },
+      "velocidad_mh": {
+        "completa": 722,
+        "ida": 544,
+        "carrera_oficial": 959,
+        "vuelta": 741
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 39,
+      "nombre": "Montesión",
+      "slug": "montesion",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 3705,
+        "ida": 940,
+        "carrera_oficial": 1055,
+        "vuelta": 1710
+      },
+      "duracion_min": {
+        "total": 413,
+        "ida": 118,
+        "carrera_oficial": 66,
+        "vuelta": 229
+      },
+      "velocidad_mh": {
+        "completa": 538,
+        "ida": 478,
+        "carrera_oficial": 959,
+        "vuelta": 448
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 40,
+      "nombre": "La Quinta Angustia",
+      "slug": "la-quinta-angustia",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 2755,
+        "ida": 450,
+        "carrera_oficial": 1055,
+        "vuelta": 1250
+      },
+      "duracion_min": {
+        "total": 216,
+        "ida": 40,
+        "carrera_oficial": 66,
+        "vuelta": 110
+      },
+      "velocidad_mh": {
+        "completa": 765,
+        "ida": 675,
+        "carrera_oficial": 959,
+        "vuelta": 682
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 41,
+      "nombre": "El Valle",
+      "slug": "el-valle",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 2818,
+        "ida": 745,
+        "carrera_oficial": 1055,
+        "vuelta": 1018
+      },
+      "duracion_min": {
+        "total": 264,
+        "ida": 84,
+        "carrera_oficial": 66,
+        "vuelta": 114
+      },
+      "velocidad_mh": {
+        "completa": 641,
+        "ida": 532,
+        "carrera_oficial": 959,
+        "vuelta": 536
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 42,
+      "nombre": "Pasión",
+      "slug": "pasion",
+      "dia": "jueves-santo",
+      "distancias_m": {
+        "total": 2539,
+        "ida": 865,
+        "carrera_oficial": 1055,
+        "vuelta": 619
+      },
+      "duracion_min": {
+        "total": 227,
+        "ida": 76,
+        "carrera_oficial": 66,
+        "vuelta": 85
+      },
+      "velocidad_mh": {
+        "completa": 671,
+        "ida": 683,
+        "carrera_oficial": 959,
+        "vuelta": 437
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 43,
+      "nombre": "El Silencio",
+      "slug": "el-silencio",
+      "dia": "madruga",
+      "distancias_m": {
+        "total": 2813,
+        "ida": 165,
+        "carrera_oficial": 1060,
+        "vuelta": 1588
+      },
+      "duracion_min": {
+        "total": 262,
+        "ida": 15,
+        "carrera_oficial": 66,
+        "vuelta": 181
+      },
+      "velocidad_mh": {
+        "completa": 644,
+        "ida": 660,
+        "carrera_oficial": 964,
+        "vuelta": 526
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 44,
+      "nombre": "El Gran Poder",
+      "slug": "el-gran-poder",
+      "dia": "madruga",
+      "distancias_m": {
+        "total": 4162,
+        "ida": 690,
+        "carrera_oficial": 1060,
+        "vuelta": 2412
+      },
+      "duracion_min": {
+        "total": 340,
+        "ida": 64,
+        "carrera_oficial": 66,
+        "vuelta": 210
+      },
+      "velocidad_mh": {
+        "completa": 735,
+        "ida": 647,
+        "carrera_oficial": 964,
+        "vuelta": 689
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 45,
+      "nombre": "La Macarena",
+      "slug": "la-macarena",
+      "dia": "madruga",
+      "distancias_m": {
+        "total": 5537,
+        "ida": 1670,
+        "carrera_oficial": 1055,
+        "vuelta": 2812
+      },
+      "duracion_min": {
+        "total": 683,
+        "ida": 170,
+        "carrera_oficial": 66,
+        "vuelta": 447
+      },
+      "velocidad_mh": {
+        "completa": 486,
+        "ida": 589,
+        "carrera_oficial": 959,
+        "vuelta": 377
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 46,
+      "nombre": "El Calvario",
+      "slug": "el-calvario",
+      "dia": "madruga",
+      "distancias_m": {
+        "total": 2726,
+        "ida": 405,
+        "carrera_oficial": 1055,
+        "vuelta": 1266
+      },
+      "duracion_min": {
+        "total": 198,
+        "ida": 33,
+        "carrera_oficial": 66,
+        "vuelta": 99
+      },
+      "velocidad_mh": {
+        "completa": 826,
+        "ida": 736,
+        "carrera_oficial": 959,
+        "vuelta": 767
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 47,
+      "nombre": "Esperanza de Triana",
+      "slug": "esperanza-de-triana",
+      "dia": "madruga",
+      "distancias_m": {
+        "total": 5171,
+        "ida": 1780,
+        "carrera_oficial": 1060,
+        "vuelta": 2331
+      },
+      "duracion_min": {
+        "total": 641,
+        "ida": 227,
+        "carrera_oficial": 66,
+        "vuelta": 348
+      },
+      "velocidad_mh": {
+        "completa": 484,
+        "ida": 470,
+        "carrera_oficial": 964,
+        "vuelta": 402
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 48,
+      "nombre": "Los Gitanos",
+      "slug": "los-gitanos",
+      "dia": "madruga",
+      "distancias_m": {
+        "total": 4399,
+        "ida": 1720,
+        "carrera_oficial": 1060,
+        "vuelta": 1619
+      },
+      "duracion_min": {
+        "total": 583,
+        "ida": 242,
+        "carrera_oficial": 66,
+        "vuelta": 275
+      },
+      "velocidad_mh": {
+        "completa": 453,
+        "ida": 426,
+        "carrera_oficial": 964,
+        "vuelta": 353
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 49,
+      "nombre": "La Carretería",
+      "slug": "la-carreteria",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 3258,
+        "ida": 1300,
+        "carrera_oficial": 1055,
+        "vuelta": 903
+      },
+      "duracion_min": {
+        "total": 286,
+        "ida": 100,
+        "carrera_oficial": 66,
+        "vuelta": 120
+      },
+      "velocidad_mh": {
+        "completa": 683,
+        "ida": 780,
+        "carrera_oficial": 959,
+        "vuelta": 451
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 50,
+      "nombre": "Soledad de San Buenaventura",
+      "slug": "soledad-de-san-buenaventura",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 3017,
+        "ida": 800,
+        "carrera_oficial": 1060,
+        "vuelta": 1157
+      },
+      "duracion_min": {
+        "total": 257,
+        "ida": 60,
+        "carrera_oficial": 66,
+        "vuelta": 131
+      },
+      "velocidad_mh": {
+        "completa": 704,
+        "ida": 800,
+        "carrera_oficial": 964,
+        "vuelta": 530
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 51,
+      "nombre": "El Cachorro",
+      "slug": "el-cachorro",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 5426,
+        "ida": 2040,
+        "carrera_oficial": 1060,
+        "vuelta": 2326
+      },
+      "duracion_min": {
+        "total": 563,
+        "ida": 214,
+        "carrera_oficial": 66,
+        "vuelta": 283
+      },
+      "velocidad_mh": {
+        "completa": 578,
+        "ida": 572,
+        "carrera_oficial": 964,
+        "vuelta": 493
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 52,
+      "nombre": "La O",
+      "slug": "la-o",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 4683,
+        "ida": 1480,
+        "carrera_oficial": 1060,
+        "vuelta": 2143
+      },
+      "duracion_min": {
+        "total": 465,
+        "ida": 147,
+        "carrera_oficial": 66,
+        "vuelta": 252
+      },
+      "velocidad_mh": {
+        "completa": 604,
+        "ida": 604,
+        "carrera_oficial": 964,
+        "vuelta": 510
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 53,
+      "nombre": "San Isidoro",
+      "slug": "san-isidoro",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 2519,
+        "ida": 890,
+        "carrera_oficial": 1055,
+        "vuelta": 574
+      },
+      "duracion_min": {
+        "total": 222,
+        "ida": 88,
+        "carrera_oficial": 66,
+        "vuelta": 68
+      },
+      "velocidad_mh": {
+        "completa": 681,
+        "ida": 607,
+        "carrera_oficial": 959,
+        "vuelta": 506
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 54,
+      "nombre": "Montserrat",
+      "slug": "montserrat",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 3011,
+        "ida": 565,
+        "carrera_oficial": 1060,
+        "vuelta": 1386
+      },
+      "duracion_min": {
+        "total": 307,
+        "ida": 72,
+        "carrera_oficial": 66,
+        "vuelta": 169
+      },
+      "velocidad_mh": {
+        "completa": 589,
+        "ida": 471,
+        "carrera_oficial": 964,
+        "vuelta": 492
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 55,
+      "nombre": "La Mortaja",
+      "slug": "la-mortaja",
+      "dia": "viernes-santo",
+      "distancias_m": {
+        "total": 4334,
+        "ida": 1925,
+        "carrera_oficial": 1055,
+        "vuelta": 1354
+      },
+      "duracion_min": {
+        "total": 322,
+        "ida": 136,
+        "carrera_oficial": 66,
+        "vuelta": 120
+      },
+      "velocidad_mh": {
+        "completa": 808,
+        "ida": 849,
+        "carrera_oficial": 959,
+        "vuelta": 677
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 56,
+      "nombre": "El Sol",
+      "slug": "el-sol",
+      "dia": "sabado-santo",
+      "distancias_m": {
+        "total": 7294,
+        "ida": 3675,
+        "carrera_oficial": 1060,
+        "vuelta": 2559
+      },
+      "duracion_min": {
+        "total": 570,
+        "ida": 270,
+        "carrera_oficial": 66,
+        "vuelta": 234
+      },
+      "velocidad_mh": {
+        "completa": 768,
+        "ida": 817,
+        "carrera_oficial": 964,
+        "vuelta": 656
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 57,
+      "nombre": "Los Servitas",
+      "slug": "los-servitas",
+      "dia": "sabado-santo",
+      "distancias_m": {
+        "total": 3904,
+        "ida": 1270,
+        "carrera_oficial": 1060,
+        "vuelta": 1574
+      },
+      "duracion_min": {
+        "total": 394,
+        "ida": 141,
+        "carrera_oficial": 66,
+        "vuelta": 187
+      },
+      "velocidad_mh": {
+        "completa": 594,
+        "ida": 540,
+        "carrera_oficial": 964,
+        "vuelta": 505
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 58,
+      "nombre": "La Trinidad",
+      "slug": "la-trinidad",
+      "dia": "sabado-santo",
+      "distancias_m": {
+        "total": 5249,
+        "ida": 1880,
+        "carrera_oficial": 1060,
+        "vuelta": 2309
+      },
+      "duracion_min": {
+        "total": 551,
+        "ida": 183,
+        "carrera_oficial": 66,
+        "vuelta": 302
+      },
+      "velocidad_mh": {
+        "completa": 572,
+        "ida": 616,
+        "carrera_oficial": 964,
+        "vuelta": 459
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 59,
+      "nombre": "Santo Entierro",
+      "slug": "santo-entierro",
+      "dia": "sabado-santo",
+      "distancias_m": {
+        "total": 2303,
+        "ida": 165,
+        "carrera_oficial": 1055,
+        "vuelta": 1083
+      },
+      "duracion_min": {
+        "total": 196,
+        "ida": 18,
+        "carrera_oficial": 66,
+        "vuelta": 112
+      },
+      "velocidad_mh": {
+        "completa": 705,
+        "ida": 550,
+        "carrera_oficial": 959,
+        "vuelta": 580
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 60,
+      "nombre": "Soledad de San Lorenzo",
+      "slug": "soledad-de-san-lorenzo",
+      "dia": "sabado-santo",
+      "distancias_m": {
+        "total": 3422,
+        "ida": 670,
+        "carrera_oficial": 1055,
+        "vuelta": 1697
+      },
+      "duracion_min": {
+        "total": 264,
+        "ida": 53,
+        "carrera_oficial": 66,
+        "vuelta": 145
+      },
+      "velocidad_mh": {
+        "completa": 778,
+        "ida": 758,
+        "carrera_oficial": 959,
+        "vuelta": 702
+      },
+      "notas": ""
+    },
+    {
+      "id_hdad": 61,
+      "nombre": "La Resurrección",
+      "slug": "la-resurreccion",
+      "dia": "domingo-resurreccion",
+      "distancias_m": {
+        "total": 4353,
+        "ida": 1490,
+        "carrera_oficial": 1060,
+        "vuelta": 1803
+      },
+      "duracion_min": {
+        "total": 441,
+        "ida": 160,
+        "carrera_oficial": 71,
+        "vuelta": 210
+      },
+      "velocidad_mh": {
+        "completa": 592,
+        "ida": 559,
+        "carrera_oficial": 896,
+        "vuelta": 515
+      },
+      "notas": ""
+    }
+  ]
+}

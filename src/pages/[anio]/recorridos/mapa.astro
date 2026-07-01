@@ -5,7 +5,7 @@ import { anios, hayRecorridos, getAnio } from '../../../lib/datos.js';
 const COLORES_DIA = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 
 export function getStaticPaths() {
-  // Solo los años con recorridos GeoJSON disponibles (de momento, 2025).
+  // Solo los años con recorridos GeoJSON disponibles (2025 y 2026).
   return anios
     .filter((a) => hayRecorridos(a.anio))
     .map((a) => ({ params: { anio: a.slug } }));
