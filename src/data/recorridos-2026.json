@@ -1,0 +1,368 @@
+[
+  {
+    "id_hdad": 1,
+    "metros": 2302,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 2,
+    "metros": 3476,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 3,
+    "metros": 3540,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 4,
+    "metros": 4402,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 5,
+    "metros": 6444,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 6,
+    "metros": 4179,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 7,
+    "metros": 4103,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 8,
+    "metros": 3631,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 9,
+    "metros": 2613,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 10,
+    "metros": 10393,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 11,
+    "metros": 3230,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 12,
+    "metros": 8844,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 13,
+    "metros": 2700,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 14,
+    "metros": 5186,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 15,
+    "metros": 3069,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 16,
+    "metros": 3131,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 17,
+    "metros": 3247,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 18,
+    "metros": 3147,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 19,
+    "metros": 10964,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 20,
+    "metros": 4056,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 21,
+    "metros": 4048,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 22,
+    "metros": 4759,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 23,
+    "metros": 3734,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 24,
+    "metros": 3526,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 25,
+    "metros": 3351,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 26,
+    "metros": 3251,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 27,
+    "metros": 4132,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 28,
+    "metros": 4267,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 29,
+    "metros": 7157,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 30,
+    "metros": 5282,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 31,
+    "metros": 3247,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 32,
+    "metros": 3518,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 33,
+    "metros": 2507,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 34,
+    "metros": 3136,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 35,
+    "metros": 3156,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 36,
+    "metros": 4264,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 37,
+    "metros": 3659,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 38,
+    "metros": 4945,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 39,
+    "metros": 4402,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 40,
+    "metros": 2755,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 41,
+    "metros": 2818,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 42,
+    "metros": 2539,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 43,
+    "metros": 2813,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 44,
+    "metros": 4162,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 45,
+    "metros": 5206,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 46,
+    "metros": 2726,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 47,
+    "metros": 5008,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 48,
+    "metros": 4527,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 49,
+    "metros": 3258,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 50,
+    "metros": 3017,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 51,
+    "metros": 5426,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 52,
+    "metros": 4683,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 53,
+    "metros": 2519,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 54,
+    "metros": 3001,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 55,
+    "metros": 4334,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 56,
+    "metros": 7294,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 57,
+    "metros": 3904,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 58,
+    "metros": 4805,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 59,
+    "metros": 2303,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 60,
+    "metros": 3422,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  },
+  {
+    "id_hdad": 61,
+    "metros": 5142,
+    "fuente": "Trazado GeoJSON 2026 (longitud de la ruta; compuesta de fragmentos 2025 y revisada a mano)",
+    "notas": ""
+  }
+]

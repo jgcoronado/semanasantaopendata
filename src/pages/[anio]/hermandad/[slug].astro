@@ -249,7 +249,7 @@ const jsonLd = {
     </section>
   )}
 
-  {anioNum === 2025 && r.metros != null && (
+  {hayRecorridos(anioNum) && r.metros != null && (
     <section class="panel contenedor">
       <div class="panel__cab"><h2>Recorrido {anio}</h2></div>
       <p class="descargas-intro">
@@ -258,6 +258,7 @@ const jsonLd = {
         {horario && <> Haz clic en los marcadores para ver los hitos de la Carrera Oficial con sus horas oficiales.</>}
       </p>
       <RecorridoMapa
+        anio={anioNum}
         idHdad={r.id_hdad}
         slug={slug}
         colorDia={colorDia}

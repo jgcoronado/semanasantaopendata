@@ -142,4 +142,4 @@ mala (317) no se usan al propagar — se sustituyen por línea recta entre Point
 | `scripts/componer-ruta.mjs` | Compone un LineString dado una lista de calles |
 | `scripts/generar-indice-tramos.mjs` | Regenera el índice (ejecutar tras editar GeoJSONs) |
 | `docs/geojson-editados-manualmente.md` | Qué aporta cada GeoJSON de 2025 |
-| `scripts/geojson-2025/` | Los 61 GeoJSONs fuente verificados |
+| `public/geojson/2025/` | Los 61 GeoJSONs fuente verificados |

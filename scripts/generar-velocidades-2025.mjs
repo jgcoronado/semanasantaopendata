@@ -1,5 +1,5 @@
 // Genera src/data/velocidades-2025.json a partir de:
-//   - scripts/geojson-2025/*.geojson  (trazado real de cada hermandad: LineString + Points de calle)
+//   - public/geojson/2025/*.geojson   (trazado real de cada hermandad: LineString + Points de calle)
 //   - src/data/horarios-2025.json     (tiempos en salida, campana, catedral, entrada, …)
 //   - src/data/hermandades.json       (catálogo: id, nombre, slug, día)
 //
@@ -23,7 +23,7 @@ import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const RAIZ = join(__dirname, '..');
-const DIR_GEO = join(__dirname, 'geojson-2025');
+const DIR_GEO = join(RAIZ, 'public', 'geojson', '2025');
 
 const PASO_M = 5;                                  // remuestreo cada 5 m
 const CATEDRAL = [-5.9925187, 37.3860585];         // fin de Carrera Oficial (coordenada fija)

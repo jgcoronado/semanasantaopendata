@@ -1,6 +1,6 @@
 {
   "generado": "2026-06-24",
-  "nota": "Índice de calles por hermandad generado de scripts/geojson-2025/*.geojson. Usar para propagar edits manuales.",
+  "nota": "Índice de calles por hermandad generado de public/geojson/2025/*.geojson. Usar para propagar edits manuales.",
   "hermandades": {
     "1": {
       "id": 1,

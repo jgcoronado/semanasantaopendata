@@ -1,0 +1,659 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "nombre": "La Estrella",
+        "dia": "domingo-de-ramos"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -6.0051335,
+            37.3834368
+          ],
+          [
+            -6.0049643,
+            37.3835834
+          ],
+          [
+            -6.0051035,
+            37.3837098
+          ],
+          [
+            -6.0048799,
+            37.3838678
+          ],
+          [
+            -6.0044822,
+            37.384164
+          ],
+          [
+            -6.0041194,
+            37.3844799
+          ],
+          [
+            -6.0035925,
+            37.385021
+          ],
+          [
+            -6.002392,
+            37.386329
+          ],
+          [
+            -6.0014333,
+            37.3873918
+          ],
+          [
+            -6.0009286,
+            37.3879185
+          ],
+          [
+            -6.00009,
+            37.388725
+          ],
+          [
+            -5.999537,
+            37.389252
+          ],
+          [
+            -5.9990535,
+            37.3897174
+          ],
+          [
+            -5.998242,
+            37.390243
+          ],
+          [
+            -5.9977932,
+            37.390508
+          ],
+          [
+            -5.996838,
+            37.390749
+          ],
+          [
+            -5.995983,
+            37.390975
+          ],
+          [
+            -5.9955203,
+            37.3910527
+          ],
+          [
+            -5.9954456,
+            37.3918072
+          ],
+          [
+            -5.995454,
+            37.392155
+          ],
+          [
+            -5.995386,
+            37.3924668
+          ],
+          [
+            -5.9954141,
+            37.3927175
+          ],
+          [
+            -5.994924,
+            37.392751
+          ],
+          [
+            -5.994797,
+            37.391803
+          ],
+          [
+            -5.994542,
+            37.390976
+          ],
+          [
+            -5.994258,
+            37.389845
+          ],
+          [
+            -5.994175,
+            37.389143
+          ],
+          [
+            -5.994151,
+            37.388605
+          ],
+          [
+            -5.994169,
+            37.388187
+          ],
+          [
+            -5.994296,
+            37.388071
+          ],
+          [
+            -5.9943041,
+            37.3879286
+          ],
+          [
+            -5.9942267,
+            37.38731
+          ],
+          [
+            -5.9941493,
+            37.386713
+          ],
+          [
+            -5.9940679,
+            37.3860718
+          ],
+          [
+            -5.9940344,
+            37.3857616
+          ],
+          [
+            -5.993999,
+            37.385447
+          ],
+          [
+            -5.9934331,
+            37.3854932
+          ],
+          [
+            -5.9929686,
+            37.3855304
+          ],
+          [
+            -5.992619,
+            37.385552
+          ],
+          [
+            -5.9926646,
+            37.3858225
+          ],
+          [
+            -5.99271,
+            37.386038
+          ],
+          [
+            -5.992325,
+            37.386077
+          ],
+          [
+            -5.9921507,
+            37.3852914
+          ],
+          [
+            -5.9924127,
+            37.3851724
+          ],
+          [
+            -5.9935917,
+            37.3851092
+          ],
+          [
+            -5.993709,
+            37.3851
+          ],
+          [
+            -5.9939062,
+            37.385106
+          ],
+          [
+            -5.9940433,
+            37.385177
+          ],
+          [
+            -5.994367,
+            37.385114
+          ],
+          [
+            -5.994479,
+            37.385092
+          ],
+          [
+            -5.994578,
+            37.385095
+          ],
+          [
+            -5.994644,
+            37.385178
+          ],
+          [
+            -5.99475,
+            37.38523
+          ],
+          [
+            -5.994849,
+            37.385252
+          ],
+          [
+            -5.994996,
+            37.385234
+          ],
+          [
+            -5.99533,
+            37.385144
+          ],
+          [
+            -5.995319,
+            37.385249
+          ],
+          [
+            -5.9953389,
+            37.3853752
+          ],
+          [
+            -5.995359,
+            37.385525
+          ],
+          [
+            -5.995383,
+            37.385608
+          ],
+          [
+            -5.995439,
+            37.385668
+          ],
+          [
+            -5.995601,
+            37.385837
+          ],
+          [
+            -5.9959447,
+            37.386045
+          ],
+          [
+            -5.9964187,
+            37.3862747
+          ],
+          [
+            -5.9965767,
+            37.3862818
+          ],
+          [
+            -5.9966661,
+            37.3862179
+          ],
+          [
+            -5.997544,
+            37.386488
+          ],
+          [
+            -6.0009286,
+            37.3879185
+          ],
+          [
+            -6.0014333,
+            37.3873918
+          ],
+          [
+            -6.002392,
+            37.386329
+          ],
+          [
+            -6.0031855,
+            37.3854239
+          ],
+          [
+            -6.003677,
+            37.38492
+          ],
+          [
+            -6.00425,
+            37.384339
+          ],
+          [
+            -6.004999,
+            37.383786
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Plaza del Altozano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0031657,
+          37.3854516
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Puente de Isabel II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0014333,
+          37.3873918
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Reyes Católicos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0009286,
+          37.3879185
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Puerta de Triana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.999537,
+          37.389252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle San Pablo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9990535,
+          37.3897174
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Plaza de la Magdalena"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9977932,
+          37.390508
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Rioja"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.996838,
+          37.390749
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Velázquez"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9954035,
+          37.3911654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle O'Donnell"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995454,
+          37.392155
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Avenida de la Constitución"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994185,
+          37.386838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Plaza de San Francisco"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994169,
+          37.388187
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Sierpes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9946698,
+          37.3913397
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "La Campana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.995376,
+          37.392725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Fray Ceferino González"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.993126,
+          37.38514
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Almirantazgo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994367,
+          37.385114
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Arco del Postigo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.994849,
+          37.385252
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Dos de Mayo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9953389,
+          37.3853752
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Arfe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.9959447,
+          37.386045
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Adriano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.997544,
+          37.386488
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle Reyes Católicos"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0009286,
+          37.3879185
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Puente de Isabel II"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.002392,
+          37.386329
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Plaza del Altozano"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.0031679,
+          37.3854516
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id_hdad": 7,
+        "hermandad": "La Estrella",
+        "calle": "Calle San Jacinto"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.004999,
+          37.383786
+        ]
+      }
+    }
+  ]
+}

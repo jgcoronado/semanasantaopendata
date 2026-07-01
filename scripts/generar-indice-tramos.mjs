@@ -24,7 +24,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dir   = dirname(fileURLToPath(import.meta.url));
-const GEO_DIR = join(__dir, 'geojson-2025');
+const GEO_DIR = join(__dir, '..', 'public', 'geojson', '2025');
 const OUT     = join(__dir, 'indice-tramos-canonicos.json');
 const VERBOSE = process.argv.includes('--verbose');
 const MAX_LEN    = 8;    // máx. nº de calles por segmento almacenado

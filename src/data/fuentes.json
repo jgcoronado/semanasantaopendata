@@ -1,5 +1,14 @@
 [
   {
+    "id": "geojson-recorridos-2026",
+    "nombre": "Recorridos GeoJSON 2026 — Semana Santa Open Data",
+    "nombre_corto": "GeoJSON recorridos 2026",
+    "tipo": "propia",
+    "url": null,
+    "fecha_consulta": null,
+    "descripcion": "Itinerarios de las 61 hermandades para 2026. Los recorridos sin cambios respecto a 2025 reutilizan el trazado dibujado a mano; los que cambiaron se recomponen a partir de los fragmentos canónicos de 2025 (algunos tramos nuevos, trazados en recta, quedan pendientes de ajuste manual). Disponibles para descarga en formato GeoJSON."
+  },
+  {
     "id": "geojson-recorridos-2025",
     "nombre": "Recorridos GeoJSON 2025 — Semana Santa Open Data",
     "nombre_corto": "GeoJSON recorridos 2025",

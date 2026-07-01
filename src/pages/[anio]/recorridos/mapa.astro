@@ -1,0 +1,241 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { anios, hayRecorridos, getAnio } from '../../../lib/datos.js';
+
+const COLORES_DIA = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
+
+export function getStaticPaths() {
+  // Solo los años con recorridos GeoJSON disponibles (2025 y 2026).
+  return anios
+    .filter((a) => hayRecorridos(a.anio))
+    .map((a) => ({ params: { anio: a.slug } }));
+}
+
+const { anio } = Astro.params;
+const anioNum = Number(anio);
+const { registros, diasPresentes } = getAnio(anioNum);
+
+// Solo hermandades con recorrido calculado (tienen GeoJSON).
+const regs = registros
+  .filter((r) => r.metros != null)
+  .map((r) => ({
+    idHdad: r.id_hdad,
+    slug: r.slug,
+    nombre: r.nombre,
+    diaSlug: r.diaSlug,
+    diaNombre: r.diaNombre,
+    diaOrden: r.diaOrden,
+    metros: r.metros,
+    geojson: `/geojson/${anio}/${String(r.id_hdad).padStart(2, '0')}-${r.slug}.geojson`,
+    color: COLORES_DIA[(r.diaOrden - 1) % 9],
+  }));
+
+const diasOrd = [...diasPresentes]
+  .sort((a, b) => a.orden - b.orden)
+  .map((d) => ({ slug: d.slug, nombre: d.nombre, orden: d.orden, color: COLORES_DIA[(d.orden - 1) % 9] }));
+
+const title = `Mapa de recorridos · Semana Santa ${anio} | Semana Santa Open Data`;
+const description = `Mapa interactivo con los ${regs.length} recorridos de estación de penitencia de la Semana Santa de Sevilla ${anio}, coloreados por día litúrgico. Datos abiertos en formato GeoJSON.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: `Recorridos de la Semana Santa de Sevilla ${anio}`,
+  description,
+  encodingFormat: 'application/geo+json',
+  isAccessibleForFree: true,
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd} anioActivo={anioNum}>
+  <section class="panel contenedor">
+    <div class="panel__cab">
+      <h1>Recorridos {anio} en el mapa</h1>
+      <div class="panel__cab-meta">
+        <span class="kpi-mini"><strong>{regs.length}</strong> recorridos</span>
+        <a class="kpi-mini enlace-volver" href={`/${anio}/#recorridos`}>← Volver a recorridos</a>
+      </div>
+    </div>
+    <p class="descargas-intro">
+      Cada línea es la estación de penitencia de una cofradía sobre su itinerario oficial,
+      coloreada según el día. Pulsa un día de la leyenda para ver solo ese; pulsa más días
+      para irlos sumando. Haz clic en cualquier ruta para ver la hermandad y los kilómetros.
+    </p>
+
+    <!-- Leyenda por día (toggle) -->
+    <ul class="leyenda-dias" id="leyenda-dias" aria-label="Filtrar recorridos por día">
+      {diasOrd.map((d) => (
+        <li>
+          <button type="button" class="leyenda-dia" data-dia={d.slug} aria-pressed="true">
+            <span class="leyenda-punto" style={`background:${d.color}`}></span>{d.nombre}
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <figure class="grafica grafica--ancha">
+      <div
+        id="mapa-global"
+        class="mapa-global"
+        data-recorridos={JSON.stringify(regs)}
+        aria-label={`Mapa con los ${regs.length} recorridos de la Semana Santa ${anio}`}
+        role="img"
+      ></div>
+      <figcaption class="grafica__nota visualmente-oculto">
+        Mapa de Sevilla con {regs.length} líneas, una por cada recorrido de cofradía, coloreadas por día litúrgico.
+      </figcaption>
+    </figure>
+    <p class="mapa-nota">Mapa no interactivo con scroll — usa los botones + / − para hacer zoom.</p>
+  </section>
+
+  <script>
+    import L from 'leaflet';
+    import 'leaflet/dist/leaflet.css';
+
+    type Recorrido = {
+      idHdad: number; slug: string; nombre: string;
+      diaSlug: string; diaNombre: string; diaOrden: number;
+      metros: number; geojson: string; color: string;
+    };
+
+    const el = document.getElementById('mapa-global') as HTMLElement | null;
+    if (el) {
+      const recorridos: Recorrido[] = JSON.parse(el.dataset.recorridos!);
+
+      const map = L.map(el, { zoomControl: true, scrollWheelZoom: false });
+      // Vista inicial sobre Sevilla para que las teselas carguen antes de las rutas;
+      // luego se ajusta con fitBounds a los recorridos cargados.
+      map.setView([37.386, -5.992], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19,
+      }).addTo(map);
+
+      const fmtKm = (m: number) =>
+        m >= 1000
+          ? (m / 1000).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' km'
+          : m + ' m';
+
+      // Capa por día (grupo añadido directamente al mapa) para poder togglear desde la leyenda.
+      const capasPorDia = new Map<string, L.LayerGroup>();
+      // Límites acumulados a partir de las capas GeoJSON reales (los LayerGroup no tienen getBounds).
+      const limites = L.latLngBounds([]);
+
+      const cargas = recorridos.map((rec) =>
+        fetch(rec.geojson)
+          .then((r) => r.json())
+          .then((data) => {
+            const line = (data.features ?? []).find((f: any) => f.geometry?.type === 'LineString');
+            if (!line) return;
+
+            const capa = L.geoJSON(line, {
+              style: { color: rec.color, weight: 3, opacity: 0.8 },
+            });
+            capa.bindPopup(
+              `<strong>${rec.nombre}</strong><br>${rec.diaNombre} · ${fmtKm(rec.metros)}` +
+              `<br><a href="/${location.pathname.split('/')[1]}/hermandad/${rec.slug}/">Ver ficha</a>`
+            );
+            capa.on('mouseover', () => capa.setStyle({ weight: 6, opacity: 1 }));
+            capa.on('mouseout', () => capa.setStyle({ weight: 3, opacity: 0.8 }));
+
+            if (!capasPorDia.has(rec.diaSlug)) capasPorDia.set(rec.diaSlug, L.layerGroup().addTo(map));
+            capa.addTo(capasPorDia.get(rec.diaSlug)!);
+            limites.extend(capa.getBounds());
+          })
+          .catch(() => { /* una ruta que falle no debe romper el mapa */ })
+      );
+
+      Promise.all(cargas).then(() => {
+        if (limites.isValid()) map.fitBounds(limites, { padding: [24, 24] });
+      });
+
+      // Filtro por día desde la leyenda.
+      // Por defecto se muestran todos. El primer clic aísla ese día (oculta el resto);
+      // clics posteriores van sumando días. Al deseleccionar todos, se vuelve a mostrar todo.
+      let modoTodos = true;
+      const seleccion = new Set<string>();
+      const botones = document.querySelectorAll<HTMLButtonElement>('.leyenda-dia');
+
+      const aplicarFiltro = () => {
+        botones.forEach((btn) => {
+          const dia = btn.dataset.dia!;
+          const visible = modoTodos || seleccion.has(dia);
+          btn.setAttribute('aria-pressed', visible ? 'true' : 'false');
+          const capa = capasPorDia.get(dia);
+          if (!capa) return;
+          if (visible && !map.hasLayer(capa)) map.addLayer(capa);
+          else if (!visible && map.hasLayer(capa)) map.removeLayer(capa);
+        });
+      };
+
+      botones.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const dia = btn.dataset.dia!;
+          if (modoTodos) {
+            // Primer clic desde "todos": aislar a este día.
+            modoTodos = false;
+            seleccion.clear();
+            seleccion.add(dia);
+          } else if (seleccion.has(dia)) {
+            seleccion.delete(dia);
+            if (seleccion.size === 0) modoTodos = true; // sin selección → mostrar todo
+          } else {
+            seleccion.add(dia);
+          }
+          aplicarFiltro();
+        });
+      });
+    }
+  </script>
+
+  <style>
+    .leyenda-dias {
+      list-style: none;
+      margin: 0 0 1rem;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .leyenda-dia {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--borde, #e0e0e0);
+      border-radius: 999px;
+      background: var(--fondo, #fff);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .leyenda-dia[aria-pressed='false'] {
+      opacity: 0.4;
+      text-decoration: line-through;
+    }
+    .leyenda-punto {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex: none;
+    }
+    .enlace-volver {
+      text-decoration: none;
+    }
+    .mapa-global {
+      height: 600px;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--borde, #e0e0e0);
+    }
+    .mapa-nota {
+      margin: 0.5rem 0 0;
+      font-size: 0.75rem;
+      color: var(--gris, #666);
+    }
+    @media (max-width: 600px) {
+      .mapa-global { height: 440px; }
+    }
+  </style>
+</Base>
