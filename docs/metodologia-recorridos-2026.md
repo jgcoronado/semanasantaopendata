@@ -1,5 +1,10 @@
 # Metodología para construir GeoJSONs de 2026 a partir de 2025
 
+> **Nota (oct 2026):** los recorridos nuevos se trazan con el editor `/recorridos/editor/`
+> (callejero oficial del CDAU), no con `componer-ruta.mjs`. El índice de tramos está desfasado
+> y sus estadísticas de abajo corresponden a la versión anterior a la edición de
+> `21-la-candelaria`. Ver `docs/editor-recorridos.md`.
+
 Este documento recoge las reglas y experiencia acumulada al corregir los 61 GeoJSONs
 de 2025. Su propósito es guiar la construcción de los recorridos de 2026, que el
 usuario pasará en modo texto (lista de calles por hermandad).

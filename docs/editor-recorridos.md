@@ -1,0 +1,85 @@
+# Editor de recorridos
+
+Página `/recorridos/editor/` (noindex, fuera del sitemap). Convierte el itinerario de una
+procesión escrito como lista de calles en una línea continua sobre el mapa, para cualquier
+municipio de Andalucía. Todo ocurre en el navegador; no hay backend.
+
+## Fuentes de datos
+
+| Servicio | Qué aporta | Uso |
+|----------|------------|-----|
+| CDAU — Callejero Digital de Andalucía Unificado (IECA), WFS `https://www.callejerodeandalucia.es/servicios/cdau/wfs` | Vías con nombre oficial (`cdau:v_vial`, ejes de calle), tramos (`cdau:v_tramo`) | Nombres del municipio, geometría de las calles, municipio de la salida |
+| DERA G13 (IECA), WFS `https://www.ideandalucia.es/services/DERA_g13_limites_administrativos/wfs` | Términos municipales | Lista de los 785 municipios y límite del elegido |
+
+Licencia CC BY 4.0: la atribución va en el mapa (`ATRIBUCION_CDAU`). Ambos servicios
+aceptan peticiones desde el navegador (CORS) y devuelven GeoJSON. Las respuestas se guardan
+con la Cache API del navegador (7 días el callejero, 90 los municipios).
+
+Medido en oct 2026: nombres de las ~5.000 vías de Sevilla en ~1 s (1,1 MB); geometría de
+la zona Catedral–Arenal (329 vías) en ~1 s; lista de municipios 144 KB.
+
+## Flujo
+
+1. **Municipio**: se elige de la lista; se carga su catálogo de nombres oficiales.
+2. **Salida**: se pincha la puerta del templo. El municipio se comprueba con el CDAU en ese
+   punto y se cambia solo si no coincide.
+3. **Itinerario**: una calle por línea (o separadas por comas, punto y coma o guiones con
+   espacios). «Carrera Oficial» es palabra clave. Si la primera línea no es una vía
+   (p. ej. «Puerta del Perdón»), es la salida; si la última repite la primera, la entrada.
+4. **Trazar**: se descarga la geometría de las vías resueltas y la zona alrededor (+200 m,
+   máx. 6 km de lado), se monta el grafo y se compone el recorrido.
+
+## Algoritmo (`src/lib/recorridos/`)
+
+| Módulo | Función |
+|--------|---------|
+| `nombres.js` | Normalización y resolución: la `clave` quita acentos, tipo de vía, artículos y espacios y unifica y/i («C/ Tomás de Ybarra» = «Calle Tomás de Ibarra», «Entre Cárceles» = «Calle entre Cárceles»). Exacta → `ok`; parecida (Levenshtein) → `aprox`; varias → `ambigua`; nada → `sin` |
+| `cdau.js` | Cliente WFS con caché |
+| `grafo.js` | Grafo de ejes. Funde vértices a ≤ 3 m y cose extremos sueltos al segmento más cercano (≤ 3 m): el CDAU no siempre comparte el vértice en los cruces |
+| `componer.js` | Cada paso va de donde acabó el anterior a la primera esquina de la calle siguiente por el camino de coste mínimo: calle actual y siguiente cuestan 1, el resto 3 (así se aceptan enlaces cortos no listados y se avisan). La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente. Los puntos de paso del usuario fuerzan el camino; si caen a más de 25 m de una calle se llega a ellos en recta |
+| `exportar.js` | GeoJSON en el formato de `scripts/geojson-AAAA/` más el estado del editor en `properties.editor` |
+| `editor.js` | Interfaz (Leaflet) |
+
+Prueba de referencia: itinerario de la salida por la Puerta del Perdón (32 líneas). Se
+resuelven 31 (falta «Arco del Postigo», que en el CDAU es parte de Almirantazgo) y el
+recorrido mide 2.506 m frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
+los GeoJSON de 2025, 291 se resuelven de forma exacta.
+
+## Correcciones en la interfaz
+
+- **Otra vía**: escribir o elegir en el campo de la línea (lista con todas las vías del
+  municipio). Se aplica a todas las líneas con el mismo texto.
+- **📍**: fijar la línea en el mapa (lugares que no son vías: arcos, compases, puertas).
+- **✕**: omitir la línea.
+- **Puntos de paso**: pinchar sobre la línea añade uno a ese paso; se arrastran; doble clic
+  o clic derecho lo quita.
+
+## Guardar
+
+«Descargar GeoJSON» genera `NN-slug.geojson` si hay hermandad elegida (solo Sevilla) o
+el nombre escrito. Para publicarlo en el sitio, el archivo va a `scripts/geojson-AAAA/` (y a
+`public/geojson/AAAA/` si lo usa el mapa de la ficha). «Abrir GeoJSON» recupera un recorrido
+del editor con sus correcciones, o carga el itinerario de un GeoJSON de 2025 y muestra su
+línea en gris como referencia. El estado de trabajo se conserva en el navegador
+(`localStorage`).
+
+## Límites conocidos
+
+- El CDAU solo tiene ejes de calle: no hay caminos por el interior de las plazas. Los cruces
+  de plaza siguen los ejes y se corrigen con puntos de paso.
+- Lo que no es una vía (puertas, arcos, compases) hay que fijarlo en el mapa.
+- Depende de los servicios WFS de la Junta: sin ellos no se pueden trazar recorridos nuevos
+  (lo ya cacheado sigue funcionando).
+- Calles homónimas en un mismo municipio: se usan todas como destino y el camino elige la
+  más cercana; si la zona descargada supera 6 km se limita alrededor de la salida.
+
+## Relación con el índice de tramos 2025
+
+El editor no usa `scripts/indice-tramos-canonicos.json` ni `componer-ruta.mjs`. Una auditoría
+(oct 2026) concluyó que el índice está desfasado (`21-la-candelaria` se editó después de
+generarlo) y que, para un itinerario nuevo, solo el 55 % de los pares de calles sale correcto;
+el 14 % de los pares de cada recorrido no aparece en ningún otro archivo. Los 61 GeoJSON de
+2025 sí son una buena base, con fallos concentrados en `52-la-o` (la línea de vuelta sigue
+por Santo Tomás → Temprado aunque los puntos se corrigieron), `55-la-mortaja` y
+`23-dulce-nombre` (≈ 1/3 de rectas entre puntos) y los puntos de la Carrera Oficial en orden
+inverso en 03, 05, 07, 14, 47, 51 y 52.

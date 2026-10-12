@@ -1,0 +1,535 @@
+/**
+ * Controlador de la página /recorridos/editor/ (Leaflet + núcleo de recorridos).
+ *
+ * Flujo: municipio → salida pinchada en el mapa → itinerario en texto → «Trazar».
+ * Correcciones: elegir otra vía en la tabla, fijar una línea en el mapa, omitirla, o
+ * pinchar sobre la línea para añadir puntos de paso y arrastrarlos.
+ */
+
+import L from 'leaflet';
+import * as cdau from './cdau.js';
+import { crearCatalogo, clave } from './nombres.js';
+import { crearGrafo } from './grafo.js';
+import { leerItinerario, resolverItinerario, componer } from './componer.js';
+import { ampliarBbox, bboxDe, bboxContiene, distM, puntoA, puntoMasCercano } from './geo.js';
+import { aGeoJSON, deGeoJSON, descargar } from './exportar.js';
+
+const CLAVE_LOCAL = 'ssod-editor-recorridos-v1';
+const SEVILLA = { cod: '41091', nombre: 'Sevilla' };
+const MARGEN_ZONA_M = 200;
+const ZONA_MAX_M = 6000;       // lado máximo de la zona de calles que se descarga
+const FLECHA_CADA_M = 150;
+const COLOR_DEFECTO = '#5b2a86';
+const COLORES = { co: '#c8a24a', manual: '#198038', recta: '#fa4d56' };
+
+const fmtKm = (m) => `${(m / 1000).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km`;
+const fmtM = (m) => `${Math.round(m).toLocaleString('es-ES', { useGrouping: 'always' })} m`;
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+export function iniciarEditor(datos) {
+  const $ = (id) => document.getElementById(id);
+  const ui = {
+    municipio: $('ed-municipio'), municipios: $('ed-municipios'), munEstado: $('ed-mun-estado'),
+    btnSalida: $('ed-btn-salida'), salidaTxt: $('ed-salida-txt'),
+    texto: $('ed-texto'), btnTrazar: $('ed-btn-trazar'), mensaje: $('ed-mensaje'),
+    resultado: $('ed-resultado'), resumen: $('ed-resumen'), avisos: $('ed-avisos'), lista: $('ed-items'),
+    calles: $('ed-calles'), hermandad: $('ed-hermandad'), bloqueHdad: $('ed-bloque-hdad'),
+    btn2025: $('ed-btn-2025'), nombre: $('ed-nombre'), btnExportar: $('ed-btn-exportar'),
+    importar: $('ed-importar'), btnBorrarPuntos: $('ed-btn-borrar-puntos'), btnRef: $('ed-btn-ref'),
+  };
+
+  // ── Estado (persistido en el navegador) ──
+  const estado = {
+    municipio: SEVILLA, salida: null, texto: '', elecciones: {}, puntosPaso: {}, hermandad: null,
+  };
+  try { Object.assign(estado, JSON.parse(localStorage.getItem(CLAVE_LOCAL) ?? '{}')); } catch { /* sin almacenamiento */ }
+  const guardar = () => {
+    try { localStorage.setItem(CLAVE_LOCAL, JSON.stringify(estado)); } catch { /* sin almacenamiento */ }
+  };
+
+  let catalogo = null;
+  let municipios = [];
+  const viasCargadas = new Map();   // id_vial → vía con geometría
+  let zona = null;                  // bbox [s, w, n, e] de la zona de calles cargada
+  let grafo = null;
+  let items = [];
+  let resultado = null;
+  let modo = null;                  // { tipo: 'salida' } | { tipo: 'punto', clave, texto }
+
+  // ── Mapa ──
+  const mapa = L.map('ed-mapa', { zoomControl: true }).setView([37.3891, -5.9845], 14);
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 20, maxNativeZoom: 19,
+  }).addTo(mapa);
+  const pnoa = L.tileLayer('https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{y}.jpeg', {
+    tms: true, maxZoom: 20, maxNativeZoom: 19,
+    attribution: 'PNOA © <a href="https://www.ign.es">Instituto Geográfico Nacional</a>',
+  });
+  L.control.layers({ Plano: osm, 'Ortofoto PNOA': pnoa }, null, { position: 'topright' }).addTo(mapa);
+  L.control.scale({ imperial: false }).addTo(mapa);
+  mapa.attributionControl.addAttribution(cdau.ATRIBUCION_CDAU);
+
+  const capaLimite = L.layerGroup().addTo(mapa);
+  const capaReferencia = L.layerGroup().addTo(mapa);
+  const capaRuta = L.layerGroup().addTo(mapa);
+  const capaPuntos = L.layerGroup().addTo(mapa);
+  let marcadorSalida = null;
+  const lineasPaso = new Map();     // índice de paso → polyline
+
+  const icono = (clase, html = '', tam = 14) => L.divIcon({ className: `ed-icono ${clase}`, html, iconSize: [tam, tam] });
+
+  function mensaje(texto, tipo = 'info') {
+    ui.mensaje.textContent = texto;
+    ui.mensaje.dataset.tipo = tipo;
+  }
+
+  function colorRuta() {
+    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad);
+    return h?.color ?? COLOR_DEFECTO;
+  }
+
+  // ── Municipio ──
+  const etiquetaMun = (m) => `${m.nombre} (${m.provincia})`;
+
+  async function cargarMunicipios() {
+    try {
+      municipios = await cdau.municipios();
+      ui.municipios.innerHTML = municipios.map((m) => `<option value="${esc(etiquetaMun(m))}"></option>`).join('');
+    } catch (e) {
+      mensaje(`No se pudo cargar la lista de municipios: ${e.message}`, 'error');
+    }
+  }
+
+  async function elegirMunicipio(mun, { encuadrar = true } = {}) {
+    const cambia = estado.municipio?.cod !== mun.cod;
+    estado.municipio = { cod: mun.cod, nombre: mun.nombre };
+    const m = municipios.find((x) => x.cod === mun.cod);
+    ui.municipio.value = m ? etiquetaMun(m) : mun.nombre;
+    ui.bloqueHdad.hidden = mun.cod !== SEVILLA.cod;
+    if (cambia) { catalogo = null; estado.elecciones = {}; }
+    guardar();
+    ui.munEstado.textContent = 'Cargando callejero…';
+    try {
+      const [limite, vias] = await Promise.all([cdau.limiteMunicipio(mun.cod), cdau.nombresVias(mun.cod)]);
+      capaLimite.clearLayers();
+      if (limite) {
+        const capa = L.geoJSON(limite, { style: { color: '#5b2a86', weight: 1.5, fill: false, dashArray: '4 4' }, interactive: false }).addTo(capaLimite);
+        if (encuadrar) mapa.fitBounds(capa.getBounds());
+      }
+      catalogo = crearCatalogo();
+      for (const v of vias) catalogo.añadir({ nombre: v.nombre, id: v.id, alias: v.sobrenombre });
+      const nombres = [...new Set(vias.map((v) => v.nombre))].sort((a, b) => a.localeCompare(b, 'es'));
+      ui.calles.innerHTML = nombres.map((n) => `<option value="${esc(n)}"></option>`).join('');
+      ui.munEstado.textContent = `${vias.length.toLocaleString('es-ES', { useGrouping: 'always' })} vías en el callejero oficial`;
+    } catch (e) {
+      ui.munEstado.textContent = '';
+      mensaje(`No se pudo cargar el callejero de ${mun.nombre}: ${e.message}`, 'error');
+    }
+  }
+
+  ui.municipio.addEventListener('change', () => {
+    const m = municipios.find((x) => etiquetaMun(x) === ui.municipio.value)
+      ?? municipios.find((x) => x.nombre.toLowerCase() === ui.municipio.value.trim().toLowerCase());
+    if (m) elegirMunicipio(m);
+    else mensaje('Elige el municipio de la lista.', 'error');
+  });
+
+  // ── Salida ──
+  function pintarSalida() {
+    if (marcadorSalida) { marcadorSalida.remove(); marcadorSalida = null; }
+    if (!estado.salida) { ui.salidaTxt.textContent = 'Sin fijar'; return; }
+    const [lon, lat] = estado.salida;
+    marcadorSalida = L.marker([lat, lon], { icon: icono('ed-salida', '', 18), draggable: true, zIndexOffset: 1000 })
+      .bindTooltip('Salida y entrada del templo').addTo(mapa);
+    marcadorSalida.on('dragend', () => {
+      const p = marcadorSalida.getLatLng();
+      fijarSalida([p.lng, p.lat]);
+    });
+    ui.salidaTxt.textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  }
+
+  async function fijarSalida(coord) {
+    estado.salida = coord;
+    guardar();
+    pintarSalida();
+    try {
+      const mun = await cdau.municipioEnPunto(coord);
+      if (!mun) mensaje('No hay calles del callejero cerca de ese punto. ¿Está en Andalucía?', 'error');
+      else if (mun.cod !== estado.municipio?.cod) {
+        mensaje(`La salida está en ${mun.nombre}: se cambia el municipio.`);
+        await elegirMunicipio(mun, { encuadrar: false });
+      }
+    } catch (e) {
+      mensaje(`No se pudo comprobar el municipio: ${e.message}`, 'error');
+    }
+    if (estado.texto.trim()) trazar();
+  }
+
+  ui.btnSalida.addEventListener('click', () => {
+    modo = { tipo: 'salida' };
+    mapa.getContainer().classList.add('ed-apuntando');
+    mensaje('Pincha en el mapa la puerta del templo.');
+  });
+
+  mapa.on('click', (e) => {
+    if (!modo) return;
+    const coord = [e.latlng.lng, e.latlng.lat];
+    const m = modo;
+    modo = null;
+    mapa.getContainer().classList.remove('ed-apuntando');
+    if (m.tipo === 'salida') fijarSalida(coord);
+    else if (m.tipo === 'punto') {
+      estado.elecciones[m.clave] = { tipo: 'punto', coord };
+      guardar();
+      mensaje(`«${m.texto}» fijada en el mapa.`);
+      trazar();
+    }
+  });
+
+  // ── Zona de calles y grafo ──
+  async function asegurarGrafo(itemsResueltos) {
+    const ids = [...new Set(itemsResueltos.flatMap((it) => it.ids ?? []))];
+    const faltan = ids.filter((id) => !viasCargadas.has(id));
+    if (faltan.length) for (const v of await cdau.viasPorId(faltan)) viasCargadas.set(v.id, v);
+
+    const puntos = [estado.salida];
+    for (const it of itemsResueltos) if (it.tipo === 'punto') puntos.push(it.coord);
+    for (const lista of Object.values(estado.puntosPaso)) puntos.push(...lista);
+    for (const id of ids) for (const l of viasCargadas.get(id)?.lineas ?? []) puntos.push(...l);
+
+    let bbox = ampliarBbox(bboxDe(puntos), MARGEN_ZONA_M);
+    const alto = distM([bbox[1], bbox[0]], [bbox[1], bbox[2]]);
+    const ancho = distM([bbox[1], bbox[0]], [bbox[3], bbox[0]]);
+    if (alto > ZONA_MAX_M || ancho > ZONA_MAX_M) {
+      // Alguna calle resuelta está muy lejos (probablemente es otra del mismo nombre):
+      // se limita la zona alrededor de la salida.
+      bbox = ampliarBbox(bboxDe([estado.salida]), ZONA_MAX_M / 2);
+    }
+    if (grafo && zona && bboxContiene(zona, bbox) && !faltan.length) return;
+    // Se amplía la zona ya cargada; si la ampliación sale demasiado grande (otro municipio),
+    // se empieza de cero conservando solo las vías del itinerario.
+    let nuevaZona = zona ? bboxDe([[zona[1], zona[0]], [zona[3], zona[2]], [bbox[1], bbox[0]], [bbox[3], bbox[2]]]) : bbox;
+    const lado = Math.max(
+      distM([nuevaZona[1], nuevaZona[0]], [nuevaZona[1], nuevaZona[2]]),
+      distM([nuevaZona[1], nuevaZona[0]], [nuevaZona[3], nuevaZona[0]]));
+    if (lado > ZONA_MAX_M * 1.5) {
+      nuevaZona = bbox;
+      for (const id of [...viasCargadas.keys()]) if (!ids.includes(id)) viasCargadas.delete(id);
+    }
+    mensaje('Descargando calles de la zona…');
+    for (const v of await cdau.viasEnBbox(nuevaZona)) viasCargadas.set(v.id, v);
+    zona = nuevaZona;
+    grafo = crearGrafo([...viasCargadas.values()]);
+  }
+
+  // ── Trazar ──
+  let enCurso = 0;
+  async function trazar({ encuadrar = false } = {}) {
+    estado.texto = ui.texto.value;
+    guardar();
+    if (!catalogo) { mensaje('Espera a que cargue el callejero del municipio.', 'error'); return; }
+    if (!estado.salida) { mensaje('Fija primero la salida pinchando en el mapa.', 'error'); return; }
+    const lineas = leerItinerario(estado.texto);
+    if (lineas.length < 2) { mensaje('Escribe al menos dos calles.', 'error'); return; }
+    const turno = ++enCurso;
+    ui.btnTrazar.disabled = true;
+    try {
+      const resueltos = resolverItinerario(lineas, catalogo, estado.elecciones);
+      await asegurarGrafo(resueltos);
+      if (turno !== enCurso) return;
+      items = resueltos;
+      recomponer();
+      if (encuadrar && resultado?.coords.length > 1) {
+        mapa.fitBounds(L.latLngBounds(resultado.coords.map(([x, y]) => [y, x])), { padding: [30, 30] });
+      }
+      const pendientes = items.filter((it) => it.tipo === 'sin' || it.tipo === 'ambigua').length;
+      mensaje(pendientes
+        ? `Recorrido trazado. ${pendientes} ${pendientes === 1 ? 'línea necesita' : 'líneas necesitan'} revisión en la lista.`
+        : 'Recorrido trazado. Pincha sobre la línea para añadir puntos de paso y arrástralos para corregirla.');
+    } catch (e) {
+      mensaje(`No se pudo trazar: ${e.message}`, 'error');
+    } finally {
+      if (turno === enCurso) ui.btnTrazar.disabled = false;
+    }
+  }
+
+  function recomponer() {
+    if (!grafo || !items.length) return;
+    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso: estado.puntosPaso });
+    dibujar();
+    pintarLista();
+  }
+
+  ui.btnTrazar.addEventListener('click', () => trazar({ encuadrar: true }));
+  ui.texto.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) trazar({ encuadrar: true }); });
+
+  // ── Dibujo ──
+  function dibujar() {
+    capaRuta.clearLayers();
+    capaPuntos.clearLayers();
+    lineasPaso.clear();
+    if (!resultado) return;
+    const color = colorRuta();
+
+    // Unión de la salida con la primera calle.
+    const primero = resultado.pasos[0]?.coords[0];
+    if (primero) L.polyline([[estado.salida[1], estado.salida[0]], [primero[1], primero[0]]], { color, weight: 5, opacity: 0.9 }).addTo(capaRuta);
+
+    resultado.pasos.forEach((p, k) => {
+      const desde = p.desde >= 0 ? items[p.desde].texto : 'Salida';
+      const hasta = items[p.hasta].texto;
+      const c = COLORES[p.tipo] ?? color;
+      const linea = L.polyline(p.coords.map(([x, y]) => [y, x]), {
+        color: c, weight: 5, opacity: 0.9,
+        dashArray: p.tipo === 'co' || p.tipo === 'recta' ? '8 6' : null,
+      }).bindTooltip(`${esc(desde)} → ${esc(hasta)} · ${fmtM(p.metros)}${p.tipo === 'co' ? ' · Carrera Oficial' : ''}`, { sticky: true });
+      linea.on('click', (e) => { L.DomEvent.stopPropagation(e); añadirPuntoPaso(p, [e.latlng.lng, e.latlng.lat]); });
+      linea.addTo(capaRuta);
+      lineasPaso.set(k, linea);
+      if (p.tipo === 'co') {
+        L.marker([p.coords[0][1], p.coords[0][0]], { icon: icono('ed-co') }).bindTooltip('Entrada en Carrera Oficial').addTo(capaRuta);
+        const f = p.coords[p.coords.length - 1];
+        L.marker([f[1], f[0]], { icon: icono('ed-co') }).bindTooltip('Salida de Carrera Oficial').addTo(capaRuta);
+      }
+      if (p.tipo === 'recta') {
+        const m = puntoA(p.coords, p.metros / 2).coord;
+        L.marker([m[1], m[0]], { icon: icono('ed-aviso', '!', 18) }).bindTooltip(`Sin conexión por calles hasta «${esc(hasta)}»`).addTo(capaRuta);
+      }
+    });
+
+    // Flechas de sentido de la marcha.
+    for (let m = FLECHA_CADA_M / 2; m < resultado.metros; m += FLECHA_CADA_M) {
+      const { coord, rumbo } = puntoA(resultado.coords, m);
+      L.marker([coord[1], coord[0]], {
+        icon: icono('ed-flecha', `<span style="transform:rotate(${(rumbo - 90).toFixed(0)}deg)">➤</span>`),
+        interactive: false, keyboard: false,
+      }).addTo(capaRuta);
+    }
+
+    // Puntos de paso arrastrables.
+    for (const [claveP, lista] of Object.entries(estado.puntosPaso)) {
+      lista.forEach((pt, i) => {
+        const mk = L.marker([pt[1], pt[0]], { icon: icono('ed-punto'), draggable: true, zIndexOffset: 500 })
+          .bindTooltip('Arrastra para corregir · doble clic para quitar')
+          .addTo(capaPuntos);
+        mk.on('dragend', () => {
+          const ll = mk.getLatLng();
+          estado.puntosPaso[claveP][i] = [ll.lng, ll.lat];
+          guardar();
+          recomponerTrasCambio();
+        });
+        mk.on('dblclick contextmenu', (e) => {
+          L.DomEvent.stop(e);
+          estado.puntosPaso[claveP].splice(i, 1);
+          if (!estado.puntosPaso[claveP].length) delete estado.puntosPaso[claveP];
+          guardar();
+          recomponerTrasCambio();
+        });
+      });
+    }
+    pintarSalida();
+  }
+
+  /** Un punto de paso fuera de la zona cargada obliga a ampliar el grafo. */
+  async function recomponerTrasCambio() {
+    const fuera = zona && Object.values(estado.puntosPaso).flat().some(([lon, lat]) => !bboxContiene(zona, [lat, lon, lat, lon]));
+    if (fuera) await trazar();
+    else recomponer();
+  }
+
+  function añadirPuntoPaso(paso, coord) {
+    const lista = estado.puntosPaso[paso.clave] ?? [];
+    lista.push(coord);
+    // Orden a lo largo del paso, para que el camino los recorra en secuencia.
+    const pos = (c) => puntoMasCercano(paso.coords, c).metros;
+    lista.sort((a, b) => pos(a) - pos(b));
+    estado.puntosPaso[paso.clave] = lista;
+    guardar();
+    recomponerTrasCambio();
+  }
+
+  // ── Lista de calles ──
+  const ETIQUETA_ESTADO = {
+    aprox: ['Parecida', 'aviso'], ambigua: ['Varias posibles', 'error'], sin: ['No encontrada', 'error'], manual: ['Elegida', 'ok'],
+  };
+
+  function pintarLista() {
+    ui.resultado.hidden = false;
+    const pasoHasta = new Map(resultado.pasos.map((p, k) => [p.hasta, { p, k }]));
+    const nVias = items.filter((it) => it.tipo === 'via').length;
+    const nPuntos = Object.values(estado.puntosPaso).reduce((s, l) => s + l.length, 0);
+    ui.resumen.innerHTML = `<strong>${fmtKm(resultado.metros)}</strong> · ${nVias} calles`
+      + (nPuntos ? ` · ${nPuntos} ${nPuntos === 1 ? 'punto de paso' : 'puntos de paso'}` : '');
+    ui.avisos.innerHTML = resultado.avisos.map((a) => `<li>${esc(a)}</li>`).join('');
+    ui.btnBorrarPuntos.hidden = !nPuntos;
+
+    ui.lista.innerHTML = items.map((it, i) => {
+      const paso = pasoHasta.get(i);
+      const metros = paso ? `<span class="ed-item__m">${fmtM(paso.p.metros)}</span>` : '';
+      let control;
+      if (it.tipo === 'salida' || it.tipo === 'entrada') {
+        control = `<span class="ed-chip">${it.tipo === 'salida' ? 'Salida del templo' : 'Entrada en el templo'}</span>`;
+      } else if (it.tipo === 'co') {
+        control = '<span class="ed-chip ed-chip--co">Carrera Oficial · tramo libre</span>';
+      } else {
+        const [txt, clase] = ETIQUETA_ESTADO[it.estado] ?? [];
+        const valor = it.tipo === 'via' ? it.nombre : '';
+        const placeholder = it.tipo === 'punto' ? 'Fijada en el mapa' : it.tipo === 'omitir' ? 'Omitida' : 'Elige una vía…';
+        control = `<input class="ed-item__via" list="ed-calles" data-i="${i}" value="${esc(valor)}" placeholder="${placeholder}" aria-label="Vía para ${esc(it.texto)}">`
+          + `<button type="button" class="ed-mini" data-accion="punto" data-i="${i}" title="Fijar en el mapa">📍</button>`
+          + `<button type="button" class="ed-mini" data-accion="omitir" data-i="${i}" title="${it.tipo === 'omitir' ? 'Volver a usar' : 'Omitir esta línea'}">${it.tipo === 'omitir' ? '↺' : '✕'}</button>`
+          + (txt ? `<span class="ed-chip ed-chip--${clase}">${txt}</span>` : '')
+          + (it.tipo === 'ambigua' && it.candidatos?.length ? `<small class="ed-item__cand">¿${it.candidatos.slice(0, 4).map(esc).join('? ¿')}?</small>` : '');
+      }
+      const enlaces = paso?.p.enlaces.length
+        ? `<small class="ed-item__enlace">Pasa por ${paso.p.enlaces.map((e) => `${esc(e.nombre)} (${fmtM(e.metros)})`).join(', ')}, que no está en la lista</small>`
+        : '';
+      return `<li class="ed-item ed-item--${it.tipo}" data-paso="${paso ? paso.k : ''}">
+        <div class="ed-item__cab"><span class="ed-item__txt">${esc(it.texto)}</span>${metros}</div>
+        <div class="ed-item__ctl">${control}</div>${enlaces}</li>`;
+    }).join('');
+  }
+
+  ui.lista.addEventListener('change', (e) => {
+    const el = e.target.closest('.ed-item__via');
+    if (!el) return;
+    const it = items[Number(el.dataset.i)];
+    const v = el.value.trim();
+    if (!v) delete estado.elecciones[it.clave];
+    else if (catalogo?.porNombre(v)) estado.elecciones[it.clave] = { tipo: 'via', nombre: v };
+    else { mensaje(`«${v}» no está en el callejero de ${estado.municipio.nombre}. Elígela de la lista.`, 'error'); return; }
+    guardar();
+    trazar();
+  });
+
+  ui.lista.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-accion]');
+    if (!b) return;
+    const it = items[Number(b.dataset.i)];
+    if (b.dataset.accion === 'omitir') {
+      if (it.tipo === 'omitir') delete estado.elecciones[it.clave];
+      else estado.elecciones[it.clave] = { tipo: 'omitir' };
+      guardar();
+      trazar();
+    } else {
+      modo = { tipo: 'punto', clave: it.clave, texto: it.texto };
+      mapa.getContainer().classList.add('ed-apuntando');
+      mensaje(`Pincha en el mapa dónde está «${it.texto}».`);
+    }
+  });
+
+  // Resaltar en el mapa el paso de la fila sobre la que está el ratón o el foco.
+  const resaltar = (e, on) => {
+    const li = e.target.closest?.('.ed-item');
+    const k = li?.dataset.paso;
+    if (k === '' || k == null) return;
+    const linea = lineasPaso.get(Number(k));
+    if (!linea) return;
+    linea.setStyle({ weight: on ? 9 : 5 });
+    if (on) linea.bringToFront();
+  };
+  ui.lista.addEventListener('mouseover', (e) => resaltar(e, true));
+  ui.lista.addEventListener('mouseout', (e) => resaltar(e, false));
+  ui.lista.addEventListener('focusin', (e) => resaltar(e, true));
+  ui.lista.addEventListener('focusout', (e) => resaltar(e, false));
+
+  ui.btnBorrarPuntos.addEventListener('click', () => {
+    estado.puntosPaso = {};
+    guardar();
+    recomponer();
+  });
+
+  // ── Hermandad (Sevilla), referencia 2025, importar y exportar ──
+  ui.hermandad.innerHTML = '<option value="">— Ninguna —</option>'
+    + datos.hermandades.map((h) => `<option value="${h.id_hdad}">${esc(h.nombre)}</option>`).join('');
+  ui.hermandad.value = estado.hermandad ?? '';
+  ui.hermandad.addEventListener('change', () => {
+    estado.hermandad = ui.hermandad.value ? Number(ui.hermandad.value) : null;
+    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad);
+    ui.btn2025.disabled = !h?.geojson2025;
+    if (h && !ui.nombre.value) ui.nombre.value = h.nombre;
+    guardar();
+    dibujar();
+  });
+  ui.btn2025.disabled = !datos.hermandades.find((x) => x.id_hdad === estado.hermandad)?.geojson2025;
+
+  function pintarReferencia(coords) {
+    capaReferencia.clearLayers();
+    if (!coords?.length) { ui.btnRef.hidden = true; return; }
+    L.polyline(coords.map(([x, y]) => [y, x]), { color: '#6b6776', weight: 7, opacity: 0.35, interactive: false }).addTo(capaReferencia);
+    ui.btnRef.hidden = false;
+  }
+  ui.btnRef.addEventListener('click', () => pintarReferencia(null));
+
+  ui.btn2025.addEventListener('click', async () => {
+    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad);
+    if (!h?.geojson2025) return;
+    if (ui.texto.value.trim() && !window.confirm('Se sustituirá el itinerario escrito por el de 2025. ¿Continuar?')) return;
+    try {
+      const r = deGeoJSON(await (await fetch(h.geojson2025)).json());
+      ui.texto.value = r.texto;
+      estado.texto = r.texto;
+      pintarReferencia(r.referencia);
+      if (!estado.salida && r.referencia?.length) {
+        await fijarSalida(r.referencia[0]);
+        mensaje('Itinerario 2025 cargado. La salida se ha tomado del trazado de 2025; muévela a la puerta si no coincide.');
+      } else {
+        mensaje('Itinerario 2025 cargado (gris: trazado de 2025). Revísalo y pulsa «Trazar recorrido».');
+      }
+      guardar();
+    } catch (e) {
+      mensaje(`No se pudo cargar el recorrido de 2025: ${e.message}`, 'error');
+    }
+  });
+
+  ui.btnExportar.addEventListener('click', () => {
+    if (!resultado) { mensaje('Traza primero el recorrido.', 'error'); return; }
+    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad) ?? null;
+    const nombre = ui.nombre.value.trim();
+    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre, municipio: estado.municipio, estado });
+    const archivo = h
+      ? `${String(h.id_hdad).padStart(2, '0')}-${h.slug}.geojson`
+      : `${(clave(nombre) || 'recorrido').slice(0, 60)}.geojson`;
+    descargar(archivo, geo);
+  });
+
+  ui.importar.addEventListener('change', async () => {
+    const f = ui.importar.files?.[0];
+    if (!f) return;
+    try {
+      const r = deGeoJSON(JSON.parse(await f.text()));
+      if (r.id_hdad && datos.hermandades.some((h) => h.id_hdad === r.id_hdad)) {
+        estado.hermandad = r.id_hdad;
+        ui.hermandad.value = String(r.id_hdad);
+      }
+      if (r.estado) {
+        Object.assign(estado, { texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso });
+        ui.texto.value = estado.texto;
+        pintarReferencia(null);
+        if (r.estado.municipio && r.estado.municipio.cod !== estado.municipio.cod) await elegirMunicipio(r.estado.municipio, { encuadrar: false });
+        guardar();
+        pintarSalida();
+        await trazar({ encuadrar: true });
+      } else {
+        ui.texto.value = r.texto;
+        estado.texto = r.texto;
+        pintarReferencia(r.referencia);
+        guardar();
+        mensaje('Itinerario importado de los puntos del archivo; la línea del archivo se muestra en gris.');
+      }
+    } catch (e) {
+      mensaje(`No se pudo leer el archivo: ${e.message}`, 'error');
+    } finally {
+      ui.importar.value = '';
+    }
+  });
+
+  // ── Arranque ──
+  ui.texto.value = estado.texto ?? '';
+  pintarSalida();
+  if (estado.salida) mapa.setView([estado.salida[1], estado.salida[0]], 16);
+  cargarMunicipios().then(async () => {
+    await elegirMunicipio(estado.municipio ?? SEVILLA, { encuadrar: !estado.salida });
+    if (estado.salida && estado.texto.trim()) trazar({ encuadrar: true });
+  });
+}

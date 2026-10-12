@@ -9,6 +9,7 @@ const {
   anioActivo = null,
   comparativaActiva = false,
   hermandadesActiva = false,
+  indexar = true,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -27,7 +28,7 @@ const listaAnios = aniosAsc.length <= 1 ? String(aniosAsc[0] ?? '') : aniosAsc.s
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#5b2a86" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={indexar ? 'index, follow' : 'noindex, follow'} />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

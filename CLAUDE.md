@@ -58,6 +58,9 @@ solas.
 - `/[anio]/hermandad/[slug]/` — ficha con datos de **todos** los años.
 - `/[anio]/datos/conteo.{csv,json}` — descargas open data (endpoints `.js`).
 - `/hermandades/` (buscador) y `/comparativa/` (entre años, con selector de año base).
+- `/recorridos/editor/` — editor de recorridos (noindex, fuera del sitemap): itinerario en texto →
+  línea sobre el mapa con el callejero oficial de Andalucía (WFS del CDAU). Lógica en cliente en
+  `src/lib/recorridos/`; ver `docs/editor-recorridos.md`.
 
 > Ojo: `/[anio]/horarios/` y `/[anio]/analisis/` ya **no** existen como páginas separadas
 > (los docs antiguos las mencionan); sus gráficas viven ahora en la página del año y del día.
@@ -93,3 +96,5 @@ solas.
 - `docs/guia-anadir-horarios-nuevo-anio.md` — proceso completo para horarios de un año nuevo
   (formato CSV del Consejo, alias de nombres en `idPorNombre`, validaciones).
 - `docs/flujo-pre-y-produccion.md` — detalle del flujo PRE → producción.
+- `docs/editor-recorridos.md` — editor de recorridos: fuentes (CDAU/DERA), algoritmo, límites y
+  estado del índice de tramos 2025 (no se usa en el editor).
