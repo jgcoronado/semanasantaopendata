@@ -158,6 +158,30 @@ export async function viasPorId(ids) {
 }
 
 /**
+ * Portales (números de policía) de una o varias vías, ordenados por número.
+ * Devuelve [{ etiqueta: '12', numero: 12, accesorio: bool, coord: [lon, lat] }].
+ */
+export async function portalesDeVias(ids) {
+  const unicos = [...new Set(ids)].filter((x) => x != null).slice(0, 60);
+  if (!unicos.length) return [];
+  const j = await pedirJSON(urlWfs(CDAU_WFS, {
+    typeNames: 'cdau:v_portalpk',
+    propertyName: 'id_vial,num_por_desde,etiqueta,txt_app,tipo_portal_pk,geom',
+    CQL_FILTER: `id_vial IN (${unicos.map(Number).join(',')})`,
+  }), { diasCache: 7 });
+  return j.features
+    .filter((f) => f.geometry?.type === 'Point')
+    .map((f) => ({
+      etiqueta: String(f.properties.etiqueta ?? f.properties.num_por_desde ?? '').trim(),
+      numero: f.properties.num_por_desde ?? null,
+      accesorio: f.properties.tipo_portal_pk !== 'PORTAL',
+      coord: f.geometry.coordinates,
+    }))
+    .filter((p) => p.etiqueta)
+    .sort((a, b) => (a.numero ?? 1e9) - (b.numero ?? 1e9) || a.accesorio - b.accesorio || a.etiqueta.localeCompare(b.etiqueta, 'es'));
+}
+
+/**
  * Municipio en el que cae un punto, deducido del tramo de calle más cercano del CDAU.
  * Devuelve { cod, nombre } o null si no hay calles a menos de ~300 m.
  */

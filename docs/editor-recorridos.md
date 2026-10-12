@@ -21,8 +21,10 @@ la zona Catedral–Arenal (329 vías) en ~1 s; lista de municipios 144 KB.
 ## Flujo
 
 1. **Municipio**: se elige de la lista; se carga su catálogo de nombres oficiales.
-2. **Salida**: se pincha la puerta del templo. El municipio se comprueba con el CDAU en ese
-   punto y se cambia solo si no coincide.
+2. **Salida**: por dirección (calle predictiva con el callejero del municipio y número
+   predictivo con los portales de esa calle, capa `cdau:v_portalpk`) o pinchando la puerta del
+   templo en el mapa. El marcador se puede arrastrar. El municipio se comprueba con el CDAU en
+   ese punto y se cambia solo si no coincide.
 3. **Itinerario**: una calle por línea (o separadas por comas, punto y coma o guiones con
    espacios). «Carrera Oficial» es palabra clave. Si la primera línea no es una vía
    (p. ej. «Puerta del Perdón»), es la salida; si la última repite la primera, la entrada.
@@ -34,7 +36,7 @@ la zona Catedral–Arenal (329 vías) en ~1 s; lista de municipios 144 KB.
 | Módulo | Función |
 |--------|---------|
 | `nombres.js` | Normalización y resolución: la `clave` quita acentos, tipo de vía, artículos y espacios y unifica y/i («C/ Tomás de Ybarra» = «Calle Tomás de Ibarra», «Entre Cárceles» = «Calle entre Cárceles»). Exacta → `ok`; parecida (Levenshtein) → `aprox`; varias → `ambigua`; nada → `sin` |
-| `cdau.js` | Cliente WFS con caché |
+| `cdau.js` | Cliente WFS con caché (vías, nombres, portales, municipio de un punto, municipios) |
 | `grafo.js` | Grafo de ejes. Funde vértices a ≤ 3 m y cose extremos sueltos al segmento más cercano (≤ 3 m): el CDAU no siempre comparte el vértice en los cruces |
 | `componer.js` | Cada paso va de donde acabó el anterior a la primera esquina de la calle siguiente por el camino de coste mínimo: calle actual y siguiente cuestan 1, el resto 3 (así se aceptan enlaces cortos no listados y se avisan). La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente. Los puntos de paso del usuario fuerzan el camino; si caen a más de 25 m de una calle se llega a ellos en recta |
 | `exportar.js` | GeoJSON en el formato de `scripts/geojson-AAAA/` más el estado del editor en `properties.editor` |
@@ -47,10 +49,15 @@ los GeoJSON de 2025, 291 se resuelven de forma exacta.
 
 ## Correcciones en la interfaz
 
+- **Orden de la lista**: ↑ y ↓ en cada fila, o arrastrar por el asa (⋮⋮). ＋ añade una calle
+  debajo (campo predictivo) y 🗑 la quita; abajo hay un campo para añadir otra antes de la
+  entrada en el templo. La lista y el cuadro de texto son la misma cosa: cada cambio reescribe
+  el itinerario y se vuelve a trazar. Los puntos de paso de pasos que dejan de existir no se
+  dibujan, pero se conservan por si se deshace el cambio.
 - **Otra vía**: escribir o elegir en el campo de la línea (lista con todas las vías del
   municipio). Se aplica a todas las líneas con el mismo texto.
 - **📍**: fijar la línea en el mapa (lugares que no son vías: arcos, compases, puertas).
-- **✕**: omitir la línea.
+- **⊘**: omitir la línea (sigue en la lista pero no se dibuja).
 - **Puntos de paso**: pinchar sobre la línea añade uno a ese paso; se arrastran; doble clic
   o clic derecho lo quita.
 

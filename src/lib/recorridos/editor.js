@@ -31,6 +31,7 @@ export function iniciarEditor(datos) {
   const ui = {
     municipio: $('ed-municipio'), municipios: $('ed-municipios'), munEstado: $('ed-mun-estado'),
     btnSalida: $('ed-btn-salida'), salidaTxt: $('ed-salida-txt'),
+    salidaCalle: $('ed-salida-calle'), salidaNum: $('ed-salida-num'), portales: $('ed-portales'),
     texto: $('ed-texto'), btnTrazar: $('ed-btn-trazar'), mensaje: $('ed-mensaje'),
     resultado: $('ed-resultado'), resumen: $('ed-resumen'), avisos: $('ed-avisos'), lista: $('ed-items'),
     calles: $('ed-calles'), hermandad: $('ed-hermandad'), bloqueHdad: $('ed-bloque-hdad'),
@@ -106,7 +107,14 @@ export function iniciarEditor(datos) {
     const m = municipios.find((x) => x.cod === mun.cod);
     ui.municipio.value = m ? etiquetaMun(m) : mun.nombre;
     ui.bloqueHdad.hidden = mun.cod !== SEVILLA.cod;
-    if (cambia) { catalogo = null; estado.elecciones = {}; }
+    if (cambia) {
+      catalogo = null;
+      estado.elecciones = {};
+      ui.salidaCalle.value = '';
+      ui.salidaNum.value = '';
+      ui.salidaNum.disabled = true;
+      ui.portales.innerHTML = '';
+    }
     guardar();
     ui.munEstado.textContent = 'Cargando callejero…';
     try {
@@ -164,6 +172,66 @@ export function iniciarEditor(datos) {
     }
     if (estado.texto.trim()) trazar();
   }
+
+  // Búsqueda de la salida por dirección: calle (predictivo con el callejero del municipio) y
+  // número (predictivo con los portales de esa calle en el CDAU).
+  let portalesCalle = [];
+  const capaBusqueda = L.layerGroup().addTo(mapa);
+
+  ui.salidaCalle.addEventListener('change', async () => {
+    const v = ui.salidaCalle.value.trim();
+    portalesCalle = [];
+    ui.portales.innerHTML = '';
+    ui.salidaNum.value = '';
+    ui.salidaNum.disabled = true;
+    capaBusqueda.clearLayers();
+    if (!v) return;
+    if (!catalogo) { mensaje('Espera a que cargue el callejero del municipio.', 'error'); return; }
+    const r = catalogo.porNombre(v) ? { eleccion: catalogo.porNombre(v) } : catalogo.resolver(v);
+    if (!r.eleccion) { mensaje(`«${v}» no está en el callejero de ${estado.municipio.nombre}. Elígela de la lista.`, 'error'); return; }
+    ui.salidaCalle.value = r.eleccion.nombre;
+    const ids = [...r.eleccion.ids];
+    try {
+      const [vias, portales] = await Promise.all([cdau.viasPorId(ids), cdau.portalesDeVias(ids)]);
+      for (const via of vias) {
+        L.polyline(via.lineas.map((l) => l.map(([x, y]) => [y, x])), { color: '#c8a24a', weight: 9, opacity: 0.45, interactive: false }).addTo(capaBusqueda);
+      }
+      if (capaBusqueda.getLayers().length) mapa.fitBounds(L.featureGroup(capaBusqueda.getLayers()).getBounds(), { padding: [40, 40], maxZoom: 18 });
+      portalesCalle = portales;
+      // Un número puede tener varios portales (accesorios): se ofrece cada etiqueta una vez.
+      const vistas = new Set();
+      ui.portales.innerHTML = portales
+        .filter((p) => !vistas.has(p.etiqueta) && vistas.add(p.etiqueta))
+        .map((p) => `<option value="${esc(p.etiqueta)}"></option>`).join('');
+      ui.salidaNum.disabled = !portales.length;
+      if (portales.length) {
+        ui.salidaNum.focus();
+        mensaje(`Elige el número del templo en ${r.eleccion.nombre} (${portales.length} portales), o pincha su puerta en el mapa.`);
+      } else {
+        modo = { tipo: 'salida' };
+        mapa.getContainer().classList.add('ed-apuntando');
+        mensaje(`${r.eleccion.nombre} no tiene números en el callejero: pincha la puerta del templo en el mapa (calle resaltada).`);
+      }
+    } catch (e) {
+      mensaje(`No se pudo buscar la calle: ${e.message}`, 'error');
+    }
+  });
+
+  ui.salidaNum.addEventListener('change', () => {
+    const v = ui.salidaNum.value.trim().toUpperCase();
+    if (!v) return;
+    const p = portalesCalle.find((x) => x.etiqueta.toUpperCase() === v)
+      ?? portalesCalle.find((x) => String(x.numero) === v.replace(/\D+$/, ''));
+    if (!p) { mensaje(`No hay portal ${v} en ${ui.salidaCalle.value}.`, 'error'); return; }
+    capaBusqueda.clearLayers();
+    mapa.setView([p.coord[1], p.coord[0]], Math.max(mapa.getZoom(), 18));
+    mensaje(`Salida fijada en ${ui.salidaCalle.value}, ${p.etiqueta}. Arrastra el marcador a la puerta si no coincide.`);
+    fijarSalida(p.coord);
+  });
+  // Enter confirma: el blur dispara el 'change' nativo una sola vez (despacharlo a mano
+  // haría que el navegador lo repitiera al perder el foco).
+  ui.salidaNum.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); ui.salidaNum.blur(); } });
+  ui.salidaCalle.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); ui.salidaCalle.blur(); } });
 
   ui.btnSalida.addEventListener('click', () => {
     modo = { tipo: 'salida' };
@@ -263,6 +331,15 @@ export function iniciarEditor(datos) {
   ui.btnTrazar.addEventListener('click', () => trazar({ encuadrar: true }));
   ui.texto.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) trazar({ encuadrar: true }); });
 
+  /**
+   * Puntos de paso de los pasos del trazado actual. Al reordenar o quitar calles, los de
+   * pasos que ya no existen no se dibujan ni se cuentan, pero se conservan por si se deshace.
+   */
+  const puntosVigentes = () => {
+    const claves = new Set(resultado?.pasos.map((p) => p.clave) ?? []);
+    return Object.entries(estado.puntosPaso).filter(([k]) => claves.has(k));
+  };
+
   // ── Dibujo ──
   function dibujar() {
     capaRuta.clearLayers();
@@ -307,7 +384,7 @@ export function iniciarEditor(datos) {
     }
 
     // Puntos de paso arrastrables.
-    for (const [claveP, lista] of Object.entries(estado.puntosPaso)) {
+    for (const [claveP, lista] of puntosVigentes()) {
       lista.forEach((pt, i) => {
         const mk = L.marker([pt[1], pt[0]], { icon: icono('ed-punto'), draggable: true, zIndexOffset: 500 })
           .bindTooltip('Arrastra para corregir · doble clic para quitar')
@@ -353,16 +430,44 @@ export function iniciarEditor(datos) {
     aprox: ['Parecida', 'aviso'], ambigua: ['Varias posibles', 'error'], sin: ['No encontrada', 'error'], manual: ['Elegida', 'ok'],
   };
 
+  // La lista edita el itinerario: cada fila es una línea del texto (items[i].n).
+  const lineasTexto = () => leerItinerario(ui.texto.value).map((l) => l.texto);
+  function escribirLineas(lineas, aviso) {
+    ui.texto.value = lineas.join('\n');
+    estado.texto = ui.texto.value;
+    guardar();
+    if (aviso) mensaje(aviso);
+    trazar();
+  }
+  function moverLinea(desde, hasta) {
+    const l = lineasTexto();
+    if (desde === hasta || desde < 0 || hasta < 0 || desde >= l.length || hasta >= l.length) return;
+    const [x] = l.splice(desde, 1);
+    l.splice(hasta, 0, x);
+    escribirLineas(l);
+  }
+  function insertarLinea(pos, texto) {
+    const l = lineasTexto();
+    l.splice(Math.max(0, Math.min(pos, l.length)), 0, texto);
+    escribirLineas(l, `«${texto}» añadida al itinerario.`);
+  }
+  function quitarLinea(pos) {
+    const l = lineasTexto();
+    const [x] = l.splice(pos, 1);
+    escribirLineas(l, `«${x}» quitada del itinerario.`);
+  }
+
   function pintarLista() {
     ui.resultado.hidden = false;
     const pasoHasta = new Map(resultado.pasos.map((p, k) => [p.hasta, { p, k }]));
     const nVias = items.filter((it) => it.tipo === 'via').length;
-    const nPuntos = Object.values(estado.puntosPaso).reduce((s, l) => s + l.length, 0);
+    const nPuntos = puntosVigentes().reduce((s, [, l]) => s + l.length, 0);
     ui.resumen.innerHTML = `<strong>${fmtKm(resultado.metros)}</strong> · ${nVias} calles`
       + (nPuntos ? ` · ${nPuntos} ${nPuntos === 1 ? 'punto de paso' : 'puntos de paso'}` : '');
     ui.avisos.innerHTML = resultado.avisos.map((a) => `<li>${esc(a)}</li>`).join('');
     ui.btnBorrarPuntos.hidden = !nPuntos;
 
+    const ultimo = items.length - 1;
     ui.lista.innerHTML = items.map((it, i) => {
       const paso = pasoHasta.get(i);
       const metros = paso ? `<span class="ed-item__m">${fmtM(paso.p.metros)}</span>` : '';
@@ -376,21 +481,45 @@ export function iniciarEditor(datos) {
         const valor = it.tipo === 'via' ? it.nombre : '';
         const placeholder = it.tipo === 'punto' ? 'Fijada en el mapa' : it.tipo === 'omitir' ? 'Omitida' : 'Elige una vía…';
         control = `<input class="ed-item__via" list="ed-calles" data-i="${i}" value="${esc(valor)}" placeholder="${placeholder}" aria-label="Vía para ${esc(it.texto)}">`
-          + `<button type="button" class="ed-mini" data-accion="punto" data-i="${i}" title="Fijar en el mapa">📍</button>`
-          + `<button type="button" class="ed-mini" data-accion="omitir" data-i="${i}" title="${it.tipo === 'omitir' ? 'Volver a usar' : 'Omitir esta línea'}">${it.tipo === 'omitir' ? '↺' : '✕'}</button>`
+          + `<button type="button" class="ed-mini" data-accion="punto" data-i="${i}" title="Fijar en el mapa" aria-label="Fijar «${esc(it.texto)}» en el mapa">📍</button>`
+          + `<button type="button" class="ed-mini" data-accion="omitir" data-i="${i}" title="${it.tipo === 'omitir' ? 'Volver a dibujar' : 'Omitir: no se dibuja pero sigue en la lista'}">${it.tipo === 'omitir' ? '↺' : '⊘'}</button>`
           + (txt ? `<span class="ed-chip ed-chip--${clase}">${txt}</span>` : '')
           + (it.tipo === 'ambigua' && it.candidatos?.length ? `<small class="ed-item__cand">¿${it.candidatos.slice(0, 4).map(esc).join('? ¿')}?</small>` : '');
       }
       const enlaces = paso?.p.enlaces.length
         ? `<small class="ed-item__enlace">Pasa por ${paso.p.enlaces.map((e) => `${esc(e.nombre)} (${fmtM(e.metros)})`).join(', ')}, que no está en la lista</small>`
         : '';
-      return `<li class="ed-item ed-item--${it.tipo}" data-paso="${paso ? paso.k : ''}">
-        <div class="ed-item__cab"><span class="ed-item__txt">${esc(it.texto)}</span>${metros}</div>
+      const orden = `<span class="ed-item__orden">`
+        + `<button type="button" class="ed-mini" data-accion="subir" data-i="${i}" title="Subir" aria-label="Subir «${esc(it.texto)}»"${i === 0 ? ' disabled' : ''}>↑</button>`
+        + `<button type="button" class="ed-mini" data-accion="bajar" data-i="${i}" title="Bajar" aria-label="Bajar «${esc(it.texto)}»"${i === ultimo ? ' disabled' : ''}>↓</button>`
+        + `<button type="button" class="ed-mini" data-accion="insertar" data-i="${i}" title="Añadir una calle debajo" aria-label="Añadir una calle debajo de «${esc(it.texto)}»">＋</button>`
+        + `<button type="button" class="ed-mini ed-mini--quitar" data-accion="quitar" data-i="${i}" title="Quitar de la lista" aria-label="Quitar «${esc(it.texto)}»">🗑</button>`
+        + `</span>`;
+      return `<li class="ed-item ed-item--${it.tipo}" data-i="${i}" data-paso="${paso ? paso.k : ''}">
+        <div class="ed-item__cab"><span class="ed-item__asa" title="Arrastra para cambiar el orden" aria-hidden="true">⋮⋮</span><span class="ed-item__txt">${esc(it.texto)}</span>${metros}${orden}</div>
         <div class="ed-item__ctl">${control}</div>${enlaces}</li>`;
-    }).join('');
+    }).join('')
+      // Se añade antes de la entrada en el templo si la lista termina en ella.
+      + `<li class="ed-nueva ed-nueva--final"><input class="ed-item__via ed-nueva__input" list="ed-calles" data-pos="${items[ultimo]?.tipo === 'entrada' ? ultimo : items.length}" placeholder="Añadir una calle${items[ultimo]?.tipo === 'entrada' ? ' antes de la entrada' : ' al final'}…" aria-label="Añadir una calle"></li>`;
+  }
+
+  /** Fila temporal con un campo predictivo para insertar una calle en `pos`. */
+  function abrirInsercion(li, pos) {
+    ui.lista.querySelector('.ed-nueva--temporal')?.remove();
+    const nueva = document.createElement('li');
+    nueva.className = 'ed-nueva ed-nueva--temporal';
+    nueva.innerHTML = `<input class="ed-item__via ed-nueva__input" list="ed-calles" data-pos="${pos}" placeholder="Calle o plaza…  (Esc para cancelar)" aria-label="Calle a añadir">`;
+    li.after(nueva);
+    nueva.querySelector('input').focus();
   }
 
   ui.lista.addEventListener('change', (e) => {
+    const nueva = e.target.closest('.ed-nueva__input');
+    if (nueva) {
+      const v = nueva.value.trim();
+      if (v) insertarLinea(Number(nueva.dataset.pos), v);
+      return;
+    }
     const el = e.target.closest('.ed-item__via');
     if (!el) return;
     const it = items[Number(el.dataset.i)];
@@ -402,20 +531,76 @@ export function iniciarEditor(datos) {
     trazar();
   });
 
+  ui.lista.addEventListener('keydown', (e) => {
+    const nueva = e.target.closest('.ed-nueva__input');
+    if (!nueva) return;
+    if (e.key === 'Escape') nueva.closest('.ed-nueva--temporal')?.remove();
+    if (e.key === 'Enter') { e.preventDefault(); nueva.blur(); }
+  });
+
   ui.lista.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-accion]');
     if (!b) return;
-    const it = items[Number(b.dataset.i)];
-    if (b.dataset.accion === 'omitir') {
-      if (it.tipo === 'omitir') delete estado.elecciones[it.clave];
-      else estado.elecciones[it.clave] = { tipo: 'omitir' };
-      guardar();
-      trazar();
-    } else {
-      modo = { tipo: 'punto', clave: it.clave, texto: it.texto };
-      mapa.getContainer().classList.add('ed-apuntando');
-      mensaje(`Pincha en el mapa dónde está «${it.texto}».`);
+    const i = Number(b.dataset.i);
+    const it = items[i];
+    switch (b.dataset.accion) {
+      case 'subir': moverLinea(i, i - 1); break;
+      case 'bajar': moverLinea(i, i + 1); break;
+      case 'quitar': quitarLinea(it.n); break;
+      case 'insertar': abrirInsercion(b.closest('.ed-item'), it.n + 1); break;
+      case 'omitir':
+        if (it.tipo === 'omitir') delete estado.elecciones[it.clave];
+        else estado.elecciones[it.clave] = { tipo: 'omitir' };
+        guardar();
+        trazar();
+        break;
+      default:
+        modo = { tipo: 'punto', clave: it.clave, texto: it.texto };
+        mapa.getContainer().classList.add('ed-apuntando');
+        mensaje(`Pincha en el mapa dónde está «${it.texto}».`);
     }
+  });
+
+  // Arrastrar filas para cambiar el orden (con ratón; en pantallas táctiles, ↑ y ↓).
+  let arrastrada = null;
+  ui.lista.addEventListener('pointerdown', (e) => {
+    const asa = e.target.closest('.ed-item__asa');
+    if (asa) asa.closest('.ed-item').draggable = true;
+  });
+  ui.lista.addEventListener('dragstart', (e) => {
+    const li = e.target.closest('.ed-item');
+    if (!li?.draggable) return;
+    arrastrada = Number(li.dataset.i);
+    li.classList.add('ed-item--arrastrando');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', items[arrastrada].texto);
+  });
+  const destinoArrastre = (e) => {
+    const li = e.target.closest('.ed-item');
+    if (!li || arrastrada == null) return null;
+    const r = li.getBoundingClientRect();
+    return { li, i: Number(li.dataset.i), debajo: e.clientY > r.top + r.height / 2 };
+  };
+  ui.lista.addEventListener('dragover', (e) => {
+    const d = destinoArrastre(e);
+    if (!d) return;
+    e.preventDefault();
+    ui.lista.querySelectorAll('.ed-item--antes, .ed-item--despues').forEach((x) => x.classList.remove('ed-item--antes', 'ed-item--despues'));
+    d.li.classList.add(d.debajo ? 'ed-item--despues' : 'ed-item--antes');
+  });
+  ui.lista.addEventListener('drop', (e) => {
+    const d = destinoArrastre(e);
+    if (!d) return;
+    e.preventDefault();
+    // Cada fila es la línea i del itinerario (items[i].n === i). Posición final contando
+    // que la fila arrastrada sale primero de su sitio.
+    let pos = d.i + (d.debajo ? 1 : 0);
+    if (arrastrada < pos) pos--;
+    moverLinea(arrastrada, pos);
+  });
+  ui.lista.addEventListener('dragend', () => {
+    arrastrada = null;
+    ui.lista.querySelectorAll('.ed-item').forEach((x) => { x.draggable = false; x.classList.remove('ed-item--arrastrando', 'ed-item--antes', 'ed-item--despues'); });
   });
 
   // Resaltar en el mapa el paso de la fila sobre la que está el ratón o el foco.

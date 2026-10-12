@@ -57,11 +57,16 @@ const description =
 
       <section class="ed__bloque">
         <h2><span class="ed__num">2</span> Salida</h2>
+        <div class="ed__direccion">
+          <input id="ed-salida-calle" class="ed__input" list="ed-calles" autocomplete="off" placeholder="Calle o plaza del templo…" aria-label="Calle de la salida" />
+          <input id="ed-salida-num" class="ed__input" list="ed-portales" autocomplete="off" inputmode="numeric" placeholder="Nº" aria-label="Número de la salida" disabled />
+        </div>
+        <datalist id="ed-portales"></datalist>
         <div class="ed__fila">
           <button id="ed-btn-salida" type="button" class="btn btn--sec">Fijar en el mapa</button>
           <span id="ed-salida-txt" class="ed__nota">Sin fijar</span>
         </div>
-        <small class="ed__nota">Pincha en la puerta del templo. Se puede arrastrar después.</small>
+        <small class="ed__nota">Busca la calle y el número del templo, o pincha su puerta en el mapa. El marcador se puede arrastrar.</small>
       </section>
 
       <section class="ed__bloque">
@@ -153,6 +158,8 @@ const description =
   }
   .ed__texto { font-family: ui-monospace, Consolas, monospace; font-size: 0.88rem; resize: vertical; }
   .ed__fila { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .ed__direccion { display: grid; grid-template-columns: 1fr 5.5rem; gap: 0.4rem; }
+  .ed__direccion input:disabled { background: var(--fondo-alt); }
   .ed__nota { color: var(--gris); font-size: 0.8rem; }
   .ed__trazar { justify-self: start; }
   .ed__mensaje { margin: 0.8rem 0 0; font-size: 0.88rem; min-height: 1.2em; }
@@ -190,6 +197,19 @@ const description =
   .ed-item__cab { display: flex; justify-content: space-between; gap: 0.5rem; }
   .ed-item__txt { font-weight: 600; }
   .ed-item__m { color: var(--gris); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ed-item__cab { align-items: center; }
+  .ed-item__txt { flex: 1; min-width: 0; }
+  .ed-item__asa { cursor: grab; color: var(--gris); user-select: none; padding: 0 0.15rem; letter-spacing: -2px; }
+  .ed-item__orden { display: inline-flex; gap: 0.15rem; }
+  .ed-item__orden .ed-mini { padding: 0.15rem 0.3rem; font-size: 0.74rem; }
+  .ed-mini:disabled { opacity: 0.35; cursor: default; }
+  .ed-mini--quitar:hover { background: #ffe1e1; }
+  .ed-item--arrastrando { opacity: 0.45; }
+  .ed-item--antes { box-shadow: 0 -3px 0 var(--morado); }
+  .ed-item--despues { box-shadow: 0 3px 0 var(--morado); }
+  .ed-nueva { list-style: none; padding: 0.3rem 0.5rem 0.3rem 2rem; }
+  .ed-nueva--temporal { border: 1px dashed var(--morado); border-radius: 8px; }
+  .ed-nueva__input { width: 100%; }
   .ed-item__ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.25rem; }
   .ed-item__via {
     flex: 1 1 12rem; min-width: 0; font: inherit; font-size: 0.84rem;
