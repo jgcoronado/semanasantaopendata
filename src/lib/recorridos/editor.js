@@ -1,7 +1,7 @@
 /**
  * Controlador de la página /recorridos/editor/ (Leaflet + núcleo de recorridos).
  *
- * Flujo: municipio → salida pinchada en el mapa → itinerario en texto → «Trazar».
+ * Flujo: municipio → salida (templo, hermandad, dirección o mapa) → itinerario → «Trazar».
  * Correcciones: elegir otra vía en la tabla, fijar una línea en el mapa, omitirla, o
  * pinchar sobre la línea para añadir puntos de paso y arrastrarlos.
  */
@@ -13,6 +13,7 @@ import { crearGrafo } from './grafo.js';
 import { leerItinerario, resolverItinerario, componer } from './componer.js';
 import { ampliarBbox, bboxDe, bboxContiene, distM, puntoA, puntoMasCercano } from './geo.js';
 import { aGeoJSON, deGeoJSON, descargar } from './exportar.js';
+import { ATRIBUCION_LUGARES, buscarLugares, buscarPhoton, templosMunicipio } from './lugares.js';
 
 const CLAVE_LOCAL = 'ssod-editor-recorridos-v1';
 const SEVILLA = { cod: '41091', nombre: 'Sevilla' };
@@ -31,6 +32,7 @@ export function iniciarEditor(datos) {
   const ui = {
     municipio: $('ed-municipio'), municipios: $('ed-municipios'), munEstado: $('ed-mun-estado'),
     btnSalida: $('ed-btn-salida'), salidaTxt: $('ed-salida-txt'),
+    lugar: $('ed-lugar'), lugarLista: $('ed-lugar-lista'), lugarEstado: $('ed-lugar-estado'),
     salidaCalle: $('ed-salida-calle'), salidaNum: $('ed-salida-num'), portales: $('ed-portales'),
     texto: $('ed-texto'), btnTrazar: $('ed-btn-trazar'), mensaje: $('ed-mensaje'),
     resultado: $('ed-resultado'), resumen: $('ed-resumen'), avisos: $('ed-avisos'), lista: $('ed-items'),
@@ -49,6 +51,8 @@ export function iniciarEditor(datos) {
   };
 
   let catalogo = null;
+  let limiteMun = null;           // límite del término municipal (Feature DERA)
+  let templos = null;             // [{ nombre, alias, coord, tipo, detalle }] o null si no hay
   let municipios = [];
   const viasCargadas = new Map();   // id_vial → vía con geometría
   let zona = null;                  // bbox [s, w, n, e] de la zona de calles cargada
@@ -69,6 +73,7 @@ export function iniciarEditor(datos) {
   L.control.layers({ Plano: osm, 'Ortofoto PNOA': pnoa }, null, { position: 'topright' }).addTo(mapa);
   L.control.scale({ imperial: false }).addTo(mapa);
   mapa.attributionControl.addAttribution(cdau.ATRIBUCION_CDAU);
+  mapa.attributionControl.addAttribution(ATRIBUCION_LUGARES);
 
   const capaLimite = L.layerGroup().addTo(mapa);
   const capaReferencia = L.layerGroup().addTo(mapa);
@@ -114,8 +119,11 @@ export function iniciarEditor(datos) {
       ui.salidaNum.value = '';
       ui.salidaNum.disabled = true;
       ui.portales.innerHTML = '';
+      ui.lugar.value = '';
     }
     guardar();
+    limiteMun = null;
+    templos = null;
     ui.munEstado.textContent = 'Cargando callejero…';
     try {
       const [limite, vias] = await Promise.all([cdau.limiteMunicipio(mun.cod), cdau.nombresVias(mun.cod)]);
@@ -124,6 +132,8 @@ export function iniciarEditor(datos) {
         const capa = L.geoJSON(limite, { style: { color: '#5b2a86', weight: 1.5, fill: false, dashArray: '4 4' }, interactive: false }).addTo(capaLimite);
         if (encuadrar) mapa.fitBounds(capa.getBounds());
       }
+      limiteMun = limite;
+      if (limite) cargarTemplos(mun);
       catalogo = crearCatalogo();
       for (const v of vias) catalogo.añadir({ nombre: v.nombre, id: v.id, alias: v.sobrenombre });
       const nombres = [...new Set(vias.map((v) => v.nombre))].sort((a, b) => a.localeCompare(b, 'es'));
@@ -172,6 +182,121 @@ export function iniciarEditor(datos) {
     }
     if (estado.texto.trim()) trazar();
   }
+
+  // ── Búsqueda de la salida por nombre: templos del municipio (OSM) y hermandades (Sevilla) ──
+  let opciones = [];             // resultados mostrados
+  let activa = -1;
+
+  async function cargarTemplos(mun) {
+    ui.lugarEstado.textContent = 'Cargando templos del municipio…';
+    try {
+      const lista = await templosMunicipio(mun.cod, limiteMun);
+      if (estado.municipio.cod !== mun.cod) return;
+      templos = lista;
+      ui.lugarEstado.textContent = `${lista.length.toLocaleString('es-ES')} templos de ${mun.nombre} en OpenStreetMap`;
+    } catch {
+      if (estado.municipio.cod !== mun.cod) return;
+      templos = null;
+      ui.lugarEstado.textContent = 'No se pudo cargar la lista de templos: la búsqueda se hará en OpenStreetMap al pulsar Enter.';
+    }
+  }
+
+  /** Hermandades de Sevilla con su salida de 2025, como lugares buscables. */
+  function lugaresHermandad() {
+    if (estado.municipio?.cod !== SEVILLA.cod) return [];
+    return datos.hermandades.filter((h) => h.salida2025).map((h) => ({
+      nombre: `Hermandad de ${h.nombre}`, alias: [h.nombre], coord: h.salida2025, tipo: 'hermandad', detalle: 'Salida de su recorrido de 2025',
+    }));
+  }
+
+  const ETIQUETA_TIPO = { templo: 'Templo', hermandad: 'Hermandad', osm: 'OpenStreetMap' };
+  function pintarOpciones(texto, { buscando = false } = {}) {
+    const items = opciones.map((o, i) => `<li id="ed-lugar-op-${i}" class="ed-buscador__op" role="option" data-i="${i}" aria-selected="${i === activa}">
+        <strong>${esc(o.nombre)}</strong><small>${ETIQUETA_TIPO[o.tipo]}${o.detalle ? ' · ' + esc(o.detalle) : ''}</small></li>`);
+    if (texto.trim().length >= 3) {
+      items.push(`<li id="ed-lugar-op-${opciones.length}" class="ed-buscador__op ed-buscador__op--accion" role="option" data-i="${opciones.length}" aria-selected="${activa === opciones.length}">
+        <strong>${buscando ? 'Buscando en OpenStreetMap…' : `Buscar «${esc(texto.trim())}» en OpenStreetMap`}</strong><small>Tarda unos segundos</small></li>`);
+    }
+    if (!items.length) { cerrarOpciones(); return; }
+    ui.lugarLista.innerHTML = items.join('');
+    ui.lugarLista.hidden = false;
+    ui.lugar.setAttribute('aria-expanded', 'true');
+    ui.lugar.setAttribute('aria-activedescendant', activa >= 0 ? `ed-lugar-op-${activa}` : '');
+    ui.lugarLista.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+  }
+  function cerrarOpciones() {
+    ui.lugarLista.hidden = true;
+    ui.lugar.setAttribute('aria-expanded', 'false');
+    ui.lugar.removeAttribute('aria-activedescendant');
+  }
+  function sugerir() {
+    const texto = ui.lugar.value;
+    activa = -1;
+    opciones = texto.trim().length >= 2 ? buscarLugares([...(templos ?? []), ...lugaresHermandad()], texto, 8) : [];
+    pintarOpciones(texto);
+  }
+  let busquedaOsm = 0;
+  async function buscarEnOsm() {
+    const texto = ui.lugar.value.trim();
+    if (texto.length < 3 || !limiteMun) return;
+    const turno = ++busquedaOsm;
+    pintarOpciones(texto, { buscando: true });
+    try {
+      const r = await buscarPhoton(texto, limiteMun, estado.salida ?? null);
+      if (turno !== busquedaOsm) return;
+      // Se mantienen arriba los resultados locales y se añaden los de OSM que no estén ya.
+      const vistos = new Set(opciones.map((o) => o.nombre + '|' + o.coord.map((v) => v.toFixed(4))));
+      opciones = [...opciones, ...r.filter((o) => !vistos.has(o.nombre + '|' + o.coord.map((v) => v.toFixed(4))))].slice(0, 12);
+      activa = opciones.length ? 0 : -1;
+      if (!opciones.length) {
+        ui.lugarLista.innerHTML = `<li class="ed-buscador__vacio">Nada en ${esc(estado.municipio.nombre)} con «${esc(texto)}». Prueba con la calle y el número, o pincha en el mapa.</li>`;
+        ui.lugarLista.hidden = false;
+        return;
+      }
+      pintarOpciones(texto);
+    } catch (e) {
+      if (turno !== busquedaOsm) return;
+      mensaje(`La búsqueda en OpenStreetMap falló: ${e.message}`, 'error');
+      pintarOpciones(texto);
+    }
+  }
+  function elegirLugar(i) {
+    if (i === opciones.length) { buscarEnOsm(); return; }
+    const o = opciones[i];
+    if (!o) return;
+    ui.lugar.value = o.nombre;
+    cerrarOpciones();
+    mapa.setView([o.coord[1], o.coord[0]], Math.max(mapa.getZoom(), 18));
+    mensaje(`Salida en ${o.nombre}. Arrastra el marcador a la puerta por la que sale la cofradía.`);
+    fijarSalida(o.coord);
+  }
+
+  ui.lugar.addEventListener('input', sugerir);
+  ui.lugar.addEventListener('focus', () => { if (ui.lugar.value.trim().length >= 2) sugerir(); });
+  ui.lugar.addEventListener('keydown', (e) => {
+    const total = opciones.length + (ui.lugar.value.trim().length >= 3 ? 1 : 0);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (ui.lugarLista.hidden) sugerir();
+      if (!total) return;
+      activa = e.key === 'ArrowDown' ? (activa + 1) % total : (activa <= 0 ? total - 1 : activa - 1);
+      pintarOpciones(ui.lugar.value);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      // Enter sin opción marcada: la primera local, o buscar en OSM si no hay ninguna.
+      elegirLugar(activa >= 0 ? activa : (opciones.length ? 0 : opciones.length));
+    } else if (e.key === 'Escape') {
+      cerrarOpciones();
+    }
+  });
+  // mousedown (no click) para elegir antes de que el blur cierre la lista.
+  ui.lugarLista.addEventListener('mousedown', (e) => {
+    const li = e.target.closest('.ed-buscador__op');
+    if (!li) return;
+    e.preventDefault();
+    elegirLugar(Number(li.dataset.i));
+  });
+  ui.lugar.addEventListener('blur', () => setTimeout(cerrarOpciones, 150));
 
   // Búsqueda de la salida por dirección: calle (predictivo con el callejero del municipio) y
   // número (predictivo con los portales de esa calle en el CDAU).

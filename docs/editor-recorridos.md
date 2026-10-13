@@ -10,20 +10,35 @@ municipio de Andalucía. Todo ocurre en el navegador; no hay backend.
 |----------|------------|-----|
 | CDAU — Callejero Digital de Andalucía Unificado (IECA), WFS `https://www.callejerodeandalucia.es/servicios/cdau/wfs` | Vías con nombre oficial (`cdau:v_vial`, ejes de calle), tramos (`cdau:v_tramo`) | Nombres del municipio, geometría de las calles, municipio de la salida |
 | DERA G13 (IECA), WFS `https://www.ideandalucia.es/services/DERA_g13_limites_administrativos/wfs` | Términos municipales | Lista de los 785 municipios y límite del elegido |
+| OpenStreetMap vía Overpass (`overpass-api.de`) | Lugares de culto (`amenity=place_of_worship`) con nombre y alias | Índice local de templos del municipio para buscar la salida por nombre |
+| Photon (`photon.komoot.io`, geocodificador sobre OSM) | Cualquier lugar con nombre | Búsqueda en vivo de la salida cuando el índice no está o no encuentra nada |
 
 Licencia CC BY 4.0: la atribución va en el mapa (`ATRIBUCION_CDAU`). Ambos servicios
 aceptan peticiones desde el navegador (CORS) y devuelven GeoJSON. Las respuestas se guardan
 con la Cache API del navegador (7 días el callejero, 90 los municipios).
 
 Medido en oct 2026: nombres de las ~5.000 vías de Sevilla en ~1 s (1,1 MB); geometría de
-la zona Catedral–Arenal (329 vías) en ~1 s; lista de municipios 144 KB.
+la zona Catedral–Arenal (329 vías) en ~1 s; lista de municipios 144 KB; templos de Sevilla en
+Overpass, 170 dentro del término en ~3 s (70 KB, caché 30 días); Photon ~4,5 s por consulta.
+
+El CDAU no tiene templos ni otros lugares. Se probaron también el Nomenclátor Geográfico de
+Andalucía (`wfs-nga-inspire`, solo GML y 39 templos en Sevilla, sin la Magdalena) y
+CartoCiudad y Nominatim (sin resultados para «parroquia de la magdalena»). Overpass da 504 en
+horas de carga: el índice reintenta tres veces y, si falla, queda la búsqueda con Photon.
 
 ## Flujo
 
 1. **Municipio**: se elige de la lista; se carga su catálogo de nombres oficiales.
-2. **Salida**: por dirección (calle predictiva con el callejero del municipio y número
-   predictivo con los portales de esa calle, capa `cdau:v_portalpk`) o pinchando la puerta del
-   templo en el mapa. El marcador se puede arrastrar. El municipio se comprueba con el CDAU en
+2. **Salida**: por nombre del templo o de la hermandad (predictivo, `lugares.js`), por
+   dirección (calle predictiva con el callejero del municipio y número predictivo con los
+   portales de esa calle, capa `cdau:v_portalpk`) o pinchando la puerta del templo en el mapa.
+   - El buscador por nombre ignora las palabras genéricas («parroquia», «iglesia», «capilla»,
+     «basílica», «san», «santa»…) para decidir: «parroquia de la magdalena» encuentra «Iglesia
+     de la Magdalena». Usa también `alt_name`, `official_name`, `old_name` y `short_name` de OSM.
+   - En Sevilla incluye las hermandades con el primer punto de su recorrido de 2025 («El
+     Baratillo» está en OSM como «Capilla de Nuestra Señora de la Piedad»).
+   - La última opción, o Enter sin coincidencias, busca en Photon dentro del término.
+   - El punto de un templo es el centro del edificio: hay que arrastrarlo a la puerta. El marcador se puede arrastrar. El municipio se comprueba con el CDAU en
    ese punto y se cambia solo si no coincide.
 3. **Itinerario**: una calle por línea (o separadas por comas, punto y coma o guiones con
    espacios). «Carrera Oficial» es palabra clave. Si la primera línea no es una vía
@@ -37,6 +52,7 @@ la zona Catedral–Arenal (329 vías) en ~1 s; lista de municipios 144 KB.
 |--------|---------|
 | `nombres.js` | Normalización y resolución: la `clave` quita acentos, tipo de vía, artículos y espacios y unifica y/i («C/ Tomás de Ybarra» = «Calle Tomás de Ibarra», «Entre Cárceles» = «Calle entre Cárceles»). Exacta → `ok`; parecida (Levenshtein) → `aprox`; varias → `ambigua`; nada → `sin` |
 | `cdau.js` | Cliente WFS con caché (vías, nombres, portales, municipio de un punto, municipios) |
+| `lugares.js` | Búsqueda de la salida por nombre: índice de templos (Overpass), puntuación con palabras genéricas, Photon |
 | `grafo.js` | Grafo de ejes. Funde vértices a ≤ 3 m y cose extremos sueltos al segmento más cercano (≤ 3 m): el CDAU no siempre comparte el vértice en los cruces |
 | `componer.js` | Cada paso va de donde acabó el anterior a la primera esquina de la calle siguiente por el camino de coste mínimo: calle actual y siguiente cuestan 1, el resto 3 (así se aceptan enlaces cortos no listados y se avisan). La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente. Los puntos de paso del usuario fuerzan el camino; si caen a más de 25 m de una calle se llega a ellos en recta |
 | `exportar.js` | GeoJSON en el formato de `scripts/geojson-AAAA/` más el estado del editor en `properties.editor` |

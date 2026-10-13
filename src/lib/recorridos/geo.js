@@ -123,3 +123,29 @@ export function bboxDe(coords) {
 /** ¿Está el bbox interior contenido en el exterior? */
 export const bboxContiene = (ext, int) =>
   int[0] >= ext[0] && int[1] >= ext[1] && int[2] <= ext[2] && int[3] <= ext[3];
+
+/** ¿Está el punto [lon, lat] dentro de un Polygon o MultiPolygon GeoJSON? (par-impar) */
+export function dentroDe([x, y], geometria) {
+  if (!geometria) return true;
+  const poligonos = geometria.type === 'Polygon' ? [geometria.coordinates]
+    : geometria.type === 'MultiPolygon' ? geometria.coordinates : [];
+  for (const anillos of poligonos) {
+    let dentro = false;
+    for (const anillo of anillos) {
+      for (let i = 0, j = anillo.length - 1; i < anillo.length; j = i++) {
+        const [xi, yi] = anillo[i], [xj, yj] = anillo[j];
+        if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) dentro = !dentro;
+      }
+    }
+    if (dentro) return true;
+  }
+  return false;
+}
+
+/** Bbox [s, w, n, e] de una geometría GeoJSON cualquiera. */
+export function bboxGeometria(geometria) {
+  const pts = [];
+  const recorrer = (a) => (typeof a[0] === 'number' ? pts.push(a) : a.forEach(recorrer));
+  recorrer(geometria.coordinates);
+  return bboxDe(pts);
+}
