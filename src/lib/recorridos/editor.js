@@ -16,6 +16,7 @@ import { aGeoJSON, deGeoJSON, descargar } from './exportar.js';
 import { ATRIBUCION_LUGARES, buscarLugares, buscarPhoton, templosMunicipio } from './lugares.js';
 
 const CLAVE_LOCAL = 'ssod-editor-recorridos-v1';
+const CLAVE_CAPAS = 'ssod-editor-recorridos-capas-v1';
 const SEVILLA = { cod: '41091', nombre: 'Sevilla' };
 const MARGEN_ZONA_M = 200;
 const ZONA_MAX_M = 6000;       // lado máximo de la zona de calles que se descarga
@@ -62,15 +63,47 @@ export function iniciarEditor(datos) {
   let modo = null;                  // { tipo: 'salida' } | { tipo: 'punto', clave, texto }
 
   // ── Mapa ──
-  const mapa = L.map('ed-mapa', { zoomControl: true }).setView([37.3891, -5.9845], 14);
+  const mapa = L.map('ed-mapa', { zoomControl: true, maxZoom: 20 }).setView([37.3891, -5.9845], 14);
+  // Fondo por defecto: mapa base del IGN (teselas WMTS). Su callejero es CartoCiudad, que en
+  // Andalucía toma las direcciones del CDAU, la misma fuente de los ejes del recorrido.
+  const ign = L.tileLayer('https://www.ign.es/wmts/ign-base?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=IGNBaseTodo&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
+    maxZoom: 20, maxNativeZoom: 19,
+    attribution: 'Mapa base © <a href="https://www.ign.es">Instituto Geográfico Nacional</a> (CartoCiudad)',
+  });
   const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 20, maxNativeZoom: 19,
-  }).addTo(mapa);
+  });
   const pnoa = L.tileLayer('https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{y}.jpeg', {
     tms: true, maxZoom: 20, maxNativeZoom: 19,
     attribution: 'PNOA © <a href="https://www.ign.es">Instituto Geográfico Nacional</a>',
   });
-  L.control.layers({ Plano: osm, 'Ortofoto PNOA': pnoa }, null, { position: 'topright' }).addTo(mapa);
+  // Superpuestas: los ejes exactos que usa el trazado (del CDAU ya descargado) y las parcelas
+  // del Catastro, para ver fachadas y ensanches.
+  // Panel propio por debajo del trazado, para que los ejes no tapen los clics sobre la línea.
+  mapa.createPane('ejes').style.zIndex = '350';
+  const capaEjes = L.layerGroup();
+  const catastro = L.tileLayer.wms('https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx', {
+    layers: 'Catastro', format: 'image/png', transparent: true, version: '1.1.1', minZoom: 15, maxZoom: 20,
+    opacity: 0.7, attribution: '© <a href="https://www.sedecatastro.gob.es/">Dirección General del Catastro</a>',
+  });
+  const fondos = { 'Callejero IGN': ign, 'OpenStreetMap': osm, 'Ortofoto PNOA': pnoa };
+  const superpuestas = { 'Ejes del callejero (CDAU)': capaEjes, 'Parcelas del Catastro': catastro };
+  // La elección de capas es una preferencia de quien mira: se recuerda en este navegador.
+  let capasGuardadas = {};
+  try { capasGuardadas = JSON.parse(localStorage.getItem(CLAVE_CAPAS) ?? '{}'); } catch { /* sin almacenamiento */ }
+  (fondos[capasGuardadas.fondo] ?? ign).addTo(mapa);
+  for (const n of capasGuardadas.superpuestas ?? []) superpuestas[n]?.addTo(mapa);
+  const guardarCapas = () => {
+    try {
+      localStorage.setItem(CLAVE_CAPAS, JSON.stringify({
+        fondo: Object.keys(fondos).find((n) => mapa.hasLayer(fondos[n])),
+        superpuestas: Object.keys(superpuestas).filter((n) => mapa.hasLayer(superpuestas[n])),
+      }));
+    } catch { /* sin almacenamiento */ }
+  };
+  mapa.on('baselayerchange overlayadd overlayremove', guardarCapas);
+  mapa.on('overlayadd', (e) => { if (e.layer === capaEjes) pintarEjes(); });
+  L.control.layers(fondos, superpuestas, { position: 'topright' }).addTo(mapa);
   L.control.scale({ imperial: false }).addTo(mapa);
   mapa.attributionControl.addAttribution(cdau.ATRIBUCION_CDAU);
   mapa.attributionControl.addAttribution(ATRIBUCION_LUGARES);
@@ -319,7 +352,8 @@ export function iniciarEditor(datos) {
     try {
       const [vias, portales] = await Promise.all([cdau.viasPorId(ids), cdau.portalesDeVias(ids)]);
       for (const via of vias) {
-        L.polyline(via.lineas.map((l) => l.map(([x, y]) => [y, x])), { color: '#c8a24a', weight: 9, opacity: 0.45, interactive: false }).addTo(capaBusqueda);
+        if (!via.lineas.some((l) => l.length > 1)) continue;
+        L.polyline(via.lineas.filter((l) => l.length > 1).map((l) => l.map(([x, y]) => [y, x])), { color: '#c8a24a', weight: 9, opacity: 0.45, interactive: false }).addTo(capaBusqueda);
       }
       if (capaBusqueda.getLayers().length) mapa.fitBounds(L.featureGroup(capaBusqueda.getLayers()).getBounds(), { padding: [40, 40], maxZoom: 18 });
       portalesCalle = portales;
@@ -413,6 +447,20 @@ export function iniciarEditor(datos) {
     for (const v of await cdau.viasEnBbox(nuevaZona)) viasCargadas.set(v.id, v);
     zona = nuevaZona;
     grafo = crearGrafo([...viasCargadas.values()]);
+    pintarEjes();
+  }
+
+  /** Ejes del CDAU descargados (los que usa el grafo), si la capa está activa. */
+  function pintarEjes() {
+    capaEjes.clearLayers();
+    if (!mapa.hasLayer(capaEjes)) return;
+    for (const v of viasCargadas.values()) {
+      const lineas = v.lineas.filter((l) => l.length > 1);
+      if (!lineas.length) continue;
+      L.polyline(lineas.map((l) => l.map(([x, y]) => [y, x])), {
+        pane: 'ejes', color: '#1c1a22', weight: 1.5, opacity: 0.75, dashArray: '4 3', interactive: true,
+      }).bindTooltip(esc(v.nombre), { sticky: true }).addTo(capaEjes);
+    }
   }
 
   // ── Trazar ──

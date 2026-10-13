@@ -26,6 +26,21 @@ Andalucía (`wfs-nga-inspire`, solo GML y 39 templos en Sevilla, sin la Magdalen
 CartoCiudad y Nominatim (sin resultados para «parroquia de la magdalena»). Overpass da 504 en
 horas de carga: el índice reintenta tres veces y, si falla, queda la búsqueda con Photon.
 
+## Mapa de fondo
+
+| Capa | Servicio | Notas |
+|------|----------|-------|
+| Callejero IGN (por defecto) | WMTS `https://www.ign.es/wmts/ign-base`, capa `IGNBaseTodo`, `GoogleMapsCompatible` | Teselas cacheadas, 100–200 ms, hasta z19. Callejero de CartoCiudad, cuyas direcciones en Andalucía proceden del CDAU: los ejes del recorrido caen sobre sus calles |
+| OpenStreetMap | `tile.openstreetmap.org` | Alternativa |
+| Ortofoto PNOA | TMS del IGN | Alternativa |
+| Ejes del callejero (CDAU), superpuesta | Se dibujan en el navegador con las vías ya descargadas | Son exactamente los ejes que usa el grafo; panel propio bajo el trazado |
+| Parcelas del Catastro, superpuesta | WMS `ovc.catastro.meh.es`, capa `Catastro`, desde z15 | Fachadas y parcelas, para ver ensanches |
+
+El fondo y las capas elegidas se recuerdan en el navegador (`localStorage`). También se
+probaron el WMS del CDAU (`/servicios/cdau/wms`: solo ejes, nombres y portales sobre blanco, sin
+manzanas) y el Mapa de Andalucía del IECA (`/services/andalucia/wms`: no rotula calles a esa
+escala y tarda ~2 s por imagen).
+
 ## Flujo
 
 1. **Municipio**: se elige de la lista; se carga su catálogo de nombres oficiales.
