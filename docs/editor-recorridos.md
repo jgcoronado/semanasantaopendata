@@ -61,7 +61,7 @@ horas de carga: el índice reintenta tres veces y, si falla, queda la búsqueda 
 
 Prueba de referencia: itinerario de la salida por la Puerta del Perdón (32 líneas). Se
 resuelven 31 (falta «Arco del Postigo», que en el CDAU es parte de Almirantazgo) y el
-recorrido mide 2.334 m (2.506 m antes del suavizado) frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
+recorrido mide unos 2,4 km (2.506 m sin suavizar) frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
 los GeoJSON de 2025, 291 se resuelven de forma exacta.
 
 ## Suavizado
@@ -70,18 +70,24 @@ Los ejes del CDAU no siempre se cortan en un punto: una calle termina en el eje 
 transversal unos metros antes del cruce (Pastor y Landero acaba en López de Arenas, ~20 m
 antes de Adriano) y el camino dibuja una V; en los ensanches el eje sigue las fachadas con
 escalones de pocos metros (Almirantazgo). Tras componer, el trazado completo pasa por
-`suavizar` y se vuelve a cortar en pasos (`cortarEn`):
+`suavizar` y se vuelve a cortar en pasos (`cortarEn`).
 
-| Regla | Criterio | Caso medido |
-|-------|----------|-------------|
-| Vértice sobrante | desvío ≤ 3 m respecto a la línea directa | — |
-| Escalón | tramo ≤ 15 m y desvío ≤ 7 m | Almirantazgo: 97–114°, tramos 8–10 m, desvío 5–6 m |
-| Pico en cruce | ángulo < 75°, tramo ≤ 25 m y desvío ≤ 18 m | López de Arenas: 44°, 23/15 m, 15 m; Arfe–Dos de Mayo: 36°, 19/4 m |
-| Esquina | se redondea con un corte de hasta 8 m | — |
+Cada vértice que se quita se mide contra el trazado **original** entre los dos vértices que
+quedan, no contra la línea ya simplificada: así los recortes no se acumulan a lo largo de una
+calle. (La primera versión medía contra la línea simplificada y llegó a separarse 16 m del
+eje en Arfe.)
 
-Las esquinas reales (tramos de decenas de metros, desvío > 18 m) se conservan. Los puntos de
-paso del usuario, la salida y el final no se tocan. Efecto en el itinerario de la Puerta del
-Perdón: 2.506 m → 2.334 m (las V sumaban ida y vuelta al nudo).
+| Regla | Desvío máximo respecto al eje original | Solo si el tramo afectado mide |
+|-------|-----------------------------------------|--------------------------------|
+| General | 2,5 m | — |
+| Escalón | 6 m | ≤ 30 m |
+| Pico en cruce (ángulo < 75°) | 18 m | ≤ 45 m |
+| Redondeo de esquina | 2,5 m (corte ≤ 8 m) | — |
+
+Comprobación (muestreo cada 2 m de la línea final frente a todos los ejes de la zona): fuera
+del enlace entre el marcador de salida y la primera calle, la línea solo se separa más de
+3 m de un eje en los cruces cortados en diagonal, en tramos de ≤ 10 m (máx. 8 m en la
+Puerta del Arenal). Los puntos de paso del usuario, la salida y el final no se tocan.
 
 ## Correcciones en la interfaz
 
