@@ -40,11 +40,17 @@ export function iniciarEditor(datos) {
     calles: $('ed-calles'), hermandad: $('ed-hermandad'), bloqueHdad: $('ed-bloque-hdad'),
     btn2025: $('ed-btn-2025'), nombre: $('ed-nombre'), btnExportar: $('ed-btn-exportar'),
     importar: $('ed-importar'), btnBorrarPuntos: $('ed-btn-borrar-puntos'), btnRef: $('ed-btn-ref'),
+    co: $('ed-co'), coResumen: $('ed-co-resumen'), coCalles: $('ed-co-calles'), coNueva: $('ed-co-nueva'),
+    coEstado: $('ed-co-estado'), coPredeterminada: $('ed-co-predeterminada'), coLibre: $('ed-co-libre'), coCopiar: $('ed-co-copiar'),
+    coPuntos: { inicio: $('ed-co-inicio'), entrada: $('ed-co-entrada'), fin: $('ed-co-fin') },
   };
 
   // ── Estado (persistido en el navegador) ──
   const estado = {
     municipio: SEVILLA, salida: null, texto: '', elecciones: {}, puntosPaso: {}, hermandad: null,
+    // Carrera Oficial por municipio: { inicio, calles (texto), entrada, fin }. Sin clave = la
+    // predeterminada de src/data/carreras-oficiales.json, si la hay; null = tramo libre.
+    carreras: {},
   };
   try { Object.assign(estado, JSON.parse(localStorage.getItem(CLAVE_LOCAL) ?? '{}')); } catch { /* sin almacenamiento */ }
   const guardar = () => {
@@ -61,6 +67,23 @@ export function iniciarEditor(datos) {
   let items = [];
   let resultado = null;
   let modo = null;                  // { tipo: 'salida' } | { tipo: 'punto', clave, texto }
+
+  // Desde que se pulsa un marcador hasta que se suelta no se redibuja (el marcador se
+  // sustituiría a medio arrastre, p. ej. si al pulsar pierde el foco un campo y su 'change'
+  // vuelve a trazar). Al soltar: si hubo arrastre, su manejador vuelve a trazar; si no, se
+  // aplica el redibujo pendiente.
+  let arrastrando = false;
+  let redibujoPendiente = false;
+  const marcarArrastre = (mk) => mk
+    .on('mousedown touchstart dragstart', () => { arrastrando = true; })
+    .on('dragend', () => { arrastrando = false; redibujoPendiente = false; });
+  const soltar = () => setTimeout(() => {
+    if (!arrastrando) return;
+    arrastrando = false;
+    if (redibujoPendiente) { redibujoPendiente = false; recomponer(); }
+  }, 0);
+  document.addEventListener('mouseup', soltar);
+  document.addEventListener('touchend', soltar);
 
   // ── Mapa ──
   const mapa = L.map('ed-mapa', { zoomControl: true, maxZoom: 20 }).setView([37.3891, -5.9845], 14);
@@ -172,6 +195,7 @@ export function iniciarEditor(datos) {
       const nombres = [...new Set(vias.map((v) => v.nombre))].sort((a, b) => a.localeCompare(b, 'es'));
       ui.calles.innerHTML = nombres.map((n) => `<option value="${esc(n)}"></option>`).join('');
       ui.munEstado.textContent = `${vias.length.toLocaleString('es-ES', { useGrouping: 'always' })} vías en el callejero oficial`;
+      resolverCarrera();
     } catch (e) {
       ui.munEstado.textContent = '';
       mensaje(`No se pudo cargar el callejero de ${mun.nombre}: ${e.message}`, 'error');
@@ -192,6 +216,7 @@ export function iniciarEditor(datos) {
     const [lon, lat] = estado.salida;
     marcadorSalida = L.marker([lat, lon], { icon: icono('ed-salida', '', 18), draggable: true, zIndexOffset: 1000 })
       .bindTooltip('Salida y entrada del templo').addTo(mapa);
+    marcarArrastre(marcadorSalida);
     marcadorSalida.on('dragend', () => {
       const p = marcadorSalida.getLatLng();
       fijarSalida([p.lng, p.lat]);
@@ -405,7 +430,10 @@ export function iniciarEditor(datos) {
     modo = null;
     mapa.getContainer().classList.remove('ed-apuntando');
     if (m.tipo === 'salida') fijarSalida(coord);
-    else if (m.tipo === 'punto') {
+    else if (m.tipo === 'co') {
+      editarCarrera((c) => { c[m.campo] = coord; });
+      mensaje(`${ETIQUETA_CO[m.campo]} de la Carrera Oficial fijado.`);
+    } else if (m.tipo === 'punto') {
       estado.elecciones[m.clave] = { tipo: 'punto', coord };
       guardar();
       mensaje(`«${m.texto}» fijada en el mapa.`);
@@ -463,6 +491,117 @@ export function iniciarEditor(datos) {
     }
   }
 
+  // ── Carrera Oficial ──
+  const ETIQUETA_CO = { inicio: 'Inicio', entrada: 'Entrada en el templo', fin: 'Fin' };
+  let carreraResuelta = null;   // { inicio, entrada, fin, calles: [items 'via'] } o null
+  let lineasCo = [];            // resolución de cada línea (para el panel)
+  const carreraEnUso = () => !!carreraResuelta && items.some((it) => it.tipo === 'co');
+
+  /** Predeterminada del municipio (src/data/carreras-oficiales.json), en formato del editor. */
+  function carreraPredeterminada(cod) {
+    const d = datos.carreras?.[cod];
+    return d ? { inicio: d.inicio ?? null, calles: (d.calles ?? []).join('\n'), entrada: d.entrada ?? null, fin: d.fin ?? null } : null;
+  }
+  /** Definición vigente para el municipio: la guardada en este navegador, la predeterminada o null. */
+  function carreraActual() {
+    const cod = estado.municipio?.cod;
+    if (estado.carreras && cod in estado.carreras) return estado.carreras[cod];
+    return carreraPredeterminada(cod);
+  }
+  /** Aplica un cambio a la definición (creándola si era tramo libre) y vuelve a trazar. */
+  function editarCarrera(cambio) {
+    const c = { inicio: null, calles: '', entrada: null, fin: null, ...(carreraActual() ?? {}) };
+    cambio(c);
+    estado.carreras = { ...(estado.carreras ?? {}), [estado.municipio.cod]: c };
+    guardar();
+    pintarCarrera();
+    if (estado.salida && ui.texto.value.trim()) trazar();
+  }
+  function resolverCarrera() {
+    const c = carreraActual();
+    lineasCo = c && catalogo
+      ? resolverItinerario(leerItinerario(c.calles ?? ''), catalogo, estado.elecciones, { templos: false })
+      : [];
+    carreraResuelta = c?.inicio && c?.fin
+      ? { inicio: c.inicio, entrada: c.entrada ?? null, fin: c.fin, calles: lineasCo.filter((it) => it.tipo === 'via') }
+      : null;
+    pintarCarrera();
+  }
+  const fmtPunto = (p) => (p ? `${p[1].toFixed(5)}, ${p[0].toFixed(5)}` : null);
+  function pintarCarrera() {
+    const c = carreraActual();
+    if (document.activeElement !== ui.coCalles) ui.coCalles.value = c?.calles ?? '';
+    ui.coPuntos.inicio.textContent = fmtPunto(c?.inicio) ?? 'Sin fijar';
+    ui.coPuntos.entrada.textContent = fmtPunto(c?.entrada) ?? 'Sin entrada';
+    ui.coPuntos.fin.textContent = fmtPunto(c?.fin) ?? 'Sin fijar';
+    ui.coPredeterminada.hidden = !datos.carreras?.[estado.municipio?.cod];
+    const nCalles = leerItinerario(c?.calles ?? '').length;
+    ui.coResumen.textContent = !c ? '· tramo libre'
+      : !(c.inicio && c.fin) ? '· falta fijar inicio y fin (tramo libre)'
+      : `· ${nCalles} ${nCalles === 1 ? 'calle' : 'calles'}${c.entrada ? ' · paso por templo' : ''}`;
+    ui.coEstado.innerHTML = lineasCo.map((it) => {
+      const ok = it.tipo === 'via';
+      const clase = ok ? (it.estado === 'ok' || it.estado === 'manual' ? 'ok' : 'aviso') : 'error';
+      return `<li class="ed-chip ed-chip--${clase}" title="${esc(ok ? it.nombre : 'No encontrada en el callejero')}">${esc(it.texto)}${ok && it.estado === 'aprox' ? ` → ${esc(it.nombre)}` : ''}${ok ? '' : ' ✗'}</li>`;
+    }).join('');
+  }
+
+  ui.coCalles.addEventListener('change', () => editarCarrera((c) => { c.calles = ui.coCalles.value; }));
+  ui.coNueva.addEventListener('change', () => {
+    const v = ui.coNueva.value.trim();
+    if (!v) return;
+    ui.coNueva.value = '';
+    editarCarrera((c) => { c.calles = [...leerItinerario(c.calles ?? '').map((l) => l.texto), v].join('\n'); });
+  });
+  ui.coNueva.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); ui.coNueva.blur(); } });
+  ui.co.addEventListener('click', (e) => {
+    const fijar = e.target.closest('[data-co-fijar]')?.dataset.coFijar;
+    const quitar = e.target.closest('[data-co-quitar]')?.dataset.coQuitar;
+    if (fijar) {
+      modo = { tipo: 'co', campo: fijar };
+      mapa.getContainer().classList.add('ed-apuntando');
+      mensaje(`Pincha en el mapa: ${ETIQUETA_CO[fijar].toLowerCase()} de la Carrera Oficial.`);
+    } else if (quitar) {
+      editarCarrera((c) => { c[quitar] = null; });
+    }
+  });
+  ui.coPredeterminada.addEventListener('click', () => {
+    const t = { ...(estado.carreras ?? {}) };
+    delete t[estado.municipio.cod];
+    estado.carreras = t;
+    guardar();
+    pintarCarrera();
+    mensaje(`Carrera Oficial predeterminada de ${estado.municipio.nombre} restablecida.`);
+    if (estado.salida && ui.texto.value.trim()) trazar();
+  });
+  // Definición en el formato de src/data/carreras-oficiales.json, para añadir otra localidad.
+  ui.coCopiar.addEventListener('click', async () => {
+    const c = carreraActual();
+    if (!c?.inicio || !c?.fin) { mensaje('Fija al menos el inicio y el fin de la Carrera Oficial.', 'error'); return; }
+    const r = (p) => (p ? p.map((v) => Math.round(v * 1e7) / 1e7) : null);
+    const entrada = {
+      municipio: estado.municipio.nombre,
+      inicio: r(c.inicio),
+      calles: leerItinerario(c.calles ?? '').map((l) => l.texto),
+      ...(c.entrada ? { entrada: r(c.entrada) } : {}),
+      fin: r(c.fin),
+    };
+    const texto = `"${estado.municipio.cod}": ${JSON.stringify(entrada, null, 2)}`;
+    try {
+      await navigator.clipboard.writeText(texto);
+      mensaje('Definición copiada: pégala en src/data/carreras-oficiales.json.');
+    } catch {
+      window.prompt('Copia la definición para src/data/carreras-oficiales.json:', texto);
+    }
+  });
+  ui.coLibre.addEventListener('click', () => {
+    estado.carreras = { ...(estado.carreras ?? {}), [estado.municipio.cod]: null };
+    guardar();
+    pintarCarrera();
+    mensaje('La Carrera Oficial será un tramo libre entre la calle anterior y la siguiente.');
+    if (estado.salida && ui.texto.value.trim()) trazar();
+  });
+
   // ── Trazar ──
   let enCurso = 0;
   async function trazar({ encuadrar = false } = {}) {
@@ -476,7 +615,12 @@ export function iniciarEditor(datos) {
     ui.btnTrazar.disabled = true;
     try {
       const resueltos = resolverItinerario(lineas, catalogo, estado.elecciones);
-      await asegurarGrafo(resueltos);
+      resolverCarrera();
+      const extra = carreraResuelta ? [
+        ...carreraResuelta.calles,
+        ...['inicio', 'entrada', 'fin'].filter((k) => carreraResuelta[k]).map((k) => ({ tipo: 'punto', coord: carreraResuelta[k] })),
+      ] : [];
+      await asegurarGrafo([...resueltos, ...extra]);
       if (turno !== enCurso) return;
       items = resueltos;
       recomponer();
@@ -495,8 +639,10 @@ export function iniciarEditor(datos) {
   }
 
   function recomponer() {
+    if (arrastrando) { redibujoPendiente = true; return; }
     if (!grafo || !items.length) return;
-    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso: estado.puntosPaso });
+    const usaCo = items.some((it) => it.tipo === 'co');
+    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso: estado.puntosPaso, carrera: usaCo ? carreraResuelta : null });
     dibujar();
     pintarLista();
   }
@@ -527,16 +673,16 @@ export function iniciarEditor(datos) {
 
     resultado.pasos.forEach((p, k) => {
       const desde = p.desde >= 0 ? items[p.desde].texto : 'Salida';
-      const hasta = items[p.hasta].texto;
+      const hasta = p.etiqueta ?? items[p.hasta].texto;
       const c = COLORES[p.tipo] ?? color;
       const linea = L.polyline(p.coords.map(([x, y]) => [y, x]), {
         color: c, weight: 5, opacity: 0.9,
         dashArray: p.tipo === 'co' || p.tipo === 'recta' ? '8 6' : null,
-      }).bindTooltip(`${esc(desde)} → ${esc(hasta)} · ${fmtM(p.metros)}${p.tipo === 'co' ? ' · Carrera Oficial' : ''}`, { sticky: true });
+      }).bindTooltip(p.etiqueta ? `${esc(p.etiqueta)} · ${fmtM(p.metros)}` : `${esc(desde)} → ${esc(hasta)} · ${fmtM(p.metros)}`, { sticky: true });
       linea.on('click', (e) => { L.DomEvent.stopPropagation(e); añadirPuntoPaso(p, [e.latlng.lng, e.latlng.lat]); });
       linea.addTo(capaRuta);
       lineasPaso.set(k, linea);
-      if (p.tipo === 'co') {
+      if (p.tipo === 'co' && !carreraEnUso()) {
         L.marker([p.coords[0][1], p.coords[0][0]], { icon: icono('ed-co') }).bindTooltip('Entrada en Carrera Oficial').addTo(capaRuta);
         const f = p.coords[p.coords.length - 1];
         L.marker([f[1], f[0]], { icon: icono('ed-co') }).bindTooltip('Salida de Carrera Oficial').addTo(capaRuta);
@@ -546,6 +692,23 @@ export function iniciarEditor(datos) {
         L.marker([m[1], m[0]], { icon: icono('ed-aviso', '!', 18) }).bindTooltip(`Sin conexión por calles hasta «${esc(hasta)}»`).addTo(capaRuta);
       }
     });
+
+    // Inicio, entrada y fin de la Carrera Oficial definida: arrastrables para modificarla.
+    if (carreraEnUso()) {
+      for (const campo of ['inicio', 'entrada', 'fin']) {
+        const pt = carreraResuelta[campo];
+        if (!pt) continue;
+        const mk = L.marker([pt[1], pt[0]], {
+          icon: icono('ed-co ed-co--' + campo, campo === 'inicio' ? 'I' : campo === 'fin' ? 'F' : 'E', 18),
+          draggable: true, zIndexOffset: 800,
+        }).bindTooltip(`${ETIQUETA_CO[campo]} de la Carrera Oficial · arrastra para moverlo`).addTo(capaRuta);
+        marcarArrastre(mk);
+        mk.on('dragend', () => {
+          const ll = mk.getLatLng();
+          editarCarrera((c) => { c[campo] = [ll.lng, ll.lat]; });
+        });
+      }
+    }
 
     // Flechas de sentido de la marcha.
     for (let m = FLECHA_CADA_M / 2; m < resultado.metros; m += FLECHA_CADA_M) {
@@ -562,6 +725,7 @@ export function iniciarEditor(datos) {
         const mk = L.marker([pt[1], pt[0]], { icon: icono('ed-punto'), draggable: true, zIndexOffset: 500 })
           .bindTooltip('Arrastra para corregir · doble clic para quitar')
           .addTo(capaPuntos);
+        marcarArrastre(mk);
         mk.on('dragend', () => {
           const ll = mk.getLatLng();
           estado.puntosPaso[claveP][i] = [ll.lng, ll.lat];
@@ -632,7 +796,15 @@ export function iniciarEditor(datos) {
 
   function pintarLista() {
     ui.resultado.hidden = false;
-    const pasoHasta = new Map(resultado.pasos.map((p, k) => [p.hasta, { p, k }]));
+    // Una línea puede tener varios pasos (la Carrera Oficial definida): se agregan.
+    const pasoHasta = new Map();
+    resultado.pasos.forEach((p, k) => {
+      const a = pasoHasta.get(p.hasta) ?? { metros: 0, ks: [], enlaces: [] };
+      a.metros += p.metros;
+      a.ks.push(k);
+      a.enlaces.push(...p.enlaces);
+      pasoHasta.set(p.hasta, a);
+    });
     const nVias = items.filter((it) => it.tipo === 'via').length;
     const nPuntos = puntosVigentes().reduce((s, [, l]) => s + l.length, 0);
     ui.resumen.innerHTML = `<strong>${fmtKm(resultado.metros)}</strong> · ${nVias} calles`
@@ -643,12 +815,16 @@ export function iniciarEditor(datos) {
     const ultimo = items.length - 1;
     ui.lista.innerHTML = items.map((it, i) => {
       const paso = pasoHasta.get(i);
-      const metros = paso ? `<span class="ed-item__m">${fmtM(paso.p.metros)}</span>` : '';
+      const metros = paso ? `<span class="ed-item__m">${fmtM(paso.metros)}</span>` : '';
       let control;
       if (it.tipo === 'salida' || it.tipo === 'entrada') {
         control = `<span class="ed-chip">${it.tipo === 'salida' ? 'Salida del templo' : 'Entrada en el templo'}</span>`;
       } else if (it.tipo === 'co') {
-        control = '<span class="ed-chip ed-chip--co">Carrera Oficial · tramo libre</span>';
+        control = carreraEnUso()
+          ? `<span class="ed-chip ed-chip--co">Carrera Oficial · ${carreraResuelta.calles.length} calles${carreraResuelta.entrada ? ' · paso por templo' : ''}</span>`
+            + '<button type="button" class="ed-mini" data-accion="ver-co" title="Ver la definición">⚙</button>'
+          : '<span class="ed-chip ed-chip--co">Carrera Oficial · tramo libre</span>'
+            + '<button type="button" class="ed-mini" data-accion="ver-co" title="Definirla">⚙</button>';
       } else {
         const [txt, clase] = ETIQUETA_ESTADO[it.estado] ?? [];
         const valor = it.tipo === 'via' ? it.nombre : '';
@@ -659,8 +835,8 @@ export function iniciarEditor(datos) {
           + (txt ? `<span class="ed-chip ed-chip--${clase}">${txt}</span>` : '')
           + (it.tipo === 'ambigua' && it.candidatos?.length ? `<small class="ed-item__cand">¿${it.candidatos.slice(0, 4).map(esc).join('? ¿')}?</small>` : '');
       }
-      const enlaces = paso?.p.enlaces.length
-        ? `<small class="ed-item__enlace">Pasa por ${paso.p.enlaces.map((e) => `${esc(e.nombre)} (${fmtM(e.metros)})`).join(', ')}, que no está en la lista</small>`
+      const enlaces = paso?.enlaces.length
+        ? `<small class="ed-item__enlace">Pasa por ${paso.enlaces.map((e) => `${esc(e.nombre)} (${fmtM(e.metros)})`).join(', ')}, que no está en la lista</small>`
         : '';
       const orden = `<span class="ed-item__orden">`
         + `<button type="button" class="ed-mini" data-accion="subir" data-i="${i}" title="Subir" aria-label="Subir «${esc(it.texto)}»"${i === 0 ? ' disabled' : ''}>↑</button>`
@@ -668,7 +844,7 @@ export function iniciarEditor(datos) {
         + `<button type="button" class="ed-mini" data-accion="insertar" data-i="${i}" title="Añadir una calle debajo" aria-label="Añadir una calle debajo de «${esc(it.texto)}»">＋</button>`
         + `<button type="button" class="ed-mini ed-mini--quitar" data-accion="quitar" data-i="${i}" title="Quitar de la lista" aria-label="Quitar «${esc(it.texto)}»">🗑</button>`
         + `</span>`;
-      return `<li class="ed-item ed-item--${it.tipo}" data-i="${i}" data-paso="${paso ? paso.k : ''}">
+      return `<li class="ed-item ed-item--${it.tipo}" data-i="${i}" data-paso="${paso ? paso.ks.join(',') : ''}">
         <div class="ed-item__cab"><span class="ed-item__asa" title="Arrastra para cambiar el orden" aria-hidden="true">⋮⋮</span><span class="ed-item__txt">${esc(it.texto)}</span>${metros}${orden}</div>
         <div class="ed-item__ctl">${control}</div>${enlaces}</li>`;
     }).join('')
@@ -721,6 +897,10 @@ export function iniciarEditor(datos) {
       case 'bajar': moverLinea(i, i + 1); break;
       case 'quitar': quitarLinea(it.n); break;
       case 'insertar': abrirInsercion(b.closest('.ed-item'), it.n + 1); break;
+      case 'ver-co':
+        ui.co.open = true;
+        ui.co.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        break;
       case 'omitir':
         if (it.tipo === 'omitir') delete estado.elecciones[it.clave];
         else estado.elecciones[it.clave] = { tipo: 'omitir' };
@@ -779,12 +959,14 @@ export function iniciarEditor(datos) {
   // Resaltar en el mapa el paso de la fila sobre la que está el ratón o el foco.
   const resaltar = (e, on) => {
     const li = e.target.closest?.('.ed-item');
-    const k = li?.dataset.paso;
-    if (k === '' || k == null) return;
-    const linea = lineasPaso.get(Number(k));
-    if (!linea) return;
-    linea.setStyle({ weight: on ? 9 : 5 });
-    if (on) linea.bringToFront();
+    const ks = li?.dataset.paso;
+    if (!ks) return;
+    for (const k of ks.split(',')) {
+      const linea = lineasPaso.get(Number(k));
+      if (!linea) continue;
+      linea.setStyle({ weight: on ? 9 : 5 });
+      if (on) linea.bringToFront();
+    }
   };
   ui.lista.addEventListener('mouseover', (e) => resaltar(e, true));
   ui.lista.addEventListener('mouseout', (e) => resaltar(e, false));
@@ -844,7 +1026,7 @@ export function iniciarEditor(datos) {
     if (!resultado) { mensaje('Traza primero el recorrido.', 'error'); return; }
     const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad) ?? null;
     const nombre = ui.nombre.value.trim();
-    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre, municipio: estado.municipio, estado });
+    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre, municipio: estado.municipio, estado: { ...estado, carrera: carreraActual() } });
     const archivo = h
       ? `${String(h.id_hdad).padStart(2, '0')}-${h.slug}.geojson`
       : `${(clave(nombre) || 'recorrido').slice(0, 60)}.geojson`;
@@ -862,6 +1044,9 @@ export function iniciarEditor(datos) {
       }
       if (r.estado) {
         Object.assign(estado, { texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso });
+        // La Carrera Oficial guardada con el recorrido se aplica a su municipio.
+        const codCo = r.estado.municipio?.cod ?? estado.municipio.cod;
+        if (r.estado.carrera !== undefined) estado.carreras = { ...(estado.carreras ?? {}), [codCo]: r.estado.carrera };
         ui.texto.value = estado.texto;
         pintarReferencia(null);
         if (r.estado.municipio && r.estado.municipio.cod !== estado.municipio.cod) await elegirMunicipio(r.estado.municipio, { encuadrar: false });
@@ -883,6 +1068,7 @@ export function iniciarEditor(datos) {
   });
 
   // ── Arranque ──
+  pintarCarrera();
   ui.texto.value = estado.texto ?? '';
   pintarSalida();
   if (estado.salida) mapa.setView([estado.salida[1], estado.salida[0]], 16);

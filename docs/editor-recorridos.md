@@ -79,6 +79,25 @@ resuelven 31 (falta «Arco del Postigo», que en el CDAU es parte de Almirantazg
 recorrido mide unos 2,4 km (2.506 m sin suavizar) frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
 los GeoJSON de 2025, 291 se resuelven de forma exacta.
 
+## Carrera Oficial
+
+La línea «Carrera Oficial» del itinerario se sustituye por la definición del municipio:
+**inicio** (punto) → **calles** en orden → **entrada en templo** (punto, opcional) → **fin**
+(punto). Con entrada, de la entrada al fin se dibuja en línea recta por el interior (en
+Sevilla, de la Puerta de San Miguel a la de Palos de la Catedral). Hasta el inicio se llega
+como a cualquier punto; dentro de la Carrera Oficial cuentan sus propias calles. Sin inicio y
+fin (o con «Dejar como tramo libre») es un tramo libre entre la calle anterior y la siguiente.
+
+- **Predeterminadas**: `src/data/carreras-oficiales.json`, por código INE de municipio. Añadir
+  otra localidad es añadir una entrada; el editor la carga sola. «Copiar definición» genera la
+  entrada desde lo que se haya fijado en el editor. Sevilla (41091): inicio en La Campana
+  (primer punto del tramo canónico de 2025), La Campana → Sierpes → Plaza de San Francisco →
+  Avenida de la Constitución, Puerta de San Miguel y Puerta de Palos (OpenStreetMap).
+- **Edición**: panel «Carrera Oficial» (📍 para fijar puntos, lista de calles con campo
+  predictivo y estado de cada una) y marcadores I/E/F arrastrables en el mapa. Los cambios se
+  guardan en el navegador por municipio y viajan en el GeoJSON exportado (`editor.carrera`).
+- En la lista del recorrido la fila «Carrera Oficial» suma los metros de todos sus tramos.
+
 ## Suavizado
 
 Los ejes del CDAU no siempre se cortan en un punto: una calle termina en el eje de la

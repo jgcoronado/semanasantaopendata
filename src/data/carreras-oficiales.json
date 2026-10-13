@@ -1,0 +1,11 @@
+{
+  "_nota": "Carreras Oficiales predeterminadas del editor de recorridos, por código INE de municipio. inicio/entrada/fin en [lon, lat]; entrada es opcional (paso por el interior de un templo: de la entrada al fin se dibuja en línea recta). calles en orden, con el nombre del callejero (CDAU) o el habitual.",
+  "41091": {
+    "municipio": "Sevilla",
+    "inicio": [-5.995376, 37.392725],
+    "calles": ["La Campana", "Sierpes", "Plaza de San Francisco", "Avenida de la Constitución"],
+    "entrada": [-5.9938093, 37.3855144],
+    "fin": [-5.9924265, 37.386063],
+    "fuente": "Inicio: primer punto del tramo canónico de 2025 (co-campana-camigo). Entrada: Puerta de San Miguel; fin: Puerta de Palos (OpenStreetMap, oct 2026)."
+  }
+}

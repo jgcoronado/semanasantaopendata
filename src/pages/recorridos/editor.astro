@@ -9,6 +9,7 @@ import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import hermandades from '../../data/hermandades.json';
 import dias from '../../data/dias.json';
+import carrerasOficiales from '../../data/carreras-oficiales.json';
 
 const COLORES_DIA = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 const ordenDia = new Map(dias.map((d) => [d.slug, d.orden]));
@@ -16,7 +17,11 @@ const ordenDia = new Map(dias.map((d) => [d.slug, d.orden]));
 // GeoJSON de 2025 publicados en /geojson/2025/ (para «Cargar itinerario 2025»).
 const archivos2025 = readdirSync(join(process.cwd(), 'public', 'geojson', '2025'));
 
+// Carreras Oficiales predeterminadas por código INE (sin la clave de notas).
+const carreras = Object.fromEntries(Object.entries(carrerasOficiales).filter(([k]) => !k.startsWith('_')));
+
 const datos = {
+  carreras,
   hermandades: [...hermandades]
     .sort((a, b) => (ordenDia.get(a.dia) - ordenDia.get(b.dia)) || a.id_hdad - b.id_hdad)
     .map((h) => {
@@ -89,8 +94,44 @@ const description =
         <h2><span class="ed__num">3</span> Itinerario</h2>
         <textarea id="ed-texto" class="ed__input ed__texto" rows="10" spellcheck="false"
           placeholder={'Una calle por línea o separadas por comas, en orden:\nPuerta del Perdón\nAlemanes\nCardenal Carlos Amigo\n…\nCarrera Oficial\n…'}></textarea>
-        <small class="ed__nota">«Carrera Oficial» se dibuja como tramo libre entre la calle anterior y la siguiente. Si la primera línea es el templo, se toma como la salida.</small>
+        <small class="ed__nota">Escribe «Carrera Oficial» donde corresponda: se sustituye por la definida abajo. Si la primera línea es el templo, se toma como la salida.</small>
         <button id="ed-btn-trazar" type="button" class="btn ed__trazar">Trazar recorrido</button>
+      </section>
+
+      <section class="ed__bloque">
+        <details id="ed-co" class="ed-co">
+          <summary><h2><span class="ed__num ed__num--co">CO</span> Carrera Oficial <small id="ed-co-resumen" class="ed__nota"></small></h2></summary>
+          <div class="ed-co__cuerpo">
+            <div class="ed-co__fila">
+              <span class="ed-co__etq">Inicio</span>
+              <span id="ed-co-inicio" class="ed__nota">Sin fijar</span>
+              <button type="button" class="ed-mini" data-co-fijar="inicio" title="Fijar el inicio en el mapa" aria-label="Fijar el inicio de la Carrera Oficial en el mapa">📍</button>
+            </div>
+            <label class="campo">Calles por las que transita, en orden
+              <textarea id="ed-co-calles" class="ed__input ed__texto" rows="5" spellcheck="false" placeholder={'Una calle por línea, en orden'}></textarea>
+            </label>
+            <input id="ed-co-nueva" class="ed__input" list="ed-calles" autocomplete="off" placeholder="Añadir una calle…" aria-label="Añadir una calle a la Carrera Oficial" />
+            <ul id="ed-co-estado" class="ed-co__estado"></ul>
+            <div class="ed-co__fila">
+              <span class="ed-co__etq">Entrada en templo</span>
+              <span id="ed-co-entrada" class="ed__nota">Sin entrada</span>
+              <button type="button" class="ed-mini" data-co-fijar="entrada" title="Fijar la entrada en el mapa" aria-label="Fijar la entrada en el templo en el mapa">📍</button>
+              <button type="button" class="ed-mini" data-co-quitar="entrada" title="Quitar la entrada" aria-label="Quitar la entrada en el templo">✕</button>
+            </div>
+            <small class="ed__nota">Opcional, cuando la Carrera Oficial atraviesa un templo: de la entrada al fin se va en línea recta por el interior (p. ej., en Sevilla, de la Puerta de San Miguel a la de Palos de la Catedral).</small>
+            <div class="ed-co__fila">
+              <span class="ed-co__etq">Fin</span>
+              <span id="ed-co-fin" class="ed__nota">Sin fijar</span>
+              <button type="button" class="ed-mini" data-co-fijar="fin" title="Fijar el fin en el mapa" aria-label="Fijar el fin de la Carrera Oficial en el mapa">📍</button>
+            </div>
+            <div class="ed__fila">
+              <button id="ed-co-predeterminada" type="button" class="btn btn--sec">Restablecer la predeterminada</button>
+              <button id="ed-co-libre" type="button" class="btn btn--sec">Dejar como tramo libre</button>
+              <button id="ed-co-copiar" type="button" class="btn btn--sec">Copiar definición</button>
+            </div>
+            <small class="ed__nota">Los puntos de inicio, entrada y fin también se pueden arrastrar en el mapa. Sin inicio y fin, la Carrera Oficial es un tramo libre entre la calle anterior y la siguiente.</small>
+          </div>
+        </details>
       </section>
 
       <p id="ed-mensaje" class="ed__mensaje" role="status" aria-live="polite"></p>
@@ -175,6 +216,17 @@ const description =
   .ed__texto { font-family: ui-monospace, Consolas, monospace; font-size: 0.88rem; resize: vertical; }
   .ed__fila { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
   .ed__o { margin: 0.1rem 0 -0.1rem; font-size: 0.78rem; color: var(--gris); }
+  .ed-co summary { cursor: pointer; list-style: none; }
+  .ed-co summary::-webkit-details-marker { display: none; }
+  .ed-co summary h2 { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+  .ed-co summary h2::after { content: '▸'; margin-left: auto; color: var(--gris); }
+  .ed-co[open] summary h2::after { content: '▾'; }
+  .ed__num--co { width: auto; padding: 0 0.35rem; border-radius: 999px; background: var(--oro); color: var(--tinta); font-size: 0.7rem; }
+  .ed-co__cuerpo { display: grid; gap: 0.45rem; margin-top: 0.5rem; }
+  .ed-co__fila { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .ed-co__etq { font-weight: 600; font-size: 0.86rem; min-width: 7.5rem; }
+  .ed-co__estado { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .ed-co__estado:empty { display: none; }
   .ed__direccion { display: grid; grid-template-columns: 1fr 5.5rem; gap: 0.4rem; }
   .ed__direccion input:disabled { background: var(--fondo-alt); }
   .ed__nota { color: var(--gris); font-size: 0.8rem; }
@@ -266,6 +318,9 @@ const description =
   .ed-salida { background: #5b2a86; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
   .ed-punto { background: #fff; border: 3px solid #198038; border-radius: 50%; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); cursor: grab; }
   .ed-co { background: #c8a24a; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); }
+  .ed-co--inicio, .ed-co--entrada, .ed-co--fin {
+    border-radius: 50%; color: #1c1a22; font: 700 10px/14px system-ui, sans-serif; text-align: center; cursor: grab;
+  }
   .ed-aviso {
     background: #fa4d56; color: #fff; border-radius: 50%; font: 700 12px/18px system-ui, sans-serif; text-align: center;
   }
