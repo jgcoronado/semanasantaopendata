@@ -152,9 +152,30 @@ export function crearCatalogo() {
     return { estado: 'ambigua', eleccion: null, candidatos };
   }
 
+  /**
+   * Nombres cuya clave se parece a la del texto al menos `umbral` (1 − distancia de
+   * edición / longitud de la clave más larga). Incluye los de clave idéntica (parecido 1).
+   * Devuelve [{ entrada, parecido }] de más a menos parecido.
+   */
+  function similares(texto, umbral = 0.9) {
+    const k = clave(texto);
+    if (!k) return [];
+    const out = [];
+    for (const [k2, lista] of porClave) {
+      const largo = Math.max(k.length, k2.length);
+      const max = Math.floor((1 - umbral) * largo + 1e-9);
+      if (Math.abs(k.length - k2.length) > max) continue;
+      const d = k === k2 ? 0 : levenshtein(k, k2, max);
+      if (d > max) continue;
+      for (const entrada of lista) out.push({ entrada, parecido: 1 - d / largo });
+    }
+    return out.sort((a, b) => b.parecido - a.parecido);
+  }
+
   return {
     añadir,
     resolver,
+    similares,
     porNombre: (nombre) => porNombre.get(nombre) ?? null,
     get tamaño() { return porNombre.size; },
   };

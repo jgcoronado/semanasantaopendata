@@ -35,7 +35,7 @@ export function leerItinerario(texto) {
 }
 
 /** Texto sin paréntesis para buscarlo ("Plaza del Duque (lado derecho)" → "Plaza del Duque"). */
-const textoBusqueda = (t) => t.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+export const textoBusqueda = (t) => t.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
 
 /**
  * Resuelve las líneas contra el catálogo del municipio.
@@ -241,6 +241,11 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     }
     if (it.tipo === 'sin' || it.tipo === 'ambigua') {
       avisos.push(`«${it.texto}»: ${it.tipo === 'sin' ? 'no se encuentra en el callejero' : 'hay varias vías posibles'}; se salta.`);
+      continue;
+    }
+    if (it.tipo === 'lejos') {
+      const lejos = it.metros == null ? '' : ` (a ${it.metros >= 1000 ? `${(it.metros / 1000).toFixed(1).replace('.', ',')} km` : `${it.metros} m`})`;
+      avisos.push(`«${it.texto}»: la única vía con ese nombre, ${it.nombre}, está lejos de la calle anterior${lejos}; se salta.`);
       continue;
     }
     const libre = coPendiente;

@@ -66,6 +66,7 @@ escala y tarda ~2 s por imagen).
 | Módulo | Función |
 |--------|---------|
 | `nombres.js` | Normalización y resolución: la `clave` quita acentos, tipo de vía, artículos y espacios y unifica y/i («C/ Tomás de Ybarra» = «Calle Tomás de Ibarra», «Entre Cárceles» = «Calle entre Cárceles»). Exacta → `ok`; parecida (Levenshtein) → `aprox`; varias → `ambigua`; nada → `sin` |
+| `continuidad.js` | Comprueba que cada vía resuelta está cerca de la anterior, ver «Continuidad» |
 | `cdau.js` | Cliente WFS con caché (vías, nombres, portales, municipio de un punto, municipios) |
 | `lugares.js` | Búsqueda de la salida por nombre: índice de templos (Overpass), puntuación con palabras genéricas, Photon |
 | `grafo.js` | Grafo de ejes. Funde vértices a ≤ 3 m y cose extremos sueltos al segmento más cercano (≤ 3 m): el CDAU no siempre comparte el vértice en los cruces |
@@ -78,6 +79,29 @@ Prueba de referencia: itinerario de la salida por la Puerta del Perdón (32 lín
 resuelven 31 (falta «Arco del Postigo», que en el CDAU es parte de Almirantazgo) y el
 recorrido mide unos 2,4 km (2.506 m sin suavizar) frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
 los GeoJSON de 2025, 291 se resuelven de forma exacta.
+
+## Continuidad
+
+El catálogo resuelve por nombre en todo el municipio, y en municipios con pedanías o
+barriadas hay homónimas a kilómetros. En Jerez, «De la Rosa» (hoy Padre Hortas Cáliz, entre
+la Encarnación y Manuel María González) coincidía con la Calle Rosa de una pedanía a 13 km.
+Tras resolver los nombres, `continuidad.js` recorre la lista en orden con la geometría de
+las candidatas y exige que cada vía esté a **≤ 300 m** de la última aceptada (la primera,
+de la salida; tras la Carrera Oficial definida, de su fin):
+
+1. De las vías con el nombre elegido se quedan las cercanas.
+2. Si ninguna está cerca, o la línea tiene varias posibles («Encarnación»: Plaza o Cuesta),
+   se busca entre las varias posibles y las de nombre parecido al **≥ 90 %** (1 − distancia
+   de edición / longitud de la clave) las que estén cerca, y se elige la que menos dista de
+   la anterior más la siguiente. La fila dice «Elegida por cercanía».
+3. Si no hay ninguna cerca, la línea queda **«Lejos del recorrido»** y no se dibuja (como
+   omitirla): el camino de la anterior a la siguiente sale solo y la fila de la siguiente
+   dice por qué calles pasa. Se corrige eligiendo la vía o con 📍.
+
+Cada línea que no se dibuja suma 300 m al radio de la siguiente (máx. 1.200 m), porque la
+calle saltada tiene su longitud; tras una Carrera Oficial sin definir el radio es 2,5 km.
+Una vía elegida a mano se respeta aunque esté lejos. Las mismas reglas se aplican a las
+calles de la Carrera Oficial, desde su inicio.
 
 ## Carrera Oficial
 
@@ -135,7 +159,11 @@ Puerta del Arenal). Los puntos de paso del usuario, la salida y el final no se t
 - **📍**: fijar la línea en el mapa (lugares que no son vías: arcos, compases, puertas).
 - **⊘**: omitir la línea (sigue en la lista pero no se dibuja).
 - **Puntos de paso**: pinchar sobre la línea añade uno a ese paso; se arrastran; doble clic
-  o clic derecho lo quita.
+  o clic derecho lo quita. Con un «Fijar en el mapa» o 📍 pendiente, el clic es para eso
+  aunque caiga sobre la línea. El trazado suavizado se reparte en pasos buscando cada corte
+  a ±80 m de lo esperado desde el corte anterior (no desde la salida: en recorridos de
+  varios km el acortamiento del suavizado se acumulaba y un paso de la Carrera Oficial
+  podía quedarse con las calles siguientes, y los clics en ellas iban a la Carrera).
 
 ## Guardar
 
@@ -153,8 +181,12 @@ línea en gris como referencia. El estado de trabajo se conserva en el navegador
 - Lo que no es una vía (puertas, arcos, compases) hay que fijarlo en el mapa.
 - Depende de los servicios WFS de la Junta: sin ellos no se pueden trazar recorridos nuevos
   (lo ya cacheado sigue funcionando).
-- Calles homónimas en un mismo municipio: se usan todas como destino y el camino elige la
-  más cercana; si la zona descargada supera 6 km se limita alrededor de la salida.
+- Calles homónimas en un mismo municipio: solo se usan las que están a ≤ 300 m de la calle
+  anterior (ver «Continuidad»). Un nombre antiguo que no está en el CDAU ni como
+  sobrenombre (de la Rosa → Padre Hortas Cáliz) no se puede traducir: se salta y el camino
+  pasa por la calle actual.
+- Lugares que no son vías (el Reducto de la Catedral de Jerez) quedan «No encontrada» y la
+  calle siguiente se busca desde la anterior: si el camino da un rodeo, fijarlos con 📍.
 
 ## Relación con el índice de tramos 2025
 

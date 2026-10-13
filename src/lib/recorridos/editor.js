@@ -8,9 +8,10 @@
 
 import L from 'leaflet';
 import * as cdau from './cdau.js';
-import { crearCatalogo, clave } from './nombres.js';
+import { crearCatalogo, clave, esCarreraOficial } from './nombres.js';
 import { crearGrafo } from './grafo.js';
 import { leerItinerario, resolverItinerario, componer } from './componer.js';
+import { confirmarContinuidad } from './continuidad.js';
 import { ampliarBbox, bboxDe, bboxContiene, distM, puntoA, puntoMasCercano } from './geo.js';
 import { aGeoJSON, deGeoJSON, descargar } from './exportar.js';
 import { ATRIBUCION_LUGARES, buscarLugares, buscarPhoton, templosMunicipio } from './lugares.js';
@@ -62,6 +63,7 @@ export function iniciarEditor(datos) {
   let templos = null;             // [{ nombre, alias, coord, tipo, detalle }] o null si no hay
   let municipios = [];
   const viasCargadas = new Map();   // id_vial → vía con geometría
+  const viasCandidatas = new Map(); // id_vial → vía: candidatas por nombre, para comprobar la continuidad
   let zona = null;                  // bbox [s, w, n, e] de la zona de calles cargada
   let grafo = null;
   let items = [];
@@ -170,6 +172,7 @@ export function iniciarEditor(datos) {
     ui.bloqueHdad.hidden = mun.cod !== SEVILLA.cod;
     if (cambia) {
       catalogo = null;
+      viasCandidatas.clear();
       estado.elecciones = {};
       ui.salidaCalle.value = '';
       ui.salidaNum.value = '';
@@ -423,8 +426,12 @@ export function iniciarEditor(datos) {
     mensaje('Pincha en el mapa la puerta del templo.');
   });
 
-  mapa.on('click', (e) => {
-    if (!modo) return;
+  // Con un modo activo («Fijar en el mapa», 📍) el siguiente clic es para él, también si cae
+  // encima de la línea del recorrido o de un punto: si no, se añadía un punto de paso y el
+  // modo seguía activo para el clic siguiente.
+  mapa.on('click', (e) => aplicarModo(e));
+  function aplicarModo(e) {
+    if (!modo) return false;
     const coord = [e.latlng.lng, e.latlng.lat];
     const m = modo;
     modo = null;
@@ -439,11 +446,13 @@ export function iniciarEditor(datos) {
       mensaje(`«${m.texto}» fijada en el mapa.`);
       trazar();
     }
-  });
+    return true;
+  }
 
   // ── Zona de calles y grafo ──
   async function asegurarGrafo(itemsResueltos) {
     const ids = [...new Set(itemsResueltos.flatMap((it) => it.ids ?? []))];
+    for (const id of ids) if (!viasCargadas.has(id) && viasCandidatas.has(id)) viasCargadas.set(id, viasCandidatas.get(id));
     const faltan = ids.filter((id) => !viasCargadas.has(id));
     if (faltan.length) for (const v of await cdau.viasPorId(faltan)) viasCargadas.set(v.id, v);
 
@@ -542,7 +551,7 @@ export function iniciarEditor(datos) {
     ui.coEstado.innerHTML = lineasCo.map((it) => {
       const ok = it.tipo === 'via';
       const clase = ok ? (it.estado === 'ok' || it.estado === 'manual' ? 'ok' : 'aviso') : 'error';
-      return `<li class="ed-chip ed-chip--${clase}" title="${esc(ok ? it.nombre : 'No encontrada en el callejero')}">${esc(it.texto)}${ok && it.estado === 'aprox' ? ` → ${esc(it.nombre)}` : ''}${ok ? '' : ' ✗'}</li>`;
+      return `<li class="ed-chip ed-chip--${clase}" title="${esc(ok ? it.nombre : it.tipo === 'lejos' ? `${it.nombre}: lejos de la calle anterior` : 'No encontrada en el callejero')}">${esc(it.texto)}${ok && it.estado === 'aprox' ? ` → ${esc(it.nombre)}` : ''}${ok ? '' : ' ✗'}</li>`;
     }).join('');
   }
 
@@ -614,8 +623,19 @@ export function iniciarEditor(datos) {
     const turno = ++enCurso;
     ui.btnTrazar.disabled = true;
     try {
-      const resueltos = resolverItinerario(lineas, catalogo, estado.elecciones);
       resolverCarrera();
+      const usaCo = lineas.some((l) => esCarreraOficial(l.texto));
+      // Cada calle tiene que estar cerca de la anterior: descarta homónimas lejanas y elige
+      // entre varias posibles por cercanía (continuidad.js).
+      if (carreraResuelta) {
+        lineasCo = await confirmarContinuidad(lineasCo, { catalogo, geometria, inicio: carreraResuelta.inicio });
+        carreraResuelta.calles = lineasCo.filter((it) => it.tipo === 'via');
+        pintarCarrera();
+      }
+      const resueltos = await confirmarContinuidad(resolverItinerario(lineas, catalogo, estado.elecciones), {
+        catalogo, geometria, inicio: estado.salida, finCarrera: usaCo && carreraResuelta ? carreraResuelta.fin : null,
+      });
+      if (turno !== enCurso) return;
       const extra = carreraResuelta ? [
         ...carreraResuelta.calles,
         ...['inicio', 'entrada', 'fin'].filter((k) => carreraResuelta[k]).map((k) => ({ tipo: 'punto', coord: carreraResuelta[k] })),
@@ -636,6 +656,13 @@ export function iniciarEditor(datos) {
     } finally {
       if (turno === enCurso) ui.btnTrazar.disabled = false;
     }
+  }
+
+  /** Geometría de vías candidatas (sin meterlas en el grafo). */
+  async function geometria(ids) {
+    const faltan = ids.filter((id) => !viasCandidatas.has(id) && !viasCargadas.has(id));
+    if (faltan.length) for (const v of await cdau.viasPorId(faltan)) viasCandidatas.set(v.id, v);
+    return new Map(ids.map((id) => [id, viasCargadas.get(id) ?? viasCandidatas.get(id)]).filter(([, v]) => v));
   }
 
   function recomponer() {
@@ -679,7 +706,7 @@ export function iniciarEditor(datos) {
         color: c, weight: 5, opacity: 0.9,
         dashArray: p.tipo === 'co' || p.tipo === 'recta' ? '8 6' : null,
       }).bindTooltip(p.etiqueta ? `${esc(p.etiqueta)} · ${fmtM(p.metros)}` : `${esc(desde)} → ${esc(hasta)} · ${fmtM(p.metros)}`, { sticky: true });
-      linea.on('click', (e) => { L.DomEvent.stopPropagation(e); añadirPuntoPaso(p, [e.latlng.lng, e.latlng.lat]); });
+      linea.on('click', (e) => { L.DomEvent.stopPropagation(e); if (!aplicarModo(e)) añadirPuntoPaso(p, [e.latlng.lng, e.latlng.lat]); });
       linea.addTo(capaRuta);
       lineasPaso.set(k, linea);
       if (p.tipo === 'co' && !carreraEnUso()) {
@@ -765,6 +792,7 @@ export function iniciarEditor(datos) {
   // ── Lista de calles ──
   const ETIQUETA_ESTADO = {
     aprox: ['Parecida', 'aviso'], ambigua: ['Varias posibles', 'error'], sin: ['No encontrada', 'error'], manual: ['Elegida', 'ok'],
+    lejos: ['Lejos del recorrido', 'error'],
   };
 
   // La lista edita el itinerario: cada fila es una línea del texto (items[i].n).
@@ -833,7 +861,9 @@ export function iniciarEditor(datos) {
           + `<button type="button" class="ed-mini" data-accion="punto" data-i="${i}" title="Fijar en el mapa" aria-label="Fijar «${esc(it.texto)}» en el mapa">📍</button>`
           + `<button type="button" class="ed-mini" data-accion="omitir" data-i="${i}" title="${it.tipo === 'omitir' ? 'Volver a dibujar' : 'Omitir: no se dibuja pero sigue en la lista'}">${it.tipo === 'omitir' ? '↺' : '⊘'}</button>`
           + (txt ? `<span class="ed-chip ed-chip--${clase}">${txt}</span>` : '')
-          + (it.tipo === 'ambigua' && it.candidatos?.length ? `<small class="ed-item__cand">¿${it.candidatos.slice(0, 4).map(esc).join('? ¿')}?</small>` : '');
+          + (it.tipo === 'ambigua' && it.candidatos?.length ? `<small class="ed-item__cand">¿${it.candidatos.slice(0, 4).map(esc).join('? ¿')}?</small>` : '')
+          + (it.tipo === 'lejos' ? `<small class="ed-item__cand">${esc(it.nombre)} está ${it.metros != null ? `a ${fmtM(it.metros)} ` : ''}de la calle anterior: no se dibuja. Elige la vía o fíjala en el mapa.</small>` : '')
+          + (it.cercania ? `<small class="ed-item__cand">Elegida por cercanía${it.cercania.antes ? ` (${esc(it.cercania.antes)} está lejos)` : ''}${it.cercania.entre ? `; otras cerca: ${it.cercania.entre.slice(1, 4).map(esc).join(', ')}` : ''}</small>` : '');
       }
       const enlaces = paso?.enlaces.length
         ? `<small class="ed-item__enlace">Pasa por ${paso.enlaces.map((e) => `${esc(e.nombre)} (${fmtM(e.metros)})`).join(', ')}, que no está en la lista</small>`

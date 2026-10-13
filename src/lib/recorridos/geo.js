@@ -245,25 +245,31 @@ export function suavizar(coords, {
 /**
  * Corta una polilínea en los puntos más cercanos a `cortes` (en orden), buscando siempre
  * hacia delante para no confundir dos pasadas por el mismo sitio. `metrosAprox[k]` es la
- * distancia aproximada del corte k al inicio; limita la búsqueda a ±`margen` m de ella.
+ * distancia aproximada (antes de suavizar) del corte k al inicio. La búsqueda se limita a
+ * ±`margen` m de la posición esperada, contada desde el corte anterior y no desde el
+ * inicio: el suavizado acorta el trazado y, medido desde el inicio, el error se acumula
+ * hasta sacar los cortes de la ventana en recorridos de varios kilómetros.
  * Devuelve las piezas (length = cortes.length + 1), que comparten los puntos de corte.
  */
 export function cortarEn(coords, cortes, metrosAprox, margen = 80) {
   const acum = [0];
   for (let i = 1; i < coords.length; i++) acum.push(acum[i - 1] + distM(coords[i - 1], coords[i]));
   const piezas = [];
-  let desde = 0, puntoDesde = coords[0];
+  let desde = 0, puntoDesde = coords[0], metrosDesde = 0, aproxDesde = 0;
   cortes.forEach((p, k) => {
+    const objetivo = metrosDesde + Math.max(0, metrosAprox[k] - aproxDesde);
     let mejor = null;
     for (let i = Math.max(1, desde + 1); i < coords.length; i++) {
-      if (acum[i - 1] > metrosAprox[k] + margen) break;
-      if (acum[i] < metrosAprox[k] - margen) continue;
+      if (acum[i - 1] > objetivo + margen) break;
+      if (acum[i] < objetivo - margen) continue;
       const pr = proyectar(p, coords[i - 1], coords[i]);
-      if (!mejor || pr.d < mejor.d) mejor = { i, coord: pr.coord, d: pr.d };
+      if (!mejor || pr.d < mejor.d - 0.01) mejor = { i, coord: pr.coord, d: pr.d };
     }
     if (!mejor) mejor = { i: Math.min(desde + 1, coords.length - 1), coord: coords[Math.min(desde + 1, coords.length - 1)] };
     // Pieza: puntoDesde, vértices [desde+1 .. mejor.i-1], punto de corte.
     piezas.push([puntoDesde, ...coords.slice(desde + 1, mejor.i), mejor.coord]);
+    metrosDesde = acum[mejor.i - 1] + distM(coords[mejor.i - 1], mejor.coord);
+    aproxDesde = metrosAprox[k];
     desde = mejor.i - 1;
     puntoDesde = mejor.coord;
   });
