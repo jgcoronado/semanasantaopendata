@@ -9,10 +9,12 @@
  *    las calles de la lista (la actual y la siguiente) cuestan 1 y cualquier otra 3.
  *    La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente.
  *    Los puntos de paso que arrastra el usuario fuerzan el camino de su paso.
+ * 4. suavizar: el trazado completo se limpia de picos en los cruces y escalones del eje y se
+ *    redondean las esquinas (geo.js → suavizar); después se vuelve a cortar en pasos.
  */
 
 import { clave, esCarreraOficial, normalizar } from './nombres.js';
-import { concatenar, distM, longitud } from './geo.js';
+import { concatenar, cortarEn, distM, longitud, suavizar } from './geo.js';
 
 const PENALIZACION_OTRAS = 3;   // coste relativo de calles que no están en la lista
 const ENGANCHE_PUNTO_M = 25;    // un punto de paso a menos de esto se pega a la calle
@@ -100,6 +102,7 @@ export function componer({ items, salida, grafo, puntosPaso = {} }) {
   }
 
   let cursor = inicio.nodo;
+  const fijos = [];          // puntos de paso del usuario: el suavizado no los toca
   let previa = -1;          // índice del último elemento alcanzado (-1 = salida)
   let coPendiente = false;
   const ocurrencias = new Map();
@@ -147,11 +150,12 @@ export function componer({ items, salida, grafo, puntosPaso = {} }) {
       const enganche = grafo.cercano(p, ENGANCHE_PUNTO_M);
       if (enganche) {
         const r = grafo.ruta(actual, new Set([enganche.nodo]));
-        if (r) { partes.push(r.nodos.map(grafo.coord)); aristas.push(...r.aristas); actual = enganche.nodo; continue; }
+        if (r) { partes.push(r.nodos.map(grafo.coord)); aristas.push(...r.aristas); actual = enganche.nodo; fijos.push(grafo.coord(enganche.nodo)); continue; }
       }
       // Punto fuera de las calles (p. ej. dentro de una plaza): se llega en línea recta.
       const vuelta = grafo.cercano(p, 300);
       partes.push([grafo.coord(actual), p]);
+      fijos.push(p);
       if (vuelta) { partes.push([p, grafo.coord(vuelta.nodo)]); actual = vuelta.nodo; }
     }
     const r = grafo.ruta(actual, destinos, coste);
@@ -203,6 +207,22 @@ export function componer({ items, salida, grafo, puntosPaso = {} }) {
   }
 
   if (coPendiente) avisos.push('La Carrera Oficial está al final de la lista y no tiene calle siguiente.');
-  const coords = concatenar([[salida], ...pasos.map((p) => p.coords)]);
+  if (!pasos.length) return { pasos, coords: [salida], metros: 0, avisos };
+
+  // Suavizado del trazado completo y nuevo reparto en pasos (el enlace salida → primera
+  // calle es la pieza 0; cada paso empieza donde acaba el anterior).
+  const bruto = concatenar([[salida], ...pasos.map((p) => p.coords)]);
+  const cortes = [pasos[0].coords[0], ...pasos.slice(0, -1).map((p) => p.coords[p.coords.length - 1])];
+  const metrosAprox = [];
+  let m = distM(salida, pasos[0].coords[0]);
+  metrosAprox.push(m);
+  for (const p of pasos.slice(0, -1)) { m += p.metros; metrosAprox.push(m); }
+  const suave = suavizar(bruto, { fijos });
+  const piezas = cortarEn(suave, cortes, metrosAprox);
+  pasos.forEach((p, k) => {
+    p.coords = piezas[k + 1];
+    p.metros = longitud(p.coords);
+  });
+  const coords = concatenar(piezas);
   return { pasos, coords, metros: longitud(coords), avisos };
 }

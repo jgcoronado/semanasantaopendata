@@ -55,13 +55,33 @@ horas de carga: el índice reintenta tres veces y, si falla, queda la búsqueda 
 | `lugares.js` | Búsqueda de la salida por nombre: índice de templos (Overpass), puntuación con palabras genéricas, Photon |
 | `grafo.js` | Grafo de ejes. Funde vértices a ≤ 3 m y cose extremos sueltos al segmento más cercano (≤ 3 m): el CDAU no siempre comparte el vértice en los cruces |
 | `componer.js` | Cada paso va de donde acabó el anterior a la primera esquina de la calle siguiente por el camino de coste mínimo: calle actual y siguiente cuestan 1, el resto 3 (así se aceptan enlaces cortos no listados y se avisan). La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente. Los puntos de paso del usuario fuerzan el camino; si caen a más de 25 m de una calle se llega a ellos en recta |
+| `geo.js` → `suavizar` | Limpieza del trazado final, ver «Suavizado» |
 | `exportar.js` | GeoJSON en el formato de `scripts/geojson-AAAA/` más el estado del editor en `properties.editor` |
 | `editor.js` | Interfaz (Leaflet) |
 
 Prueba de referencia: itinerario de la salida por la Puerta del Perdón (32 líneas). Se
 resuelven 31 (falta «Arco del Postigo», que en el CDAU es parte de Almirantazgo) y el
-recorrido mide 2.506 m frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
+recorrido mide 2.334 m (2.506 m antes del suavizado) frente a los ~2.440 m de las trazas GPS. De los 297 nombres de calle de
 los GeoJSON de 2025, 291 se resuelven de forma exacta.
+
+## Suavizado
+
+Los ejes del CDAU no siempre se cortan en un punto: una calle termina en el eje de la
+transversal unos metros antes del cruce (Pastor y Landero acaba en López de Arenas, ~20 m
+antes de Adriano) y el camino dibuja una V; en los ensanches el eje sigue las fachadas con
+escalones de pocos metros (Almirantazgo). Tras componer, el trazado completo pasa por
+`suavizar` y se vuelve a cortar en pasos (`cortarEn`):
+
+| Regla | Criterio | Caso medido |
+|-------|----------|-------------|
+| Vértice sobrante | desvío ≤ 3 m respecto a la línea directa | — |
+| Escalón | tramo ≤ 15 m y desvío ≤ 7 m | Almirantazgo: 97–114°, tramos 8–10 m, desvío 5–6 m |
+| Pico en cruce | ángulo < 75°, tramo ≤ 25 m y desvío ≤ 18 m | López de Arenas: 44°, 23/15 m, 15 m; Arfe–Dos de Mayo: 36°, 19/4 m |
+| Esquina | se redondea con un corte de hasta 8 m | — |
+
+Las esquinas reales (tramos de decenas de metros, desvío > 18 m) se conservan. Los puntos de
+paso del usuario, la salida y el final no se tocan. Efecto en el itinerario de la Puerta del
+Perdón: 2.506 m → 2.334 m (las V sumaban ida y vuelta al nudo).
 
 ## Correcciones en la interfaz
 
