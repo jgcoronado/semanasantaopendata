@@ -20,6 +20,8 @@ const PENALIZACION_OTRAS = 3;   // coste relativo de calles que no están en la 
 const ENGANCHE_PUNTO_M = 25;    // un punto de paso a menos de esto se pega a la calle
 const SALIDA_MAX_M = 150;       // la salida debe estar a menos de esto de una calle
 const ENLACE_MIN_M = 10;        // tramos por calles no listadas que se avisan
+/** Restricción dura: una calle nunca se acepta a más de esto de la última reconocida. */
+export const DISTANCIA_MAX_CALLE_M = 1000;
 
 const RE_TEMPLO = /^(salida|entrada|recogida|regreso|templo|parroquia|iglesia|capilla|basilica|catedral|convento|santa iglesia|puerta del? )/;
 
@@ -126,7 +128,15 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     if (obj.tipo === 'via') {
       const ids = obj.ids.filter((id) => grafo.tieneVia(id));
       if (!ids.length) { avisos.push(`«${obj.texto}» (${obj.nombre}) queda fuera de la zona cargada; se salta.`); return false; }
-      destinos = grafo.nodosDeVias(ids);
+      // Restricción dura (además de continuidad.js): solo cuentan las esquinas a ≤ 1 km de la
+      // última calle reconocida, o del punto donde acabó el paso anterior si no fue una calle.
+      const previas = idsPrevios.filter((id) => grafo.tieneVia(id));
+      const ancla = previas.length ? [...grafo.nodosDeVias(previas)].map(grafo.coord) : [grafo.coord(cursor)];
+      destinos = new Set([...grafo.nodosDeVias(ids)].filter((n) => {
+        const c = grafo.coord(n);
+        return ancla.some((a) => distM(a, c) <= DISTANCIA_MAX_CALLE_M);
+      }));
+      if (!destinos.size) { avisos.push(`«${obj.texto}» (${obj.nombre}) está a más de 1 km de la última calle reconocida; se salta.`); return false; }
     } else {
       // 'punto' fijado en el mapa, o 'entrada' (vuelta al punto de salida)
       puntoFinal = obj.tipo === 'entrada' ? salida : obj.coord;
@@ -245,7 +255,7 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     }
     if (it.tipo === 'lejos') {
       const lejos = it.metros == null ? '' : ` (a ${it.metros >= 1000 ? `${(it.metros / 1000).toFixed(1).replace('.', ',')} km` : `${it.metros} m`})`;
-      avisos.push(`«${it.texto}»: la única vía con ese nombre, ${it.nombre}, está lejos de la calle anterior${lejos}; se salta.`);
+      avisos.push(`«${it.texto}»: ${it.nombre} está lejos de la última calle reconocida${lejos} y no hay otra parecida a menos de ${it.limite ?? DISTANCIA_MAX_CALLE_M} m; se salta.`);
       continue;
     }
     const libre = coPendiente;

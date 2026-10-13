@@ -862,7 +862,7 @@ export function iniciarEditor(datos) {
           + `<button type="button" class="ed-mini" data-accion="omitir" data-i="${i}" title="${it.tipo === 'omitir' ? 'Volver a dibujar' : 'Omitir: no se dibuja pero sigue en la lista'}">${it.tipo === 'omitir' ? '↺' : '⊘'}</button>`
           + (txt ? `<span class="ed-chip ed-chip--${clase}">${txt}</span>` : '')
           + (it.tipo === 'ambigua' && it.candidatos?.length ? `<small class="ed-item__cand">¿${it.candidatos.slice(0, 4).map(esc).join('? ¿')}?</small>` : '')
-          + (it.tipo === 'lejos' ? `<small class="ed-item__cand">${esc(it.nombre)} está ${it.metros != null ? `a ${fmtM(it.metros)} ` : ''}de la calle anterior: no se dibuja. Elige la vía o fíjala en el mapa.</small>` : '')
+          + (it.tipo === 'lejos' ? `<small class="ed-item__cand">${esc(it.nombre)} está ${it.metros != null ? `a ${fmtM(it.metros)} ` : ''}de la última calle reconocida (máximo ${fmtM(it.limite ?? 1000)}): no se dibuja. Elige otra vía cercana o fíjala en el mapa.</small>` : '')
           + (it.cercania ? `<small class="ed-item__cand">Elegida por cercanía${it.cercania.antes ? ` (${esc(it.cercania.antes)} está lejos)` : ''}${it.cercania.entre ? `; otras cerca: ${it.cercania.entre.slice(1, 4).map(esc).join(', ')}` : ''}</small>` : '');
       }
       const enlaces = paso?.enlaces.length

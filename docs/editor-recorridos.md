@@ -98,10 +98,14 @@ de la salida; tras la Carrera Oficial definida, de su fin):
    omitirla): el camino de la anterior a la siguiente sale solo y la fila de la siguiente
    dice por qué calles pasa. Se corrige eligiendo la vía o con 📍.
 
-Cada línea que no se dibuja suma 300 m al radio de la siguiente (máx. 1.200 m), porque la
-calle saltada tiene su longitud; tras una Carrera Oficial sin definir el radio es 2,5 km.
-Una vía elegida a mano se respeta aunque esté lejos. Las mismas reglas se aplican a las
-calles de la Carrera Oficial, desde su inicio.
+Cada línea que no se dibuja suma 300 m al radio de la siguiente, porque la calle saltada
+tiene su longitud. **Restricción dura: nunca se acepta una vía a más de 1 km de la última
+reconocida** (`DISTANCIA_MAX_CALLE_M` en `componer.js`): ni por saltos, ni elegida a mano, ni
+tras una Carrera Oficial sin definir (si la calle siguiente queda a más de 1 km, hay que
+definir la Carrera Oficial o fijar un punto con 📍). Los puntos fijados en el mapa, la salida
+y el fin de la Carrera Oficial cuentan como referencia. `componer.js` lo vuelve a comprobar
+sobre el grafo: solo usa esquinas de la calle a ≤ 1 km de la calle anterior. Las mismas
+reglas se aplican a las calles de la Carrera Oficial, desde su inicio.
 
 ## Carrera Oficial
 

@@ -16,15 +16,15 @@
  *     camino entre la anterior y la siguiente sale solo y la lista dice por qué calles pasa.
  *
  * Cada línea que no se dibuja amplía el radio para la siguiente (la calle saltada tiene su
- * longitud). Tras una Carrera Oficial sin definir no se sabe dónde acaba: radio amplio.
+ * longitud). Restricción dura: nunca se acepta una vía a más de DISTANCIA_MAX_CALLE_M (1 km)
+ * de la última reconocida, ni elegida a mano ni tras una Carrera Oficial sin definir.
  */
 
-import { textoBusqueda } from './componer.js';
+import { DISTANCIA_MAX_CALLE_M, textoBusqueda } from './componer.js';
 import { distM, proyectar } from './geo.js';
 
 const RAD = Math.PI / 180;
 const M_GRADO = 111320;
-const RADIO_TRAS_CO_LIBRE_M = 2500;
 const SALTOS_MAX = 3;
 
 function bboxLineas(lineas) {
@@ -135,14 +135,15 @@ export async function confirmarContinuidad(items, {
       default: saltos += 1; return;   // sin resolver u omitida: su longitud separa la siguiente
     }
 
-    const limite = trasCoLibre ? RADIO_TRAS_CO_LIBRE_M : radio * (1 + Math.min(saltos, SALTOS_MAX));
+    const limite = Math.min(DISTANCIA_MAX_CALLE_M,
+      trasCoLibre ? DISTANCIA_MAX_CALLE_M : radio * (1 + Math.min(saltos, SALTOS_MAX)));
 
     if (it.tipo === 'via') {
       const propia = cercanas(catalogo.porNombre(it.nombre) ?? { ids: new Set(it.ids) }, limite);
       if (propia.length) { aceptar(it, propia.map((c) => c.id)); return; }
-      if (it.estado === 'manual') {
-        // Elegida a mano: se respeta aunque esté lejos.
-        aceptar(it, it.ids);
+      if (it.estado === 'manual' && distLineas(lineasDe(it.ids), ancla, DISTANCIA_MAX_CALLE_M) <= DISTANCIA_MAX_CALLE_M) {
+        // Elegida a mano: se respeta más allá del radio, pero nunca a más de 1 km.
+        aceptar(it, it.ids.filter((id) => distLineas(lineasDe([id]), ancla, DISTANCIA_MAX_CALLE_M) <= DISTANCIA_MAX_CALLE_M));
         return;
       }
     }
@@ -179,7 +180,7 @@ export async function confirmarContinuidad(items, {
 
     if (it.tipo === 'via') {
       const metros = distLineas(lineasDe(it.ids), ancla);
-      out[i] = { ...it, tipo: 'lejos', estado: 'lejos', metros: Number.isFinite(metros) ? Math.round(metros) : null };
+      out[i] = { ...it, tipo: 'lejos', estado: 'lejos', limite, metros: Number.isFinite(metros) ? Math.round(metros) : null };
       delete out[i].ids;
     }
     saltos += 1;
