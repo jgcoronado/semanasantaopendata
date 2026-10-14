@@ -151,7 +151,7 @@ export function bboxGeometria(geometria) {
 }
 
 /** Ángulo interior en B (grados; 180 = recto, 0 = vuelta atrás). */
-function anguloInterior(A, B, C) {
+export function anguloInterior(A, B, C) {
   const k = Math.cos(B[1] * RAD);
   const u = [(A[0] - B[0]) * k, A[1] - B[1]], v = [(C[0] - B[0]) * k, C[1] - B[1]];
   const nu = Math.hypot(u[0], u[1]), nv = Math.hypot(v[0], v[1]);
@@ -239,6 +239,98 @@ export function suavizar(coords, {
     }
   }
   out.push(c[c.length - 1]);
+  return out;
+}
+
+/**
+ * Horquillas en zonas abiertas (plazas, compases): el eje del CDAU va por el carril y en
+ * algunas plazas baja hasta un cruce y vuelve por el otro lado (Plaza del Triunfo, junto a
+ * Santo Tomás: un codo de 180°). Un cortejo a pie cruza la plaza. Se buscan tramos de ida y
+ * vuelta y se sustituyen por la recta entre la ida y la vuelta:
+ *  - todos los segmentos del tramo son de zona abierta (`abierto(i)`: coords[i]→coords[i+1]);
+ *  - la recta mide ≤ `hueco` m y el tramo que sustituye ≥ max(`tramoMin`, 2,5 × la recta) y
+ *    ≤ `tramoMax` m;
+ *  - la ida y la vuelta van juntas (separación máx. ≤ `ancho` m): una vuelta alrededor de
+ *    algo más ancho (una fuente grande, un monumento) es intencionada y no se toca;
+ *  - no hay puntos `fijos` (puntos de paso del usuario) dentro.
+ * Los segmentos abiertos se densifican cada `paso` m para que la recta pueda salir de mitad
+ * de un segmento largo. Entre varias opciones gana la que más recorte (tramo − 2 × recta).
+ */
+export function atajarHorquillas(coords, abierto, {
+  hueco = 25, ancho = 25, tramoMin = 20, tramoMax = 120, paso = 2, fijos = [],
+} = {}) {
+  if (coords.length < 3) return coords;
+  const P = [], ab = [];
+  for (let i = 0; i < coords.length; i++) {
+    P.push(coords[i]);
+    if (i === coords.length - 1) break;
+    const a = !!abierto(i);
+    const L = distM(coords[i], coords[i + 1]);
+    if (a && L > paso) {
+      const n = Math.ceil(L / paso);
+      for (let s = 1; s < n; s++) {
+        ab.push(true);
+        const t = s / n;
+        P.push([coords[i][0] + (coords[i + 1][0] - coords[i][0]) * t, coords[i][1] + (coords[i + 1][1] - coords[i][1]) * t]);
+      }
+    }
+    ab.push(a);
+  }
+  if (!ab.some(Boolean)) return coords;
+  const acum = [0];
+  for (let i = 1; i < P.length; i++) acum.push(acum[i - 1] + distM(P[i - 1], P[i]));
+  const esFijo = P.map((p) => fijos.some((f) => distM(f, p) < 0.5));
+
+  const distPolilinea = (p, desde, hasta) => {
+    let d = Infinity;
+    for (let k = desde + 1; k <= hasta; k++) d = Math.min(d, proyectar(p, P[k - 1], P[k]).d);
+    return d;
+  };
+  const anchoDe = (i, j) => {
+    // Vértice más alejado de la recta: separa la ida de la vuelta.
+    let a = i + 1, m = -1;
+    for (let k = i + 1; k < j; k++) {
+      const d = proyectar(P[k], P[i], P[j]).d;
+      if (d > m) { m = d; a = k; }
+    }
+    let w = 0;
+    for (let k = i; k <= a; k++) w = Math.max(w, distPolilinea(P[k], a, j));
+    return w;
+  };
+
+  // Mejor salida j para cada entrada i.
+  const candidatos = [];
+  for (let i = 0; i < P.length - 2; i++) {
+    if (!ab[i]) continue;
+    let mejor = null;
+    for (let j = i + 2; j < P.length; j++) {
+      if (!ab[j - 1] || esFijo[j - 1] && j - 1 > i) break;
+      const tramo = acum[j] - acum[i];
+      if (tramo > tramoMax) break;
+      if (tramo < tramoMin) continue;
+      const g = distM(P[i], P[j]);
+      if (g > hueco || tramo < 2.5 * g) continue;
+      const ahorro = tramo - 2 * g;
+      if (!mejor || ahorro > mejor.ahorro) mejor = { i, j, ahorro };
+    }
+    if (mejor) candidatos.push(mejor);
+  }
+  candidatos.sort((a, b) => b.ahorro - a.ahorro);
+  const elegidos = [];
+  for (const c of candidatos) {
+    if (elegidos.some((e) => c.i < e.j && e.i < c.j)) continue;
+    if (anchoDe(c.i, c.j) > ancho) continue;
+    elegidos.push(c);
+  }
+  if (!elegidos.length) return coords;
+  elegidos.sort((a, b) => a.i - b.i);
+  const out = [];
+  let k = 0;
+  for (const e of elegidos) {
+    while (k <= e.i) out.push(P[k++]);
+    k = e.j;
+  }
+  while (k < P.length) out.push(P[k++]);
   return out;
 }
 

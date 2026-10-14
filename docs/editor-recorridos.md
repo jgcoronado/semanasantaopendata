@@ -151,6 +151,21 @@ del enlace entre el marcador de salida y la primera calle, la línea solo se sep
 3 m de un eje en los cruces cortados en diagonal, en tramos de ≤ 10 m (máx. 8 m en la
 Puerta del Arenal). Los puntos de paso del usuario, la salida y el final no se tocan.
 
+### Plazas y zonas abiertas
+
+En las plazas (y compases, explanadas, atrios, lonjas: `esZonaAbierta` en `nombres.js`) el
+cortejo no va por el carril. El eje del CDAU de algunas plazas baja hasta un cruce y vuelve
+por el otro lado: en la Plaza del Triunfo, rodeándola por el Archivo de Indias y la muralla
+del Alcázar, el eje llega hasta Santo Tomás y sube de nuevo (un codo de 180°).
+`atajarHorquillas` (en `geo.js`, antes de `suavizar`) sustituye esas idas y vueltas por la
+recta que cruza la plaza cuando:
+
+- todo el tramo va por ejes de plazas;
+- la recta mide ≤ 25 m y el tramo que quita ≥ 20 m y ≥ 2,5 veces la recta (≤ 120 m);
+- la ida y la vuelta van a ≤ 25 m una de otra (rodear algo más ancho, como un monumento o
+  una fuente grande, es intencionado y se respeta);
+- no hay puntos de paso del usuario dentro (un punto de paso en la horquilla la conserva).
+
 ## Correcciones en la interfaz
 
 - **Orden de la lista**: ↑ y ↓ en cada fila, o arrastrar por el asa (⋮⋮). ＋ añade una calle

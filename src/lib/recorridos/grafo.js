@@ -239,6 +239,11 @@ export function crearGrafo(vias, { union = UNION_M } = {}) {
       return s;
     },
     tieneVia: (id) => nodosVia.has(id),
+    /** Arista que une dos nodos vecinos, o -1. */
+    aristaEntre(a, b) {
+      for (let k = inicio[a]; k < inicio[a + 1]; k++) if (vecino[k] === b) return aristaDe[k];
+      return -1;
+    },
     /** id_vial y nombre de la vía de una arista. */
     viaDeArista: (e) => viaInfo[evia[e]],
     longitudArista: (e) => elen[e],

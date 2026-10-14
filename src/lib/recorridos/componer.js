@@ -9,12 +9,13 @@
  *    las calles de la lista (la actual y la siguiente) cuestan 1 y cualquier otra 3.
  *    La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente.
  *    Los puntos de paso que arrastra el usuario fuerzan el camino de su paso.
- * 4. suavizar: el trazado completo se limpia de picos en los cruces y escalones del eje y se
- *    redondean las esquinas (geo.js → suavizar); después se vuelve a cortar en pasos.
+ * 4. atajarHorquillas + suavizar: en las plazas se quitan las idas y vueltas del eje (el
+ *    cortejo cruza la plaza); después el trazado completo se limpia de picos en los cruces y
+ *    escalones del eje y se redondean las esquinas (geo.js); se vuelve a cortar en pasos.
  */
 
-import { clave, esCarreraOficial, normalizar } from './nombres.js';
-import { concatenar, cortarEn, distM, longitud, suavizar } from './geo.js';
+import { clave, esCarreraOficial, esZonaAbierta, normalizar } from './nombres.js';
+import { atajarHorquillas, concatenar, cortarEn, distM, longitud, suavizar } from './geo.js';
 
 const PENALIZACION_OTRAS = 3;   // coste relativo de calles que no están en la lista
 const ENGANCHE_PUNTO_M = 25;    // un punto de paso a menos de esto se pega a la calle
@@ -276,7 +277,15 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
   let m = distM(salida, pasos[0].coords[0]);
   metrosAprox.push(m);
   for (const p of pasos.slice(0, -1)) { m += p.metros; metrosAprox.push(m); }
-  const suave = suavizar(bruto, { fijos });
+  // Horquillas en plazas: segmento abierto si une dos nodos por una arista de una plaza.
+  const nodos = bruto.map((c) => grafo.cercano(c, 0.3)?.nodo ?? -1);
+  const abierto = (i) => {
+    const a = nodos[i], b = nodos[i + 1];
+    if (a < 0 || b < 0) return false;
+    const e = grafo.aristaEntre(a, b);
+    return e >= 0 && esZonaAbierta(grafo.viaDeArista(e).nombre);
+  };
+  const suave = suavizar(atajarHorquillas(bruto, abierto, { fijos }), { fijos });
   const piezas = cortarEn(suave, cortes, metrosAprox);
   pasos.forEach((p, k) => {
     p.coords = piezas[k + 1];

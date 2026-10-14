@@ -59,6 +59,12 @@ export function clave(texto) {
 }
 
 /** ¿La línea del itinerario es la Carrera Oficial? */
+/**
+ * Vías que son zona abierta (plazas, compases…): el cortejo no va por el carril y puede
+ * cruzarlas (geo.js → atajarHorquillas).
+ */
+export const esZonaAbierta = (nombre) => /^(plaza|plazuela|plazoleta|plazeta|compas|explanada|atrio|patio|lonja)\b/.test(normalizar(nombre));
+
 export const esCarreraOficial = (texto) => /^carrera oficial\b/.test(normalizar(texto));
 
 /** Distancia de Levenshtein con corte (devuelve max+1 si la supera). */
