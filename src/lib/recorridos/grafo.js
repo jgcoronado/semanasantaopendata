@@ -239,6 +239,26 @@ export function crearGrafo(vias, { union = UNION_M } = {}) {
       return s;
     },
     tieneVia: (id) => nodosVia.has(id),
+    /**
+     * Punto más cercano a p sobre los ejes de las vías `ids` (todas si es null), a ≤ maxM:
+     * { coord, d, a, b } con a y b los nodos del segmento. Para anclar una puerta a su calle.
+     */
+    anclar(p, ids = null, maxM = 150) {
+      const filtro = ids ? new Set(ids) : null;
+      let mejor = null;
+      for (let e = 0; e < ea.length; e++) {
+        if (!eviva[e]) continue;
+        if (filtro && !filtro.has(viaInfo[evia[e]].id)) continue;
+        const A = [lon[ea[e]], lat[ea[e]]], B = [lon[eb[e]], lat[eb[e]]];
+        // Descarte rápido por caja (~maxM).
+        const g = maxM / M_POR_GRADO;
+        if (p[1] < Math.min(A[1], B[1]) - g || p[1] > Math.max(A[1], B[1]) + g) continue;
+        if (p[0] * kLon < Math.min(A[0], B[0]) * kLon - g || p[0] * kLon > Math.max(A[0], B[0]) * kLon + g) continue;
+        const pr = proyectar(p, A, B);
+        if (pr.d <= maxM && (!mejor || pr.d < mejor.d)) mejor = { coord: pr.coord, d: pr.d, a: ea[e], b: eb[e], via: viaInfo[evia[e]] };
+      }
+      return mejor;
+    },
     /** Arista que une dos nodos vecinos, o -1. */
     aristaEntre(a, b) {
       for (let k = inicio[a]; k < inicio[a + 1]; k++) if (vecino[k] === b) return aristaDe[k];

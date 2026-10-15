@@ -122,6 +122,7 @@
 
 .ed-icono { background: transparent; border: 0; }
 .ed-salida { background: #5b2a86; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+.ed-salida--entrada { background: #fff; border-color: #5b2a86; }
 .ed-punto { background: #fff; border: 3px solid #198038; border-radius: 50%; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); cursor: grab; }
 .ed-co { background: #c8a24a; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); }
 .ed-co--inicio, .ed-co--entrada, .ed-co--fin {

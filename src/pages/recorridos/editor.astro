@@ -89,6 +89,19 @@ const description =
           <span id="ed-salida-txt" class="ed__nota">Sin fijar</span>
         </div>
         <small class="ed__nota">El marcador cae en el centro del templo o en el portal: arrástralo a la puerta por la que sale la cofradía.</small>
+        <label class="campo">La puerta da a
+          <input id="ed-puerta-calle" class="ed__input" list="ed-calles" autocomplete="off" placeholder="Automática: la calle más cercana" />
+        </label>
+        <div class="ed-co__fila">
+          <span class="ed-co__etq">Entrada</span>
+          <span id="ed-entrada-txt" class="ed__nota">Por la misma puerta</span>
+          <button id="ed-btn-entrada" type="button" class="ed-mini" title="Fijar en el mapa otra puerta de entrada" aria-label="Fijar en el mapa otra puerta de entrada">📍</button>
+          <button id="ed-entrada-quitar" type="button" class="ed-mini" title="Entrar por la misma puerta" aria-label="Entrar por la misma puerta" hidden>✕</button>
+        </div>
+        <label class="campo">La puerta de entrada da a
+          <input id="ed-entrada-calle" class="ed__input" list="ed-calles" autocomplete="off" placeholder="La misma que la de salida" />
+        </label>
+        <small class="ed__nota">Si el templo tiene fachada a varias calles, indica a cuál da la puerta: el cortejo arranca (y termina) en esa calle aunque otra quede más cerca del marcador.</small>
       </section>
 
       <section class="ed__bloque">

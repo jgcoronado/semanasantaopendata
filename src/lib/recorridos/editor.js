@@ -39,12 +39,17 @@ export function iniciarEditor(datos) {
     calles: $('ed-calles'), hermandad: $('ed-hermandad'), bloqueHdad: $('ed-bloque-hdad'),
     btn2025: $('ed-btn-2025'), nombre: $('ed-nombre'), btnExportar: $('ed-btn-exportar'),
     importar: $('ed-importar'), btnBorrarPuntos: $('ed-btn-borrar-puntos'), btnRef: $('ed-btn-ref'),
+    puertaCalle: $('ed-puerta-calle'), entradaTxt: $('ed-entrada-txt'), btnEntrada: $('ed-btn-entrada'),
+    btnEntradaQuitar: $('ed-entrada-quitar'), entradaCalle: $('ed-entrada-calle'),
     coResumen: $('ed-co-resumen'), coDetalle: $('ed-co-detalle'), coEnlace: $('ed-co-enlace'),
   };
 
   // ── Estado (persistido en el navegador) ──
   const estado = {
     municipio: SEVILLA, salida: null, texto: '', elecciones: {}, puntosPaso: {}, hermandad: null,
+    // Calle a la que da la puerta de salida (nombre del callejero; null = la más cercana) y
+    // otra puerta de entrada, si la hay: { coord: [lon, lat] | null, calle: nombre | null }.
+    puertaSalida: null, entrada: null,
     ...leerLocal(CLAVE_LOCAL, {}),
   };
   // Versiones anteriores guardaban aquí la Carrera Oficial editada; pasa a su ventana.
@@ -124,6 +129,8 @@ export function iniciarEditor(datos) {
     if (cambia) {
       catalogo = null;
       zonaCalles.reiniciar();
+      estado.puertaSalida = null;
+      estado.entrada = null;
       estado.elecciones = {};
       ui.salidaCalle.value = '';
       ui.salidaNum.value = '';
@@ -162,12 +169,31 @@ export function iniciarEditor(datos) {
   });
 
   // ── Salida ──
+  let marcadorEntrada = null;
   function pintarSalida() {
     if (marcadorSalida) { marcadorSalida.remove(); marcadorSalida = null; }
+    if (marcadorEntrada) { marcadorEntrada.remove(); marcadorEntrada = null; }
+    if (document.activeElement !== ui.puertaCalle) ui.puertaCalle.value = estado.puertaSalida ?? '';
+    if (document.activeElement !== ui.entradaCalle) ui.entradaCalle.value = estado.entrada?.calle ?? '';
+    const otra = estado.entrada?.coord;
+    ui.entradaTxt.textContent = otra ? `Otra puerta: ${otra[1].toFixed(5)}, ${otra[0].toFixed(5)}` : 'Por la misma puerta';
+    ui.btnEntradaQuitar.hidden = !estado.entrada;
+    if (otra) {
+      marcadorEntrada = L.marker([otra[1], otra[0]], { icon: icono('ed-salida ed-salida--entrada', '', 18), draggable: true, zIndexOffset: 1000 })
+        .bindTooltip('Entrada en el templo (otra puerta) · arrastra para moverla').addTo(mapa);
+      marcarArrastre(marcadorEntrada);
+      marcadorEntrada.on('dragend', () => {
+        const ll = marcadorEntrada.getLatLng();
+        estado.entrada = { ...(estado.entrada ?? {}), coord: [ll.lng, ll.lat] };
+        guardar();
+        pintarSalida();
+        if (estado.texto.trim()) trazar();
+      });
+    }
     if (!estado.salida) { ui.salidaTxt.textContent = 'Sin fijar'; return; }
     const [lon, lat] = estado.salida;
     marcadorSalida = L.marker([lat, lon], { icon: icono('ed-salida', '', 18), draggable: true, zIndexOffset: 1000 })
-      .bindTooltip('Salida y entrada del templo').addTo(mapa);
+      .bindTooltip(otra ? 'Salida del templo' : 'Salida y entrada del templo').addTo(mapa);
     marcarArrastre(marcadorSalida);
     marcadorSalida.on('dragend', () => {
       const p = marcadorSalida.getLatLng();
@@ -192,6 +218,48 @@ export function iniciarEditor(datos) {
     }
     if (estado.texto.trim()) trazar();
   }
+
+  // ── Calle de la puerta y otra puerta de entrada ──
+  /** Nombre del callejero escrito en un campo, '' (automática) o null si no existe. */
+  function calleDeCampo(input) {
+    const v = input.value.trim();
+    if (!v) return '';
+    if (catalogo?.porNombre(v)) return v;
+    const r = catalogo?.resolver(v);
+    return r?.eleccion ? r.eleccion.nombre : null;
+  }
+  ui.puertaCalle.addEventListener('change', () => {
+    const v = calleDeCampo(ui.puertaCalle);
+    if (v === null) { mensaje(`«${ui.puertaCalle.value}» no está en el callejero de ${estado.municipio.nombre}. Elígela de la lista.`, 'error'); return; }
+    estado.puertaSalida = v || null;
+    ui.puertaCalle.value = v;
+    guardar();
+    if (estado.salida && estado.texto.trim()) trazar();
+  });
+  ui.entradaCalle.addEventListener('change', () => {
+    const v = calleDeCampo(ui.entradaCalle);
+    if (v === null) { mensaje(`«${ui.entradaCalle.value}» no está en el callejero de ${estado.municipio.nombre}. Elígela de la lista.`, 'error'); return; }
+    const coord = estado.entrada?.coord ?? null;
+    estado.entrada = v || coord ? { coord, calle: v || null } : null;
+    ui.entradaCalle.value = v;
+    guardar();
+    pintarSalida();
+    if (estado.salida && estado.texto.trim()) trazar();
+  });
+  for (const el of [ui.puertaCalle, ui.entradaCalle]) {
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+  }
+  ui.btnEntrada.addEventListener('click', () => {
+    modo = { tipo: 'entrada' };
+    mapa.getContainer().classList.add('ed-apuntando');
+    mensaje('Pincha en el mapa la puerta por la que entra la cofradía.');
+  });
+  ui.btnEntradaQuitar.addEventListener('click', () => {
+    estado.entrada = null;
+    guardar();
+    pintarSalida();
+    if (estado.salida && estado.texto.trim()) trazar();
+  });
 
   // ── Búsqueda de la salida por nombre: templos del municipio (OSM) y hermandades (Sevilla) ──
   let opciones = [];             // resultados mostrados
@@ -362,6 +430,8 @@ export function iniciarEditor(datos) {
     capaBusqueda.clearLayers();
     mapa.setView([p.coord[1], p.coord[0]], Math.max(mapa.getZoom(), 18));
     mensaje(`Salida fijada en ${ui.salidaCalle.value}, ${p.etiqueta}. Arrastra el marcador a la puerta si no coincide.`);
+    // La puerta da a la calle del portal.
+    if (catalogo?.porNombre(ui.salidaCalle.value)) estado.puertaSalida = ui.salidaCalle.value;
     fijarSalida(p.coord);
   });
   // Enter confirma: el blur dispara el 'change' nativo una sola vez (despacharlo a mano
@@ -386,7 +456,13 @@ export function iniciarEditor(datos) {
     modo = null;
     mapa.getContainer().classList.remove('ed-apuntando');
     if (m.tipo === 'salida') fijarSalida(coord);
-    else if (m.tipo === 'punto') {
+    else if (m.tipo === 'entrada') {
+      estado.entrada = { calle: null, ...(estado.entrada ?? {}), coord };
+      guardar();
+      pintarSalida();
+      mensaje('Puerta de entrada fijada.');
+      if (estado.salida && estado.texto.trim()) trazar();
+    } else if (m.tipo === 'punto') {
       estado.elecciones[m.clave] = { tipo: 'punto', coord };
       guardar();
       mensaje(`«${m.texto}» fijada en el mapa.`);
@@ -480,7 +556,10 @@ export function iniciarEditor(datos) {
         coResuelta.inicio, coResuelta.fin, ...(coResuelta.entrada ? [coResuelta.entrada] : []),
         ...(coResuelta.trazado ?? []), ...Object.values(co.def.puntosPaso ?? {}).flat(),
       ] : [];
-      await asegurarGrafo([...resueltos, ...(usaCo && coResuelta ? coResuelta.calles : [])], extra);
+      const puertas = puertasRecorrido();
+      if (estado.entrada?.coord) extra.push(estado.entrada.coord);
+      await asegurarGrafo([...resueltos, ...(usaCo && coResuelta ? coResuelta.calles : []),
+        { ids: [...(puertas.salida ?? []), ...(puertas.entrada?.ids ?? [])] }], extra);
       if (turno !== enCurso) return;
       items = resueltos;
       recomponer();
@@ -498,6 +577,15 @@ export function iniciarEditor(datos) {
     }
   }
 
+  /** Puertas para componer: ids de la calle de cada una (null = la más cercana). */
+  function puertasRecorrido() {
+    const ids = (n) => (n && catalogo?.porNombre(n) ? [...catalogo.porNombre(n).ids] : null);
+    return {
+      salida: ids(estado.puertaSalida),
+      entrada: estado.entrada ? { punto: estado.entrada.coord ?? null, ids: ids(estado.entrada.calle) } : null,
+    };
+  }
+
   function recomponer() {
     if (arrastrando) { redibujoPendiente = true; return; }
     if (!grafo || !items.length) return;
@@ -505,7 +593,12 @@ export function iniciarEditor(datos) {
     // Sin trazado guardado, la Carrera Oficial se calcula con sus propios puntos de paso.
     const puntosPaso = usaCo && coResuelta && !coResuelta.trazado
       ? { ...estado.puntosPaso, ...(co.def.puntosPaso ?? {}) } : estado.puntosPaso;
-    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso, carrera: usaCo ? coResuelta : null });
+    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso, carrera: usaCo ? coResuelta : null, puertas: puertasRecorrido() });
+    // La calle a la que se ha anclado cada puerta, como pista cuando es automática.
+    ui.puertaCalle.placeholder = `Automática: ${resultado.anclas?.salida?.via.nombre ?? 'la calle más cercana'}`;
+    ui.entradaCalle.placeholder = estado.entrada?.coord
+      ? `Automática: ${resultado.anclas?.entrada?.via.nombre ?? 'la calle más cercana'}`
+      : `La misma que la de salida (${resultado.anclas?.entrada?.via.nombre ?? '—'})`;
     dibujar();
     pintarLista();
   }
@@ -912,7 +1005,10 @@ export function iniciarEditor(datos) {
       }
       if (r.estado) {
         // La Carrera Oficial no se importa: se usa la del municipio.
-        Object.assign(estado, { texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso });
+        Object.assign(estado, {
+          texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso,
+          puertaSalida: r.estado.puertaSalida ?? null, entrada: r.estado.entrada ?? null,
+        });
         ui.texto.value = estado.texto;
         pintarReferencia(null);
         if (r.estado.municipio && r.estado.municipio.cod !== estado.municipio.cod) await elegirMunicipio(r.estado.municipio, { encuadrar: false });

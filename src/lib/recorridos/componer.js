@@ -95,6 +95,9 @@ export function resolverItinerario(lineas, catalogo, elecciones = {}, { templos 
  * - salida: [lon, lat] fijado en el mapa (puerta del templo).
  * - grafo: crearGrafo(...).
  * - puntosPaso: claveDePaso → [[lon, lat], …] arrastrados por el usuario.
+ * - puertas: { salida: [id_vial…] | null, entrada: { punto: [lon, lat] | null, ids } | null }
+ *   calle a la que da la puerta de salida y, si es otra, la puerta de entrada (punto y calle);
+ *   sin ellas, la calle más cercana y la misma puerta.
  * - carrera: Carrera Oficial del municipio (carrera.js → paraComponer), o null para dejarla
  *   como tramo libre:
  *     { inicio: [lon, lat], calles: [items 'via' resueltos], entrada: [lon, lat] | null,
@@ -109,15 +112,32 @@ export function resolverItinerario(lineas, catalogo, elecciones = {}, { templos 
  *   ('calle' | 'co' | 'manual' | 'recta'), etiqueta, coords, metros, enlaces: [{ nombre, metros }] }.
  * La Carrera Oficial definida genera varios pasos con el mismo `hasta`.
  */
-export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null }) {
+export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null, puertas = {} }) {
   const avisos = [];
   const pasos = [];
-  const inicio = grafo.cercano(salida, SALIDA_MAX_M);
-  if (!inicio) {
+  // La puerta se ancla al eje de la calle a la que da (puertas.salida: ids de esa vía) o, si
+  // no se ha dicho, al de la calle más cercana. El cortejo arranca desde ese punto del eje
+  // hacia el lado que lleve a la primera calle.
+  const anclar = (punto, ids, cual) => {
+    if (ids?.length) {
+      const a = grafo.anclar(punto, ids, SALIDA_MAX_M);
+      if (a) return a;
+      avisos.push(`La calle de la puerta de ${cual} está a más de ${SALIDA_MAX_M} m de la puerta; se usa la calle más cercana.`);
+    }
+    return grafo.anclar(punto, null, SALIDA_MAX_M);
+  };
+  const anclaSalida = anclar(salida, puertas.salida, 'salida');
+  if (!anclaSalida) {
     return { pasos, coords: [salida], metros: 0, avisos: [`La salida está a más de ${SALIDA_MAX_M} m de cualquier calle cargada.`] };
   }
+  const puntoEntrada = puertas.entrada?.punto ?? salida;
+  const anclaEntrada = puertas.entrada?.punto || puertas.entrada?.ids?.length
+    // Otra puerta sin calle indicada: la más cercana a esa puerta; la misma puerta: su calle.
+    ? anclar(puntoEntrada, puertas.entrada.ids?.length ? puertas.entrada.ids : puertas.entrada.punto ? null : puertas.salida, 'entrada') ?? anclaSalida
+    : anclaSalida;
 
-  let cursor = inicio.nodo;
+  let cursor = anclaSalida.a;
+  let arranque = anclaSalida;  // el primer paso sale del punto del eje hacia a o hacia b
   const fijos = [];          // puntos de paso del usuario: el suavizado no los toca
   let previa = -1;           // índice del último elemento alcanzado (-1 = salida)
   let clavePrevia = 'salida';
@@ -146,11 +166,14 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
       if (!destinos.size) { avisos.push(`«${obj.texto}» (${obj.nombre}) está a más de 1 km de la última calle reconocida; se salta.`); return false; }
     } else {
       // 'punto' fijado en el mapa, o 'entrada' (vuelta al punto de salida)
-      puntoFinal = obj.tipo === 'entrada' ? salida : obj.coord;
-      nodoFinal = obj.tipo === 'entrada' ? inicio : grafo.cercano(puntoFinal, SALIDA_MAX_M);
+      puntoFinal = obj.tipo === 'entrada' ? puntoEntrada : obj.coord;
+      nodoFinal = obj.tipo === 'entrada' ? { nodo: anclaEntrada.a } : grafo.cercano(puntoFinal, SALIDA_MAX_M);
       // Por el interior de un templo (recta) no hace falta calle cerca.
       if (!nodoFinal && !obj.recta) { avisos.push(`«${obj.texto}»: el punto está lejos de cualquier calle; se salta.`); return false; }
-      destinos = nodoFinal ? new Set([nodoFinal.nodo]) : new Set();
+      // A la puerta de entrada se llega por su calle: por cualquiera de los dos extremos del
+      // segmento donde se ancla, y de ahí al punto del eje frente a la puerta.
+      destinos = obj.tipo === 'entrada' ? new Set([anclaEntrada.a, anclaEntrada.b])
+        : nodoFinal ? new Set([nodoFinal.nodo]) : new Set();
       fijos.push(puntoFinal);   // los puntos fijados no se mueven al suavizar
     }
 
@@ -172,6 +195,22 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
       partes.push([ultimoPunto ?? grafo.coord(actual), puntoFinal]);
       if (nodoFinal) actual = nodoFinal.nodo;
     } else {
+      if (arranque) {
+        // Primer paso: desde el punto del eje frente a la puerta, hacia el extremo del
+        // segmento que dé el camino más corto (sin ir y volver por la calle de la puerta).
+        const wps0 = puntosPaso[clavePaso] ?? [];
+        const n0 = wps0.length ? grafo.cercano(wps0[0], 300) : null;
+        const objetivo = n0 ? new Set([n0.nodo]) : destinos;
+        let mejor = null;
+        for (const n of [arranque.a, arranque.b]) {
+          const r = grafo.ruta(n, objetivo, coste);
+          const total = distM(arranque.coord, grafo.coord(n)) + (r ? r.metros : Infinity);
+          if (!mejor || total < mejor.total) mejor = { n, total };
+        }
+        partes.push([arranque.coord, grafo.coord(mejor.n)]);
+        actual = mejor.n;
+        arranque = null;
+      }
       // En la Carrera Oficial los puntos de paso no se pegan a los ejes: la línea sale de la
       // calle antes del primero, pasa por todos con una curva suave y vuelve después del último.
       const wps = puntosPaso[clavePaso] ?? [];
@@ -212,7 +251,8 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
           avisos.push(`No hay conexión por calles hasta «${obj.texto}»; se ha unido en línea recta.`);
         }
       }
-      if (puntoFinal) partes.push([grafo.coord(actual), puntoFinal]);
+      if (obj.tipo === 'entrada') partes.push([grafo.coord(actual), anclaEntrada.coord, puntoFinal]);
+      else if (puntoFinal) partes.push([grafo.coord(actual), puntoFinal]);
     }
 
     // Calles no listadas por las que pasa el paso (no en tramos libres).
@@ -376,7 +416,8 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
   }
 
   if (coPendiente) avisos.push('La Carrera Oficial está al final de la lista y no tiene calle siguiente.');
-  if (!pasos.length) return { pasos, coords: [salida], metros: 0, avisos };
+  const anclas = { salida: anclaSalida, entrada: anclaEntrada };
+  if (!pasos.length) return { pasos, coords: [salida], metros: 0, avisos, anclas };
 
   // Suavizado del trazado completo y nuevo reparto en pasos (el enlace salida → primera
   // calle es la pieza 0; cada paso empieza donde acaba el anterior).
@@ -411,5 +452,5 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     p.metros = longitud(p.coords);
   });
   const coords = concatenar(piezas);
-  return { pasos, coords, metros: longitud(coords), avisos };
+  return { pasos, coords, metros: longitud(coords), avisos, anclas };
 }

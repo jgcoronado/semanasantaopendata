@@ -53,6 +53,14 @@ escala y tarda ~2 s por imagen).
    - En Sevilla incluye las hermandades con el primer punto de su recorrido de 2025 («El
      Baratillo» está en OSM como «Capilla de Nuestra Señora de la Piedad»).
    - La última opción, o Enter sin coincidencias, busca en Photon dentro del término.
+   - **Calle de la puerta**: el templo suele estar en el callejero por una fachada y la
+     cofradía puede salir por otra puerta a otra calle. «La puerta da a» fija esa calle; si se
+     deja vacío, se usa la más cercana al marcador (se muestra como pista). Al elegir la salida
+     por dirección, se toma la calle del portal. El cortejo arranca en el punto del eje de esa
+     calle frente a la puerta (`grafo.anclar`) hacia el lado que lleve antes a la primera calle.
+   - **Entrada por otra puerta**: 📍 en «Entrada» fija otra puerta (marcador blanco) y «La
+     puerta de entrada da a» su calle; sin ellas, se entra por la misma puerta y calle que la
+     salida. Se llega por esa calle hasta el punto frente a la puerta y de ahí a la puerta.
    - El punto de un templo es el centro del edificio: hay que arrastrarlo a la puerta. El marcador se puede arrastrar. El municipio se comprueba con el CDAU en
    ese punto y se cambia solo si no coincide.
 3. **Itinerario**: una calle por línea (o separadas por comas, punto y coma o guiones con
