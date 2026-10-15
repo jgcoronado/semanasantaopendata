@@ -146,3 +146,8 @@
 .co-paso--interior { border-style: dashed; border-color: #9f1853; }
 .co-json { font-family: ui-monospace, Consolas, monospace; font-size: 0.75rem; min-height: 10rem; }
 .ed-ley--interior { border-top: 4px dashed #9f1853; }
+
+/* Aviso de recorrido existente al guardar */
+.ed-existente { display: grid; gap: 0.45rem; padding: 0.6rem 0.7rem; border: 1px solid #f1c21b; border-radius: 8px; background: #fff8e1; font-size: 0.86rem; }
+.btn--aviso { background: #b28600; border-color: #b28600; }
+.btn--aviso:hover { background: #8e6a00; border-color: #8e6a00; }

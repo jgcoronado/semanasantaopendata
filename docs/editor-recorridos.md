@@ -222,12 +222,23 @@ recta que cruza la plaza cuando:
 
 ## Guardar
 
-«Descargar GeoJSON» genera `NN-slug.geojson` si hay hermandad elegida (solo Sevilla) o
-el nombre escrito. Para publicarlo en el sitio, el archivo va a `scripts/geojson-AAAA/` (y a
-`public/geojson/AAAA/` si lo usa el mapa de la ficha). «Abrir GeoJSON» recupera un recorrido
-del editor con sus correcciones, o carga el itinerario de un GeoJSON de 2025 y muestra su
-línea en gris como referencia. El estado de trabajo se conserva en el navegador
-(`localStorage`).
+Se guarda **por cofradía y año**: hermandad (en Sevilla, de la lista) o nombre de la cofradía,
+y año (los del proyecto, los que tienen recorridos publicados y el actual).
+
+- **Guardar** lo deja en este navegador (`localStorage` `ssod-recorridos-guardados-v1`, clave
+  `municipio/año/cofradía`) con el GeoJSON completo (incluido `anio` y el estado del editor).
+- **Recorrido existente**: al elegir cofradía y año se busca uno guardado en el navegador o
+  publicado en el proyecto (`public/geojson/AAAA/NN-slug.geojson`, por `id_hdad`). Si lo hay,
+  se dibuja en gris punteado y un aviso dice de dónde es y cuánto mide. El primer «Guardar»
+  solo avisa y cambia el botón a «Confirmar: sobrescribir»; hay que pulsarlo otra vez. Cambiar
+  de cofradía o de año anula la confirmación pendiente. «Abrir el existente» lo carga en el
+  editor (con sus correcciones si lo hizo el editor; si no, su itinerario sacado de los
+  puntos, con su línea de referencia).
+- **Publicar**: la web es estática y el navegador no puede escribir en el proyecto.
+  «Descargar GeoJSON» genera `NN-slug.geojson` (o el nombre de la cofradía); se sube a
+  `public/geojson/AAAA/` (y a `scripts/geojson-AAAA/`). «Abrir GeoJSON» recupera un recorrido
+  desde un archivo.
+- El estado de trabajo (itinerario, salida, correcciones) se conserva aparte en el navegador.
 
 ## Límites conocidos
 

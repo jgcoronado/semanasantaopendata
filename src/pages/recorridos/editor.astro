@@ -10,19 +10,29 @@ import Base from '../../layouts/Base.astro';
 import hermandades from '../../data/hermandades.json';
 import dias from '../../data/dias.json';
 import carrerasOficiales from '../../data/carreras-oficiales.json';
+import aniosDatos from '../../data/anios.json';
 import '../../styles/recorridos.css';
 
 const COLORES_DIA = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 const ordenDia = new Map(dias.map((d) => [d.slug, d.orden]));
 
-// GeoJSON de 2025 publicados en /geojson/2025/ (para «Cargar itinerario 2025»).
-const archivos2025 = readdirSync(join(process.cwd(), 'public', 'geojson', '2025'));
+// Recorridos publicados por año en public/geojson/AAAA/NN-slug.geojson: { año: { id_hdad: url } }.
+const dirGeojson = join(process.cwd(), 'public', 'geojson');
+const publicados = Object.fromEntries(
+  readdirSync(dirGeojson).filter((a) => /^\d{4}$/.test(a)).map((anio) => [anio, Object.fromEntries(
+    readdirSync(join(dirGeojson, anio)).filter((f) => /^\d+-.*\.geojson$/.test(f)).map((f) => [Number(f.split('-')[0]), `/geojson/${anio}/${f}`]),
+  )]),
+);
+const archivos2025 = readdirSync(join(dirGeojson, '2025'));
 
 // Carreras Oficiales predeterminadas por código INE (sin la clave de notas).
 const carreras = Object.fromEntries(Object.entries(carrerasOficiales).filter(([k]) => !k.startsWith('_')));
 
 const datos = {
   carreras,
+  publicados,
+  // Años del proyecto y los que ya tienen recorridos publicados (el editor añade el actual).
+  anios: [...new Set([...aniosDatos.map((a) => a.anio), ...Object.keys(publicados).map(Number)])],
   hermandades: [...hermandades]
     .sort((a, b) => (ordenDia.get(a.dia) - ordenDia.get(b.dia)) || a.id_hdad - b.id_hdad)
     .map((h) => {
@@ -41,7 +51,6 @@ const datos = {
         slug: h.slug,
         dia: h.dia,
         color: COLORES_DIA[(ordenDia.get(h.dia) ?? 1) - 1],
-        geojson2025: f ? `/geojson/2025/${f}` : null,
         salida2025,
       };
     }),
@@ -143,19 +152,26 @@ const description =
           <label class="campo">Hermandad (Sevilla)
             <select id="ed-hermandad"></select>
           </label>
+        </div>
+        <label class="campo">Cofradía o nombre del recorrido
+          <input id="ed-nombre" class="ed__input" type="text" autocomplete="off" placeholder="Fuera de Sevilla, o sin elegir hermandad" />
+        </label>
+        <label class="campo">Año
+          <select id="ed-anio"></select>
+        </label>
+        <div id="ed-existente" class="ed-existente" role="status" hidden>
+          <p id="ed-existente-txt" class="ed__parrafo"></p>
           <div class="ed__fila">
-            <button id="ed-btn-2025" type="button" class="btn btn--sec">Cargar itinerario 2025</button>
-            <button id="ed-btn-ref" type="button" class="btn btn--sec" hidden>Ocultar trazado gris</button>
+            <button id="ed-btn-abrir-existente" type="button" class="btn btn--sec">Abrir el existente</button>
+            <button id="ed-btn-ref" type="button" class="btn btn--sec" hidden>Ocultar su trazado</button>
           </div>
         </div>
-        <label class="campo">Nombre del recorrido
-          <input id="ed-nombre" class="ed__input" type="text" autocomplete="off" />
-        </label>
         <div class="ed__fila">
-          <button id="ed-btn-exportar" type="button" class="btn">Descargar GeoJSON</button>
+          <button id="ed-btn-guardar" type="button" class="btn">Guardar</button>
+          <button id="ed-btn-exportar" type="button" class="btn btn--sec">Descargar GeoJSON</button>
           <label class="btn btn--sec ed__importar">Abrir GeoJSON<input id="ed-importar" type="file" accept=".geojson,.json,application/geo+json,application/json" /></label>
         </div>
-        <small class="ed__nota">El GeoJSON guarda también el itinerario y las correcciones para volver a abrirlo aquí.</small>
+        <small class="ed__nota">«Guardar» lo deja en este navegador para esa cofradía y año. Para publicarlo en la web, «Descargar GeoJSON» y súbelo a <code>public/geojson/AAAA/</code> (y <code>scripts/geojson-AAAA/</code>). El GeoJSON guarda también el itinerario y las correcciones para volver a abrirlo aquí.</small>
       </section>
     </aside>
 

@@ -11,7 +11,7 @@ import * as cdau from './cdau.js';
 import { clave, esCarreraOficial } from './nombres.js';
 import { leerItinerario, resolverItinerario, componer } from './componer.js';
 import { confirmarContinuidad } from './continuidad.js';
-import { puntoA, puntoMasCercano } from './geo.js';
+import { longitud, puntoA, puntoMasCercano } from './geo.js';
 import { aGeoJSON, deGeoJSON, descargar } from './exportar.js';
 import { ATRIBUCION_LUGARES, buscarLugares, buscarPhoton, templosMunicipio } from './lugares.js';
 import {
@@ -37,7 +37,8 @@ export function iniciarEditor(datos) {
     texto: $('ed-texto'), btnTrazar: $('ed-btn-trazar'), mensaje: $('ed-mensaje'),
     resultado: $('ed-resultado'), resumen: $('ed-resumen'), avisos: $('ed-avisos'), lista: $('ed-items'),
     calles: $('ed-calles'), hermandad: $('ed-hermandad'), bloqueHdad: $('ed-bloque-hdad'),
-    btn2025: $('ed-btn-2025'), nombre: $('ed-nombre'), btnExportar: $('ed-btn-exportar'),
+    nombre: $('ed-nombre'), btnExportar: $('ed-btn-exportar'), anio: $('ed-anio'), btnGuardar: $('ed-btn-guardar'),
+    existente: $('ed-existente'), existenteTxt: $('ed-existente-txt'), btnAbrirExistente: $('ed-btn-abrir-existente'),
     importar: $('ed-importar'), btnBorrarPuntos: $('ed-btn-borrar-puntos'), btnRef: $('ed-btn-ref'),
     puertaCalle: $('ed-puerta-calle'), entradaTxt: $('ed-entrada-txt'), btnEntrada: $('ed-btn-entrada'),
     btnEntradaQuitar: $('ed-entrada-quitar'), entradaCalle: $('ed-entrada-calle'),
@@ -131,6 +132,7 @@ export function iniciarEditor(datos) {
       zonaCalles.reiniciar();
       estado.puertaSalida = null;
       estado.entrada = null;
+      buscarExistente();
       estado.elecciones = {};
       ui.salidaCalle.value = '';
       ui.salidaNum.value = '';
@@ -938,90 +940,197 @@ export function iniciarEditor(datos) {
     recomponer();
   });
 
-  // ── Hermandad (Sevilla), referencia 2025, importar y exportar ──
+  // ── Guardar: cofradía y año ──
+  // Se guarda en este navegador por municipio, año y cofradía (hermandad de Sevilla o nombre).
+  // Si para esa cofradía y año ya hay un recorrido (guardado aquí o publicado en el proyecto,
+  // public/geojson/AAAA/), se dibuja como referencia y el primer «Guardar» solo avisa: hay que
+  // volver a pulsarlo para sobrescribirlo.
+  const anios = [...new Set([...(datos.anios ?? []), new Date().getFullYear()])].sort((a, b) => b - a);
+  ui.anio.innerHTML = anios.map((a) => `<option value="${a}">${a}</option>`).join('');
+  estado.anio = anios.includes(estado.anio) ? estado.anio : new Date().getFullYear();
+  ui.anio.value = String(estado.anio);
   ui.hermandad.innerHTML = '<option value="">— Ninguna —</option>'
     + datos.hermandades.map((h) => `<option value="${h.id_hdad}">${esc(h.nombre)}</option>`).join('');
   ui.hermandad.value = estado.hermandad ?? '';
-  ui.hermandad.addEventListener('change', () => {
-    estado.hermandad = ui.hermandad.value ? Number(ui.hermandad.value) : null;
-    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad);
-    ui.btn2025.disabled = !h?.geojson2025;
-    if (h && !ui.nombre.value) ui.nombre.value = h.nombre;
-    guardar();
-    dibujar();
-  });
-  ui.btn2025.disabled = !datos.hermandades.find((x) => x.id_hdad === estado.hermandad)?.geojson2025;
+  if (estado.nombre) ui.nombre.value = estado.nombre;
 
-  function pintarReferencia(coords) {
+  let existente = null;      // { origen: 'navegador' | 'proyecto', geo, fecha, metros } | null
+  let confirmar = false;     // el siguiente «Guardar» sobrescribe
+  const hermandadActual = () => (estado.municipio?.cod === SEVILLA.cod ? datos.hermandades.find((x) => x.id_hdad === estado.hermandad) ?? null : null);
+  const nombreCofradia = () => hermandadActual()?.nombre ?? ui.nombre.value.trim();
+
+  /** Clave del recorrido guardado (municipio/año/cofradía) o null si falta la cofradía. */
+  function claveGuardado() {
+    const h = hermandadActual();
+    const quien = h ? `h${h.id_hdad}` : clave(ui.nombre.value.trim());
+    return quien ? `${estado.municipio.cod}/${estado.anio}/${quien}` : null;
+  }
+
+  function pintarReferencia(coords, titulo = 'Trazado de referencia') {
     capaReferencia.clearLayers();
     if (!coords?.length) { ui.btnRef.hidden = true; return; }
-    L.polyline(coords.map(([x, y]) => [y, x]), { color: '#6b6776', weight: 7, opacity: 0.35, interactive: false }).addTo(capaReferencia);
+    L.polyline(coords.map(([x, y]) => [y, x]), { color: '#6b6776', weight: 7, opacity: 0.4, dashArray: '2 8', interactive: true })
+      .bindTooltip(esc(titulo), { sticky: true }).addTo(capaReferencia);
     ui.btnRef.hidden = false;
   }
   ui.btnRef.addEventListener('click', () => pintarReferencia(null));
 
-  ui.btn2025.addEventListener('click', async () => {
-    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad);
-    if (!h?.geojson2025) return;
-    if (ui.texto.value.trim() && !window.confirm('Se sustituirá el itinerario escrito por el de 2025. ¿Continuar?')) return;
+  function pintarGuardar() {
+    ui.btnGuardar.textContent = confirmar ? 'Confirmar: sobrescribir' : 'Guardar';
+    ui.btnGuardar.classList.toggle('btn--aviso', confirmar);
+    ui.existente.hidden = !existente;
+    if (!existente) return;
+    const quien = nombreCofradia() || 'esta cofradía';
+    const donde = existente.origen === 'proyecto' ? 'publicado en el proyecto' : `guardado en este navegador${existente.fecha ? ` el ${existente.fecha}` : ''}`;
+    ui.existenteTxt.innerHTML = `Ya hay un recorrido de <strong>${esc(quien)}</strong> para <strong>${estado.anio}</strong> (${donde}${existente.metros ? `, ${fmtKm(existente.metros)}` : ''})${capaReferencia.getLayers().length ? ', dibujado en gris punteado' : ''}. `
+      + (confirmar ? '<strong>Pulsa otra vez «Guardar» para sobrescribirlo.</strong>' : 'Al guardar se sobrescribirá.');
+  }
+
+  let turnoExistente = 0;
+  async function buscarExistente() {
+    const t = ++turnoExistente;
+    if (confirmar) mensaje('');   // la confirmación pendiente era para otra cofradía o año
+    confirmar = false;
+    existente = null;
+    const k = claveGuardado();
+    const local = k ? guardados()[k] : null;
+    if (local) {
+      existente = { origen: 'navegador', geo: local.geojson, fecha: local.fecha, metros: local.metros };
+    } else {
+      const h = hermandadActual();
+      const url = h ? datos.publicados?.[estado.anio]?.[h.id_hdad] : null;
+      if (url) {
+        try {
+          const geo = await (await fetch(url)).json();
+          if (t !== turnoExistente) return;
+          const linea = geo.features?.find((f) => f.geometry?.type === 'LineString');
+          existente = { origen: 'proyecto', geo, url, metros: linea ? longitud(linea.geometry.coordinates) : null };
+        } catch { /* sin acceso al archivo publicado */ }
+      }
+    }
+    if (t !== turnoExistente) return;
+    pintarReferencia(existente ? deGeoJSON(existente.geo).referencia : null, existente ? `Recorrido existente ${estado.anio}` : undefined);
+    pintarGuardar();
+  }
+
+  const CLAVE_GUARDADOS = 'ssod-recorridos-guardados-v1';
+  const guardados = () => leerLocal(CLAVE_GUARDADOS, {});
+
+  function geoActual() {
+    const h = hermandadActual();
+    // De la Carrera Oficial se anota solo su origen y fecha: es la del municipio, no del recorrido.
+    const carrera = carreraEnUso() ? { origen: co.origen, actualizado: co.def.actualizado ?? null } : null;
+    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre: nombreCofradia(), municipio: estado.municipio, estado: { ...estado, carrera } });
+    geo.features[0].properties.anio = estado.anio;
+    return geo;
+  }
+
+  ui.hermandad.addEventListener('change', () => {
+    estado.hermandad = ui.hermandad.value ? Number(ui.hermandad.value) : null;
+    const h = hermandadActual();
+    if (h) ui.nombre.value = h.nombre;
+    estado.nombre = ui.nombre.value.trim();
+    guardar();
+    dibujar();
+    buscarExistente();
+  });
+  ui.anio.addEventListener('change', () => {
+    estado.anio = Number(ui.anio.value);
+    guardar();
+    buscarExistente();
+  });
+  ui.nombre.addEventListener('change', () => {
+    estado.nombre = ui.nombre.value.trim();
+    guardar();
+    if (!hermandadActual()) buscarExistente();
+  });
+
+  ui.btnGuardar.addEventListener('click', () => {
+    if (!resultado) { mensaje('Traza primero el recorrido.', 'error'); return; }
+    const k = claveGuardado();
+    if (!k) { mensaje('Elige la hermandad o escribe el nombre de la cofradía para guardar.', 'error'); return; }
+    if (existente && !confirmar) {
+      confirmar = true;
+      pintarGuardar();
+      mensaje(`Ya hay un recorrido de ${nombreCofradia()} para ${estado.anio}: pulsa otra vez «Guardar» para sobrescribirlo.`, 'error');
+      return;
+    }
+    const ahora = new Date();
+    const fecha = `${ahora.toISOString().slice(0, 10)} ${ahora.toTimeString().slice(0, 5)}`;
+    const geojson = geoActual();
+    const todos = { ...guardados(), [k]: { geojson, fecha, metros: Math.round(resultado.metros), nombre: nombreCofradia() } };
     try {
-      const r = deGeoJSON(await (await fetch(h.geojson2025)).json());
+      localStorage.setItem(CLAVE_GUARDADOS, JSON.stringify(todos));
+    } catch {
+      mensaje('No se pudo guardar en este navegador (almacenamiento lleno o bloqueado). Usa «Descargar GeoJSON».', 'error');
+      return;
+    }
+    const sobrescrito = !!existente;
+    existente = { origen: 'navegador', geo: geojson, fecha, metros: Math.round(resultado.metros) };
+    confirmar = false;
+    pintarReferencia(null);
+    pintarGuardar();
+    mensaje(`Recorrido de ${nombreCofradia()} ${estado.anio} ${sobrescrito ? 'sobrescrito' : 'guardado'} en este navegador. Para publicarlo, «Descargar GeoJSON» y súbelo a public/geojson/${estado.anio}/.`);
+  });
+
+  /** Abre un GeoJSON: con estado del editor, lo restaura y traza; si no, toma su itinerario. */
+  async function abrirGeoJSON(geo, { titulo = 'Trazado del archivo' } = {}) {
+    const r = deGeoJSON(geo);
+    if (r.id_hdad && datos.hermandades.some((h) => h.id_hdad === r.id_hdad)) {
+      estado.hermandad = r.id_hdad;
+      ui.hermandad.value = String(r.id_hdad);
+    }
+    if (r.estado) {
+      // La Carrera Oficial no se importa: se usa la del municipio.
+      Object.assign(estado, {
+        texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso,
+        puertaSalida: r.estado.puertaSalida ?? null, entrada: r.estado.entrada ?? null,
+      });
+      ui.texto.value = estado.texto;
+      if (r.estado.municipio && r.estado.municipio.cod !== estado.municipio.cod) await elegirMunicipio(r.estado.municipio, { encuadrar: false });
+      guardar();
+      pintarSalida();
+      await trazar({ encuadrar: true });
+    } else {
       ui.texto.value = r.texto;
       estado.texto = r.texto;
-      pintarReferencia(r.referencia);
+      pintarReferencia(r.referencia, titulo);
       if (!estado.salida && r.referencia?.length) {
         await fijarSalida(r.referencia[0]);
-        mensaje('Itinerario 2025 cargado. La salida se ha tomado del trazado de 2025; muévela a la puerta si no coincide.');
+        mensaje('Itinerario cargado de los puntos del archivo. La salida se ha tomado del primer punto de su línea; muévela a la puerta si no coincide.');
       } else {
-        mensaje('Itinerario 2025 cargado (gris: trazado de 2025). Revísalo y pulsa «Trazar recorrido».');
+        mensaje('Itinerario cargado de los puntos del archivo (su línea, en gris). Revísalo y pulsa «Trazar recorrido».');
       }
       guardar();
+    }
+  }
+
+  ui.btnAbrirExistente.addEventListener('click', async () => {
+    if (!existente) return;
+    if (ui.texto.value.trim() && !window.confirm('Se sustituirá el itinerario escrito por el del recorrido existente. ¿Continuar?')) return;
+    try {
+      await abrirGeoJSON(existente.geo, { titulo: `Recorrido existente ${estado.anio}` });
+      pintarGuardar();
     } catch (e) {
-      mensaje(`No se pudo cargar el recorrido de 2025: ${e.message}`, 'error');
+      mensaje(`No se pudo abrir el recorrido existente: ${e.message}`, 'error');
     }
   });
 
   ui.btnExportar.addEventListener('click', () => {
     if (!resultado) { mensaje('Traza primero el recorrido.', 'error'); return; }
-    const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad) ?? null;
-    const nombre = ui.nombre.value.trim();
-    // De la Carrera Oficial se anota solo su origen y fecha: es la del municipio, no del recorrido.
-    const carrera = carreraEnUso() ? { origen: co.origen, actualizado: co.def.actualizado ?? null } : null;
-    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre, municipio: estado.municipio, estado: { ...estado, carrera } });
+    const h = hermandadActual();
     const archivo = h
       ? `${String(h.id_hdad).padStart(2, '0')}-${h.slug}.geojson`
-      : `${(clave(nombre) || 'recorrido').slice(0, 60)}.geojson`;
-    descargar(archivo, geo);
+      : `${(clave(nombreCofradia()) || 'recorrido').slice(0, 60)}.geojson`;
+    descargar(archivo, geoActual());
   });
 
   ui.importar.addEventListener('change', async () => {
     const f = ui.importar.files?.[0];
     if (!f) return;
     try {
-      const r = deGeoJSON(JSON.parse(await f.text()));
-      if (r.id_hdad && datos.hermandades.some((h) => h.id_hdad === r.id_hdad)) {
-        estado.hermandad = r.id_hdad;
-        ui.hermandad.value = String(r.id_hdad);
-      }
-      if (r.estado) {
-        // La Carrera Oficial no se importa: se usa la del municipio.
-        Object.assign(estado, {
-          texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso,
-          puertaSalida: r.estado.puertaSalida ?? null, entrada: r.estado.entrada ?? null,
-        });
-        ui.texto.value = estado.texto;
-        pintarReferencia(null);
-        if (r.estado.municipio && r.estado.municipio.cod !== estado.municipio.cod) await elegirMunicipio(r.estado.municipio, { encuadrar: false });
-        guardar();
-        pintarSalida();
-        await trazar({ encuadrar: true });
-      } else {
-        ui.texto.value = r.texto;
-        estado.texto = r.texto;
-        pintarReferencia(r.referencia);
-        guardar();
-        mensaje('Itinerario importado de los puntos del archivo; la línea del archivo se muestra en gris.');
-      }
+      await abrirGeoJSON(JSON.parse(await f.text()));
+      buscarExistente();
     } catch (e) {
       mensaje(`No se pudo leer el archivo: ${e.message}`, 'error');
     } finally {
@@ -1036,6 +1145,7 @@ export function iniciarEditor(datos) {
   if (estado.salida) mapa.setView([estado.salida[1], estado.salida[0]], 16);
   cargarMunicipios().then(async () => {
     await elegirMunicipio(estado.municipio ?? SEVILLA, { encuadrar: !estado.salida });
+    buscarExistente();
     if (estado.salida && estado.texto.trim()) trazar({ encuadrar: true });
   });
 }
