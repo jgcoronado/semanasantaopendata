@@ -10,6 +10,7 @@ import Base from '../../layouts/Base.astro';
 import hermandades from '../../data/hermandades.json';
 import dias from '../../data/dias.json';
 import carrerasOficiales from '../../data/carreras-oficiales.json';
+import '../../styles/recorridos.css';
 
 const COLORES_DIA = ['#6929c4','#1192e8','#005d5d','#9f1853','#fa4d56','#198038','#b28600','#012749','#8a3800'];
 const ordenDia = new Map(dias.map((d) => [d.slug, d.orden]));
@@ -94,44 +95,17 @@ const description =
         <h2><span class="ed__num">3</span> Itinerario</h2>
         <textarea id="ed-texto" class="ed__input ed__texto" rows="10" spellcheck="false"
           placeholder={'Una calle por línea o separadas por comas, en orden:\nPuerta del Perdón\nAlemanes\nCardenal Carlos Amigo\n…\nCarrera Oficial\n…'}></textarea>
-        <small class="ed__nota">Escribe «Carrera Oficial» donde corresponda: se sustituye por la definida abajo. Si la primera línea es el templo, se toma como la salida.</small>
+        <small class="ed__nota">Escribe «Carrera Oficial» donde corresponda: se sustituye por la del municipio (abajo). Si la primera línea es el templo, se toma como la salida.</small>
         <button id="ed-btn-trazar" type="button" class="btn ed__trazar">Trazar recorrido</button>
       </section>
 
       <section class="ed__bloque">
-        <details id="ed-co" class="ed-co">
-          <summary><h2><span class="ed__num ed__num--co">CO</span> Carrera Oficial <small id="ed-co-resumen" class="ed__nota"></small></h2></summary>
-          <div class="ed-co__cuerpo">
-            <div class="ed-co__fila">
-              <span class="ed-co__etq">Inicio</span>
-              <span id="ed-co-inicio" class="ed__nota">Sin fijar</span>
-              <button type="button" class="ed-mini" data-co-fijar="inicio" title="Fijar el inicio en el mapa" aria-label="Fijar el inicio de la Carrera Oficial en el mapa">📍</button>
-            </div>
-            <label class="campo">Calles por las que transita, en orden
-              <textarea id="ed-co-calles" class="ed__input ed__texto" rows="5" spellcheck="false" placeholder={'Una calle por línea, en orden'}></textarea>
-            </label>
-            <input id="ed-co-nueva" class="ed__input" list="ed-calles" autocomplete="off" placeholder="Añadir una calle…" aria-label="Añadir una calle a la Carrera Oficial" />
-            <ul id="ed-co-estado" class="ed-co__estado"></ul>
-            <div class="ed-co__fila">
-              <span class="ed-co__etq">Entrada en templo</span>
-              <span id="ed-co-entrada" class="ed__nota">Sin entrada</span>
-              <button type="button" class="ed-mini" data-co-fijar="entrada" title="Fijar la entrada en el mapa" aria-label="Fijar la entrada en el templo en el mapa">📍</button>
-              <button type="button" class="ed-mini" data-co-quitar="entrada" title="Quitar la entrada" aria-label="Quitar la entrada en el templo">✕</button>
-            </div>
-            <small class="ed__nota">Opcional, cuando la Carrera Oficial atraviesa un templo: de la entrada al fin se va en línea recta por el interior (p. ej., en Sevilla, de la Puerta de San Miguel a la de Palos de la Catedral).</small>
-            <div class="ed-co__fila">
-              <span class="ed-co__etq">Fin</span>
-              <span id="ed-co-fin" class="ed__nota">Sin fijar</span>
-              <button type="button" class="ed-mini" data-co-fijar="fin" title="Fijar el fin en el mapa" aria-label="Fijar el fin de la Carrera Oficial en el mapa">📍</button>
-            </div>
-            <div class="ed__fila">
-              <button id="ed-co-predeterminada" type="button" class="btn btn--sec">Restablecer la predeterminada</button>
-              <button id="ed-co-libre" type="button" class="btn btn--sec">Dejar como tramo libre</button>
-              <button id="ed-co-copiar" type="button" class="btn btn--sec">Copiar definición</button>
-            </div>
-            <small class="ed__nota">Los puntos de inicio, entrada y fin también se pueden arrastrar en el mapa. Sin inicio y fin, la Carrera Oficial es un tramo libre entre la calle anterior y la siguiente.</small>
-          </div>
-        </details>
+        <h2><span class="ed__num ed__num--co">CO</span> Carrera Oficial <small id="ed-co-resumen" class="ed__nota"></small></h2>
+        <p id="ed-co-detalle" class="ed__nota ed__parrafo"></p>
+        <div class="ed__fila">
+          <a id="ed-co-enlace" class="btn btn--sec" href="/recorridos/carrera-oficial/" target="_blank" rel="noopener">Revisar o cambiar</a>
+        </div>
+        <small class="ed__nota">Es la misma para todas las cofradías del municipio: se define en su propia ventana y aquí se usa tal cual.</small>
       </section>
 
       <p id="ed-mensaje" class="ed__mensaje" role="status" aria-live="polite"></p>
@@ -187,144 +161,4 @@ const description =
   iniciarEditor(datos);
 </script>
 
-<style>
-  .ed {
-    display: grid;
-    grid-template-columns: minmax(320px, 420px) 1fr;
-    height: calc(100dvh - 64px);
-    min-height: 560px;
-  }
-  .ed__panel {
-    overflow-y: auto;
-    padding: 1rem 1.1rem 2rem;
-    border-right: 1px solid var(--linea);
-    background: var(--blanco);
-  }
-  .ed__mapa { height: 100%; min-height: 420px; }
-  .ed__titulo { font-size: 1.35rem; margin: 0 0 0.4rem; }
-  .ed__intro { color: var(--gris); font-size: 0.92rem; margin: 0 0 0.8rem; }
-  .ed__bloque { border-top: 1px solid var(--linea); padding-top: 0.8rem; margin-top: 0.8rem; display: grid; gap: 0.45rem; }
-  .ed__bloque h2 { font-size: 1rem; margin: 0; display: flex; align-items: center; gap: 0.45rem; }
-  .ed__num {
-    display: inline-grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%;
-    background: var(--morado); color: var(--blanco); font-size: 0.8rem;
-  }
-  .ed__input {
-    font: inherit; font-size: 0.95rem; color: var(--tinta); width: 100%;
-    padding: 0.5rem 0.6rem; border: 1px solid var(--linea); border-radius: 8px; background: var(--blanco);
-  }
-  .ed__texto { font-family: ui-monospace, Consolas, monospace; font-size: 0.88rem; resize: vertical; }
-  .ed__fila { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-  .ed__o { margin: 0.1rem 0 -0.1rem; font-size: 0.78rem; color: var(--gris); }
-  .ed-co summary { cursor: pointer; list-style: none; }
-  .ed-co summary::-webkit-details-marker { display: none; }
-  .ed-co summary h2 { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
-  .ed-co summary h2::after { content: '▸'; margin-left: auto; color: var(--gris); }
-  .ed-co[open] summary h2::after { content: '▾'; }
-  .ed__num--co { width: auto; padding: 0 0.35rem; border-radius: 999px; background: var(--oro); color: var(--tinta); font-size: 0.7rem; }
-  .ed-co__cuerpo { display: grid; gap: 0.45rem; margin-top: 0.5rem; }
-  .ed-co__fila { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
-  .ed-co__etq { font-weight: 600; font-size: 0.86rem; min-width: 7.5rem; }
-  .ed-co__estado { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem; }
-  .ed-co__estado:empty { display: none; }
-  .ed__direccion { display: grid; grid-template-columns: 1fr 5.5rem; gap: 0.4rem; }
-  .ed__direccion input:disabled { background: var(--fondo-alt); }
-  .ed__nota { color: var(--gris); font-size: 0.8rem; }
-  .ed__trazar { justify-self: start; }
-  .ed__mensaje { margin: 0.8rem 0 0; font-size: 0.88rem; min-height: 1.2em; }
-  .ed__mensaje[data-tipo='error'] { color: #a2191f; }
-  .ed__resumen { margin: 0; font-size: 0.95rem; }
-  .ed__avisos { margin: 0; padding-left: 1.1rem; color: #8e6a00; font-size: 0.82rem; }
-  .ed__avisos:empty { display: none; }
-  .ed__leyenda { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; font-size: 0.78rem; color: var(--gris); }
-  .ed__sub { display: grid; gap: 0.45rem; }
-  .ed__importar { cursor: pointer; }
-  .ed__importar input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-  .ed__importar:focus-within { outline: 2px solid var(--morado); outline-offset: 3px; }
 
-  @media (max-width: 820px) {
-    .ed { grid-template-columns: 1fr; height: auto; }
-    .ed__mapa { height: 62vh; order: -1; }
-    .ed__panel { border-right: 0; }
-  }
-</style>
-
-<style is:global>
-  /* Elementos creados por JS (lista y marcadores de Leaflet). */
-  .ed-items { list-style: none; margin: 0; padding: 0; counter-reset: ed; display: grid; gap: 0.35rem; }
-  .ed-item {
-    counter-increment: ed; position: relative; padding: 0.4rem 0.5rem 0.45rem 2rem;
-    border: 1px solid var(--linea); border-radius: 8px; font-size: 0.86rem;
-  }
-  .ed-item::before {
-    content: counter(ed); position: absolute; left: 0.5rem; top: 0.45rem;
-    color: var(--gris); font-size: 0.75rem; font-variant-numeric: tabular-nums;
-  }
-  .ed-item:hover, .ed-item:focus-within { background: var(--fondo-alt); }
-  .ed-item--sin, .ed-item--ambigua { border-color: #fa4d56; }
-  .ed-item--omitir .ed-item__txt { text-decoration: line-through; color: var(--gris); }
-  .ed-item__cab { display: flex; justify-content: space-between; gap: 0.5rem; }
-  .ed-item__txt { font-weight: 600; }
-  .ed-item__m { color: var(--gris); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .ed-item__cab { align-items: center; }
-  .ed-item__txt { flex: 1; min-width: 0; }
-  .ed-item__asa { cursor: grab; color: var(--gris); user-select: none; padding: 0 0.15rem; letter-spacing: -2px; }
-  .ed-item__orden { display: inline-flex; gap: 0.15rem; }
-  .ed-item__orden .ed-mini { padding: 0.15rem 0.3rem; font-size: 0.74rem; }
-  .ed-mini:disabled { opacity: 0.35; cursor: default; }
-  .ed-mini--quitar:hover { background: #ffe1e1; }
-  .ed-item--arrastrando { opacity: 0.45; }
-  .ed-item--antes { box-shadow: 0 -3px 0 var(--morado); }
-  .ed-item--despues { box-shadow: 0 3px 0 var(--morado); }
-  .ed-nueva { list-style: none; padding: 0.3rem 0.5rem 0.3rem 2rem; }
-  .ed-nueva--temporal { border: 1px dashed var(--morado); border-radius: 8px; }
-  .ed-nueva__input { width: 100%; }
-  .ed-buscador { position: relative; }
-  .ed-buscador__lista {
-    position: absolute; z-index: 1200; left: 0; right: 0; top: calc(100% + 2px); margin: 0; padding: 0.25rem 0;
-    list-style: none; background: var(--blanco); border: 1px solid var(--linea); border-radius: 8px;
-    box-shadow: var(--sombra); max-height: 18rem; overflow-y: auto;
-  }
-  .ed-buscador__op { padding: 0.4rem 0.6rem; cursor: pointer; display: grid; gap: 0.05rem; }
-  .ed-buscador__op[aria-selected='true'], .ed-buscador__op:hover { background: var(--fondo-alt); }
-  .ed-buscador__op strong { font-weight: 600; font-size: 0.9rem; }
-  .ed-buscador__op small { color: var(--gris); font-size: 0.76rem; }
-  .ed-buscador__op--accion strong { color: var(--morado); font-weight: 600; }
-  .ed-buscador__vacio { padding: 0.4rem 0.6rem; color: var(--gris); font-size: 0.82rem; }
-  .ed-item__ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.25rem; }
-  .ed-item__via {
-    flex: 1 1 12rem; min-width: 0; font: inherit; font-size: 0.84rem;
-    padding: 0.25rem 0.4rem; border: 1px solid var(--linea); border-radius: 6px;
-  }
-  .ed-item__enlace, .ed-item__cand { display: block; margin-top: 0.2rem; color: var(--gris); font-size: 0.76rem; }
-  .ed-mini {
-    font: inherit; font-size: 0.8rem; line-height: 1; padding: 0.3rem 0.4rem; cursor: pointer;
-    border: 1px solid var(--linea); border-radius: 6px; background: var(--blanco);
-  }
-  .ed-mini:hover { background: var(--fondo-alt); }
-  .ed-mini:focus-visible { outline: 2px solid var(--morado); outline-offset: 1px; }
-  .ed-chip { font-size: 0.74rem; padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--fondo-alt); color: var(--gris); }
-  .ed-chip--co { background: #fff3d6; color: #6b5200; }
-  .ed-chip--aviso { background: #fff3d6; color: #6b5200; }
-  .ed-chip--error { background: #ffe1e1; color: #a2191f; }
-  .ed-chip--ok { background: #e3f4e6; color: #0e6027; }
-
-  .ed-ley { display: inline-block; width: 18px; height: 0; border-top: 4px solid #5b2a86; margin-right: 0.3rem; vertical-align: middle; }
-  .ed-ley--co { border-top: 4px dashed #c8a24a; }
-  .ed-ley--manual { border-top-color: #198038; }
-  .ed-ley--recta { border-top: 4px dashed #fa4d56; }
-
-  .ed-icono { background: transparent; border: 0; }
-  .ed-salida { background: #5b2a86; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
-  .ed-punto { background: #fff; border: 3px solid #198038; border-radius: 50%; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); cursor: grab; }
-  .ed-co { background: #c8a24a; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); }
-  .ed-co--inicio, .ed-co--entrada, .ed-co--fin {
-    border-radius: 50%; color: #1c1a22; font: 700 10px/14px system-ui, sans-serif; text-align: center; cursor: grab;
-  }
-  .ed-aviso {
-    background: #fa4d56; color: #fff; border-radius: 50%; font: 700 12px/18px system-ui, sans-serif; text-align: center;
-  }
-  .ed-flecha { color: #fff; font-size: 11px; line-height: 14px; text-align: center; text-shadow: 0 0 2px #000, 0 0 2px #000; }
-  .ed-flecha span { display: inline-block; }
-  .ed-apuntando, .ed-apuntando .leaflet-interactive { cursor: crosshair !important; }
-</style>

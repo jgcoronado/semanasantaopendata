@@ -7,6 +7,6 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://semanasantaopendata.org',
   trailingSlash: 'always',
-  // El editor de recorridos es una herramienta (noindex): fuera del sitemap.
-  integrations: [sitemap({ filter: (page) => !page.includes('/recorridos/editor/') })],
+  // Las herramientas de recorridos (editor y Carrera Oficial) son noindex: fuera del sitemap.
+  integrations: [sitemap({ filter: (page) => !page.includes('/recorridos/') })],
 });

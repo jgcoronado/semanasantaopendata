@@ -1,5 +1,5 @@
 {
-  "_nota": "Carreras Oficiales predeterminadas del editor de recorridos, por código INE de municipio. inicio/entrada/fin en [lon, lat]; entrada es opcional (paso por el interior de un templo: de la entrada al fin se dibuja en línea recta). calles en orden, con el nombre del callejero (CDAU) o el habitual.",
+  "_nota": "Carreras Oficiales del proyecto por código INE de municipio; se generan en /recorridos/carrera-oficial/ («Copiar para el proyecto»). Coordenadas [lon, lat]. inicio y fin; calles en orden (nombre del callejero CDAU o el habitual) con elecciones opcionales de vía; entrada e interior, opcionales, para el paso por un templo (de la entrada al fin en línea recta por los puntos interiores); puntosPaso: correcciones de la línea; trazado: la línea revisada, que el editor de recorridos usa tal cual (sin ella la calcula a partir de la definición).",
   "41091": {
     "municipio": "Sevilla",
     "inicio": [-5.995376, 37.392725],

@@ -92,11 +92,14 @@ export function resolverItinerario(lineas, catalogo, elecciones = {}, { templos 
  * - salida: [lon, lat] fijado en el mapa (puerta del templo).
  * - grafo: crearGrafo(...).
  * - puntosPaso: claveDePaso → [[lon, lat], …] arrastrados por el usuario.
- * - carrera: definición de la Carrera Oficial, o null para dejarla como tramo libre:
+ * - carrera: Carrera Oficial del municipio (carrera.js → paraComponer), o null para dejarla
+ *   como tramo libre:
  *     { inicio: [lon, lat], calles: [items 'via' resueltos], entrada: [lon, lat] | null,
- *       fin: [lon, lat] }
- *   Con `entrada` (puerta de un templo), de la entrada al fin se va en línea recta por el
- *   interior (Catedral de Sevilla: Puerta de San Miguel → Puerta de Palos).
+ *       interior: [[lon, lat], …], fin: [lon, lat], trazado: [[lon, lat], …] | null }
+ *   Con `trazado` (calculado en su ventana) se llega hasta el inicio y se sigue su línea tal
+ *   cual, sin recalcularla ni suavizarla (paso con `fija: true`). Sin él se calcula: inicio →
+ *   calles → entrada; con `entrada` (puerta de un templo), de ella al fin se va en línea recta
+ *   por los puntos `interior` (Catedral de Sevilla: Puerta de San Miguel → Puerta de Palos).
  *
  * Devuelve { pasos, coords, metros, avisos }.
  * Cada paso: { clave, hasta (índice en items), desde (índice o -1 = salida), tipo
@@ -142,8 +145,10 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
       // 'punto' fijado en el mapa, o 'entrada' (vuelta al punto de salida)
       puntoFinal = obj.tipo === 'entrada' ? salida : obj.coord;
       nodoFinal = obj.tipo === 'entrada' ? inicio : grafo.cercano(puntoFinal, SALIDA_MAX_M);
-      if (!nodoFinal) { avisos.push(`«${obj.texto}»: el punto está lejos de cualquier calle; se salta.`); return false; }
-      destinos = new Set([nodoFinal.nodo]);
+      // Por el interior de un templo (recta) no hace falta calle cerca.
+      if (!nodoFinal && !obj.recta) { avisos.push(`«${obj.texto}»: el punto está lejos de cualquier calle; se salta.`); return false; }
+      destinos = nodoFinal ? new Set([nodoFinal.nodo]) : new Set();
+      fijos.push(puntoFinal);   // los puntos fijados no se mueven al suavizar
     }
 
     const base = `${clavePrevia}>${obj.clave}`;
@@ -162,7 +167,7 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     if (obj.recta) {
       // Por el interior de un edificio: recta desde donde acabó el paso anterior.
       partes.push([ultimoPunto ?? grafo.coord(actual), puntoFinal]);
-      actual = nodoFinal.nodo;
+      if (nodoFinal) actual = nodoFinal.nodo;
     } else {
       for (const p of puntosPaso[clavePaso] ?? []) {
         const enganche = grafo.cercano(p, ENGANCHE_PUNTO_M);
@@ -228,21 +233,52 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     return true;
   }
 
+  /** Carrera Oficial con trazado guardado: un paso con su línea, que no se toca. */
+  function pasoFijo(c, i) {
+    const base = `${clavePrevia}>co:trazado`;
+    const occ = ocurrencias.get(base) ?? 0;
+    ocurrencias.set(base, occ + 1);
+    pasos.push({
+      clave: `${base}#${occ}`, desde: previa, hasta: i, tipo: 'co', fija: true, etiqueta: 'Carrera Oficial',
+      coords: c.trazado, metros: longitud(c.trazado), enlaces: [],
+    });
+    const fin = c.trazado[c.trazado.length - 1];
+    const n = grafo.cercano(fin, SALIDA_MAX_M);
+    if (n) cursor = n.nodo;
+    clavePrevia = 'co:fin';
+    idsPrevios = [];
+    ultimoPunto = fin;
+  }
+
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
     if (i === 0 && it.tipo === 'salida') continue;
     if (it.tipo === 'omitir') continue;
     if (it.tipo === 'co') {
       if (!carrera) { coPendiente = true; continue; }
-      // Carrera Oficial definida: inicio → calles → [entrada al templo] → fin.
+      if (carrera.trazado) {
+        // Trazado fijo: se llega al inicio y se sigue la línea guardada.
+        if (avanzar({ tipo: 'punto', coord: carrera.inicio, texto: 'Inicio de la Carrera Oficial', clave: 'co:inicio' }, i, { etiqueta: 'Hasta el inicio de la Carrera Oficial' })) {
+          pasoFijo(carrera, i);
+          previa = i;
+        }
+        continue;
+      }
+      // Carrera Oficial sin trazado guardado: inicio → calles → [entrada → interior] → fin.
       const tramos = [
         { tipo: 'punto', coord: carrera.inicio, texto: 'Inicio de la Carrera Oficial', clave: 'co:inicio', etiqueta: 'Carrera Oficial: inicio' },
         ...carrera.calles.map((c, k) => ({ ...c, clave: `co:${k}:${c.clave}`, etiqueta: `Carrera Oficial: ${c.texto}` })),
-        ...(carrera.entrada ? [{ tipo: 'punto', coord: carrera.entrada, texto: 'Entrada en el templo', clave: 'co:entrada', etiqueta: 'Carrera Oficial: entrada en el templo' }] : []),
-        { tipo: 'punto', coord: carrera.fin, texto: 'Fin de la Carrera Oficial', clave: 'co:fin', recta: !!carrera.entrada, etiqueta: carrera.entrada ? 'Carrera Oficial: interior del templo' : 'Carrera Oficial: fin' },
+        ...(carrera.entrada ? [
+          { tipo: 'punto', coord: carrera.entrada, texto: 'Entrada en el templo', clave: 'co:entrada', etiqueta: 'Carrera Oficial: entrada en el templo' },
+          ...(carrera.interior ?? []).map((coord, k) => ({ tipo: 'punto', coord, texto: 'Interior del templo', clave: `co:interior:${k}`, recta: true, etiqueta: `Carrera Oficial: punto interior ${k + 1}` })),
+        ] : []),
+        { tipo: 'punto', coord: carrera.fin, texto: 'Fin de la Carrera Oficial', clave: 'co:fin', recta: !!carrera.entrada, etiqueta: carrera.entrada ? 'Carrera Oficial: salida del templo' : 'Carrera Oficial: fin' },
       ];
       let alguno = false;
       tramos.forEach((t, k) => {
+        // Si el recorrido empieza en el propio inicio (ventana de la Carrera Oficial), no hay
+        // que llegar a él: se evita ir al eje y volver.
+        if (k === 0 && !pasos.length && distM(salida, t.coord) < 1) return;
         // Hasta el inicio se llega como a cualquier punto (penalizando calles no listadas);
         // dentro de la Carrera Oficial cuentan sus propias calles.
         if (avanzar(t, i, { co: k > 0, etiqueta: t.etiqueta })) alguno = true;
@@ -271,21 +307,31 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
 
   // Suavizado del trazado completo y nuevo reparto en pasos (el enlace salida → primera
   // calle es la pieza 0; cada paso empieza donde acaba el anterior).
-  const bruto = concatenar([[salida], ...pasos.map((p) => p.coords)]);
+  // Tramos consecutivos fijos (Carrera Oficial guardada) o no: solo se suavizan los otros.
+  const grupos = [];
+  for (const p of pasos) {
+    const u = grupos[grupos.length - 1];
+    if (u && u.fija === !!p.fija) u.partes.push(p.coords);
+    else grupos.push({ fija: !!p.fija, partes: grupos.length ? [p.coords] : [[salida], p.coords] });
+  }
   const cortes = [pasos[0].coords[0], ...pasos.slice(0, -1).map((p) => p.coords[p.coords.length - 1])];
   const metrosAprox = [];
   let m = distM(salida, pasos[0].coords[0]);
   metrosAprox.push(m);
   for (const p of pasos.slice(0, -1)) { m += p.metros; metrosAprox.push(m); }
-  // Horquillas en plazas: segmento abierto si une dos nodos por una arista de una plaza.
-  const nodos = bruto.map((c) => grafo.cercano(c, 0.3)?.nodo ?? -1);
-  const abierto = (i) => {
-    const a = nodos[i], b = nodos[i + 1];
-    if (a < 0 || b < 0) return false;
-    const e = grafo.aristaEntre(a, b);
-    return e >= 0 && esZonaAbierta(grafo.viaDeArista(e).nombre);
-  };
-  const suave = suavizar(atajarHorquillas(bruto, abierto, { fijos }), { fijos });
+  const suave = concatenar(grupos.map((g) => {
+    const tramo = concatenar(g.partes);
+    if (g.fija) return tramo;
+    // Horquillas en plazas: segmento abierto si une dos nodos por una arista de una plaza.
+    const nodos = tramo.map((c) => grafo.cercano(c, 0.3)?.nodo ?? -1);
+    const abierto = (i) => {
+      const a = nodos[i], b = nodos[i + 1];
+      if (a < 0 || b < 0) return false;
+      const e = grafo.aristaEntre(a, b);
+      return e >= 0 && esZonaAbierta(grafo.viaDeArista(e).nombre);
+    };
+    return suavizar(atajarHorquillas(tramo, abierto, { fijos }), { fijos });
+  }));
   const piezas = cortarEn(suave, cortes, metrosAprox);
   pasos.forEach((p, k) => {
     p.coords = piezas[k + 1];

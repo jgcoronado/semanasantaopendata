@@ -61,8 +61,9 @@ solas.
 - `/recorridos/editor/` — editor de recorridos (noindex, fuera del sitemap): itinerario en texto →
   línea sobre el mapa con el callejero oficial de Andalucía (WFS del CDAU). Lógica en cliente en
   `src/lib/recorridos/`; ver `docs/editor-recorridos.md`.
-  Carreras Oficiales predeterminadas por código INE en `src/data/carreras-oficiales.json`
-  (añadir una localidad = añadir una entrada).
+  La Carrera Oficial de cada localidad se define aparte en `/recorridos/carrera-oficial/` (también
+  noindex) y el editor la usa sin poder modificarla; las del proyecto, por código INE, en
+  `src/data/carreras-oficiales.json` (la ventana genera la entrada con «Copiar para el proyecto»).
 
 > Ojo: `/[anio]/horarios/` y `/[anio]/analisis/` ya **no** existen como páginas separadas
 > (los docs antiguos las mencionan); sus gráficas viven ahora en la página del año y del día.

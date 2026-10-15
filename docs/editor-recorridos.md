@@ -70,8 +70,10 @@ escala y tarda ~2 s por imagen).
 | `cdau.js` | Cliente WFS con caché (vías, nombres, portales, municipio de un punto, municipios) |
 | `lugares.js` | Búsqueda de la salida por nombre: índice de templos (Overpass), puntuación con palabras genéricas, Photon |
 | `grafo.js` | Grafo de ejes. Funde vértices a ≤ 3 m y cose extremos sueltos al segmento más cercano (≤ 3 m): el CDAU no siempre comparte el vértice en los cruces |
-| `componer.js` | Cada paso va de donde acabó el anterior a la primera esquina de la calle siguiente por el camino de coste mínimo: calle actual y siguiente cuestan 1, el resto 3 (así se aceptan enlaces cortos no listados y se avisan). La Carrera Oficial es un paso sin penalizaciones entre la calle anterior y la siguiente. Los puntos de paso del usuario fuerzan el camino; si caen a más de 25 m de una calle se llega a ellos en recta |
+| `componer.js` | Cada paso va de donde acabó el anterior a la primera esquina de la calle siguiente por el camino de coste mínimo: calle actual y siguiente cuestan 1, el resto 3 (así se aceptan enlaces cortos no listados y se avisan). La Carrera Oficial es su línea fija (ver «Carrera Oficial») o, sin definir, un paso sin penalizaciones entre la calle anterior y la siguiente. Los puntos de paso del usuario fuerzan el camino; si caen a más de 25 m de una calle se llega a ellos en recta |
 | `geo.js` → `suavizar` | Limpieza del trazado final, ver «Suavizado» |
+| `carrera.js` / `carrera-oficial.js` | Modelo y almacenamiento de la Carrera Oficial / su ventana |
+| `base.js` | Mapa (fondos y capas), callejero del municipio y zona de calles con su grafo, comunes a las dos páginas |
 | `exportar.js` | GeoJSON en el formato de `scripts/geojson-AAAA/` más el estado del editor en `properties.editor` |
 | `editor.js` | Interfaz (Leaflet) |
 
@@ -109,22 +111,40 @@ reglas se aplican a las calles de la Carrera Oficial, desde su inicio.
 
 ## Carrera Oficial
 
-La línea «Carrera Oficial» del itinerario se sustituye por la definición del municipio:
-**inicio** (punto) → **calles** en orden → **entrada en templo** (punto, opcional) → **fin**
-(punto). Con entrada, de la entrada al fin se dibuja en línea recta por el interior (en
-Sevilla, de la Puerta de San Miguel a la de Palos de la Catedral). Hasta el inicio se llega
-como a cualquier punto; dentro de la Carrera Oficial cuentan sus propias calles. Sin inicio y
-fin (o con «Dejar como tramo libre») es un tramo libre entre la calle anterior y la siguiente.
+Es la misma para todas las cofradías de una localidad y casi no cambia de un año a otro, así
+que **se define aparte, en `/recorridos/carrera-oficial/`** (noindex, fuera del sitemap;
+`src/lib/recorridos/carrera-oficial.js`), y el editor de recorridos la usa tal cual: allí no
+se puede modificar (sin marcadores arrastrables ni puntos de paso sobre ella; un clic en su
+línea avisa de que se corrige en su ventana).
 
-- **Predeterminadas**: `src/data/carreras-oficiales.json`, por código INE de municipio. Añadir
-  otra localidad es añadir una entrada; el editor la carga sola. «Copiar definición» genera la
-  entrada desde lo que se haya fijado en el editor. Sevilla (41091): inicio en La Campana
-  (primer punto del tramo canónico de 2025), La Campana → Sierpes → Plaza de San Francisco →
-  Avenida de la Constitución, Puerta de San Miguel y Puerta de Palos (OpenStreetMap).
-- **Edición**: panel «Carrera Oficial» (📍 para fijar puntos, lista de calles con campo
-  predictivo y estado de cada una) y marcadores I/E/F arrastrables en el mapa. Los cambios se
-  guardan en el navegador por municipio y viajan en el GeoJSON exportado (`editor.carrera`).
-- En la lista del recorrido la fila «Carrera Oficial» suma los metros de todos sus tramos.
+Definición (`carrera.js`): **inicio** → **calles** en orden (con elección de vía por línea) →
+**entrada** en un templo (opcional) → **puntos interiores** → **fin** (con entrada, la puerta
+por la que sale), más los **puntos de paso** que corrigen la línea. De la entrada al fin se va
+en línea recta por los puntos interiores (Sevilla: de la Puerta de San Miguel a la de Palos
+por dentro de la Catedral). En la ventana:
+
+- 📍 fija inicio, entrada y fin; los marcadores I/E/F se arrastran.
+- Pinchar en la línea añade un punto de paso al tramo de calles, o un punto interior si es el
+  tramo discontinuo por dentro del templo; se arrastran y se quitan con doble clic.
+- Las calles se comprueban como las del itinerario (continuidad, 1 km como máximo).
+- **Guardar** calcula y fija la línea (`trazado`, `metros`, `actualizado`) para ese municipio
+  en este navegador (`localStorage` `ssod-carreras-oficiales-v1`). Hasta entonces los cambios
+  son un borrador (`ssod-carrera-oficial-borrador-v1`) y el editor sigue con la anterior.
+- **Copiar para el proyecto** da la entrada de `src/data/carreras-oficiales.json` (por código
+  INE) con la línea incluida, para publicarla para todos. **Volver a la del proyecto** descarta
+  la guardada en el navegador.
+
+Vigente en el editor: la guardada en el navegador o, si no hay, la del proyecto. Con
+`trazado`, el editor llega hasta el inicio, sigue esa línea sin recalcularla ni suavizarla
+(paso `fija`) y continúa desde el fin; sin él (como la de Sevilla del proyecto, que aún no
+tiene línea revisada) la calcula a partir de la definición con sus puntos de paso. Si el
+municipio no tiene ninguna, «Carrera Oficial» es un tramo libre entre la calle anterior y la
+siguiente. El editor se actualiza solo cuando se guarda en la otra pestaña (evento
+`storage`). El panel del editor la resume con un enlace a su ventana; el GeoJSON exportado
+solo anota su origen y fecha (`editor.carrera`), y al importar no se aplica.
+
+Las definiciones que versiones anteriores del editor guardaban en su propio estado se
+trasladan solas a `ssod-carreras-oficiales-v1` (sin línea revisada).
 
 ## Suavizado
 

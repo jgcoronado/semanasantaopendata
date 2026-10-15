@@ -8,26 +8,24 @@
 
 import L from 'leaflet';
 import * as cdau from './cdau.js';
-import { crearCatalogo, clave, esCarreraOficial } from './nombres.js';
-import { crearGrafo } from './grafo.js';
+import { clave, esCarreraOficial } from './nombres.js';
 import { leerItinerario, resolverItinerario, componer } from './componer.js';
 import { confirmarContinuidad } from './continuidad.js';
-import { ampliarBbox, bboxDe, bboxContiene, distM, puntoA, puntoMasCercano } from './geo.js';
+import { puntoA, puntoMasCercano } from './geo.js';
 import { aGeoJSON, deGeoJSON, descargar } from './exportar.js';
 import { ATRIBUCION_LUGARES, buscarLugares, buscarPhoton, templosMunicipio } from './lugares.js';
+import {
+  SEVILLA, cargarCallejero, crearMapa, crearZona, esc, etiquetaMun, fmtKm, fmtM, guardarLocal, icono, leerLocal,
+} from './base.js';
+import {
+  CLAVE_CARRERAS, carreraCompleta, carreraVigente, carrerasGuardadas, guardarCarrera, normalizarCarrera,
+  paraComponer, resolverCalles,
+} from './carrera.js';
 
 const CLAVE_LOCAL = 'ssod-editor-recorridos-v1';
-const CLAVE_CAPAS = 'ssod-editor-recorridos-capas-v1';
-const SEVILLA = { cod: '41091', nombre: 'Sevilla' };
-const MARGEN_ZONA_M = 200;
-const ZONA_MAX_M = 6000;       // lado máximo de la zona de calles que se descarga
 const FLECHA_CADA_M = 150;
 const COLOR_DEFECTO = '#5b2a86';
 const COLORES = { co: '#c8a24a', manual: '#198038', recta: '#fa4d56' };
-
-const fmtKm = (m) => `${(m / 1000).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} km`;
-const fmtM = (m) => `${Math.round(m).toLocaleString('es-ES', { useGrouping: 'always' })} m`;
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 export function iniciarEditor(datos) {
   const $ = (id) => document.getElementById(id);
@@ -41,30 +39,29 @@ export function iniciarEditor(datos) {
     calles: $('ed-calles'), hermandad: $('ed-hermandad'), bloqueHdad: $('ed-bloque-hdad'),
     btn2025: $('ed-btn-2025'), nombre: $('ed-nombre'), btnExportar: $('ed-btn-exportar'),
     importar: $('ed-importar'), btnBorrarPuntos: $('ed-btn-borrar-puntos'), btnRef: $('ed-btn-ref'),
-    co: $('ed-co'), coResumen: $('ed-co-resumen'), coCalles: $('ed-co-calles'), coNueva: $('ed-co-nueva'),
-    coEstado: $('ed-co-estado'), coPredeterminada: $('ed-co-predeterminada'), coLibre: $('ed-co-libre'), coCopiar: $('ed-co-copiar'),
-    coPuntos: { inicio: $('ed-co-inicio'), entrada: $('ed-co-entrada'), fin: $('ed-co-fin') },
+    coResumen: $('ed-co-resumen'), coDetalle: $('ed-co-detalle'), coEnlace: $('ed-co-enlace'),
   };
 
   // ── Estado (persistido en el navegador) ──
   const estado = {
     municipio: SEVILLA, salida: null, texto: '', elecciones: {}, puntosPaso: {}, hermandad: null,
-    // Carrera Oficial por municipio: { inicio, calles (texto), entrada, fin }. Sin clave = la
-    // predeterminada de src/data/carreras-oficiales.json, si la hay; null = tramo libre.
-    carreras: {},
+    ...leerLocal(CLAVE_LOCAL, {}),
   };
-  try { Object.assign(estado, JSON.parse(localStorage.getItem(CLAVE_LOCAL) ?? '{}')); } catch { /* sin almacenamiento */ }
-  const guardar = () => {
-    try { localStorage.setItem(CLAVE_LOCAL, JSON.stringify(estado)); } catch { /* sin almacenamiento */ }
-  };
+  // Versiones anteriores guardaban aquí la Carrera Oficial editada; pasa a su ventana.
+  if (estado.carreras) {
+    const guardadas = carrerasGuardadas();
+    for (const [cod, c] of Object.entries(estado.carreras)) {
+      if (c && !guardadas[cod]) guardarCarrera(cod, { ...normalizarCarrera(c), actualizado: null });
+    }
+    delete estado.carreras;
+  }
+  const guardar = () => guardarLocal(CLAVE_LOCAL, estado);
 
   let catalogo = null;
   let limiteMun = null;           // límite del término municipal (Feature DERA)
   let templos = null;             // [{ nombre, alias, coord, tipo, detalle }] o null si no hay
   let municipios = [];
-  const viasCargadas = new Map();   // id_vial → vía con geometría
-  const viasCandidatas = new Map(); // id_vial → vía: candidatas por nombre, para comprobar la continuidad
-  let zona = null;                  // bbox [s, w, n, e] de la zona de calles cargada
+  const zonaCalles = crearZona({ aviso: (t) => mensaje(t), alCargar: () => pintarEjes() });
   let grafo = null;
   let items = [];
   let resultado = null;
@@ -88,50 +85,7 @@ export function iniciarEditor(datos) {
   document.addEventListener('touchend', soltar);
 
   // ── Mapa ──
-  const mapa = L.map('ed-mapa', { zoomControl: true, maxZoom: 20 }).setView([37.3891, -5.9845], 14);
-  // Fondo por defecto: mapa base del IGN (teselas WMTS). Su callejero es CartoCiudad, que en
-  // Andalucía toma las direcciones del CDAU, la misma fuente de los ejes del recorrido.
-  const ign = L.tileLayer('https://www.ign.es/wmts/ign-base?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=IGNBaseTodo&STYLE=default&FORMAT=image/jpeg&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {
-    maxZoom: 20, maxNativeZoom: 19,
-    attribution: 'Mapa base © <a href="https://www.ign.es">Instituto Geográfico Nacional</a> (CartoCiudad)',
-  });
-  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 20, maxNativeZoom: 19,
-  });
-  const pnoa = L.tileLayer('https://tms-pnoa-ma.idee.es/1.0.0/pnoa-ma/{z}/{x}/{y}.jpeg', {
-    tms: true, maxZoom: 20, maxNativeZoom: 19,
-    attribution: 'PNOA © <a href="https://www.ign.es">Instituto Geográfico Nacional</a>',
-  });
-  // Superpuestas: los ejes exactos que usa el trazado (del CDAU ya descargado) y las parcelas
-  // del Catastro, para ver fachadas y ensanches.
-  // Panel propio por debajo del trazado, para que los ejes no tapen los clics sobre la línea.
-  mapa.createPane('ejes').style.zIndex = '350';
-  const capaEjes = L.layerGroup();
-  const catastro = L.tileLayer.wms('https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx', {
-    layers: 'Catastro', format: 'image/png', transparent: true, version: '1.1.1', minZoom: 15, maxZoom: 20,
-    opacity: 0.7, attribution: '© <a href="https://www.sedecatastro.gob.es/">Dirección General del Catastro</a>',
-  });
-  const fondos = { 'Callejero IGN': ign, 'OpenStreetMap': osm, 'Ortofoto PNOA': pnoa };
-  const superpuestas = { 'Ejes del callejero (CDAU)': capaEjes, 'Parcelas del Catastro': catastro };
-  // La elección de capas es una preferencia de quien mira: se recuerda en este navegador.
-  let capasGuardadas = {};
-  try { capasGuardadas = JSON.parse(localStorage.getItem(CLAVE_CAPAS) ?? '{}'); } catch { /* sin almacenamiento */ }
-  (fondos[capasGuardadas.fondo] ?? ign).addTo(mapa);
-  for (const n of capasGuardadas.superpuestas ?? []) superpuestas[n]?.addTo(mapa);
-  const guardarCapas = () => {
-    try {
-      localStorage.setItem(CLAVE_CAPAS, JSON.stringify({
-        fondo: Object.keys(fondos).find((n) => mapa.hasLayer(fondos[n])),
-        superpuestas: Object.keys(superpuestas).filter((n) => mapa.hasLayer(superpuestas[n])),
-      }));
-    } catch { /* sin almacenamiento */ }
-  };
-  mapa.on('baselayerchange overlayadd overlayremove', guardarCapas);
-  mapa.on('overlayadd', (e) => { if (e.layer === capaEjes) pintarEjes(); });
-  L.control.layers(fondos, superpuestas, { position: 'topright' }).addTo(mapa);
-  L.control.scale({ imperial: false }).addTo(mapa);
-  mapa.attributionControl.addAttribution(cdau.ATRIBUCION_CDAU);
-  mapa.attributionControl.addAttribution(ATRIBUCION_LUGARES);
+  const { mapa, pintarEjes } = crearMapa('ed-mapa', { vias: () => zonaCalles.vias(), atribuciones: [ATRIBUCION_LUGARES] });
 
   const capaLimite = L.layerGroup().addTo(mapa);
   const capaReferencia = L.layerGroup().addTo(mapa);
@@ -139,8 +93,6 @@ export function iniciarEditor(datos) {
   const capaPuntos = L.layerGroup().addTo(mapa);
   let marcadorSalida = null;
   const lineasPaso = new Map();     // índice de paso → polyline
-
-  const icono = (clase, html = '', tam = 14) => L.divIcon({ className: `ed-icono ${clase}`, html, iconSize: [tam, tam] });
 
   function mensaje(texto, tipo = 'info') {
     ui.mensaje.textContent = texto;
@@ -153,7 +105,6 @@ export function iniciarEditor(datos) {
   }
 
   // ── Municipio ──
-  const etiquetaMun = (m) => `${m.nombre} (${m.provincia})`;
 
   async function cargarMunicipios() {
     try {
@@ -172,7 +123,7 @@ export function iniciarEditor(datos) {
     ui.bloqueHdad.hidden = mun.cod !== SEVILLA.cod;
     if (cambia) {
       catalogo = null;
-      viasCandidatas.clear();
+      zonaCalles.reiniciar();
       estado.elecciones = {};
       ui.salidaCalle.value = '';
       ui.salidaNum.value = '';
@@ -185,7 +136,7 @@ export function iniciarEditor(datos) {
     templos = null;
     ui.munEstado.textContent = 'Cargando callejero…';
     try {
-      const [limite, vias] = await Promise.all([cdau.limiteMunicipio(mun.cod), cdau.nombresVias(mun.cod)]);
+      const { limite, vias, catalogo: cat, nombres } = await cargarCallejero(mun.cod);
       capaLimite.clearLayers();
       if (limite) {
         const capa = L.geoJSON(limite, { style: { color: '#5b2a86', weight: 1.5, fill: false, dashArray: '4 4' }, interactive: false }).addTo(capaLimite);
@@ -193,12 +144,10 @@ export function iniciarEditor(datos) {
       }
       limiteMun = limite;
       if (limite) cargarTemplos(mun);
-      catalogo = crearCatalogo();
-      for (const v of vias) catalogo.añadir({ nombre: v.nombre, id: v.id, alias: v.sobrenombre });
-      const nombres = [...new Set(vias.map((v) => v.nombre))].sort((a, b) => a.localeCompare(b, 'es'));
+      catalogo = cat;
       ui.calles.innerHTML = nombres.map((n) => `<option value="${esc(n)}"></option>`).join('');
       ui.munEstado.textContent = `${vias.length.toLocaleString('es-ES', { useGrouping: 'always' })} vías en el callejero oficial`;
-      resolverCarrera();
+      cargarCarrera();
     } catch (e) {
       ui.munEstado.textContent = '';
       mensaje(`No se pudo cargar el callejero de ${mun.nombre}: ${e.message}`, 'error');
@@ -437,10 +386,7 @@ export function iniciarEditor(datos) {
     modo = null;
     mapa.getContainer().classList.remove('ed-apuntando');
     if (m.tipo === 'salida') fijarSalida(coord);
-    else if (m.tipo === 'co') {
-      editarCarrera((c) => { c[m.campo] = coord; });
-      mensaje(`${ETIQUETA_CO[m.campo]} de la Carrera Oficial fijado.`);
-    } else if (m.tipo === 'punto') {
+    else if (m.tipo === 'punto') {
       estado.elecciones[m.clave] = { tipo: 'punto', coord };
       guardar();
       mensaje(`«${m.texto}» fijada en el mapa.`);
@@ -450,164 +396,58 @@ export function iniciarEditor(datos) {
   }
 
   // ── Zona de calles y grafo ──
-  async function asegurarGrafo(itemsResueltos) {
-    const ids = [...new Set(itemsResueltos.flatMap((it) => it.ids ?? []))];
-    for (const id of ids) if (!viasCargadas.has(id) && viasCandidatas.has(id)) viasCargadas.set(id, viasCandidatas.get(id));
-    const faltan = ids.filter((id) => !viasCargadas.has(id));
-    if (faltan.length) for (const v of await cdau.viasPorId(faltan)) viasCargadas.set(v.id, v);
-
-    const puntos = [estado.salida];
+  async function asegurarGrafo(itemsResueltos, extra = []) {
+    const ids = itemsResueltos.flatMap((it) => it.ids ?? []);
+    const puntos = [estado.salida, ...extra];
     for (const it of itemsResueltos) if (it.tipo === 'punto') puntos.push(it.coord);
     for (const lista of Object.values(estado.puntosPaso)) puntos.push(...lista);
-    for (const id of ids) for (const l of viasCargadas.get(id)?.lineas ?? []) puntos.push(...l);
-
-    let bbox = ampliarBbox(bboxDe(puntos), MARGEN_ZONA_M);
-    const alto = distM([bbox[1], bbox[0]], [bbox[1], bbox[2]]);
-    const ancho = distM([bbox[1], bbox[0]], [bbox[3], bbox[0]]);
-    if (alto > ZONA_MAX_M || ancho > ZONA_MAX_M) {
-      // Alguna calle resuelta está muy lejos (probablemente es otra del mismo nombre):
-      // se limita la zona alrededor de la salida.
-      bbox = ampliarBbox(bboxDe([estado.salida]), ZONA_MAX_M / 2);
-    }
-    if (grafo && zona && bboxContiene(zona, bbox) && !faltan.length) return;
-    // Se amplía la zona ya cargada; si la ampliación sale demasiado grande (otro municipio),
-    // se empieza de cero conservando solo las vías del itinerario.
-    let nuevaZona = zona ? bboxDe([[zona[1], zona[0]], [zona[3], zona[2]], [bbox[1], bbox[0]], [bbox[3], bbox[2]]]) : bbox;
-    const lado = Math.max(
-      distM([nuevaZona[1], nuevaZona[0]], [nuevaZona[1], nuevaZona[2]]),
-      distM([nuevaZona[1], nuevaZona[0]], [nuevaZona[3], nuevaZona[0]]));
-    if (lado > ZONA_MAX_M * 1.5) {
-      nuevaZona = bbox;
-      for (const id of [...viasCargadas.keys()]) if (!ids.includes(id)) viasCargadas.delete(id);
-    }
-    mensaje('Descargando calles de la zona…');
-    for (const v of await cdau.viasEnBbox(nuevaZona)) viasCargadas.set(v.id, v);
-    zona = nuevaZona;
-    grafo = crearGrafo([...viasCargadas.values()]);
-    pintarEjes();
-  }
-
-  /** Ejes del CDAU descargados (los que usa el grafo), si la capa está activa. */
-  function pintarEjes() {
-    capaEjes.clearLayers();
-    if (!mapa.hasLayer(capaEjes)) return;
-    for (const v of viasCargadas.values()) {
-      const lineas = v.lineas.filter((l) => l.length > 1);
-      if (!lineas.length) continue;
-      L.polyline(lineas.map((l) => l.map(([x, y]) => [y, x])), {
-        pane: 'ejes', color: '#1c1a22', weight: 1.5, opacity: 0.75, dashArray: '4 3', interactive: true,
-      }).bindTooltip(esc(v.nombre), { sticky: true }).addTo(capaEjes);
-    }
+    grafo = await zonaCalles.asegurar(ids, puntos, estado.salida);
   }
 
   // ── Carrera Oficial ──
+  // Se define en su ventana (/recorridos/carrera-oficial/) y aquí se usa tal cual: no se
+  // puede modificar desde el editor de recorridos.
   const ETIQUETA_CO = { inicio: 'Inicio', entrada: 'Entrada en el templo', fin: 'Fin' };
-  let carreraResuelta = null;   // { inicio, entrada, fin, calles: [items 'via'] } o null
-  let lineasCo = [];            // resolución de cada línea (para el panel)
-  const carreraEnUso = () => !!carreraResuelta && items.some((it) => it.tipo === 'co');
+  let co = { def: null, origen: null };   // vigente para el municipio (carrera.js)
+  let coResuelta = null;                  // paraComponer(…) o null (tramo libre)
+  let coLineas = [];                      // calles resueltas (sin trazado guardado)
+  const carreraEnUso = () => !!coResuelta && items.some((it) => it.tipo === 'co');
 
-  /** Predeterminada del municipio (src/data/carreras-oficiales.json), en formato del editor. */
-  function carreraPredeterminada(cod) {
-    const d = datos.carreras?.[cod];
-    return d ? { inicio: d.inicio ?? null, calles: (d.calles ?? []).join('\n'), entrada: d.entrada ?? null, fin: d.fin ?? null } : null;
-  }
-  /** Definición vigente para el municipio: la guardada en este navegador, la predeterminada o null. */
-  function carreraActual() {
-    const cod = estado.municipio?.cod;
-    if (estado.carreras && cod in estado.carreras) return estado.carreras[cod];
-    return carreraPredeterminada(cod);
-  }
-  /** Aplica un cambio a la definición (creándola si era tramo libre) y vuelve a trazar. */
-  function editarCarrera(cambio) {
-    const c = { inicio: null, calles: '', entrada: null, fin: null, ...(carreraActual() ?? {}) };
-    cambio(c);
-    estado.carreras = { ...(estado.carreras ?? {}), [estado.municipio.cod]: c };
-    guardar();
-    pintarCarrera();
-    if (estado.salida && ui.texto.value.trim()) trazar();
-  }
-  function resolverCarrera() {
-    const c = carreraActual();
-    lineasCo = c && catalogo
-      ? resolverItinerario(leerItinerario(c.calles ?? ''), catalogo, estado.elecciones, { templos: false })
-      : [];
-    carreraResuelta = c?.inicio && c?.fin
-      ? { inicio: c.inicio, entrada: c.entrada ?? null, fin: c.fin, calles: lineasCo.filter((it) => it.tipo === 'via') }
-      : null;
+  function cargarCarrera() {
+    co = carreraVigente(estado.municipio?.cod, datos.carreras);
+    coResuelta = null;
+    coLineas = [];
+    if (carreraCompleta(co.def)) {
+      coLineas = co.def.trazado || !catalogo ? [] : resolverCalles(co.def, catalogo);
+      coResuelta = paraComponer(co.def, coLineas);
+    }
     pintarCarrera();
   }
-  const fmtPunto = (p) => (p ? `${p[1].toFixed(5)}, ${p[0].toFixed(5)}` : null);
+
   function pintarCarrera() {
-    const c = carreraActual();
-    if (document.activeElement !== ui.coCalles) ui.coCalles.value = c?.calles ?? '';
-    ui.coPuntos.inicio.textContent = fmtPunto(c?.inicio) ?? 'Sin fijar';
-    ui.coPuntos.entrada.textContent = fmtPunto(c?.entrada) ?? 'Sin entrada';
-    ui.coPuntos.fin.textContent = fmtPunto(c?.fin) ?? 'Sin fijar';
-    ui.coPredeterminada.hidden = !datos.carreras?.[estado.municipio?.cod];
-    const nCalles = leerItinerario(c?.calles ?? '').length;
-    ui.coResumen.textContent = !c ? '· tramo libre'
-      : !(c.inicio && c.fin) ? '· falta fijar inicio y fin (tramo libre)'
-      : `· ${nCalles} ${nCalles === 1 ? 'calle' : 'calles'}${c.entrada ? ' · paso por templo' : ''}`;
-    ui.coEstado.innerHTML = lineasCo.map((it) => {
-      const ok = it.tipo === 'via';
-      const clase = ok ? (it.estado === 'ok' || it.estado === 'manual' ? 'ok' : 'aviso') : 'error';
-      return `<li class="ed-chip ed-chip--${clase}" title="${esc(ok ? it.nombre : it.tipo === 'lejos' ? `${it.nombre}: lejos de la calle anterior` : 'No encontrada en el callejero')}">${esc(it.texto)}${ok && it.estado === 'aprox' ? ` → ${esc(it.nombre)}` : ''}${ok ? '' : ' ✗'}</li>`;
-    }).join('');
+    const cod = estado.municipio?.cod;
+    ui.coEnlace.href = `${ui.coEnlace.pathname}?municipio=${encodeURIComponent(cod ?? '')}`;
+    const d = co.def;
+    if (!carreraCompleta(d)) {
+      ui.coResumen.textContent = 'sin definir';
+      ui.coDetalle.textContent = `${estado.municipio?.nombre ?? 'Este municipio'} no tiene Carrera Oficial definida: «Carrera Oficial» se traza como un tramo libre entre la calle anterior y la siguiente.`;
+      ui.coEnlace.textContent = 'Definirla';
+      return;
+    }
+    const n = d.calles.length;
+    const metros = d.metros;
+    ui.coResumen.textContent = `${n} ${n === 1 ? 'calle' : 'calles'}${d.entrada ? ' · paso por templo' : ''}${metros ? ` · ${fmtM(metros)}` : ''}`;
+    ui.coDetalle.textContent = `${d.calles.join(' · ')}. `
+      + (co.origen === 'navegador' ? 'Guardada en este navegador' : 'Definida en el proyecto')
+      + (d.actualizado ? ` (${d.actualizado})` : '')
+      + (d.trazado ? '.' : '; sin trazado revisado: se calcula a partir de su definición.');
+    ui.coEnlace.textContent = 'Revisar o cambiar';
   }
 
-  ui.coCalles.addEventListener('change', () => editarCarrera((c) => { c.calles = ui.coCalles.value; }));
-  ui.coNueva.addEventListener('change', () => {
-    const v = ui.coNueva.value.trim();
-    if (!v) return;
-    ui.coNueva.value = '';
-    editarCarrera((c) => { c.calles = [...leerItinerario(c.calles ?? '').map((l) => l.texto), v].join('\n'); });
-  });
-  ui.coNueva.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); ui.coNueva.blur(); } });
-  ui.co.addEventListener('click', (e) => {
-    const fijar = e.target.closest('[data-co-fijar]')?.dataset.coFijar;
-    const quitar = e.target.closest('[data-co-quitar]')?.dataset.coQuitar;
-    if (fijar) {
-      modo = { tipo: 'co', campo: fijar };
-      mapa.getContainer().classList.add('ed-apuntando');
-      mensaje(`Pincha en el mapa: ${ETIQUETA_CO[fijar].toLowerCase()} de la Carrera Oficial.`);
-    } else if (quitar) {
-      editarCarrera((c) => { c[quitar] = null; });
-    }
-  });
-  ui.coPredeterminada.addEventListener('click', () => {
-    const t = { ...(estado.carreras ?? {}) };
-    delete t[estado.municipio.cod];
-    estado.carreras = t;
-    guardar();
-    pintarCarrera();
-    mensaje(`Carrera Oficial predeterminada de ${estado.municipio.nombre} restablecida.`);
-    if (estado.salida && ui.texto.value.trim()) trazar();
-  });
-  // Definición en el formato de src/data/carreras-oficiales.json, para añadir otra localidad.
-  ui.coCopiar.addEventListener('click', async () => {
-    const c = carreraActual();
-    if (!c?.inicio || !c?.fin) { mensaje('Fija al menos el inicio y el fin de la Carrera Oficial.', 'error'); return; }
-    const r = (p) => (p ? p.map((v) => Math.round(v * 1e7) / 1e7) : null);
-    const entrada = {
-      municipio: estado.municipio.nombre,
-      inicio: r(c.inicio),
-      calles: leerItinerario(c.calles ?? '').map((l) => l.texto),
-      ...(c.entrada ? { entrada: r(c.entrada) } : {}),
-      fin: r(c.fin),
-    };
-    const texto = `"${estado.municipio.cod}": ${JSON.stringify(entrada, null, 2)}`;
-    try {
-      await navigator.clipboard.writeText(texto);
-      mensaje('Definición copiada: pégala en src/data/carreras-oficiales.json.');
-    } catch {
-      window.prompt('Copia la definición para src/data/carreras-oficiales.json:', texto);
-    }
-  });
-  ui.coLibre.addEventListener('click', () => {
-    estado.carreras = { ...(estado.carreras ?? {}), [estado.municipio.cod]: null };
-    guardar();
-    pintarCarrera();
-    mensaje('La Carrera Oficial será un tramo libre entre la calle anterior y la siguiente.');
+  // Al guardar la Carrera Oficial en su ventana (otra pestaña), se vuelve a trazar.
+  window.addEventListener('storage', (e) => {
+    if (e.key !== CLAVE_CARRERAS) return;
+    cargarCarrera();
     if (estado.salida && ui.texto.value.trim()) trazar();
   });
 
@@ -623,24 +463,24 @@ export function iniciarEditor(datos) {
     const turno = ++enCurso;
     ui.btnTrazar.disabled = true;
     try {
-      resolverCarrera();
+      cargarCarrera();
       const usaCo = lineas.some((l) => esCarreraOficial(l.texto));
+      // Sin trazado guardado, sus calles se comprueban como las del itinerario.
+      if (coResuelta && !coResuelta.trazado && coLineas.length) {
+        coLineas = await confirmarContinuidad(coLineas, { catalogo, geometria: zonaCalles.geometria, inicio: coResuelta.inicio });
+        coResuelta = paraComponer(co.def, coLineas);
+      }
       // Cada calle tiene que estar cerca de la anterior: descarta homónimas lejanas y elige
       // entre varias posibles por cercanía (continuidad.js).
-      if (carreraResuelta) {
-        lineasCo = await confirmarContinuidad(lineasCo, { catalogo, geometria, inicio: carreraResuelta.inicio });
-        carreraResuelta.calles = lineasCo.filter((it) => it.tipo === 'via');
-        pintarCarrera();
-      }
       const resueltos = await confirmarContinuidad(resolverItinerario(lineas, catalogo, estado.elecciones), {
-        catalogo, geometria, inicio: estado.salida, finCarrera: usaCo && carreraResuelta ? carreraResuelta.fin : null,
+        catalogo, geometria: zonaCalles.geometria, inicio: estado.salida, finCarrera: usaCo && coResuelta ? coResuelta.fin : null,
       });
       if (turno !== enCurso) return;
-      const extra = carreraResuelta ? [
-        ...carreraResuelta.calles,
-        ...['inicio', 'entrada', 'fin'].filter((k) => carreraResuelta[k]).map((k) => ({ tipo: 'punto', coord: carreraResuelta[k] })),
+      const extra = coResuelta && usaCo ? [
+        coResuelta.inicio, coResuelta.fin, ...(coResuelta.entrada ? [coResuelta.entrada] : []),
+        ...(coResuelta.trazado ?? []), ...Object.values(co.def.puntosPaso ?? {}).flat(),
       ] : [];
-      await asegurarGrafo([...resueltos, ...extra]);
+      await asegurarGrafo([...resueltos, ...(usaCo && coResuelta ? coResuelta.calles : [])], extra);
       if (turno !== enCurso) return;
       items = resueltos;
       recomponer();
@@ -658,18 +498,14 @@ export function iniciarEditor(datos) {
     }
   }
 
-  /** Geometría de vías candidatas (sin meterlas en el grafo). */
-  async function geometria(ids) {
-    const faltan = ids.filter((id) => !viasCandidatas.has(id) && !viasCargadas.has(id));
-    if (faltan.length) for (const v of await cdau.viasPorId(faltan)) viasCandidatas.set(v.id, v);
-    return new Map(ids.map((id) => [id, viasCargadas.get(id) ?? viasCandidatas.get(id)]).filter(([, v]) => v));
-  }
-
   function recomponer() {
     if (arrastrando) { redibujoPendiente = true; return; }
     if (!grafo || !items.length) return;
     const usaCo = items.some((it) => it.tipo === 'co');
-    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso: estado.puntosPaso, carrera: usaCo ? carreraResuelta : null });
+    // Sin trazado guardado, la Carrera Oficial se calcula con sus propios puntos de paso.
+    const puntosPaso = usaCo && coResuelta && !coResuelta.trazado
+      ? { ...estado.puntosPaso, ...(co.def.puntosPaso ?? {}) } : estado.puntosPaso;
+    resultado = componer({ items, salida: estado.salida, grafo, puntosPaso, carrera: usaCo ? coResuelta : null });
     dibujar();
     pintarLista();
   }
@@ -706,7 +542,14 @@ export function iniciarEditor(datos) {
         color: c, weight: 5, opacity: 0.9,
         dashArray: p.tipo === 'co' || p.tipo === 'recta' ? '8 6' : null,
       }).bindTooltip(p.etiqueta ? `${esc(p.etiqueta)} · ${fmtM(p.metros)}` : `${esc(desde)} → ${esc(hasta)} · ${fmtM(p.metros)}`, { sticky: true });
-      linea.on('click', (e) => { L.DomEvent.stopPropagation(e); if (!aplicarModo(e)) añadirPuntoPaso(p, [e.latlng.lng, e.latlng.lat]); });
+      // La Carrera Oficial definida no se corrige aquí, sino en su ventana.
+      const fijaCo = p.tipo === 'co' && carreraEnUso();
+      linea.on('click', (e) => {
+        L.DomEvent.stopPropagation(e);
+        if (aplicarModo(e)) return;
+        if (fijaCo) mensaje('La Carrera Oficial se corrige en su ventana («Revisar o cambiar» en el panel).');
+        else añadirPuntoPaso(p, [e.latlng.lng, e.latlng.lat]);
+      });
       linea.addTo(capaRuta);
       lineasPaso.set(k, linea);
       if (p.tipo === 'co' && !carreraEnUso()) {
@@ -720,20 +563,14 @@ export function iniciarEditor(datos) {
       }
     });
 
-    // Inicio, entrada y fin de la Carrera Oficial definida: arrastrables para modificarla.
+    // Inicio, entrada y fin de la Carrera Oficial (fijos: se cambian en su ventana).
     if (carreraEnUso()) {
       for (const campo of ['inicio', 'entrada', 'fin']) {
-        const pt = carreraResuelta[campo];
+        const pt = coResuelta[campo];
         if (!pt) continue;
-        const mk = L.marker([pt[1], pt[0]], {
-          icon: icono('ed-co ed-co--' + campo, campo === 'inicio' ? 'I' : campo === 'fin' ? 'F' : 'E', 18),
-          draggable: true, zIndexOffset: 800,
-        }).bindTooltip(`${ETIQUETA_CO[campo]} de la Carrera Oficial · arrastra para moverlo`).addTo(capaRuta);
-        marcarArrastre(mk);
-        mk.on('dragend', () => {
-          const ll = mk.getLatLng();
-          editarCarrera((c) => { c[campo] = [ll.lng, ll.lat]; });
-        });
+        L.marker([pt[1], pt[0]], {
+          icon: icono('ed-co ed-co--' + campo, campo === 'inicio' ? 'I' : campo === 'fin' ? 'F' : 'E', 18), zIndexOffset: 800,
+        }).bindTooltip(`${ETIQUETA_CO[campo]} de la Carrera Oficial`).addTo(capaRuta);
       }
     }
 
@@ -773,7 +610,7 @@ export function iniciarEditor(datos) {
 
   /** Un punto de paso fuera de la zona cargada obliga a ampliar el grafo. */
   async function recomponerTrasCambio() {
-    const fuera = zona && Object.values(estado.puntosPaso).flat().some(([lon, lat]) => !bboxContiene(zona, [lat, lon, lat, lon]));
+    const fuera = Object.values(estado.puntosPaso).flat().some((p) => !zonaCalles.contiene(p));
     if (fuera) await trazar();
     else recomponer();
   }
@@ -849,7 +686,7 @@ export function iniciarEditor(datos) {
         control = `<span class="ed-chip">${it.tipo === 'salida' ? 'Salida del templo' : 'Entrada en el templo'}</span>`;
       } else if (it.tipo === 'co') {
         control = carreraEnUso()
-          ? `<span class="ed-chip ed-chip--co">Carrera Oficial · ${carreraResuelta.calles.length} calles${carreraResuelta.entrada ? ' · paso por templo' : ''}</span>`
+          ? `<span class="ed-chip ed-chip--co">Carrera Oficial · ${co.def.calles.length} calles${co.def.entrada ? ' · paso por templo' : ''}</span>`
             + '<button type="button" class="ed-mini" data-accion="ver-co" title="Ver la definición">⚙</button>'
           : '<span class="ed-chip ed-chip--co">Carrera Oficial · tramo libre</span>'
             + '<button type="button" class="ed-mini" data-accion="ver-co" title="Definirla">⚙</button>';
@@ -928,8 +765,7 @@ export function iniciarEditor(datos) {
       case 'quitar': quitarLinea(it.n); break;
       case 'insertar': abrirInsercion(b.closest('.ed-item'), it.n + 1); break;
       case 'ver-co':
-        ui.co.open = true;
-        ui.co.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        ui.coEnlace.closest('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         break;
       case 'omitir':
         if (it.tipo === 'omitir') delete estado.elecciones[it.clave];
@@ -1056,7 +892,9 @@ export function iniciarEditor(datos) {
     if (!resultado) { mensaje('Traza primero el recorrido.', 'error'); return; }
     const h = datos.hermandades.find((x) => x.id_hdad === estado.hermandad) ?? null;
     const nombre = ui.nombre.value.trim();
-    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre, municipio: estado.municipio, estado: { ...estado, carrera: carreraActual() } });
+    // De la Carrera Oficial se anota solo su origen y fecha: es la del municipio, no del recorrido.
+    const carrera = carreraEnUso() ? { origen: co.origen, actualizado: co.def.actualizado ?? null } : null;
+    const geo = aGeoJSON({ items, resultado, salida: estado.salida, hermandad: h, nombre, municipio: estado.municipio, estado: { ...estado, carrera } });
     const archivo = h
       ? `${String(h.id_hdad).padStart(2, '0')}-${h.slug}.geojson`
       : `${(clave(nombre) || 'recorrido').slice(0, 60)}.geojson`;
@@ -1073,10 +911,8 @@ export function iniciarEditor(datos) {
         ui.hermandad.value = String(r.id_hdad);
       }
       if (r.estado) {
+        // La Carrera Oficial no se importa: se usa la del municipio.
         Object.assign(estado, { texto: r.estado.texto, salida: r.estado.salida, elecciones: r.estado.elecciones, puntosPaso: r.estado.puntosPaso });
-        // La Carrera Oficial guardada con el recorrido se aplica a su municipio.
-        const codCo = r.estado.municipio?.cod ?? estado.municipio.cod;
-        if (r.estado.carrera !== undefined) estado.carreras = { ...(estado.carreras ?? {}), [codCo]: r.estado.carrera };
         ui.texto.value = estado.texto;
         pintarReferencia(null);
         if (r.estado.municipio && r.estado.municipio.cod !== estado.municipio.cod) await elegirMunicipio(r.estado.municipio, { encuadrar: false });
@@ -1098,7 +934,7 @@ export function iniciarEditor(datos) {
   });
 
   // ── Arranque ──
-  pintarCarrera();
+  cargarCarrera();
   ui.texto.value = estado.texto ?? '';
   pintarSalida();
   if (estado.salida) mapa.setView([estado.salida[1], estado.salida[0]], 16);

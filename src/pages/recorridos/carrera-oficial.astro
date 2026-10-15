@@ -1,0 +1,121 @@
+---
+/**
+ * Carrera Oficial de cada localidad: se define aquí una vez (inicio, calles, paso por un
+ * templo con sus puntos interiores y fin), se revisa su línea y se guarda. El editor de
+ * recorridos la usa después tal cual. Lógica en src/lib/recorridos/carrera-oficial.js.
+ */
+import Base from '../../layouts/Base.astro';
+import carrerasOficiales from '../../data/carreras-oficiales.json';
+import '../../styles/recorridos.css';
+
+// Carreras Oficiales del proyecto por código INE (sin la clave de notas).
+const carreras = Object.fromEntries(Object.entries(carrerasOficiales).filter(([k]) => !k.startsWith('_')));
+const datos = { carreras };
+
+const title = 'Carrera Oficial de cada localidad | Semana Santa Open Data';
+const description = 'Define la Carrera Oficial de una localidad andaluza sobre el callejero oficial para usarla en el editor de recorridos.';
+---
+
+<Base title={title} description={description} indexar={false}>
+  <div class="ed">
+    <aside class="ed__panel" aria-label="Carrera Oficial">
+      <h1 class="ed__titulo">Carrera Oficial</h1>
+      <p class="ed__intro">
+        Es la misma para todas las cofradías de la localidad y casi no cambia de un año a otro.
+        Defínela aquí con precisión, guárdala y el <a href="/recorridos/editor/">editor de recorridos</a>
+        la usará tal cual.
+      </p>
+
+      <section class="ed__bloque">
+        <h2><span class="ed__num">1</span> Municipio</h2>
+        <input id="co-municipio" class="ed__input" list="co-municipios" autocomplete="off" aria-label="Municipio" placeholder="Escribe el municipio…" />
+        <datalist id="co-municipios"></datalist>
+        <small id="co-mun-estado" class="ed__nota"></small>
+        <p id="co-origen" class="ed__parrafo"></p>
+      </section>
+
+      <section class="ed__bloque">
+        <h2><span class="ed__num">2</span> Inicio</h2>
+        <div class="ed-co__fila">
+          <span id="co-inicio" class="ed__nota">Sin fijar</span>
+          <button type="button" class="ed-mini" data-fijar="inicio" title="Fijar el inicio en el mapa" aria-label="Fijar el inicio en el mapa">📍</button>
+        </div>
+      </section>
+
+      <section class="ed__bloque">
+        <h2><span class="ed__num">3</span> Calles</h2>
+        <label class="campo">Por las que transita, en orden
+          <textarea id="co-calles" class="ed__input ed__texto" rows="5" spellcheck="false" placeholder={'Una calle por línea, en orden'}></textarea>
+        </label>
+        <input id="co-nueva" class="ed__input" list="co-nombres-calles" autocomplete="off" placeholder="Añadir una calle…" aria-label="Añadir una calle" />
+        <ul id="co-lineas" class="co-lineas"></ul>
+      </section>
+
+      <section class="ed__bloque">
+        <h2><span class="ed__num">4</span> Paso por un templo <small class="ed__nota">opcional</small></h2>
+        <div class="ed-co__fila">
+          <span class="ed-co__etq">Entrada</span>
+          <span id="co-entrada" class="ed__nota">No pasa por un templo</span>
+          <button type="button" class="ed-mini" data-fijar="entrada" title="Fijar la puerta de entrada en el mapa" aria-label="Fijar la puerta de entrada en el mapa">📍</button>
+          <button type="button" class="ed-mini" data-quitar="entrada" title="Quitar el paso por el templo" aria-label="Quitar el paso por el templo">✕</button>
+        </div>
+        <div class="ed-co__fila">
+          <span class="ed-co__etq">Interior</span>
+          <span id="co-interior" class="ed__nota"></span>
+          <button id="co-vaciar-interior" type="button" class="ed-mini" title="Quitar los puntos interiores" hidden>✕</button>
+        </div>
+        <small class="ed__nota">De la puerta de entrada a la de salida (el fin) la línea va por dentro del templo. Pincha sobre ese tramo para añadir puntos interiores y arrástralos por donde pasa el cortejo (en Sevilla, de la Puerta de San Miguel a la de Palos de la Catedral).</small>
+      </section>
+
+      <section class="ed__bloque">
+        <h2><span class="ed__num">5</span> Fin</h2>
+        <div class="ed-co__fila">
+          <span id="co-fin" class="ed__nota">Sin fijar</span>
+          <button type="button" class="ed-mini" data-fijar="fin" title="Fijar el fin en el mapa" aria-label="Fijar el fin en el mapa">📍</button>
+        </div>
+        <small class="ed__nota">Con paso por un templo, el fin es la puerta por la que sale.</small>
+      </section>
+
+      <p id="co-mensaje" class="ed__mensaje" role="status" aria-live="polite"></p>
+
+      <section id="co-resultado" class="ed__bloque" hidden>
+        <h2>Línea</h2>
+        <p id="co-resumen" class="ed__resumen"></p>
+        <ul id="co-avisos" class="ed__avisos"></ul>
+        <div class="ed__leyenda" aria-hidden="true">
+          <span><i class="ed-ley ed-ley--co"></i>Calles</span>
+          <span><i class="ed-ley ed-ley--interior"></i>Interior del templo</span>
+          <span><i class="ed-ley ed-ley--recta"></i>Sin conexión</span>
+        </div>
+        <ol id="co-pasos" class="co-pasos"></ol>
+        <small class="ed__nota">Pincha sobre la línea para añadir puntos de paso; arrástralos para corregirla y doble clic para quitarlos. Los puntos I, E y F también se arrastran.</small>
+        <button id="co-quitar-puntos" type="button" class="btn btn--sec" hidden>Quitar los puntos de paso</button>
+      </section>
+
+      <section class="ed__bloque">
+        <h2>Guardar</h2>
+        <p id="co-cambios" class="ed__parrafo ed__nota" hidden>Hay cambios sin guardar: el editor de recorridos sigue usando la versión anterior.</p>
+        <div class="ed__fila">
+          <button id="co-guardar" type="button" class="btn">Guardar</button>
+          <button id="co-copiar" type="button" class="btn btn--sec">Copiar para el proyecto</button>
+          <button id="co-proyecto" type="button" class="btn btn--sec" hidden>Volver a la del proyecto</button>
+        </div>
+        <small class="ed__nota">«Guardar» la deja fija para el editor en este navegador. «Copiar para el proyecto» da la entrada de <code>src/data/carreras-oficiales.json</code>, para publicarla para todos.</small>
+        <textarea id="co-json" class="ed__input co-json" readonly hidden aria-label="Entrada para src/data/carreras-oficiales.json"></textarea>
+      </section>
+    </aside>
+
+    <div id="co-mapa" class="ed__mapa" role="application" aria-label="Mapa de la Carrera Oficial"></div>
+  </div>
+  <datalist id="co-nombres-calles"></datalist>
+
+  <script type="application/json" id="co-datos" set:html={JSON.stringify(datos)}></script>
+</Base>
+
+<script>
+  import 'leaflet/dist/leaflet.css';
+  import { iniciarCarreraOficial } from '../../lib/recorridos/carrera-oficial.js';
+
+  const datos = JSON.parse(document.getElementById('co-datos')!.textContent!);
+  iniciarCarreraOficial(datos);
+</script>
