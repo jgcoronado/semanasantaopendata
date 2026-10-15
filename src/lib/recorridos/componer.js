@@ -15,12 +15,15 @@
  */
 
 import { clave, esCarreraOficial, esZonaAbierta, normalizar } from './nombres.js';
-import { atajarHorquillas, concatenar, cortarEn, distM, longitud, suavizar } from './geo.js';
+import {
+  atajarHorquillas, concatenar, cortarEn, curvaSuave, distM, longitud, puntoA, puntoMasCercano, subPolilinea, suavizar,
+} from './geo.js';
 
 const PENALIZACION_OTRAS = 3;   // coste relativo de calles que no están en la lista
 const ENGANCHE_PUNTO_M = 25;    // un punto de paso a menos de esto se pega a la calle
 const SALIDA_MAX_M = 150;       // la salida debe estar a menos de esto de una calle
 const ENLACE_MIN_M = 10;        // tramos por calles no listadas que se avisan
+const PUNTO_LIBRE_CERCA_M = 80; // punto de paso de la Carrera Oficial que corrige su camino (si no, va por otra calle)
 /** Restricción dura: una calle nunca se acepta a más de esto de la última reconocida. */
 export const DISTANCIA_MAX_CALLE_M = 1000;
 
@@ -169,34 +172,45 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
       partes.push([ultimoPunto ?? grafo.coord(actual), puntoFinal]);
       if (nodoFinal) actual = nodoFinal.nodo;
     } else {
-      for (const p of puntosPaso[clavePaso] ?? []) {
-        const enganche = grafo.cercano(p, ENGANCHE_PUNTO_M);
-        if (enganche) {
-          const r = grafo.ruta(actual, new Set([enganche.nodo]));
-          if (r) { partes.push(r.nodos.map(grafo.coord)); aristas.push(...r.aristas); actual = enganche.nodo; fijos.push(grafo.coord(enganche.nodo)); continue; }
-        }
-        // Punto fuera de las calles (p. ej. dentro de una plaza): se llega en línea recta.
-        const vuelta = grafo.cercano(p, 300);
-        partes.push([grafo.coord(actual), p]);
-        fijos.push(p);
-        if (vuelta) { partes.push([p, grafo.coord(vuelta.nodo)]); actual = vuelta.nodo; }
-      }
-      const r = grafo.ruta(actual, destinos, coste);
-      if (r) {
-        partes.push(r.nodos.map(grafo.coord));
-        aristas.push(...r.aristas);
-        actual = r.nodos[r.nodos.length - 1];
+      // En la Carrera Oficial los puntos de paso no se pegan a los ejes: la línea sale de la
+      // calle antes del primero, pasa por todos con una curva suave y vuelve después del último.
+      const wps = puntosPaso[clavePaso] ?? [];
+      const t = co && wps.length ? tramoLibre(actual, wps, destinos, coste) : null;
+      if (t) {
+        partes.push(...t.partes);
+        aristas.push(...t.aristas);
+        fijos.push(...t.curva);
+        actual = t.fin;
       } else {
-        // Sin conexión en el grafo: recta al destino más cercano, marcada para revisar.
-        let mejor = null;
-        for (const n of destinos) {
-          const d = distM(grafo.coord(actual), grafo.coord(n));
-          if (!mejor || d < mejor.d) mejor = { n, d };
+        for (const p of puntosPaso[clavePaso] ?? []) {
+          const enganche = grafo.cercano(p, ENGANCHE_PUNTO_M);
+          if (enganche) {
+            const r = grafo.ruta(actual, new Set([enganche.nodo]));
+            if (r) { partes.push(r.nodos.map(grafo.coord)); aristas.push(...r.aristas); actual = enganche.nodo; fijos.push(grafo.coord(enganche.nodo)); continue; }
+          }
+          // Punto fuera de las calles (p. ej. dentro de una plaza): se llega en línea recta.
+          const vuelta = grafo.cercano(p, 300);
+          partes.push([grafo.coord(actual), p]);
+          fijos.push(p);
+          if (vuelta) { partes.push([p, grafo.coord(vuelta.nodo)]); actual = vuelta.nodo; }
         }
-        partes.push([grafo.coord(actual), grafo.coord(mejor.n)]);
-        actual = mejor.n;
-        sinConexion = true;
-        avisos.push(`No hay conexión por calles hasta «${obj.texto}»; se ha unido en línea recta.`);
+        const r = grafo.ruta(actual, destinos, coste);
+        if (r) {
+          partes.push(r.nodos.map(grafo.coord));
+          aristas.push(...r.aristas);
+          actual = r.nodos[r.nodos.length - 1];
+        } else {
+          // Sin conexión en el grafo: recta al destino más cercano, marcada para revisar.
+          let mejor = null;
+          for (const n of destinos) {
+            const d = distM(grafo.coord(actual), grafo.coord(n));
+            if (!mejor || d < mejor.d) mejor = { n, d };
+          }
+          partes.push([grafo.coord(actual), grafo.coord(mejor.n)]);
+          actual = mejor.n;
+          sinConexion = true;
+          avisos.push(`No hay conexión por calles hasta «${obj.texto}»; se ha unido en línea recta.`);
+        }
       }
       if (puntoFinal) partes.push([grafo.coord(actual), puntoFinal]);
     }
@@ -231,6 +245,65 @@ export function componer({ items, salida, grafo, puntosPaso = {}, carrera = null
     idsPrevios = obj.ids ?? [];
     ultimoPunto = puntoFinal;
     return true;
+  }
+
+  /**
+   * Puntos de paso libres (Carrera Oficial): son correcciones locales del camino por calles.
+   * La línea deja ese camino un poco antes del primer punto, pasa por todos con una curva
+   * suave y vuelve a él un poco después del último. Si el primer o el último punto están
+   * lejos del camino (> PUNTO_LIBRE_CERCA_M, el cortejo va por otra calle), ese extremo se
+   * enlaza por calles con el cruce más cercano al punto. null si no hay camino.
+   */
+  function tramoLibre(origen, wps, destinos, coste) {
+    const w1 = wps[0], wn = wps[wps.length - 1];
+    const proy = (c, p) => (c.length > 1 ? puntoMasCercano(c, p) : { metros: 0, d: distM(c[0], p) });
+    // Se deja la calle antes del punto (y se vuelve a ella después) tanto como se separe de
+    // ella, entre 8 y 40 m, para que la curva entre y salga sin quiebros.
+    const holgura = (d) => Math.min(40, Math.max(8, d));
+    const R = grafo.ruta(origen, destinos, coste);
+    const cR = R ? R.nodos.map(grafo.coord) : null;
+    let p1 = cR ? proy(cR, w1) : null;
+    let p2 = cR ? proy(cR, wn) : null;
+    if (p1 && p2 && p2.metros < p1.metros - 1) p1 = p2 = null;   // al revés del camino
+    const aristas = R ? [...R.aristas] : [];
+
+    let ida, antes, vuelta, despues, fin;
+    if (p1 && p1.d <= PUNTO_LIBRE_CERCA_M) {
+      const sale = Math.max(0, p1.metros - holgura(p1.d));
+      ida = subPolilinea(cR, 0, sale);
+      antes = sale > 0.5 ? puntoA(cR, Math.max(0, sale - 5)).coord : null;
+    } else {
+      const n1 = grafo.cercano(w1, 300);
+      const r1 = n1 && grafo.ruta(origen, new Set([n1.nodo]), coste);
+      if (!r1) return null;
+      const c1 = r1.nodos.map(grafo.coord);
+      const q = proy(c1, w1);
+      const sale = Math.max(0, q.metros - holgura(q.d));
+      ida = c1.length > 1 ? subPolilinea(c1, 0, sale) : [c1[0]];
+      antes = sale > 0.5 ? puntoA(c1, Math.max(0, sale - 5)).coord : null;
+      aristas.push(...r1.aristas);
+    }
+    if (p2 && p2.d <= PUNTO_LIBRE_CERCA_M) {
+      const l = longitud(cR);
+      const entra = Math.min(l, p2.metros + holgura(p2.d));
+      vuelta = cR.length > 1 ? subPolilinea(cR, entra, l) : [cR[0]];
+      despues = entra < l - 0.5 ? puntoA(cR, Math.min(l, entra + 5)).coord : null;
+      fin = R.nodos[R.nodos.length - 1];
+    } else {
+      const n2 = grafo.cercano(wn, 300);
+      const r2 = n2 && grafo.ruta(n2.nodo, destinos, coste);
+      if (!r2) return null;
+      const c2 = r2.nodos.map(grafo.coord);
+      const l = longitud(c2);
+      const q = proy(c2, wn);
+      const entra = Math.min(l, q.metros + holgura(q.d));
+      vuelta = c2.length > 1 ? subPolilinea(c2, entra, l) : [c2[0]];
+      despues = entra < l - 0.5 ? puntoA(c2, Math.min(l, entra + 5)).coord : null;
+      fin = r2.nodos[r2.nodos.length - 1];
+      aristas.push(...r2.aristas);
+    }
+    const curva = curvaSuave([ida[ida.length - 1], ...wps, vuelta[0]], { antes, despues });
+    return { partes: [ida, curva, vuelta], aristas, curva, fin };
   }
 
   /** Carrera Oficial con trazado guardado: un paso con su línea, que no se toca. */

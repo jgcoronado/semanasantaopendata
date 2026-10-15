@@ -126,6 +126,14 @@ por dentro de la Catedral). En la ventana:
 - 📍 fija inicio, entrada y fin; los marcadores I/E/F se arrastran.
 - Pinchar en la línea añade un punto de paso al tramo de calles, o un punto interior si es el
   tramo discontinuo por dentro del templo; se arrastran y se quitan con doble clic.
+- **Los puntos de paso de la Carrera Oficial no se pegan a los ejes** (pasa por el centro de
+  plazas y zonas peatonales): son correcciones locales del camino por calles de ese tramo. La
+  línea deja el camino un poco antes del primer punto (tanto como se separe de él, entre 8 y
+  40 m), pasa por todos con una curva suave (Catmull-Rom centrípeta, `geo.js → curvaSuave`) y
+  vuelve al camino después del último; la distancia es la de esa línea. Si el primer o el
+  último punto está a más de 80 m del camino (el cortejo va por otra calle), ese extremo se
+  enlaza por calles con el cruce más cercano al punto. La curva no se suaviza después. Fuera
+  de la Carrera Oficial los puntos de paso siguen enganchándose a la calle (≤ 25 m).
 - Las calles se comprueban como las del itinerario (continuidad, 1 km como máximo).
 - **Guardar** calcula y fija la línea (`trazado`, `metros`, `actualizado`) para ese municipio
   en este navegador (`localStorage` `ssod-carreras-oficiales-v1`). Hasta entonces los cambios

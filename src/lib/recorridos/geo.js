@@ -160,6 +160,84 @@ export function anguloInterior(A, B, C) {
 }
 
 /**
+ * ¿Está p (a menos de 0,5 m) entre los puntos fijos? Rejilla en lugar de recorrer la lista:
+ * las curvas de los puntos de paso de la Carrera Oficial añaden cientos de puntos fijos.
+ */
+export function buscadorFijos(fijos) {
+  if (!fijos.length) return () => false;
+  const celda = 1 / 111320;   // ~1 m
+  const rej = new Map();
+  const clave = (x, y) => `${x},${y}`;
+  for (const f of fijos) {
+    const k = clave(Math.floor(f[0] / celda), Math.floor(f[1] / celda));
+    (rej.get(k) ?? rej.set(k, []).get(k)).push(f);
+  }
+  return (p) => {
+    const cx = Math.floor(p[0] / celda), cy = Math.floor(p[1] / celda);
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        for (const f of rej.get(clave(cx + dx, cy + dy)) ?? []) if (distM(f, p) < 0.5) return true;
+      }
+    }
+    return false;
+  };
+}
+
+/** Trozo de una polilínea entre dos distancias desde su inicio (en metros). */
+export function subPolilinea(coords, desde, hasta) {
+  const total = longitud(coords);
+  desde = Math.max(0, Math.min(desde, total));
+  hasta = Math.max(desde, Math.min(hasta, total));
+  const out = [puntoA(coords, desde).coord];
+  let acum = 0;
+  for (let i = 1; i < coords.length; i++) {
+    acum += distM(coords[i - 1], coords[i]);
+    if (acum > desde && acum < hasta) out.push(coords[i]);
+  }
+  out.push(puntoA(coords, hasta).coord);
+  return concatenar([out]);
+}
+
+/**
+ * Curva suave (Catmull-Rom centrípeta) que pasa por `puntos` en orden, muestreada cada
+ * ~`paso` m. `antes` y `despues` dan la dirección de llegada y de salida (un punto anterior
+ * al primero y otro posterior al último) para que empalme sin quiebro con lo que hay a cada
+ * lado; si faltan, se prolonga el primer o el último segmento.
+ */
+export function curvaSuave(puntos, { antes = null, despues = null, paso = 2 } = {}) {
+  const ps = concatenar([puntos]);
+  if (ps.length < 2) return ps;
+  const lat0 = ps[0][1] * RAD;
+  const k = Math.cos(lat0) * 111320;
+  const aXY = ([x, y]) => [x * k, y * 111320];
+  const aLL = ([x, y]) => [x / k, y / 111320];
+  const P = ps.map(aXY);
+  const reflejo = (a, b) => [2 * a[0] - b[0], 2 * a[1] - b[1]];
+  const p0 = antes && distM(antes, ps[0]) > 0.3 ? aXY(antes) : reflejo(P[0], P[1]);
+  const pN = despues && distM(despues, ps[ps.length - 1]) > 0.3 ? aXY(despues) : reflejo(P[P.length - 1], P[P.length - 2]);
+  const Q = [p0, ...P, pN];
+  const out = [ps[0]];
+  for (let i = 1; i < Q.length - 2; i++) {
+    const [a, b, c, d] = [Q[i - 1], Q[i], Q[i + 1], Q[i + 2]];
+    // Parámetros centrípetos (alfa = 0,5): sin bucles ni sobrepasos en tramos desiguales.
+    const t = (u, v) => Math.max(Math.hypot(v[0] - u[0], v[1] - u[1]) ** 0.5, 1e-6);
+    const t0 = 0, t1 = t0 + t(a, b), t2 = t1 + t(b, c), t3 = t2 + t(c, d);
+    const n = Math.max(1, Math.ceil(Math.hypot(c[0] - b[0], c[1] - b[1]) / paso));
+    const L = (p, q, ta, tb, tt) => [
+      ((tb - tt) * p[0] + (tt - ta) * q[0]) / (tb - ta),
+      ((tb - tt) * p[1] + (tt - ta) * q[1]) / (tb - ta),
+    ];
+    for (let s = 1; s <= n; s++) {
+      const tt = t1 + (t2 - t1) * (s / n);
+      const A1 = L(a, b, t0, t1, tt), A2 = L(b, c, t1, t2, tt), A3 = L(c, d, t2, t3, tt);
+      const B1 = L(A1, A2, t0, t2, tt), B2 = L(A2, A3, t1, t3, tt);
+      out.push(s === n ? ps[i] : aLL(L(B1, B2, t1, t2, tt)));
+    }
+  }
+  return out;
+}
+
+/**
  * Suaviza el trazado sobre ejes de calle para que se parezca al paso real de un cortejo,
  * sin separarse de la calle.
  *
@@ -187,7 +265,7 @@ export function suavizar(coords, {
     if (!u || distM(u, p) > 0.3) o.push(p);
   }
   if (o.length < 3) return o;
-  const fijo = (p) => fijos.some((f) => distM(f, p) < 0.5);
+  const fijo = buscadorFijos(fijos);
   const acum = [0];
   for (let i = 1; i < o.length; i++) acum.push(acum[i - 1] + distM(o[i - 1], o[i]));
   // Desvío máximo del original entre i y j respecto al segmento o[i]–o[j].
@@ -279,7 +357,7 @@ export function atajarHorquillas(coords, abierto, {
   if (!ab.some(Boolean)) return coords;
   const acum = [0];
   for (let i = 1; i < P.length; i++) acum.push(acum[i - 1] + distM(P[i - 1], P[i]));
-  const esFijo = P.map((p) => fijos.some((f) => distM(f, p) < 0.5));
+  const esFijo = P.map(buscadorFijos(fijos));
 
   const distPolilinea = (p, desde, hasta) => {
     let d = Infinity;
